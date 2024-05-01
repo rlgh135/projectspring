@@ -5,5 +5,6 @@ public class Hello {
 		System.out.println("Hi");
 		System.out.println("박민수");
 		System.out.println("최영환");
+		System.out.println("유성휘");
 	}
 }
