@@ -5,6 +5,7 @@ public class Hello {
 		System.out.println("Hi");
 		System.out.println("박민수");
 		System.out.println("최영환");
+		System.out.println("가나다라마바사 2차 테스트 최영환");
 		System.out.println("유성휘");
 		System.out.println("정상현");
 	}
