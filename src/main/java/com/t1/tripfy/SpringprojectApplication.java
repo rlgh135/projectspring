@@ -1,4 +1,4 @@
-package com.ncs.test;
+package com.t1.tripfy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

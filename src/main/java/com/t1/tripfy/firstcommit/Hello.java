@@ -1,4 +1,4 @@
-package com.ncs.test.model;
+package com.t1.tripfy.firstcommit;
 
 public class Hello {
 	public static void main(String[] args) {
