@@ -1,0 +1,48 @@
+*{
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+}
+ul{
+    list-style:none;
+    padding-left:0px;
+}
+@font-face {
+    font-family: CustomFont; /* 폰트의 이름을 지정합니다. */
+    src: url('./MCKLSH__.ttf') format('truetype'); /* .ttf 파일의 경로를 지정합니다. */
+}
+a {color: black; text-decoration: none; outline: none}
+a:hover, a:active {text-decoration: none; color:black;}
+
+section{
+    width: 100%;
+    min-width: 1400px;
+    height: 1080px;
+    margin: 0 auto;
+}
+.logozone{
+    display: inline-block;
+    position: fixed;
+}
+section:first-child{
+    background-color: #e3fefd;
+}
+section:nth-child(2){
+    background-image: url("../../images/layoutimg/idone.gif");
+}
+section:last-child{
+    background-color: #e3fefd;
+}
+#joinlogoWrap{
+    width: 320px;
+    height: 300px;
+    border-radius: 50%;
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+}
+#goJoinBtn:hover{
+    content: url('../../images/layoutimg/logowink.png');
+}
+#goJoinBtn{
+    width: 300px;
+}

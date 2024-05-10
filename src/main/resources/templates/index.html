@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>tripfy</title>
-<link rel="stylesheet" href="/css/style.css">
+	<meta charset="UTF-8">
+	<title>tripfy</title>
+	<link rel="stylesheet" href="/css/layout/indexstyle.css">
 </head>
+<header>
+	<!--로그인으로 가는 기능 만들기-->
+</header>
 <body>
+	<!--<th:block th:include="~{layout/header::header}"></th:block>-->
+	<div id="idxwrap">
+		<header></header>
+		<div id="idxcontainer">
+			<section class="index-section">
+
+				<div id="joinlogoWrap">
+					<img src="/images/layoutimg/logoimg.png" style="cursor: pointer;" srcset=""
+						onclick="goToJoin()" id="goJoinBtn">
+				</div>
+
+			</section>
+			<section class="index-section">
+			</section>
+			<section class="index-section">
+
+			</section>
+		</div>
+	</div>
+
 </body>
-<section class="index-page-one"></section>
 <script>
-	window.setTimeout(function(){
-		document.querySelector("#wrap.login+img").classList = "hdd";
-		document.querySelector("#wrap.login").style.display = "block";
-	},1300)
+	function goToJoin() {
+		alert("조인!");
+	}
 </script>
+
 </html>
