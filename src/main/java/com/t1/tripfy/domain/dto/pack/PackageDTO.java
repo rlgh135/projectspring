@@ -17,4 +17,6 @@ public class PackageDTO {
 	private long viewcnt;
 	private String deadline;
 	private int isDelete;
+	private String regionname;
+	private String countrycode;
 }

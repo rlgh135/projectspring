@@ -104,7 +104,9 @@ CREATE TABLE `package` (
   `tourdays` int,
   `viewcnt` bigint,
   `deadline` date NOT NULL,
-  `isdelete` int DEFAULT 0
+  `isdelete` int DEFAULT 0,
+  `regionname` varchar(300),
+  `countrycode` varchar(300)
 );
 
 CREATE TABLE `timeline` (
