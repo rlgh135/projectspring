@@ -106,7 +106,9 @@ CREATE TABLE `package` (
   `deadline` date NOT NULL,
   `isdelete` int DEFAULT 0,
   `regionname` varchar(300),
-  `countrycode` varchar(300)
+  `countrycode` varchar(300),
+  /*아래 컬럼이O이면 패키지리스트에 띄우고 x면 안띄울겁니다*/
+  `Visibility` varchar(3) default 'x'
 );
 
 CREATE TABLE `timeline` (
