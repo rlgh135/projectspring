@@ -43,4 +43,9 @@ public class UserServiceImpl implements UserService{
 	public boolean checkId(String userid) {
 		return umapper.getUserById(userid) == null;
 	}
+	
+	@Override
+	public String getProfileImgName(String userid) {
+		return umapper.getUserProfileName(userid);
+	}
 }

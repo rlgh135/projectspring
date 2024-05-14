@@ -9,4 +9,5 @@ public interface UserService {
 	boolean updateUser(UserDTO user);
 	boolean updateProfileimg(UserImgDTO userimg);
 	boolean checkId(String userid);
+	String getProfileImgName(String userid);
 }

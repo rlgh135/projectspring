@@ -12,6 +12,7 @@ public interface UserMapper {
 	
 	//R
 	UserDTO getUserById(String userid);
+	String getUserProfileName(String userid);
 	
 	//U
 	int updateUser(UserDTO user);

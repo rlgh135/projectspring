@@ -2,9 +2,11 @@ package com.t1.tripfy.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.t1.tripfy.domain.dto.user.UserDTO;
+import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.service.user.UserService;
 
 import jakarta.servlet.http.Cookie;
@@ -29,6 +31,7 @@ public class UserController {
 //	user/checkId 
 //	user/logout
 //	user/noAccount
+//	user/myInfo
 	
 	// POST
 //	user/login
@@ -59,6 +62,23 @@ public class UserController {
 		return "redirect:/user/myinfo";
 	}
 	
+	@GetMapping("myinfo")
+	public String myInfo(HttpServletRequest req, Model model) {
+		HttpSession session = req.getSession();
+		//썸네일 가져오기
+		String loginUser = (String)session.getAttribute("loginUser");
+		String thumbnail = service.getProfileImgName(loginUser);
+		model.addAttribute("thumbnail", thumbnail);
+		
+		//내가 쓴 게시글 추가하기
+		
+		//내가 쓴 패키지 추가하기
+		
+		//내가 받은 가이드 댓글 추가하기
+		
+		return "/user/myinfo";
+	}
+	
 	//post
 	@PostMapping("join")
 	public String join(UserDTO user, HttpServletResponse resp) {
@@ -85,4 +105,6 @@ public class UserController {
 		}
 		return "redirect:/";
 	}
+	
+
 }
