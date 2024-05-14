@@ -19,4 +19,5 @@ public class PackageDTO {
 	private int isDelete;
 	private String regionname;
 	private String countrycode;
+	private String Visibility;
 }
