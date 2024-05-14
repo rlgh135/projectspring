@@ -6,35 +6,117 @@
 	<title>tripfy</title>
 	<link rel="stylesheet" href="/css/layout/indexstyle.css">
 </head>
-<header>
-	<!--로그인으로 가는 기능 만들기-->
-</header>
+
 <body>
 	<!--<th:block th:include="~{layout/header::header}"></th:block>-->
-	<div id="idxwrap">
-		<header></header>
-		<div id="idxcontainer">
-			<section class="index-section">
+	<header id="index_top_wrap">
+		<nav class="gnb">
+			<div class="logo_box">
+				<a href="">
+					<div class="logo"></div>
+				</a>
+			</div>
 
-				<div id="joinlogoWrap">
-					<img src="/images/layoutimg/logoimg.png" style="cursor: pointer;" srcset=""
-						onclick="goToJoin()" id="goJoinBtn">
+			<div class="login">
+				<div>
+					<!--모달 팝업-->
+					<div class="modal">
+						<div class="modal_popup">
+							<form action="/user/login" method="post" name="loginForm">
+								<table>
+									<tbody>
+										<tr>
+											<th>아이디</th>
+											<td>
+												<input type="text" name="userid" value="">
+											</td>
+										</tr>
+										<tr>
+											<th>비밀번호</th>
+											<td>
+												<input type="password" name="userpw">
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<div class="btn_area">
+													<input type="submit" value="로그인">
+													<button type="button" class="close_btn">닫기</button>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</form>
+						</div>
+					</div>
+					<!--모달 팝업-->
+					<div class="index-nav-right">
+						<button type="button" class="modal_btn">로그인</button>
+					</div>
 				</div>
+			</div>
+		</nav>
+	</header>
+	<div id="idxcontainer">
+		<section class="index-section" id="idxsection1">
 
-			</section>
-			<section class="index-section">
-			</section>
-			<section class="index-section">
 
-			</section>
+
+			<div class="welcome-text" id="content1">
+				<p><span>내</span>가 안내하는 <br><span>우리</span>의 여행 </p>
+			</div>
+
+		</section>
+		<section class="index-section" id="idxsection1">
+			<div class="welcome-text" id="content2">
+				<p>늘 가는 여행지는 NO<br>직접 기획하는 우리 동네 패키지</p>
+			</div>
+		</section>
+		<section class="index-section" id="idxsection1">
+			<div class="welcome-text" id="content3">
+				<p>늘 가는 여행지는 NO<br>직접 기획하는 우리 동네 패키지</p>
+			</div>
+		</section>
+		<div id="joinlogoWrap">
+			<img src="/images/layoutimg/logoimg.png" style="cursor: pointer;" srcset="" onclick="goToJoin()"
+				id="goJoinBtn">
 		</div>
 	</div>
 
 </body>
 <script>
+	const modal = document.querySelector('.modal');
+	const modalOpen = document.querySelector('.modal_btn');
+	const modalClose = document.querySelector('.close_btn');
+
+	//모달팝업 열림
+	modalOpen.addEventListener('click', function () {
+		modal.style.display = 'block';
+	});
+	//모달팝업 닫힘
+	modalClose.addEventListener('click', function () {
+		modal.style.display = 'none';
+	});
+
 	function goToJoin() {
-		alert("조인!");
+		location.href = "/user/join";
 	}
+
+	let observer = new IntersectionObserver((e) => {
+		e.forEach((eachSection) => {
+			if (eachSection.isIntersecting) {
+				eachSection.target.style.opacity = 1;
+			} else {
+				eachSection.target.style.opacity = 0;
+			}
+		})
+	})
+
+	let indexsection = document.querySelectorAll('.index-section');
+	observer.observe(indexsection[0]);
+	observer.observe(indexsection[1]);
+	observer.observe(indexsection[2]);
 </script>
 
 </html>

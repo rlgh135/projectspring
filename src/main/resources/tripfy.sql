@@ -12,8 +12,12 @@ CREATE TABLE `user` (
   `addr` varchar(300),
   `addrdetail` varchar(300),
   `addretc` varchar(300),
-  `regdate` date DEFAULT 'now()',
-  `user_warncnt` bigint AUTO_INCREMENT DEFAULT 0,
+  /*
+  date 디폴트 now()에서 수정
+  워닝카운트에 auto increment 달려있는거 지움
+  */
+  `regdate` date DEFAULT (current_date),
+  `user_warncnt` bigint DEFAULT 0,
   `isDelete` int DEFAULT 0
 );
 
@@ -31,8 +35,8 @@ CREATE TABLE `manager` (
 CREATE TABLE `guide` (
   `guidenum` bigint PRIMARY KEY AUTO_INCREMENT,
   `userid` varchar(300),
-  `guide_likecnt` bigint AUTO_INCREMENT DEFAULT 0,
-  `guide_warncnt` bigint AUTO_INCREMENT DEFAULT 0
+  `guide_likecnt` bigint DEFAULT 0,
+  `guide_warncnt` bigint DEFAULT 0
 );
 
 create table `guide_user`(
@@ -58,7 +62,7 @@ CREATE TABLE `board` (
   `userid` varchar(300),
   `title` varchar(300),
   `content` text,
-  `regdate` datetime DEFAULT 'now()',
+  `regdate` datetime DEFAULT now(),
   `updatecheck` int DEFAULT 0,
   `regionname` varchar(300),
   `countrycode` varchar(300),
@@ -82,7 +86,7 @@ CREATE TABLE `board_reply` (
   `updatecheck` int DEFAULT 0,
   `em_sysname` varchar(300),
   `contents` varchar(2000),
-  `regdate` datetime DEFAULT 'now()'
+  `regdate` datetime DEFAULT now()
 );
 
 CREATE TABLE `board_file` (
@@ -169,5 +173,5 @@ CREATE TABLE `chat_detail` (
   `chatid` bigint,
   `senderid` varchar(300),
   `message` text,
-  `regdate` datetime DEFAULT 'now()'
+  `regdate` datetime DEFAULT now()
 );
