@@ -5,8 +5,10 @@
 	<meta charset="UTF-8">
 	<title>tripfy</title>
 	<link rel="stylesheet" href="/css/layout/indexstyle.css">
+	<style>
+		
+	</style>
 </head>
-
 <body>
 	<header id="index_top_wrap">
 		<nav class="gnb">
@@ -21,6 +23,17 @@
 					<!--모달 팝업-->
 					<div class="modal">
 						<div class="modal_popup">
+							<div id="mologinwrap">
+								<div class="morewrapimg"></div>
+								<p>
+								</p>
+								<h3>Sign up with</h3>
+								<ul id="lologoswrap">
+									<li><img src="/images/layoutimg/btn_kakao.svg"></li>
+									<li><img src="/images/layoutimg/btn_google.svg"></li>
+									<li><img src="/images/layoutimg/btn_naver.svg"></li>									
+								</ul>									
+							</div>
 							<form action="/user/login" method="post" name="loginForm">
 								<table>
 									<tbody>
@@ -36,16 +49,15 @@
 												<input type="password" name="userpw">
 											</td>
 										</tr>
-										<tr>
-											<td colspan="2">
-												<div class="btn_area">
-													<input type="submit" value="로그인">
-													<button type="button" class="close_btn">닫기</button>
-												</div>
-											</td>
-										</tr>
+									
 									</tbody>
 								</table>
+								<div>
+									<div class="btn_area">
+										<input type="submit" value="로그인">
+										<input type="button" value="닫기" class="close_btn" style="cursor: pointer;">
+									</div>
+								</div>
 							</form>
 						</div>
 					</div>

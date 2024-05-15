@@ -99,13 +99,13 @@ img{
 	position: relative;
 	display: inline-block;
 	padding: 5px 15px 5px 10px;
-	border:1px solid #ccc;
+	border: none;
+	border-bottom: 1px solid #ccc;
 	width:250px; height:40px; line-height: 40px;
-	border-radius: 5px;
 }
 input:focus{
     outline:none;
-    border:1px solid rgb(0,200,80);
+    border-bottom :1px solid #2196f3;
 }
 
 .join td > input[type=text]+input[type=button]{
