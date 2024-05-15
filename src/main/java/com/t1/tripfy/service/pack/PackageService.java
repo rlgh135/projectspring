@@ -1,4 +1,4 @@
-package com.t1.trify.service.pack;
+package com.t1.tripfy.service.pack;
 
 import java.util.List;
 
