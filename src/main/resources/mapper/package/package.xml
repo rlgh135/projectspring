@@ -49,6 +49,7 @@
 	<select id="getListByCountryCode">
     select * from package
 	    <where>
+		<include refid="cri"></include>	
 	        <if test="countrycode != null">
 	            <choose>
 	                <when test="countrycode == 'kr'">
@@ -67,6 +68,7 @@
 	<select id="getDetailRegionList">
 		select * from package
 		where
+		<include refid="cri"></include>
 		startdate = #{startdate}
 		and enddate = #{enddate}
 		and countrycode = #{countrycode}
