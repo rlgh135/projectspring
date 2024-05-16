@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link rel="stylesheet" href="/css/user/joinstyle.css">
+	<script type="module" src="/js/user/joinmap.js"></script>
+	<style>
+		.hidemap{
+			display: none;
+		}
+	</style>
 </head>
 <body>
 	<!--<th:block th:if="${session.loginUser != null}">
@@ -16,7 +23,25 @@
 		<p>Tripfy!</p>
 	</div>
     <div id="wrap" class="join">
+			
         <form action="/user/join" method="post" name="joinForm">
+			<input type="button" onclick="openMap()">
+			<div id="mapwrap" class="hidemap">
+							<div style="display: none">
+							      <input
+							        id="pac-input"
+							        class="controls"
+							        type="text"
+							        placeholder="주소를 입력하거나 지도를 클릭하세요"
+							      />
+							    </div>
+							    <div id="map"></div>
+							    <div id="infowindow-content">
+							      <span id="place-name" class="title"></span><br />
+							      <strong>Place ID:</strong> <span id="place-id"></span><br />
+							      <span id="place-address"></span>
+							    </div>
+						</div>
             <table>
                 <tbody>
                     <tr>
@@ -123,8 +148,18 @@
         </form>
     </div>
 </body>
+<script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places&v=weekly"
+      defer
+    ></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="/js/user/user.js"></script>
+<script>
+	const mapwrap = document.getElementById("mapwrap");
+	function openMap(){
+		mapwrap.classList.toggle("hidemap");
+	}
+</script>
 </html>
 
 

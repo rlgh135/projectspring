@@ -1,4 +1,4 @@
-package com.t1.tripfy.domain.dto;
+package com.t1.tripfy.domain.dto.user;
 
 import lombok.Data;
 
