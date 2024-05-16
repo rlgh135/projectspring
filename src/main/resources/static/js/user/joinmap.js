@@ -1,3 +1,8 @@
+const addr = document.getElementById("addr");
+const inputplaceid = document.getElementById("inputplaceid");
+/* google placeid api 
+https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder?_gl=1*1y6i2bk*_up*MQ..*_ga*MTA1NzU1NDA4My4xNzE1ODIxNTQz*_ga_NRWSTWS78N*MTcxNTgyMTU0My4xLjAuMTcxNTgyMTU3Ni4wLjAuMA..#maps_places_placeid_finder-javascript
+*/
 function initMap() {
   const map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: -33.8688, lng: 151.2195 },
@@ -45,12 +50,17 @@ function initMap() {
       location: place.geometry.location,
     });
     marker.setVisible(true);
-    infowindowContent.children.namedItem("place-name").textContent = place.name;
-    infowindowContent.children.namedItem("place-id").textContent =
-      place.place_id;
+    console.log(place.name);
+    console.log(place.place_id);
+    console.log(place.formatted_address);
+    infowindowContent.children.namedItem("place-name").textContent = "주소";
+    infowindowContent.children.namedItem("place-id").textContent = place.place_id;
     infowindowContent.children.namedItem("place-address").textContent =
       place.formatted_address;
     infowindow.open(map, marker);
+    
+    addr.setAttribute("value", place.formatted_address);
+    inputplaceid.setAttribute("value", place.place_id);
   });
 }
 

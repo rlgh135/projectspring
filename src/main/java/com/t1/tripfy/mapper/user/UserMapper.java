@@ -9,6 +9,7 @@ import com.t1.tripfy.domain.dto.user.UserImgDTO;
 public interface UserMapper {
 	//C
 	int insertUser(UserDTO user);
+	int makeDefaultBadge(String userid);
 	
 	//R
 	UserDTO getUserById(String userid);
