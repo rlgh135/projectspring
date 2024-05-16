@@ -160,7 +160,7 @@ CREATE TABLE `report` (
   `reportcontents` text,
   `state` varchar(300) DEFAULT '대기중'
 );
-
+/* 240516 채팅테이블 수정
 CREATE TABLE `chat` (
   `chatid` bigint PRIMARY KEY AUTO_INCREMENT,
   `userid_a` varchar(300),
@@ -174,4 +174,36 @@ CREATE TABLE `chat_detail` (
   `senderid` varchar(300),
   `message` text,
   `regdate` datetime DEFAULT now()
+);
+*/
+# 240516 채팅테이블 수정본
+CREATE TABLE `chat_room` (
+	`chat_room_idx` BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `packagenum` BIGINT NOT NULL
+    #,CONSTRAINT fk___package___chat_room___packagenum FOREIGN KEY (`packagenum`) REFERENCES `package`(`packagenum`)
+);
+
+CREATE TABLE `chat_user` (
+	`chat_room_idx` BIGINT, 
+    `userid` VARCHAR(300),
+    `chat_user_is_seller` BOOLEAN NOT NULL,
+    `chat_detail_idx` BIGINT COMMENT "각 레코드의 userid가 조회한 제일 최근의 메시지, 순환 참조를 위해 null기입을 가능하게 함, 그리고 자기 자신의 메시지도 기입 가능하게 해야 함",
+    PRIMARY KEY(`chat_room_idx`, `userid`)
+    /*
+    ,CONSTRAINT fk___chat_room___chat_user___chat_room_idx FOREIGN KEY (`chat_room_idx`) REFERENCES `chat_room`(`chat_room_idx`),
+    CONSTRAINT fk___user___chat_user___userid FOREIGN KEY (`userid`) REFERENCES `user`(`userid`),
+    CONSTRAINT fk___chat_detail___chat_user___chat_detail_idx FOREIGN KEY (`chat_detail_idx`) REFERENCES `chat_detail`(`chat_detail_idx`)
+    */
+);
+
+CREATE TABLE `chat_detail` (
+	`chat_detail_idx` BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `chat_room_idx` BIGINT NOT NULL,
+    `userid` VARCHAR(300) NOT NULL COMMENT "메시지 작성자",
+    `chat_detail_content` VARCHAR(300) NOT NULL,
+    `regdate` DATETIME NOT NULL DEFAULT(CURRENT_TIMESTAMP())
+    /*
+    ,CONSTRAINT fk___chat_room___chat_detail___chat_room_idx FOREIGN KEY (`chat_room_idx`) REFERENCES `chat_room`(`chat_room_idx`),
+    CONSTRAINT fk___chat_user___chat_detail___userid FOREIGN KEY (`userid`) REFERENCES `chat_user`(`userid`)
+	*/
 );

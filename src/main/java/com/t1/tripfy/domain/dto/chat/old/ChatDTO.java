@@ -1,4 +1,4 @@
-package com.t1.tripfy.domain.dto.chat;
+package com.t1.tripfy.domain.dto.chat.old;
 
 import lombok.Data;
 

@@ -7,7 +7,6 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
@@ -31,13 +30,17 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	 *  1. 우선 요청링크에서 userid 뜯어내기
 	 *   나중에 UUID같은거로 갈아치울 수도 있음
 	 *    로그인시 UUID를 할당해주고 JS에 넘긴다거나 뭐
+	 *    
 	 *  2. 당연히 유효성 체크
 	 *   요청이 로그인된 유저로부터 왔는지 체크
+	 *   
 	 *  3. 해당 userid로 개설된 웹소켓 세션이 존재하는지 확인
 	 *   (비정상 종료 등으로 인해)존재하는 경우 삭제해준다
 	 *    웹소켓 객체도 close 해주고 WEBSOCKET_SESSIONS(HashMap 객체) 에서도 지워줘야 함
+	 *    
 	 *  4. 접속한 채팅방 확인 전에 우선 웹소켓 세션을 HashMap에 등록해준다 - 240515
 	 *   WEBSOCKET_SESSION.put() ㅇㅇ
+	 *   
 	 *  5. 해당 유저가 접속한 채팅이 있는지 확인
 	 *   DB 까봐야됨
 	 *    대충 채팅방 세션 객체에서 우선 확인할 수도 있고 - 채팅방 세션 객체를 만들거라면
@@ -45,6 +48,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	 *   또한 읽지 않은 채팅 개수랑 각 채팅방도 가져와야 함
 	 *    -> 근데 이걸 하려면 chat, chat_detail 어딘가나 별개의 테이블에 읽지 않은 채팅을 기록해야함
 	 *     아마 근데 1대1 한정이라는걸 생각하면 어케 간단하게 될 수도 있고
+	 *   - 240516 추가
+	 *    생각해보니까 여기서 채팅방 리스트를 뽑아올 이유가 없음
+	 *    지금 웹소켓은 페이지 로딩 시 마다 연결해주는 - (SSE 등의)메시지 알림 기능등을 포함한 형태라
+	 *    굳이 지금 뽑아올 필요 없이 채팅창 열 때 가져와주면 됨
+	 *     어짜피 채팅창이 닫힌 상태에서는 단순히 알림 개수만 뽑아주면 되니까ㅇㅇ
+	 *    일단 알림 개수 전송은 냅둠
+	 *     임마도 핸드쉐이크 후로 넘길 수도 있긴 한데... 뭐 굳이라
+	 *     
 	 *  6. 가져온 user 의 접속 채팅방과 안 읽은 채팅 개수를 적당히 싸서 보낸다(session.sendMessage())
 	 *  
 	 *  +추가
@@ -95,7 +106,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	 *   위와동일ㅇㅇ
 	 *  채팅방 연결(일반 웹소켓 연결)
 	 *   ws://localhost:8080/test?pupo=comm&uid={userid}
-	 *  
+	 * 
+	 * #핸드쉐이크 요청 링크 결론 240516
+	 *  생각해보니까 굳이 핸드쉐이크와 동시에 채팅방 개설을 요청할 필요가 없음
+	 *  걍 열고 성공여부 받으면 그때 개설해주면 되지
+	 *  링크 구성은 아래와 같이 함
+	 *   ws://localhost:8080/test/{userid}
+	 * 
 	 * #웹소켓 통신의 종류 관련
 	 *  어.. 대충 이정도가 필요해보임
 	 *   웹소켓 연결(핸드쉐이크)
@@ -197,7 +214,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 	//1. 요청 uri에서 userid 뽑기
-		// 이걸 /test/{userid} 형식 대신 getparameter로 넣고 UriComponents? 를 쓸 수도 있음
 		String splitUri[] = session.getUri().toString().split("/");
 		String userid = splitUri[splitUri.length - 1];
 		
@@ -227,9 +243,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	//4. 웹소켓 등록
 		WEBSOCKET_SESSIONS.put(userid, session);
 		
-	//5. userid 가 접속해있는 채팅 확인하고 끌고오기
+	//5. 안 읽은 채팅 개수 끌고오기
 		// ChatServiceImpl가 필요함
-	
+		
+		
 	//6. 채팅방 리스트와 안 읽은 채팅 개수 보내주기
 		// wip
 	}
@@ -243,6 +260,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	// 웹소켓 연결 해제시
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		
+		//세션 저장 객체에서 삭제해준다
+		//이거 사용자 로그아웃 시에도 우선적으로 호출하게 해야 함
+		if(WEBSOCKET_SESSIONS.containsValue(session)) {
+			WebSocketSession tempSess = WEBSOCKET_SESSIONS.remove(session.getAttributes().get("loginUser"));
+			if(tempSess.isOpen())
+				tempSess.close();
+		}
 	}
 }
