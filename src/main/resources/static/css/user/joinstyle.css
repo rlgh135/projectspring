@@ -67,7 +67,6 @@
     width:1000px;
     margin: 0 auto;
     position: relative;
-    background-color: white;
     border: 1px solid rgba(0, 0, 0, 0.2);
     /*box-shadow: 0 0 20px;*/
 }
@@ -86,6 +85,10 @@ a{
 	text-decoration: none;
 	background-color: transparent;
 	color: #424242;
+}
+#wrap{
+	background-color: rgba(255, 255, 255, 0.85);
+	
 }
 form{
 	width: fit-content;
@@ -115,7 +118,7 @@ td input[type="button"]{
 	color: #4d90fe;
 	border: none;
 	outline: none;
-	background-color: #fff;
+	background: none;
 }
 td span {
 	color: red;
@@ -159,6 +162,9 @@ td span {
 	-moz-appearance:none;
 	appearance:none;
 	border:none;
+}
+input[type=text]{
+	background: none;
 }
 .gender_area li > label{
 	display: block;
