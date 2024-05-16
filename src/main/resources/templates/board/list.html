@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>list</title>
+</head>
+<style>
+    /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    
+    .wrap {
+        width: 1400px;
+        margin: 0 auto;
+    }
+
+    .b_banner {
+        position: relative;
+        width: 100%;
+        height: 350px;
+        background: url('/images/boardimg/1.jpg') center/cover no-repeat;
+    }
+
+    .b_search {
+        width: 500px;
+        border-radius: 30px;
+        background-color: #fff;
+        position: absolute;
+        top: 42%;
+        left: 32%;
+        outline: none;
+        padding: 20px 20px 20px 63px;
+        box-shadow: 0px 4px 20px 0px rgba(25, 25, 25, 0.35);
+        font-size: 20px;
+        border: 1px solid #fff;
+    }
+
+    .b_search:focus {
+        caret-color: #2196F3;
+        border: 1px solid #2196F3;
+    }
+
+    .b_search::placeholder {
+        color: #444;
+    }
+
+    .b_searchimg {
+        width: 43px;
+        height: 43px;
+        position: absolute;
+        top: 45%;
+        left: 33%;
+    }
+
+    .b_searchDetail {
+        width: 500px; height: 250px;
+        position: absolute;
+        top: 64%;
+        left: 32%;
+        background-color: #fff;
+        border-radius: 15px;
+        /* display: none; */
+        z-index: 1;
+        box-shadow: 0px 10px 20px 0px rgba(25, 25, 25, 0.35);
+    }
+
+    .b_searchDetail .ximg {
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        top: 10px; right: 10px;
+    }
+
+    .b_searchDetail .recentsearch {
+        border-top: 1px solid rgb(233, 233, 233);
+        position: absolute;
+        top: 50px;
+        width: 100%;
+        height: 200px;
+        padding: 0 15px;
+        padding-top: 10px;
+    }
+
+    .recentsearch > div {
+        color: black;
+        font-size: 14px;
+    }
+
+    .recentsearch > div:nth-child(1) {
+        font-weight: bold;
+        margin-left: 3px;
+    }
+
+    .keyword_area {
+        margin-top: 12px;
+        width: 100%;
+        max-height: 153px;
+        display: flex;
+        flex-wrap: wrap;
+        
+    }
+
+    .keyword_area > .keyword {
+        width: auto;
+        border-radius: 15px;
+        border: 1px solid #ccc;
+        padding: 6px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        display: flex;
+
+    }
+
+    .keyword > .xbtn {
+        width: 18px;
+        height: 18px;
+        margin-left: 3px;
+        background: url('/images/boardimg/xbtn.png') center/cover no-repeat;
+    }
+
+    .post_area {
+        margin-top: 40px;
+        padding: 0 20px;
+    }
+	
+	.post_area > div:last-of-type {
+		text-align: center;
+		margin: 80px 0;
+	}
+
+    .b_buttons {
+        height: 40px;
+    }
+
+    .nation_area {
+        float: right;
+        position: relative;
+    }
+
+    .sortbtn {
+        float: left;
+    }
+
+    .sortbtn [type="button"] {
+        background-color: #F5F5F5;
+        border: 1px solid #F5F5F5;
+        padding: 10px;
+        border-radius: 10px;
+        font-weight: 500;
+        color: #4e4c4c;
+        margin-right: 5px;
+    }
+
+    /* .sortbtn [type="button"]:first-child {
+        background-color: #252525;
+        color: #fff;
+    } */
+   
+    .nation_area > button {
+        width: 80px;
+        background-color: #fff;
+        border: 1px solid rgb(233, 233, 233);
+        padding: 10px 13px 10px;
+        border-radius: 10px;
+        font-weight: 500;
+        color: #4e4c4c;
+        position: relative;
+        text-align: right;
+    }
+
+    .nation_select {
+        position: absolute;
+        z-index: 1;
+        background-color: #fff;
+        width: 350px; height: auto;
+        top: 50px; right: 0;
+        border: 1px solid rgb(233, 233, 233);
+        border-radius: 10px;
+        display: flex;
+        padding: 5px;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        box-shadow: 0px 0px 3px rgba(30, 30, 30, 0.15);
+        /* display: none; */
+    }
+
+    .nation_select * {
+        width: 33.3%;
+    }
+
+    .nation_select .nation {
+        border-radius: 10px 0 0 10px / 10px 0 0 10px;
+        border: 1px solid rgb(233, 233, 233);
+        padding: 3px;
+    }
+
+    .nation_select .nation > button {
+        display: block;
+        width: 100%;
+        padding: 5px;
+        border: none;
+        background-color: #fff;
+    }
+
+    .nation_select .nation > button > p {
+        width: 100%;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .nation_select .region {
+        border-top: 1px solid rgb(233, 233, 233);
+        border-bottom: 1px solid rgb(233, 233, 233);
+    }
+
+    .nation_select .region_detail {
+        border-radius: 0 10px 10px 0 / 0 10px 10px 0;
+        border: 1px solid rgb(233, 233, 233);
+    }
+
+    .settings {
+        width: 19px; height: 19px;
+        position: absolute;
+        top:9px; left: 13px;
+    }
+
+    .posts {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        overflow-y: auto;
+        gap: 26.6px;  /* 전체에 여백 */
+        padding-bottom: 10px;
+    }
+
+    .posts .post {
+        width: 320px;
+        height: 300px;
+        border-radius: 14px;
+        box-shadow: 0px 3px 8px rgba(25, 25, 25, 0.2);
+    }
+
+    .post > .guide {
+        height: 45px;
+        padding: 10px;
+        font-size: 14px;
+        line-height: 16px;
+        display: flex;
+    }
+
+    .post > .guide img {
+        width: 30px;
+        height: 30px;
+        margin-right: 7px;
+    }
+
+    .post > .guide span {
+        margin-top: 5px;
+    }
+
+    .post > .p_img {
+        width: 100%;
+        height: 160px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12px;
+    }
+
+    .posts > a:hover {
+        cursor: pointer;
+    }
+
+    .posts > a:hover .p_img > img {
+        transform: scale(1.2);
+        transition: 0.25s ease-in-out;
+    }
+
+    .post > .post_write {
+        padding: 10px;
+        height: 95px;
+    }
+
+    .post > .post_write > .post_title {
+        margin-bottom: 7px;
+        
+    }
+
+    .post > .post_write > .post_title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    .post > .post_write > .post_preview {
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        color: #777;
+        font-size: 15px;
+    }
+	
+	
+	
+    .b_pagenation {
+        margin-top: 70px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .b_pagenation img {
+        width: 20px; height: 20px;
+        margin-top: 5px;
+        
+    }
+
+    .b_pagenation a {
+        font-size: 18px;
+        font-weight: bold;
+        width: 33px; height: 33px;
+        text-align: center;
+        margin-right: 15px;
+        border: 1px solid rgb(233, 233, 233);
+        border-radius: 5px;
+        line-height: 28px;
+    }
+
+    .b_pagenation a:last-of-type {
+        margin-right: 0;
+    }
+</style>
+<body>
+    <div class="wrap">
+        <div class="b_banner">
+            <input type="text" placeholder="검색" class="b_search">
+            <img src="/images/boardimg/b_search.png" alt="검색아이콘" class="b_searchimg">
+            <div class="b_searchDetail">
+                <img src="/images/boardimg/x_icon.png" alt="" class="ximg">
+                <div class="recentsearch">
+                    <div>최근 검색어</div>
+                    <div class="keyword_area">
+                        <div class="keyword"><span>검색어</span><div class="xbtn"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 정렬 방법 -->
+        <div class="post_area">
+            <div class="b_buttons">
+                <div class="sortbtn">
+                    <input type="button" value="최신 순" class="sort">
+                    <input type="button" value="인기 순" class="sort">
+                    <input type="button" value="좋아요 순" class="sort">
+                </div>
+    
+                <div class="nation_area">
+                    <button><img src="/images/boardimg/settings.png" alt="설정" class="settings">국가</button>
+                    <div class="nation_select">
+                        <div class="nation">
+                            <button><p>국내</p></button>
+                            <button><p>해외</p></button>
+                        </div>
+
+                        <div class="region"></div>
+                        <div class="region_detail"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 게시글 목록 -->
+            <section class="posts">
+                <!-- 게시글 -->
+                <a th:if="${list != null and list.size > 0}" th:each="board:${list}">
+                    <div class="post">
+                        <div class="guide">
+                            <img src="/images/boardimg/profile.png" alt="">
+                            <span>[[${board.userid}]]</span>
+                        </div>
+
+                        <div class="p_img">
+                            <img src="/images/boardimg/2.jpg" alt="">
+                        </div>
+                        
+                        <div class="post_write">
+                            <div class="post_title">[[${board.title}]]</div>
+                            <div class="post_preview">[[${board.content}]]</div>
+                        </div>
+                    </div>
+                </a>
+				
+
+            </section>
+			
+			<div th:if="${list == null or list.size == 0}">
+				<div class="no_post">등록된 게시글이 없습니다.</div>
+			</div>
+        </div>
+
+        <!-- 페이지 네이션 -->
+        <div class="b_pagenation">
+            <a><img src="/images/boardimg/prev.png" alt="" class="b_prevbtn"></a>
+            <a>1</a>
+            <a>2</a>
+            <a>3</a>
+            <a>4</a>
+            <a>5</a>
+            <a><img src="/images/boardimg/next.png" alt="" class="b_nextbtn"></a>
+        </div>
+
+    </div>
+</body>
+<script>
+	const sort = document.getElementsByClassName("sort");
+	console.log(sort);
+	
+	for(let i = 0; i < sort.length; i++) {
+		sort[i].addEventListener("click", listsort);
+	}
+	
+	function listsort(e) {
+		console.log(e.target);
+		
+		let obj = e.target;
+		let text = obj.value;  // 최신순, 좋아요순, 인기순
+		
+		let str = "";
+		if(text == "최신 순") {
+			str = "recent";
+		}
+		
+		else if(text == "인기 순") {
+			str = "popular"
+		}
+		
+		else {
+			str = "like"
+		}
+		console.log(str)
+		
+		location.replace(`/board/list?sort=${str}`);
+	}
+</script>
+</html>

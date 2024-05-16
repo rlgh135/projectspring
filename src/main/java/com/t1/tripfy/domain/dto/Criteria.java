@@ -14,7 +14,7 @@ public class Criteria {
 	private int startrow;
 	
 	public Criteria() {
-		this(1,10);
+		this(1,20);
 	}
 	public Criteria(int pagenum, int amount) {
 		this.pagenum = pagenum;

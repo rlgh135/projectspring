@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>get</title>
+<style>
+    /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+
+    .wrap {
+        width: 1400px;
+        margin: 0 auto;
+    }
+
+    .main_photo img {
+        width: 100%;
+        height: 470px;
+
+    }
+
+    .info {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        margin-top: 30px;
+        margin-bottom: 200px;
+    }
+
+    .info > div:nth-child(2) {
+        border-left: 1px solid #f0f0f0;
+    }
+
+    .info > div:first-child {
+        width: 970px;
+    }
+
+    .info > div:last-child {
+        width: 370px;
+    }
+
+    .cnt_info {
+        margin-top: 10px;
+        position: relative;
+    }
+
+    .cnt_info span {
+        font-size: 13px;
+        margin-right: 10px;
+        color: #9a9a9a;
+    }
+
+    .cnt_info span:nth-child(1)::after, .cnt_info span:nth-child(2)::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 2px;
+        height: 2px;
+        background-color: #9a9a9a;
+        display: inline-block;
+        border-radius: 50%;
+        transform: translateX(300%);
+    }
+
+    .trip_schedule {
+        margin-top: 40px;
+    }  
+
+    .schedule_detail {
+        margin-top: 10px;
+        background-color: #90caf99a;
+        width: 100%;
+        height: 70px;
+        border-radius: 8px;
+        padding: 11px;
+        padding-left: 38px;
+    }
+
+    .schedule_detail > p {
+        position: relative;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .schedule_detail > p:first-child {
+        margin-bottom: 6px;
+    }
+
+    .schedule_detail > p:first-child::before {
+        position: absolute;
+        top: 2px;
+        content: "";
+        display: inline-block;
+        background: url("/images/boardimg/schedule.png") no-repeat center/contain;
+        width: 16px;
+        height: 16px;
+        transform: translateX(-150%);
+    }
+
+    .schedule_detail > p:nth-child(2)::before {
+        position: absolute;
+        top: 3px;
+        content: "";
+        display: inline-block;
+        background: url("/images/boardimg/location.png") no-repeat center/contain;
+        width: 16px;
+        height: 16px;
+        transform: translateX(-150%);
+    }
+
+    .trip_introduction, .reply_area {
+        margin-top: 60px;
+    }
+
+    .trip_introduction > p {
+        margin-top: 13px;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .reply_area > div {
+        margin-top: 8px;
+        position: relative;
+    }
+
+    .reply_area > div > textarea {
+        overflow: auto;
+        resize: none;
+        width: 91.3%;
+        outline: none;
+        border: 1px solid #2196F3;
+        border-radius: 10px;
+        padding: 11px;
+        font-size: 13px;
+        height: 80px;
+        caret-color: #2196F3;
+    }
+
+    .reply_area > div > textarea::placeholder {
+        font-size: 13px;
+        color: #aaaaaa;
+    }
+
+    .reply_area > div > [type="button"] {
+        position: absolute;
+        top: 26%; right: 1.3%;
+        font-size: 14px;
+        border: none;
+        border-radius: 6px;
+        background-color: #2196F3;
+        width: 60px;
+        height: 35px;
+        color: #fff;
+    }
+
+    .guide_profile {
+        margin-top: 10px;
+        border-radius: 10px;
+        padding: 10px;
+        position: relative;
+        background-color: #f5f5f5;
+        padding-bottom: 15px;
+    }
+
+    .guide_profile img {
+        width: 35px;
+        height: 35px;
+        margin-right: 9px;
+    }
+
+    .guide_profile span {
+        position: absolute;
+        top: 11px;
+        font-size: 18px;
+    }
+
+    .guide_profile p {
+        margin-top: 5px;
+        font-size: 13px;
+    }
+
+    .location {
+        margin-top: 60px;
+    }
+
+    .location_detail {
+        margin-top: 10px;
+        border-radius: 10px;
+        border: 1px solid #64B5F6;
+        height: 180px;
+    }
+
+   .chatting {
+        margin-top: 60px;
+        text-align: center;
+        background-color: #2196F3;
+        padding: 15px;
+        border-radius: 10px;
+        color: #fff;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+</style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="main_photo">
+            <img src="/images/boardimg/2.jpg" alt="">
+        </div>
+
+        <div class="info">
+            <div class="">
+                <h2 class="title_info">
+                    [[${board.title}]]
+                </h2>
+
+                <div class="cnt_info">
+                    <span>조회수 [[${board.viewcnt}]]</span>
+					<span>좋아요 [[${board.likecnt}]]</span>
+                    <span>댓글 5</span>
+                </div>
+
+                <div class="trip_schedule">
+                    <h4>여행 일정</h4>
+                    <div class="schedule_detail">
+                        <p>2024.05.14 - 2024-05.14</p>
+                        <p>대한민국, 서울, 강남</p>
+                    </div>
+
+                    <div class="trip_introduction">
+                        <h4>후기</h4>
+                        <p>[[${board.content}]]</p>
+                    </div>
+
+                    <div class="reply_area">
+                        <h4>댓글</h4>
+                        <div>
+                            <textarea name="replycontent" class="replycontent" placeholder="댓글을 입력해주세요."></textarea>
+                            <input type="button" value="등록">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 구분선 -->
+            <div></div>
+
+            <div class="">
+                <div class="guide_info">
+                    <h4>가이드</h4>
+                    <div class="guide_profile">
+                        <img src="/images/boardimg/profile.png" alt="">
+                        <span>[[${board.userid}]]</span>
+                        <p>자기 소개를 아직 작성하지 않았습니다</p>
+                    </div>
+
+                    <div class="location">
+                        <h4>장소</h4>
+                        <div class="location_detail">
+                            <p>대한민국</p>
+                            <p>서울</p>
+
+                        </div>
+                    </div>
+
+                    <div class="chatting">채팅하기</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
