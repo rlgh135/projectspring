@@ -2,17 +2,10 @@ package com.t1.tripfy.service.chat;
 
 import java.util.ArrayList;
 
-import com.t1.tripfy.domain.dto.chat.old.ChatDTO;
-
 public class ChatServiceImpl implements ChatService {
 
 	@Override
 	public Long createChat(String userid, Long packagenum) {
-		return null;
-	}
-
-	@Override
-	public ArrayList<ChatDTO> selectChatByUserid(String userid) {
 		return null;
 	}
 
