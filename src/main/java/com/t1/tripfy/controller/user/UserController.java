@@ -90,7 +90,7 @@ public class UserController {
 		} else {
 			
 		}
-		return "redirect:/user/myinfo";
+		return "redirect:/";
 	}
 	
 	@PostMapping("login")

@@ -10,8 +10,7 @@ CREATE TABLE `user` (
   `gender` varchar(300),
   `birth` varchar(300),
   `addr` varchar(300),
-  `addrdetail` varchar(300),
-  `addretc` varchar(300),
+  `placeid` varchar(300),
   /*
   date 디폴트 now()에서 수정
   워닝카운트에 auto increment 달려있는거 지움

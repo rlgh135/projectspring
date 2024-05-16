@@ -11,8 +11,7 @@ public class UserDTO {
 	private String gender;
 	private String birth;
 	private String addr;
-	private String addrdetail;
-	private String addretc;
+	private String placeid;
 	private String regdate;
 	private long userWarncnt;
 	private int isDelete;

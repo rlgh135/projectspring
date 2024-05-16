@@ -14,7 +14,12 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public boolean join(UserDTO user) {
-		return umapper.insertUser(user)==1;
+		if(umapper.insertUser(user)==1) {
+			if(umapper.makeDefaultBadge(user.getUserid())==1) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override

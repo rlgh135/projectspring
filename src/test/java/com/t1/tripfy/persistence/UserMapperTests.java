@@ -31,8 +31,7 @@ public class UserMapperTests {
 		user.setGender("e");
 		user.setBirth("f");
 		user.setAddr("g");
-		user.setAddrdetail("h");
-		user.setAddretc("i");
+		user.setPlaceid("h");
 		
 		boolean result = umapper.insertUser(user)==1;
 		System.out.println("insertUserTest 결과: "+result);

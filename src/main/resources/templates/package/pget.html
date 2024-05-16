@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/pget.css">
+</head>
+<body>
+    <div id="wrap" class="list">
+        <div class="body_container">
+            <div class="nav">
+                <div id="nav1"><a href="">해외투어</a></div>
+                <div id="nav2"><a href="">국내투어</a></div>
+                <div id="nav3"><a href="">게시판</a></div>
+            </div>
+            <div class="packageinfo">
+                <div class="pthumbnail">
+                    <img src="/img/KakaoTalk_Photo_2024-02-08-10-18-29 001.jpeg" alt="">
+                </div>
+                <div class="pinfo">
+                    <div class="p_info">
+                        <div class="p_title">
+                            <h3>고양이 여행</h3>
+                        </div>
+                        <hr>
+                        <div class="p_con">
+                            냥냥편치
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="price">
+                        <h3>공짜</h3>
+                    </div>
+                </div> 
+            </div>
+        </div>
+       
+        <div class="moreinfo">
+            <div class="mi_container">
+                <div class="mi_header">
+                    <div class="mi_menu">
+                        <div class="menu1"><a href="">여행소개</a></div> 
+                        <div class="menu2"><a href="">유의사항</a></div>
+                        <div class="menu3"><a href="">가이드리뷰</a></div>
+                    </div>
+                </div>
+                <div class="mi_container">
+                    
+                </div>
+            </div>
+            <div class="pay_container">
+                <div class="mapcon">
+                    <div class="maphead">
+                        <h3>패키지 이름</h3>
+                        <p>패키지 내용 </p>
+                    </div>
+                    <hr>
+                    <div class="map">
+
+                    </div>
+                    <hr>
+                    <div class="mapfoot">
+                        <a href="">상세보기 ></a>
+                    </div>
+                </div>
+                <div class="paydetail">
+                  <div class="adultchild">
+                    <div class="ac_head">
+                        <h3>인원선택 (필수)</h3>
+                    </div>
+                    <hr>
+                    <div class="ac_con">
+                        <div class="adult">
+                            <div class="adult_info">
+                                <h3>성인</h3>
+                                <p>요금</p>
+                            </div>
+                            <div class="adult_cnt">
+                                <input type='button' onclick='count("minus")' value='-'/>
+                                <div id='result'>0</div>
+                                <input type='button'onclick='count("plus")' value='+'/>
+                            </div>
+                            
+                            
+                        </div>
+                        <div class="child">
+                            <div class="child_info">
+                                <h3>아이</h3>
+                                <p>요금</p>
+                            </div>
+                            <div class="child_cnt">
+                                <input type='button' onclick='count_child("minus")' value='-'/>
+                                <div id='result_child'>0</div>
+                                <input type='button'onclick='count_child("plus")' value='+'/>
+                            </div>
+                            
+                        
+                        </div>
+                        <div class="amount">
+                            <p>총 금액 : </p>
+                        </div>
+                    </div>
+                    <div class="paybutton">
+                        <button id="pay">결제하기</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+<script>
+    function count(type)  {
+  // 결과를 표시할 element
+  const resultElement = document.getElementById('result');
+  
+  // 현재 화면에 표시된 값
+  let number = resultElement.innerText;
+  
+  // 더하기/빼기
+  if(type === 'plus') {
+    number = parseInt(number) + 1;
+  }else if(type === 'minus' && number >0)  {
+    number = parseInt(number) - 1;
+  }
+  
+  // 결과 출력
+  resultElement.innerText = number;
+}
+function count_child(type)  {
+  // 결과를 표시할 element
+  const resultElement = document.getElementById('result_child');
+  
+  // 현재 화면에 표시된 값
+  let number = resultElement.innerText;
+  
+  // 더하기/빼기
+  if(type === 'plus' && number) {
+    number = parseInt(number) + 1;
+  }else if(type === 'minus' && number >0)  {
+    number = parseInt(number) - 1;
+  }
+  
+  // 결과 출력
+  resultElement.innerText = number;
+}
+</script>
+</html>
