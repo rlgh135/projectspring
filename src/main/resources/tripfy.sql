@@ -56,6 +56,15 @@ CREATE TABLE `region` (
   PRIMARY KEY (`regionname`, `countrycode`)
 );
 
+insert into region values('kr','서울');
+insert into region values('kr','제주도');
+insert into region values('kr','경기도');
+insert into region values('kr','강원도');
+insert into region values('kr','충청도');
+insert into region values('kr','경상도');
+insert into region values('kr','전라도');
+insert into region values('kr','인천광역시');
+
 CREATE TABLE `board` (
   `boardnum` bigint PRIMARY KEY AUTO_INCREMENT,
   `userid` varchar(300),
