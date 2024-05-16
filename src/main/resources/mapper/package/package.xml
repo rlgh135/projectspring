@@ -27,16 +27,17 @@
 	
 	<insert id="insertPack">
 		insert into package
-		(guidenum, package_title,
+		(guidenum, package_title, packagecontent
 		max_cnt, adult_price, child_price, startdate, enddate, tourdays, deadline)
 		values
-		(#{guidenum}, #{package_title},#{max_cnt}, #{adult_price},
+		(#{guidenum}, #{package_title}, #{packagecontent}, s#{max_cnt}, #{adult_price},
 		#{child_price}, #{startdate}, #{enddate}, #{tourdays}, #{deadline})	
 	</insert>
+	
 	<update id="insertPackContent">
 		update package
-		set packagecontent = #{packagecontent}, visibility ='O'
-		 
+		set  visibility ='O'
+		where packagenum = #{packagenum}
 	</update>
 	
 	<select id="getAllList">
