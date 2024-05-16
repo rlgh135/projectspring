@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/plist.css">
+</head>
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+<body>
+    <div id="wrap" class="list">
+        <div class="plistresult">  
+            <div class="sidesearch">
+                <div class="sidebar">
+                    <div class="destination">
+                        <input type="button" value="지역"/>
+                    </div>
+                    <div class="period">
+                        <input type="button" placeholder="출발일/ 도착일" id ="myID" />
+                    </div>
+                    <div class="person">
+                        <button type="button"onclick="openper()"><span id="personCount">인원수</span></button>
+                    </div>
+                    <div id="perlist" class="hide">
+                        <div class="pr_header">
+                            <span onclick="openper()">x</span>
+                        </div>
+                        
+                        <div class="pr_choice">
+                            <div class="pr_list">
+                                <button class="pr"><span>1명</span></button>
+                                <button class="pr"><span>2명</span></button>
+                                <button class="pr"><span>3명</span></button>
+                                <button class="pr"><span>4명</span></button>
+                                <button class="pr"><span>5명</span></button>
+                                <button class="pr"><span>6명</span></button>
+                                <button class="pr"><span>7명</span></button>
+                                <button class="pr"><span>8명</span></button>
+                                <button class="pr"><span>9명</span></button>
+                                <button class="pr"><span>10명 ++ </span></button>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+            <div class="searchresult">
+                <div class="reslutbar">
+                    <div class="result">
+                        <div class="text1">
+                            <span>이세계</span>
+                        </div>
+                        <div class="text2">
+                            <span>5.15 ~ </span>
+                        </div>
+                        <div class="text3">
+                            <span>1명</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="listwrap">
+
+                    <div class="plist">
+                        <a href="">
+                            <div class="package">
+                                <div class="thumbnail">
+                                    <img src="./img/384878.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <h3>제목</h3>
+                                    <p>내용</p>
+                                </div>
+                                <div class="price">
+                                    <h3>공짜</h3>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="">
+                            <div class="package">
+                                <div class="thumbnail">
+                                    <img src="./img/384878.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <h3>제목</h3>
+                                    <p>내용</p>
+                                </div>
+                                <div class="price">
+                                    <h3>공짜</h3>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="">
+                            <div class="package">
+                                <div class="thumbnail">
+                                    <img src="./img/384878.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <h3>제목</h3>
+                                    <p>내용</p>
+                                </div>
+                                <div class="price">
+                                    <h3>공짜</h3>
+                                </div>
+                            </div>
+                        </a>
+                      
+                        <a href="">
+                            <div class="package">
+                                <div class="thumbnail">
+                                    <img src="./img/384878.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <h3>제목</h3>
+                                    <p>내용</p>
+                                </div>
+                                <div class="price">
+                                    <h3>공짜</h3>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="">
+                            <div class="package">
+                                <div class="thumbnail">
+                                    <img src="./img/384878.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <h3>제목</h3>
+                                    <p>내용</p>
+                                </div>
+                                <div class="price">
+                                    <h3>공짜</h3>
+                                </div>
+                            </div>
+                        </a>
+                       
+                        <a href="">
+                            <div class="package">
+                                <div class="thumbnail">
+                                    <img src="./img/384878.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <h3>제목</h3>
+                                    <p>내용</p>
+                                </div>
+                                <div class="price">
+                                    <h3>공짜</h3>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="">
+                            <div class="package">
+                                <div class="thumbnail">
+                                    <img src="./img/384878.jpg" alt="">
+                                </div>
+                                <div class="info">
+                                    <h3>제목</h3>
+                                    <p>내용</p>
+                                </div>
+                                <div class="price">
+                                    <h3>공짜</h3>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#myID", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            onClose: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    const formattedDate = selectedDates.map(date => {
+                        return instance.formatDate(date, "Y-m-d");
+                    }).join(" / ");
+                    instance.input.value = formattedDate;
+                }
+            }
+        });
+
+        function openper() {
+        const target = document.getElementById("perlist");
+        console.log(target);
+        target.classList.toggle("hide");
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll(".pr_list button");
+
+    buttons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            const count = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+            const personCountSpan = document.getElementById("personCount");
+            personCountSpan.textContent = count; // 인원 수 업데이트
+            openper(); // perlist 닫기
+        });
+    });
+});
+</script>
+</html>

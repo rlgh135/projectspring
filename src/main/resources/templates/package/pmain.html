@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/pmain.css">
+</head>
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+
+<body>
+    <div id="wrap" class = "list">
+        <div id="body_container">
+            <div class="menu">
+                <div id="menu1"><a href="">해외투어</a></div>
+                <div id="menu2"><a href="">국내투어</a></div>
+                <div id="menu3"><a href="">게시판</a></div>
+            </div>
+            <div class="banner">
+                <a href="">
+                    <img src="/img/30fe1a9df8f3aac93c34e5d2b80f694a.jpg" alt="">
+                </a>
+            </div>
+            <div class="packagesearch">
+                <div class="destination">
+                    <button type="button" onclick="opendes()">
+                        <span>어디로 여행하세요?</span>
+                    </button>
+                    <div id ="deslist" class="hide" >
+                        <div class="list">
+                            <div class="dl_header">
+                                <span onclick="opendes()">x</span>
+                            </div>
+                      
+                            <div class="dl_choice">
+                                <ul class="placeLeft">
+                                    <li>
+                                        <button>베트남</button>
+                                    </li>
+                                    <li>
+                                        <button>태국</button>
+                                    </li>
+                                    <li>
+                                        <button>필리핀</button>
+                                    </li>
+                                    <li>
+                                        <button>말레이시아</button>
+                                    </li>
+                                    <li>
+                                        <button>홍콩</button>
+                                    </li>
+                                </ul>
+                                <ul class="placeRight">
+                                    <li>
+                                        <button>다낭</button>
+                                    </li>
+                                    <li>
+                                        <button>호이안</button>
+                                    </li>
+                                    <li>
+                                        <button>나트랑</button>
+                                    </li>
+                                    <li>
+                                        <button>하노이</button>
+                                    </li>
+                                    <li>
+                                        <button>호치민</button>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="period">
+                    <input type="button" placeholder="출발일/ 도착일" id ="myID" />
+                </div>
+                <div class="person">
+                    <button type="button" onclick="openper()">
+                        <span id="personCount">인원</span>
+                    </button>
+                    <div id="perlist" class="hide">
+                        <div class="pr_header">
+                            <span onclick="openper()">x</span>
+                        </div>
+                        
+                        <div class="pr_choice">
+                            <div class="pr_list">
+                                <button class="pr"><span>1명</span></button>
+                                <button class="pr"><span>2명</span></button>
+                                <button class="pr"><span>3명</span></button>
+                                <button class="pr"><span>4명</span></button>
+                                <button class="pr"><span>5명</span></button>
+                                <button class="pr"><span>6명</span></button>
+                                <button class="pr"><span>7명</span></button>
+                                <button class="pr"><span>8명</span></button>
+                                <button class="pr"><span>9명</span></button>
+                                <button class="pr"><span>10명 ++ </span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="search_btn">
+                    <button type="button">
+                        검색
+                    </button>
+                </div>
+            </div>
+            <div class="p_wrap">
+                <div class="p_header">
+                    <h2>최신 패키지들을 만나보세요!</h2>
+                </div>
+                <div class="p_list">
+                    <a href="">
+                        <div class="package">
+                            <div class="p_img"><img src="/img/384878.jpg" alt=""></div>
+                            <div class="p_info">
+                                <div class="p_title">
+                                    <h3>이세계 여행</h3>
+                                </div>
+                                <div class="p_con">
+                                    트럭에 치이세요 제발
+                                </div>
+                            </div>
+                            <div class="price">
+                                <h3>공짜</h3>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="package">
+                            <div class="p_img"><img src="/img/384878.jpg" alt=""></div>
+                            <div class="p_info">
+                                <div class="p_title">
+                                    <h3>이세계 여행</h3>
+                                </div>
+                                <div class="p_con">
+                                    트럭에 치이세요 제발
+                                </div>
+                            </div>
+                            <div class="price">
+                                <h3>공짜</h3>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="package">
+                            <div class="p_img"><img src="/img/384878.jpg" alt=""></div>
+                            <div class="p_info">
+                                <div class="p_title">
+                                    <h3>이세계 여행</h3>
+                                </div>
+                                <div class="p_con">
+                                    트럭에 치이세요 제발
+                                </div>
+                            </div>
+                            <div class="price">
+                                <h3>공짜</h3>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="package">
+                            <div class="p_img"><img src="/img/384878.jpg" alt=""></div>
+                            <div class="p_info">
+                                <div class="p_title">
+                                    <h3>이세계 여행</h3>
+                                </div>
+                                <div class="p_con">
+                                    트럭에 치이세요 제발
+                                </div>
+                            </div>
+                            <div class="price">
+                                <h3>공짜</h3>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="package">
+                            <div class="p_img"><img src="/img/384878.jpg" alt=""></div>
+                            <div class="p_info">
+                                <div class="p_title">
+                                    <h3>이세계 여행</h3>
+                                </div>
+                                <div class="p_con">
+                                    트럭에 치이세요 제발
+                                </div>
+                            </div>
+                            <div class="price">
+                                <h3>공짜</h3>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="package">
+                            <div class="p_img"><img src="/img/384878.jpg" alt=""></div>
+                            <div class="p_info">
+                                <div class="p_title">
+                                    <h3>이세계 여행</h3>
+                                </div>
+                                <div class="p_con">
+                                    트럭에 치이세요 제발
+                                </div>
+                            </div>
+                            <div class="price">
+                                <h3>공짜</h3>
+                            </div>
+                        </div>
+                    </a>
+                   
+                   
+                </div>
+            </div>
+            
+          
+
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    flatpickr("#myID", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            onClose: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    const formattedDate = selectedDates.map(date => {
+                        return instance.formatDate(date, "Y-m-d");
+                    }).join(" / ");
+                    instance.input.value = formattedDate;
+                }
+            }
+        });
+    function opendes() {
+        const target = document.getElementById("deslist");
+        console.log(target);
+        target.classList.toggle("hide");
+    }
+    function openper() {
+        const target = document.getElementById("perlist");
+        console.log(target);
+        target.classList.toggle("hide");
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll(".pr_list button");
+
+    buttons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            const count = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+            const personCountSpan = document.getElementById("personCount");
+            personCountSpan.textContent = count; // 인원 수 업데이트
+            openper(); // perlist 닫기
+        });
+    });
+});
+</script>
+</html>
