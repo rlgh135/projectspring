@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.t1.tripfy.domain.mapper.chat.ChatUserMapper">
+<mapper namespace="com.t1.tripfy.mapper.chat.ChatUserMapper">
 	<!-- userid로 chat_user 테이블 행 긁어오기 -->
 	<select id="selectSpecificChatUserByUserid">
 		SELECT * FROM chat_user

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.t1.tripfy.domain.mapper.chat.ChatDetailMapper">
+<mapper namespace="com.t1.tripfy.mapper.chat.ChatDetailMapper">
 	<!-- 특정 채팅방의 특정 메시지 이후의 메시지 개수 세기 -->
 	<select id="selectSpecificCountOfChatDetail">
 		SELECT COUNT(*) FROM chat_detail
@@ -10,5 +10,11 @@
 			chat_room_idx = #{chatRoomIdx}
 		AND
 			chat_detail_idx > #{chatDetailIdx}
+	</select>
+	<!-- 특정 채팅방의 모든 메시지 개수 세기 -->
+	<select id="selectAllCountOfChatDetail">
+		SELECT COUNT(*) FROM chat_detail
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
 	</select>
 </mapper>
