@@ -9,6 +9,9 @@
     /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
     * {margin: 0; padding: 0; box-sizing: border-box;}
     
+	a {text-decoration: none;}
+	a:visited, a:active, a:hover, a:link {color: #000;}
+	
     .wrap {
         width: 1400px;
         margin: 0 auto;
@@ -151,10 +154,10 @@
         margin-right: 5px;
     }
 
-    /* .sortbtn [type="button"]:first-child {
-        background-color: #252525;
+    .sortbtn [type="button"]:first-child {
+        background-color: #000;
         color: #fff;
-    } */
+    }
    
     .nation_area > button {
         width: 80px;
@@ -335,6 +338,7 @@
     .b_pagenation a:last-of-type {
         margin-right: 0;
     }
+
 </style>
 <body>
     <div class="wrap">
@@ -377,8 +381,8 @@
             <!-- 게시글 목록 -->
             <section class="posts">
                 <!-- 게시글 -->
-				<!--
-                <a th:if="${list != null and list.size > 0}" th:each="board:${list}">
+				
+                <a th:if="${list != null and list.size > 0}" th:each="board:${list}" th:href="@{/board/get(boardnum=${board.boardnum})}">
                     <div class="post">
                         <div class="guide">
                             <img src="/images/boardimg/profile.png" alt="">
@@ -395,7 +399,7 @@
                         </div>
                     </div>
                 </a>
-				-->
+				
 
             </section>
 			
@@ -447,16 +451,81 @@
 		console.log(str)
 		
 		$.ajax({
-			url: "/board/list?sort=" + str,
+			url: "/board/sort?sort=" + str,
 			method: "GET",
 			
-			success:function() {
-				console.log("O")
+			success:function(data) {
+				// console.log("O")
+				// console.log(data)
+				// console.log(data.sortlist[0].boardnum)
+			
+				
+				// 정렬 버튼 색 초기화
+				for(let i = 0; i < sort.length; i++) {
+					sort[i].style.backgroundColor = "#F5F5F5";
+					sort[i].style.color = "#4e4c4c";
+				}
+				
+				// 현재 정렬 조건인 버튼 색 변경
+				if(data.sortValue == null || data.sortValue == "recent") {
+					sort[0].style.backgroundColor = "#000";
+					sort[0].style.color = "#fff";
+				}
+				
+				else if(data.sortValue == "popular") {
+					sort[1].style.backgroundColor = "#000";
+					sort[1].style.color = "#fff";
+				}
+				
+				else if(data.sortValue == "like") {
+					sort[2].style.backgroundColor = "#000";
+					sort[2].style.color = "#fff";
+				}
+				
+				$(".posts").empty();
+				
+				if(data.sortlist.length == 0) {
+					let divTag = $("<div>");
+					let divTag2 = $("<div>").attr("class", "no_post").text("등록된 게시글이 없습니다.");
+					divTag.append(divTag2);
+					$(".post_area").append(divTag);
+				}
+				
+				else {
+					for(let i = 0; i < data.sortlist.length; i++) {
+						// .attr: 속성 추가
+						// .addClass: 클래스 추가
+						let aTag = $("<a>").attr("href", "/board/get?boardnum=" + data.sortlist[i].boardnum);
+						let divPost = $("<div>").addClass("post");
+							
+						let divGuide = $("<div>").addClass("guide");
+						let profile = $("<img>").attr("src", "/images/boardimg/profile.png");
+						let spanTag = $("<span>").text(data.sortlist[i].userid);
+							
+						divGuide.append(profile, spanTag);
+							
+						let divpImg = $("<div>").addClass("p_img");
+						let boardimg = $("<img>").attr("src", "/images/boardimg/2.jpg");
+						
+						divpImg.append(boardimg);
+						
+						let divWrite = $("<div>").addClass("post_write");
+						let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
+						let postPrev = $("<div>").addClass("post_preview").text(data.sortlist[i].content);
+							
+						divWrite.append(postTitle, postPrev);
+						
+						divPost.append(divGuide, divpImg, divWrite);
+						aTag.append(divPost);
+						
+						$(".posts").append(aTag);
+					}
+				}
 				
 			},
 			
 			error:function() {
-				console.log("X")
+				// console.log("X")
 			}
 			
 		})
@@ -464,24 +533,7 @@
 		// location.replace(`/board/list?sort=${str}`);
 	}
 	
-	// 정렬버튼 색상 변경
-	let sortValue = /*[[${sort}]]*/"";
-	console.log(sortValue);
 	
-	if(sortValue == null || sortValue == "recent") {
-		sort[0].style.backgroundColor = "#000";
-		sort[0].style.color = "#fff";
-	}
-	
-	else if(sortValue == "popular") {
-		sort[1].style.backgroundColor = "black";
-		sort[1].style.color = "#fff";
-	}
-	
-	else if(sortValue == "like") {
-		sort[2].style.backgroundColor = "black";
-		sort[2].style.color = "#fff";
-	}
 
 </script>
 </html>

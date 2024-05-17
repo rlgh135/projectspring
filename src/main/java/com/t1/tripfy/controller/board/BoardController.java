@@ -27,43 +27,51 @@ public class BoardController {
 	private BoardService service;
 
 	@GetMapping("list")
-	@ResponseBody
-	public Map<String, Object> boardlist(@RequestParam(value = "sort", required = false) String sort, Criteria cri, Model model) {  // 정렬 방법
-		System.out.println("sort: " + sort);
+	public void boardlist(Criteria cri, Model model) {
 		System.out.println(cri);
 		
-		List<BoardDTO> list = new ArrayList<BoardDTO>();
+		List<BoardDTO> list = service.getList(cri);
 		
-		if(sort != null && !sort.isEmpty()) {  // sort 파라미터 있는 경우(/board/list?sort="")
+		model.addAttribute("list", list);
+		model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
+	}
+	
+	@GetMapping("sort")
+	@ResponseBody
+	public Map<String, Object> boardSort(@RequestParam(value = "sort", required = false) String method, Criteria cri, Model model) {  // 정렬 방법
+		System.out.println("sort: " + method);
+		System.out.println(cri);
+		
+		List<BoardDTO> sortlist = new ArrayList<BoardDTO>();
+		
+		if(method != null && !method.isEmpty()) {  // sort 파라미터 있는 경우(/board/list?sort="")
 			
-			switch (sort) {
+			switch (method) {
 			case "recent": 
-				list = service.getList(cri);
+				sortlist = service.getList(cri);
 				break;
 			
 			case "popular":
-				list = service.getpopularList(cri);
+				sortlist = service.getpopularList(cri);
 				break;
 				
 			case "like": 
-				list = service.getlikeList(cri);
+				sortlist = service.getlikeList(cri);
 				break;
 			
 			}
 		}
 		
 		else {  // sort 파라미터 없을 경우(/board/list 요청 시)
-			list = service.getList(cri);
+			sortlist = service.getList(cri);
 		}
-		/*
-		model.addAttribute("list", list);
-		model.addAttribute("sort", sort);
-		model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
-		*/
 		
 		Map<String, Object> data = new HashMap<>();
-		data.put("list", list);
+		data.put("sortlist", sortlist);
 		data.put("pageMaker", new PageDTO(service.getTotal(cri), cri));
+		data.put("sortValue", method);
+		
+		System.out.println(data);
 		
 		return data;
 	}
