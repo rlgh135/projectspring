@@ -12,7 +12,10 @@ public interface PackageMapper {
 	int insertPack(PackageDTO pack);
 	int insertPackContent(PackageDTO pack);
 	
-	List<PackageDTO>getAllList(Criteria cri);
+	List<PackageDTO>getRecentList(Criteria cri);
+	List<PackageDTO> getPopList(Criteria cri);
+	List<PackageDTO> getCheapList(Criteria cri);
+	List<PackageDTO> getPopularGuideList(Criteria cri);
 	List<PackageDTO>getListByCountryCode(Criteria cri);
 	List<PackageDTO>getDetailRegionList(Criteria cri);
 	

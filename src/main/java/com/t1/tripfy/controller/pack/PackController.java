@@ -25,11 +25,11 @@ public class PackController {
 	private PackageService service;
 	
 	@GetMapping("pmain")
-	public void main(Model model) {
-		List<PackageDTO> recent = service.getRecentList();
-		List<PackageDTO> cheap = service.getCheapList();
-		List<PackageDTO> pop = service.getPopList();
-		List<PackageDTO> popguide = service.getPopularGuideList();
+	public void main(Criteria cri,Model model) {
+		List<PackageDTO> recent = service.getRecentList(cri);
+		List<PackageDTO> cheap = service.getCheapList(cri);
+		List<PackageDTO> pop = service.getPopList(cri);
+		List<PackageDTO> popguide = service.getPopularGuideList(cri);
 		model.addAttribute("recent", recent);
 		model.addAttribute("cheap", cheap);
 		model.addAttribute("pop",pop);

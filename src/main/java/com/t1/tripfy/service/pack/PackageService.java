@@ -12,10 +12,10 @@ public interface PackageService {
 	boolean regist(PackageDTO pack, MultipartFile[] files) throws Exception;
 	
 	PackageDTO getDetail(long packagenum);
-	List<PackageDTO> getRecentList();
-	List<PackageDTO> getPopList();
-	List<PackageDTO> getCheapList();
-	List<PackageDTO> getPopularGuideList();
+	List<PackageDTO> getRecentList(Criteria cri);
+	List<PackageDTO> getPopList(Criteria cri);
+	List<PackageDTO> getCheapList(Criteria cri);
+	List<PackageDTO> getPopularGuideList(Criteria cri);
 	List<PackageDTO> getListByCountryCode(Criteria cri);
 	long getTotal(Criteria cri);
 	long getLastNum(String userid);
