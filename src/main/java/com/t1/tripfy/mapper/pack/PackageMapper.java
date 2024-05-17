@@ -24,6 +24,5 @@ public interface PackageMapper {
 	PackageDTO getPackageByPackageNum(long packagenum);
 	
 	int updatePack(PackageDTO pack);
-	int deletePack(long packagenum);
-	
+	int deletePack(long packagenum);	
 }

@@ -54,6 +54,7 @@ public class UserController {
 	@GetMapping("logout")
 	public String logout(HttpServletRequest req) {
 		req.getSession().invalidate();
+		System.out.println("로그아웃");
 		return "redirect:/";
 	}
 	
@@ -98,10 +99,12 @@ public class UserController {
 		HttpSession session = req.getSession();
 		if(service.login(userid, userpw)) {
 			session.setAttribute("loginUser", userid);
+			//가이드인지 확인하고 세션에 세팅
 			return "redirect:/user/myinfo";
 		}
 		else {
 			//
+			System.out.println("로그인 실패");
 		}
 		return "redirect:/";
 	}
