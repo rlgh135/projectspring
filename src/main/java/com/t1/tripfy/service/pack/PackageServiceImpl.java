@@ -14,9 +14,9 @@ import com.t1.tripfy.mapper.pack.PackageMapper;
 @Service
 public class PackageServiceImpl implements PackageService{
 	
-	@Value("${file.dir}")
-	private String saveFolder;
-	
+//	@Value("${file.dir}")
+//	private String saveFolder;
+//	
 	@Autowired
 	private PackageMapper pmapper;
 //	@Autowired

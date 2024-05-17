@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.t1.tripfy.domain.mapper.pack.PackMapper">
+<mapper namespace="com.t1.tripfy.mapper.pack.PackageMapper">
 	
 	<sql id="cri">
 		<if test="keyword != '' and type != ''">
@@ -41,16 +41,16 @@
 	</update>
 	
 	<select id="getRecentList">
-		select * from package desc packagenum limit 4
+		select * from package ORDER BY packagenum desc limit 4
 	</select>
 	<select id="getPopList">
-		select * from package desc viewcnt limit 4
+		select * from package ORDER BY viewcnt desc limit 4
 	</select>
 	<select id="getCheapList">
-		select * from package desc adult_price limit 4
+		select * from package ORDER BY adult_price desc limit 4
 	</select>
-	<select id="getPopularGuideList">
-		select p.packagenum, p.packagetitle, p.packagecontent, p.adult_price
+	<!-- <select id="getPopularGuideList">
+		select p.packagenum, p.package_title, p.package_content, p.adult_price
 		from package p 
 		inner join (
 		  	SELECT guidenum
@@ -59,7 +59,7 @@
 		ON p.guidenum = g.guidenum
 		GROUP BY p.guidenum
 		ORDER BY g.guidenum
-	</select>
+	</select>-->
 	
 	<select id="getListByCountryCode">
     select * from package

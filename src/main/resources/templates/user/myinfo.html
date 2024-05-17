@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>myinfo</title>
-	<link rel="stylesheet" href="/css/user/myinfostyle.css">
 </head>
 <body>
-	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
-	<section>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-	</section>
+	<th:block th:include="~{layout/header::header}"></th:block>
+	<div>
+		<p>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<h1>Hi</h1>
+			<h1>이미지이름: [[${thumbnail}]]</h1>
+		</p>
+	</div>
 </body>
 </html>

@@ -29,11 +29,11 @@ public class PackController {
 		List<PackageDTO> recent = service.getRecentList(cri);
 		List<PackageDTO> cheap = service.getCheapList(cri);
 		List<PackageDTO> pop = service.getPopList(cri);
-		List<PackageDTO> popguide = service.getPopularGuideList(cri);
+//		List<PackageDTO> popguide = service.getPopularGuideList(cri);
 		model.addAttribute("recent", recent);
 		model.addAttribute("cheap", cheap);
 		model.addAttribute("pop",pop);
-		model.addAttribute("popguide",popguide);
+//		model.addAttribute("popguide",popguide);
 	}
 	
 	@GetMapping("plist")
