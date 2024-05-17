@@ -40,11 +40,25 @@
 		where packagenum = #{packagenum}
 	</update>
 	
-	<select id="getAllList">
-		select * from package
-		where visibility ='O'
-		order by packagenum
-		desc limit #{startrow},#{amount}
+	<select id="getRecentList">
+		select * from package desc packagenum limit 4
+	</select>
+	<select id="getPopList">
+		select * from package desc viewcnt limit 4
+	</select>
+	<select id="getCheapList">
+		select * from package desc adult_price limit 4
+	</select>
+	<select id="getPopularGuideList">
+		select p.packagenum, p.packagetitle, p.packagecontent, p.adult_price
+		from package p 
+		inner join (
+		  	SELECT guidenum
+   			FROM guide
+    		ORDER BY guide_likecnt DESC LIMIT 4) g
+		ON p.guidenum = g.guidenum
+		GROUP BY p.guidenum
+		ORDER BY g.guidenum
 	</select>
 	
 	<select id="getListByCountryCode">
