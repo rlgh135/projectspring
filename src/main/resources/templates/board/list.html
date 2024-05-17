@@ -416,7 +416,7 @@
 
     </div>
 </body>
-<script>
+<script th:inline="javascript">
 	const sort = document.getElementsByClassName("sort");
 	console.log(sort);
 	
@@ -446,5 +446,25 @@
 		
 		location.replace(`/board/list?sort=${str}`);
 	}
+	
+	// 정렬버튼 색상 변경
+	let sortValue = /*[[${sort}]]*/"";
+	console.log(sortValue);
+	
+	if(sortValue == null || sortValue == "recent") {
+		sort[0].style.backgroundColor = "#000";
+		sort[0].style.color = "#fff";
+	}
+	
+	else if(sortValue == "popular") {
+		sort[1].style.backgroundColor = "black";
+		sort[1].style.color = "#fff";
+	}
+	
+	else if(sortValue == "like") {
+		sort[2].style.backgroundColor = "black";
+		sort[2].style.color = "#fff";
+	}
+
 </script>
 </html>

@@ -52,6 +52,7 @@ public class BoardController {
 		}
 		
 		model.addAttribute("list", list);
+		model.addAttribute("sort", sort);
 		model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
 	}
 	
