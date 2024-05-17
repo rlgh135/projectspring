@@ -1,58 +1,115 @@
-<th:block th:fragment="header">
-        <link rel="stylesheet" href="/css/layout/headerstyle.css">
+<th:block th:fragment="header(loginUser)">
+	<link rel="stylesheet" href="/css/layout/headerstyle.css">
 	<!-- 탑 해더 부분 -->
-        <div id="top_wrap">
-            <div class="gnb">
-                <div class="logo_box">
-                    <a href="#">
-                        <img src="/images/layoutimg/logo_long.png" class="logo" id="logo_img">
-                    </a>
-                </div>
-                
-                <!--<th:block th:if="${loginUser == null}">
-                    <div class="user_gnb_wrap">
-                        <ul class="user_gnb lonullul">
-                            <li class="lonullli">
-                                <a href="#" class="lonull" style="line-height: 80px;">
-                                    로그인
-                                </a>
-                            </li>
-                            <li class="" style="width: 100px;">
-                                <a href="#" class="lonull" style="width: 90px; line-height: 80px;">
-                                    회원가입
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </th:block>-->
-                <!--<th:block th:unless="${loginUser != null}">-->
-                    <nav class="gnb_menu">
-                        <ul class="gnb_menu_1">
-                            
-                            <li>
-                                <a href="#">게시판</a>
-                            </li>
-                            <li>
-                                <a href="#">패키지</a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <div class="user_gnb_wrap">
-                        <ul class="user_gnb">
-                            <li class="userinfo_gnb">
-                                <a href="#">
-                                    <img src="/images/userimg/defaultbadge.svg" alt="유저프로필">
-                                </a>
-                            </li>
-                            <li class="userinfo_gnb">
-                                <a href="#">
-                                    <img src="/images/userimg/free-icon-sign-out-7046204.png" alt="로그아웃" srcset="">
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                <!--</th:block>-->
-                
-            </div>
-        </div>
-		</th:block>
+	<div id="top_wrap">
+		<div class="gnb">
+			<div class="logo_box">
+				<a href="#">
+					<img src="/images/layoutimg/logo_long.png" class="logo" id="logo_img">
+				</a>
+			</div>
+			<th:block th:if="${#strings.isEmpty(loginUser)}">
+				<div class="user_gnb_wrap">
+					<ul class="user_gnb lonullul">
+						<li class="lonullli">
+							<a href="javascript:openm()" class="lonull .modal_btn" style="line-height: 80px;">
+								로그인
+							</a>
+							<div class="modal">
+								<div class="modal_popup">
+									<div id="mologinwrap">
+										<div class="morewrapimg"></div>
+										<p>
+										</p>
+										<h3>Sign up with</h3>
+										<ul id="lologoswrap">
+											<li><img src="/images/layoutimg/btn_kakao.svg"></li>
+											<li><img src="/images/layoutimg/btn_google.svg"></li>
+											<li><img src="/images/layoutimg/btn_naver.svg"></li>
+										</ul>
+									</div>
+									<form action="/user/login" method="post" name="loginForm">
+										<table>
+											<tbody>
+												<tr>
+													<th>아이디</th>
+													<td>
+														<input type="text" name="userid" value="">
+													</td>
+												</tr>
+												<tr>
+													<th>비밀번호</th>
+													<td>
+														<input type="password" name="userpw">
+													</td>
+												</tr>
+
+											</tbody>
+										</table>
+										<div>
+											<div class="btn_area">
+												<input type="submit" value="로그인">
+												<input type="button" value="닫기" class="close_btn"
+													style="cursor: pointer;" onclick="closem()">
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</li>
+						<li class="" style="width: 100px;">
+							<a href="/user/join" class="lonull" style="width: 90px; line-height: 80px;">
+								회원가입
+							</a>
+						</li>
+					</ul>
+				</div>
+			</th:block>
+			<th:block th:unless="${#strings.isEmpty(loginUser)}">
+				<nav class="gnb_menu">
+					<ul class="gnb_menu_1">
+
+						<li>
+							<a href="#">게시판</a>
+						</li>
+						<li>
+							<a href="#">패키지</a>
+						</li>
+					</ul>
+				</nav>
+				<div class="user_gnb_wrap">
+					<ul class="user_gnb">
+						<li class="userinfo_gnb">
+							<a href="/user/myinfo">
+								<img src="/images/userimg/defaultbadge.svg" alt="유저프로필">
+							</a>
+						</li>
+						<li class="userinfo_gnb">
+							<a href="/user/logout">
+								<img src="/images/userimg/free-icon-sign-out-7046204.png" alt="로그아웃" srcset="">
+							</a>
+						</li>
+					</ul>
+				</div>
+			</th:block>
+
+		</div>
+	</div>
+	<script>
+		const modal = document.querySelector('.modal');
+		const modalOpen = document.querySelector('.modal_btn');
+		const modalClose = document.querySelector('.close_btn');
+
+		function closem(){
+			modal.style.display = 'none';
+		}
+		
+		function openm(){
+			modal.style.display = 'block';
+		}
+
+		function goToJoin() {
+			location.href = "/user/join";
+		}
+	</script>
+</th:block>
