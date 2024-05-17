@@ -377,6 +377,7 @@
             <!-- 게시글 목록 -->
             <section class="posts">
                 <!-- 게시글 -->
+				<!--
                 <a th:if="${list != null and list.size > 0}" th:each="board:${list}">
                     <div class="post">
                         <div class="guide">
@@ -394,7 +395,7 @@
                         </div>
                     </div>
                 </a>
-				
+				-->
 
             </section>
 			
@@ -416,6 +417,7 @@
 
     </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script th:inline="javascript">
 	const sort = document.getElementsByClassName("sort");
 	console.log(sort);
@@ -444,7 +446,22 @@
 		}
 		console.log(str)
 		
-		location.replace(`/board/list?sort=${str}`);
+		$.ajax({
+			url: "/board/list?sort=" + str,
+			method: "GET",
+			
+			success:function() {
+				console.log("O")
+				
+			},
+			
+			error:function() {
+				console.log("X")
+			}
+			
+		})
+		
+		// location.replace(`/board/list?sort=${str}`);
 	}
 	
 	// 정렬버튼 색상 변경

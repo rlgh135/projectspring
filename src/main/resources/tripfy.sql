@@ -104,7 +104,7 @@ CREATE TABLE `board_file` (
 );
 
 CREATE TABLE `package` (
-  `pacakgenum` BIGINT PRIMARY KEY AUTO_INCREMENT,
+  `packagenum` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `guidenum` bigint,
   `package_title` varchar(300),
   `package_content` text,

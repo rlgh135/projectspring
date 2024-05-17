@@ -1,7 +1,9 @@
 package com.t1.tripfy.controller.board;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
@@ -24,7 +27,9 @@ public class BoardController {
 	private BoardService service;
 
 	@GetMapping("list")
-	public void boardlist(@RequestParam(value = "sort", required = false) String sort, Criteria cri, Model model) {  // 정렬 방법
+	@ResponseBody
+	public Map<String, Object> boardlist(@RequestParam(value = "sort", required = false) String sort, Criteria cri, Model model) {  // 정렬 방법
+		System.out.println("sort: " + sort);
 		System.out.println(cri);
 		
 		List<BoardDTO> list = new ArrayList<BoardDTO>();
@@ -50,10 +55,17 @@ public class BoardController {
 		else {  // sort 파라미터 없을 경우(/board/list 요청 시)
 			list = service.getList(cri);
 		}
-		
+		/*
 		model.addAttribute("list", list);
 		model.addAttribute("sort", sort);
 		model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
+		*/
+		
+		Map<String, Object> data = new HashMap<>();
+		data.put("list", list);
+		data.put("pageMaker", new PageDTO(service.getTotal(cri), cri));
+		
+		return data;
 	}
 	
 	@GetMapping("get")
@@ -62,10 +74,5 @@ public class BoardController {
 		BoardDTO board = service.getDetail(boardnum);
 		model.addAttribute("board", board);
 	}
-	
-	@GetMapping("sort") 
-	public String sortlist(@RequestParam("sort") String sort) {
-		
-		return "/board/list";
-	}
+
 }
