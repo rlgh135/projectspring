@@ -16,10 +16,31 @@ public class PackageServiceImpl implements PackageService{
 		return false;
 	}
 	@Override
-	public List<PackageDTO> getAllList(Criteria cri) {
+	public List<PackageDTO> getListByCountryCode(Criteria cri) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public List<PackageDTO> getRecentList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<PackageDTO> getCheapList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<PackageDTO> getPopList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<PackageDTO> getPopularGuideList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public PackageDTO getDetail(long packagenum) {
 		// TODO Auto-generated method stub
