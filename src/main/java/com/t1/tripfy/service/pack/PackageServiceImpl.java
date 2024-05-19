@@ -28,9 +28,9 @@ public class PackageServiceImpl implements PackageService{
 		return false;
 	}
 	@Override
-	public List<PackageDTO> getListByCountryCode(Criteria cri) {
-	
-		return pmapper.getListByCountryCode(cri);
+	public List<PackageDTO> getDetailRegionList(Criteria cri) {
+		// TODO Auto-generated method stub
+		return pmapper.getDetailRegionList(cri);
 	}
 	@Override
 	public List<PackageDTO> getRecentList(Criteria cri) {
@@ -55,8 +55,7 @@ public class PackageServiceImpl implements PackageService{
 	
 	@Override
 	public PackageDTO getDetail(long packagenum) {
-		// TODO Auto-generated method stub
-		return null;
+		return pmapper.getPackageByPackageNum(packagenum);
 	}
 	@Override
 	public long getLastNum(String userid) {

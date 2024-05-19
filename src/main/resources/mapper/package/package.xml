@@ -41,13 +41,20 @@
 	</update>
 	
 	<select id="getRecentList">
-		select * from package ORDER BY packagenum desc limit 4
+		SELECT * 
+    	FROM package 
+    	where countrycode = "kr"
+    	ORDER BY packagenum DESC 
+    	LIMIT 4
 	</select>
 	<select id="getPopList">
-		select * from package ORDER BY viewcnt desc limit 4
+		select * from package where countrycode = "kr"
+		ORDER BY viewcnt desc limit 4
 	</select>
 	<select id="getCheapList">
-		select * from package ORDER BY adult_price desc limit 4
+		select * from package
+		where countrycode = "kr"
+		ORDER BY adult_price desc limit 4
 	</select>
 	<!-- <select id="getPopularGuideList">
 		select p.packagenum, p.package_title, p.package_content, p.adult_price
@@ -61,24 +68,6 @@
 		ORDER BY g.guidenum
 	</select>-->
 	
-	<select id="getListByCountryCode">
-    select * from package
-	    <where>
-		<include refid="cri"></include>	
-	        <if test="countrycode != null">
-	            <choose>
-	                <when test="countrycode == 'kr'">
-	                    and countrycode = #{countrycode}
-	                </when>
-	            
-	                <when test="countrycode != 'kr'">
-	                    and countrycode != 'kr'
-	                </when>
-	            </choose>
-	        </if>
-	    </where>
-	    and visibility ='O'
-	</select>
 	
 	<select id="getDetailRegionList">
 		select * from package
@@ -86,7 +75,6 @@
 		<include refid="cri"></include>
 		startdate = #{startdate}
 		and enddate = #{enddate}
-		and countrycode = #{countrycode}
 		and regionname = #{regionname}
 		and maxcnt = #{maxcnt}	
 		and visibility ='O'

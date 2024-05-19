@@ -4,8 +4,8 @@
 #wrap{
     width: 100%;
     margin: 0 auto;
+    
     position: relative;
-    margin-top: 120px;
 }
 body{
     background-color:white;
@@ -52,7 +52,8 @@ button{
     margin-top: 40px;
     
 }
-.packagesearch button{
+
+.packagesearch  button{
     background-color: transparent;
     border: none;
     font-size: 30px;
@@ -60,14 +61,17 @@ button{
     height: 70px;
     
 }
-.packagesearch >.search_btn button{
-   border:none;
-   background-color: black;
-   width: 150px;
-   height: 70px;
-    border-radius: 30px;
+.packagesearch > #searchForm button{
+    background-color: black;
+    border: none;
+    font-size: 30px;
     color:white;
-} 
+    height: 70px;
+    width: 150px;
+    border-radius: 20px;
+    
+}
+
 .destination{
     display:flex;
     border-right: 1px solid lightgray;
@@ -77,12 +81,19 @@ button{
 
 .period{
     display: flex;
+    
 }
 .period input{
     border: none;
     height: 100%;
-    width: 350px;
+    width: 180px;
     font-size: 30px;
+}
+.period input:focus{
+	outline: none;
+} 
+#endDateInput{
+	color:gray;
 }
 .person{
     display: flex;
@@ -98,22 +109,23 @@ button{
     width: 1400px;
     margin: 0 auto;
 }
-.p_header{
+.rp_header{
     width:100%;
     text-align: center;
     margin-top: 60px;
 }
-.p_list{
+.rp_list{
     flex-wrap: wrap;
     width: 100%;
+    
     margin-top: 40px;
     display: flex;
 }
-.p_list a{
+.rp_list a{
     text-decoration: none;
     color:black;
 }
-.package{
+.rpackage{
     width: 330px;
     height: 350px;
     border: 1px solid black;
@@ -122,22 +134,111 @@ button{
     flex-grow: 0;
     
 }
-.p_img{
+.rp_img{
     width:100%;
     height: 150px;
 }
-.p_img img{
+.rp_img img{
     width: 100%;
     border-radius: 8% 8% 0 0;
 }
-.p_info{
+.rp_info{
     width: 80%;
     margin: 0 auto;
     height: 90px;
     margin-top: 45px;
 }
 
-.price{
+.rprice{
+    width: 80%;
+    margin: 0 auto;
+}
+.pp_header{
+    width:100%;
+    text-align: center;
+    margin-top: 60px;
+}
+.pp_list{
+    flex-wrap: wrap;
+    width: 100%;
+    
+    margin-top: 40px;
+    display: flex;
+}
+.pp_list a{
+    text-decoration: none;
+    color:black;
+}
+.ppackage{
+    width: 330px;
+    height: 350px;
+    border: 1px solid black;
+    border-radius: 5%;
+    margin: 10px 10px;
+    flex-grow: 0;
+    
+}
+.pp_img{
+    width:100%;
+    height: 150px;
+}
+.pp_img img{
+    width: 100%;
+    border-radius: 8% 8% 0 0;
+}
+.pp_info{
+    width: 80%;
+    margin: 0 auto;
+    height: 90px;
+    margin-top: 45px;
+}
+
+.pprice{
+    width: 80%;
+    margin: 0 auto;
+}
+.cp_header{
+    width:100%;
+    text-align: center;
+    margin-top: 60px;
+}
+
+.cp_list{
+    flex-wrap: wrap;
+    width: 100%;
+    
+    margin-top: 40px;
+    display: flex;
+}
+.cp_list a{
+    text-decoration: none;
+    color:black;
+}
+.cpackage{
+    width: 330px;
+    height: 350px;
+    border: 1px solid black;
+    border-radius: 5%;
+    margin: 10px 10px;
+    flex-grow: 0;
+    
+}
+.cp_img{
+    width:100%;
+    height: 150px;
+}
+.cp_img img{
+    width: 100%;
+    border-radius: 8% 8% 0 0;
+}
+.cp_info{
+    width: 80%;
+    margin: 0 auto;
+    height: 90px;
+    margin-top: 45px;
+}
+
+.cprice{
     width: 80%;
     margin: 0 auto;
 }
@@ -152,7 +253,7 @@ button{
     position: absolute;
     z-index: 2;
     width: 400px;
-    height: 550px;
+    height: 350px;
     margin: 0 auto;
     overflow-y: scroll;
 }
@@ -176,49 +277,21 @@ button{
 }
 
 .dl_choice{
-    width: 350px;
-    height: 100%;
-    margin: 0 auto;
+    width: 100%;
     display: flex;
-    border-top: 1px solid gray;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
-.placeLeft{
-    width: 100px;
-    height: 95%;
-    list-style:none;
-    padding-left:0px;
-    background-color: lightgray;
-}
-.placeLeft li{
-    width: 100%;
-    height: 40px;
-    border-bottom: 1px solid gray;
+.dl_choice button{
+    width : 170px;
+    height: 50px;
+    font-size: 20px;
+    background-color: skyblue;
+    border-radius: 10px;
+    margin-top: 10px;
+    color: white;
     
 }
-.placeLeft li button{  
-    width: 100%;
-    height : 40px;
-    font-size: 15px;  
-    color: black;
-}
-.placeRight{
-    width: 230px;
-    height: 100%;
-    list-style:none;
-    padding-left:0px;
-    
-}
-.placeRight li{
-    width: 100%;
-    height: 40px;    
-}
-.placeRight li button{  
-    width: 100%;
-    height : 40px;
-    font-size: 15px;  
-    color: black;
-}
-
 #perlist{
     border: 1px solid lightgray;
     border-radius: 5%;

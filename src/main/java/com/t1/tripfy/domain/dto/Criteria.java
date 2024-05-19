@@ -12,6 +12,11 @@ public class Criteria {
 	private String type;
 	private String keyword;
 	private int startrow;
+	private String countrycode;
+	private String startdate;
+	private String enddate;
+	private String regionname;
+	private int maxcnt;
 	
 	public Criteria() {
 		this(1,20);

@@ -27,8 +27,11 @@ public class PackController {
 	@GetMapping("pmain")
 	public void main(Criteria cri,Model model) {
 		List<PackageDTO> recent = service.getRecentList(cri);
+		System.out.println(recent);
 		List<PackageDTO> cheap = service.getCheapList(cri);
+		System.out.println(cheap);
 		List<PackageDTO> pop = service.getPopList(cri);
+		System.out.println(pop);
 //		List<PackageDTO> popguide = service.getPopularGuideList(cri);
 		model.addAttribute("recent", recent);
 		model.addAttribute("cheap", cheap);
@@ -39,20 +42,26 @@ public class PackController {
 	@GetMapping("plist")
 	public void list(Criteria cri, Model model) {
 		System.out.println(cri);
-		List<PackageDTO> list = service.getListByCountryCode(cri);
+		List<PackageDTO> list = service.getDetailRegionList(cri);
 		model.addAttribute("list",list);
 		model.addAttribute("pageMaker",new PageDTO(service.getTotal(cri),cri));
 	}
 	
 	@GetMapping("pget")
 	public String get(Criteria cri, long packagenum, HttpServletRequest req, HttpServletResponse resp, Model model) {
-		String reuqestURI = req.getRequestURI();
+		System.out.println("packagenum: " + packagenum);
+		String requestURI = req.getRequestURI();
 		model.addAttribute("cri",cri);
 		HttpSession session = req.getSession();
 		PackageDTO pack = service.getDetail(packagenum);
+		System.out.println(pack+"안뜨나?");
 		model.addAttribute("package",pack);
 		//model.addAttribute("files",service.getFiles(boardnum));
 		String loginUser = (String)session.getAttribute("loginUser");
+		
+		if(requestURI.contains("modify")) {
+			return "board/modify";
+		}
 		return "package/pget";
 	}
 	

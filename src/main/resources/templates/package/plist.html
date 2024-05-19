@@ -8,7 +8,6 @@
 </head>
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 <body>
-	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
     <div id="wrap" class="list">
         <div class="plistresult">  
             <div class="sidesearch">
@@ -48,128 +47,37 @@
             <div class="searchresult">
                 <div class="reslutbar">
                     <div class="result">
-                        <div class="text1">
-                            <span>이세계</span>
-                        </div>
-                        <div class="text2">
-                            <span>5.15 ~ </span>
-                        </div>
-                        <div class="text3">
-                            <span>1명</span>
-                        </div>
+						<div class="text1">
+						    <span id="resultRegion"></span>
+						</div>
+						<div class="text2">
+						    <span id="resultPeriod"></span>
+						</div>
+						<div class="text3">
+						    <span id="resultPerson"></span>
+						</div>
                     </div>
                 </div>
                 <div class="listwrap">
-
-                    <div class="plist">
-                        <a href="">
-                            <div class="package">
-                                <div class="thumbnail">
-                                    <img src="/images/packageimg/384878.jpg" alt="">
-                                </div>
-                                <div class="info">
-                                    <h3>제목</h3>
-                                    <p>내용</p>
-                                </div>
-                                <div class="price">
-                                    <h3>공짜</h3>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <a href="">
-                            <div class="package">
-                                <div class="thumbnail">
-                                    <img src="/images/packageimg/384878.jpg" alt="">
-                                </div>
-                                <div class="info">
-                                    <h3>제목</h3>
-                                    <p>내용</p>
-                                </div>
-                                <div class="price">
-                                    <h3>공짜</h3>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <a href="">
-                            <div class="package">
-                                <div class="thumbnail">
-                                    <img src="/images/packageimg/384878.jpg" alt="">
-                                </div>
-                                <div class="info">
-                                    <h3>제목</h3>
-                                    <p>내용</p>
-                                </div>
-                                <div class="price">
-                                    <h3>공짜</h3>
-                                </div>
-                            </div>
-                        </a>
-                      
-                        <a href="">
-                            <div class="package">
-                                <div class="thumbnail">
-                                    <img src="/images/packageimg/384878.jpg" alt="">
-                                </div>
-                                <div class="info">
-                                    <h3>제목</h3>
-                                    <p>내용</p>
-                                </div>
-                                <div class="price">
-                                    <h3>공짜</h3>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <a href="">
-                            <div class="package">
-                                <div class="thumbnail">
-                                    <img src="/images/packageimg/384878.jpg" alt="">
-                                </div>
-                                <div class="info">
-                                    <h3>제목</h3>
-                                    <p>내용</p>
-                                </div>
-                                <div class="price">
-                                    <h3>공짜</h3>
-                                </div>
-                            </div>
-                        </a>
-                       
-                        <a href="">
-                            <div class="package">
-                                <div class="thumbnail">
-                                    <img src="/images/packageimg/384878.jpg" alt="">
-                                </div>
-                                <div class="info">
-                                    <h3>제목</h3>
-                                    <p>내용</p>
-                                </div>
-                                <div class="price">
-                                    <h3>공짜</h3>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <a href="">
-                            <div class="package">
-                                <div class="thumbnail">
-                                    <img src="/images/packageimg/384878.jpg" alt="">
-                                </div>
-                                <div class="info">
-                                    <h3>제목</h3>
-                                    <p>내용</p>
-                                </div>
-                                <div class="price">
-                                    <h3>공짜</h3>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        
-                        
+                    <div th:if="${list != null and list.size() > 0}" th:each="board:${list}"class="plist">
+	                    <div class="package">
+	                    	<a href="@{/package/pget(packagenum=${board.packagenum})}">
+	                        <div class="thumbnail">
+	                            <img src="/images/packageimg/384878.jpg" alt="">
+	                        </div>
+	                        <div class="info">
+	                            <h3>[[${board.packageTitle}]]</h3>
+	                            <p>[[${board.packageContent}]]</p>
+	                        </div>
+	                        <div class="price">
+	                            <h3>[[${board.adultPrice}]] 원</h3>
+	                        </div>
+	                    	</a>
+	                    </div> 
                     </div>
+					<div th:if="${list == null or list.size() == 0}" class="row no-list">
+						<p>등록된 게시글이 없습니다.</p>
+					</div>
                 </div>
             </div>
         </div>
@@ -178,34 +86,46 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     flatpickr("#myID", {
-            mode: "range",
-            dateFormat: "Y-m-d",
-            onClose: function(selectedDates, dateStr, instance) {
-                if (selectedDates.length === 2) {
-                    const formattedDate = selectedDates.map(date => {
-                        return instance.formatDate(date, "Y-m-d");
-                    }).join(" / ");
-                    instance.input.value = formattedDate;
-                }
+        mode: "range",
+        dateFormat: "Y-m-d",
+        onClose: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 2) {
+                const formattedDate = selectedDates.map(date => {
+                    return instance.formatDate(date, "Y-m-d");
+                }).join(" / ");
+                instance.input.value = formattedDate;
             }
-        });
+        }
+    });
 
-        function openper() {
+    function openper() {
         const target = document.getElementById("perlist");
-        console.log(target);
         target.classList.toggle("hide");
     }
-    document.addEventListener("DOMContentLoaded", function() {
-    const buttons = document.querySelectorAll(".pr_list button");
 
-    buttons.forEach(function(button) {
-        button.addEventListener("click", function() {
-            const count = this.textContent.trim(); // 버튼의 텍스트를 가져옴
-            const personCountSpan = document.getElementById("personCount");
-            personCountSpan.textContent = count; // 인원 수 업데이트
-            openper(); // perlist 닫기
+    document.addEventListener("DOMContentLoaded", function() {
+        const buttons = document.querySelectorAll(".pr_list button");
+
+        buttons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const count = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+                const personCountSpan = document.getElementById("personCount");
+                personCountSpan.textContent = count; // 인원 수 업데이트
+                openper(); // perlist 닫기
+            });
         });
+
+        // URL 파라미터를 통해 데이터 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const region = urlParams.get('regionname');
+        const startdate = urlParams.get('startdate');
+        const enddate = urlParams.get('enddate');
+        const maxcnt = urlParams.get('maxcnt');
+
+        // 결과를 span에 설정
+        document.getElementById('resultRegion').textContent = region;
+        document.getElementById('resultPeriod').textContent = startdate + " ~ " + enddate;
+        document.getElementById('resultPerson').textContent = maxcnt + "명";
     });
-});
 </script>
 </html>

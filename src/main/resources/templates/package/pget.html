@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/package/pget.css">
 </head>
 <body>
-    <div id="wrap" class="list">
+    <div id="wrap" class="get">
         <div class="body_container">
             <div class="nav">
                 <div id="nav1"><a href="">해외투어</a></div>
@@ -21,16 +21,12 @@
                 <div class="pinfo">
                     <div class="p_info">
                         <div class="p_title">
-                            <h3>고양이 여행</h3>
+                            <h3>[[${package.packageTitle}]]</h3>
                         </div>
                         <hr>
                         <div class="p_con">
-                            냥냥편치
+							[[${package.packageContent}]]
                         </div>
-                        <hr>
-                    </div>
-                    <div class="price">
-                        <h3>공짜</h3>
                     </div>
                 </div> 
             </div>
@@ -52,8 +48,7 @@
             <div class="pay_container">
                 <div class="mapcon">
                     <div class="maphead">
-                        <h3>패키지 이름</h3>
-                        <p>패키지 내용 </p>
+                        <h3>[[${package.regionname}]]</h3>
                     </div>
                     <hr>
                     <div class="map">
@@ -74,7 +69,7 @@
                         <div class="adult">
                             <div class="adult_info">
                                 <h3>성인</h3>
-                                <p>요금</p>
+                                <p>[[${package.adultPrice}]] 원</p>
                             </div>
                             <div class="adult_cnt">
                                 <input type='button' onclick='count("minus")' value='-'/>
@@ -87,7 +82,7 @@
                         <div class="child">
                             <div class="child_info">
                                 <h3>아이</h3>
-                                <p>요금</p>
+                                <p>[[${package.childPrice}]] 원</p>
                             </div>
                             <div class="child_cnt">
                                 <input type='button' onclick='count_child("minus")' value='-'/>

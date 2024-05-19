@@ -9,7 +9,7 @@
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 
 <body>
-    <div id="wrap" class = "list">
+    <div id="wrap">
         <div id="body_container">
             <div class="menu">
                 <div id="menu1"><a href="">해외투어</a></div>
@@ -24,237 +24,213 @@
             <div class="packagesearch">
                 <div class="destination">
                     <button type="button" onclick="opendes()">
-                        <span>어디로 여행하세요?</span>
+                        <span id="desChoice">어디로 여행하세요?</span>
                     </button>
-                    <div id ="deslist" class="hide" >
+                    <input type="hidden" name="regionname" id="destinationInput">
+                    <div id="deslist" class="hide">
                         <div class="list">
                             <div class="dl_header">
                                 <span onclick="opendes()">x</span>
                             </div>
-                      
+                            <hr>
                             <div class="dl_choice">
-                                <ul class="placeLeft">
-                                    <li>
-                                        <button>베트남</button>
-                                    </li>
-                                    <li>
-                                        <button>태국</button>
-                                    </li>
-                                    <li>
-                                        <button>필리핀</button>
-                                    </li>
-                                    <li>
-                                        <button>말레이시아</button>
-                                    </li>
-                                    <li>
-                                        <button>홍콩</button>
-                                    </li>
-                                </ul>
-                                <ul class="placeRight">
-                                    <li>
-                                        <button>다낭</button>
-                                    </li>
-                                    <li>
-                                        <button>호이안</button>
-                                    </li>
-                                    <li>
-                                        <button>나트랑</button>
-                                    </li>
-                                    <li>
-                                        <button>하노이</button>
-                                    </li>
-                                    <li>
-                                        <button>호치민</button>
-                                    </li>
-
-                                </ul>
+                                <button type="button" class="dl"><span>서울</span></button>
+                                <button type="button" class="dl"><span>제주도</span></button>
+                                <button type="button" class="dl"><span>경기도</span></button>
+                                <button type="button" class="dl"><span>강원도</span></button>
+                                <button type="button" class="dl"><span>충청도</span></button>
+                                <button type="button" class="dl"><span>경상도</span></button>
+                                <button type="button" class="dl"><span>전라도</span></button>
+                                <button type="button" class="dl"><span>인천</span></button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="period">
-                    <input type="button" placeholder="출발일/ 도착일" id ="myID" />
+                    <input type="text" name="startdate" placeholder="출발일   /" id="startDateInput" readonly />
+                    <input type="text" name="enddate" placeholder="도착일" id="endDateInput" readonly />
                 </div>
                 <div class="person">
                     <button type="button" onclick="openper()">
                         <span id="personCount">인원</span>
                     </button>
+                    <input type="hidden" name="maxcnt" id="personInput">
                     <div id="perlist" class="hide">
                         <div class="pr_header">
                             <span onclick="openper()">x</span>
                         </div>
-                        
                         <div class="pr_choice">
                             <div class="pr_list">
-                                <button class="pr"><span>1명</span></button>
-                                <button class="pr"><span>2명</span></button>
-                                <button class="pr"><span>3명</span></button>
-                                <button class="pr"><span>4명</span></button>
-                                <button class="pr"><span>5명</span></button>
-                                <button class="pr"><span>6명</span></button>
-                                <button class="pr"><span>7명</span></button>
-                                <button class="pr"><span>8명</span></button>
-                                <button class="pr"><span>9명</span></button>
-                                <button class="pr"><span>10명 ++ </span></button>
+                                <button type="button" class="pr"><span>1명</span></button>
+                                <button type="button" class="pr"><span>2명</span></button>
+                                <button type="button" class="pr"><span>3명</span></button>
+                                <button type="button" class="pr"><span>4명</span></button>
+                                <button type="button" class="pr"><span>5명</span></button>
+                                <button type="button" class="pr"><span>6명</span></button>
+                                <button type="button" class="pr"><span>7명</span></button>
+                                <button type="button" class="pr"><span>8명</span></button>
+                                <button type="button" class="pr"><span>9명</span></button>
+                                <button type="button" class="pr"><span>10명 ++ </span></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="search_btn">
-                    <button type="button">
-                        검색
-                    </button>
-                </div>
+                <form id="searchForm" action="/package/plist" method="GET">
+                    <input type="hidden" name="regionname" id="destinationInputForm">
+                    <input type="hidden" name="startdate" id="startDateInputForm">
+                    <input type="hidden" name="enddate" id="endDateInputForm">
+                    <input type="hidden" name="maxcnt" id="personInputForm">
+                    <div class="search_btn">
+                        <button type="submit">검색</button>
+                    </div>
+                </form>
             </div>
             <div class="p_wrap">
-                <div class="p_header">
-                    <h2>최신 패키지들을 만나보세요!</h2>
+                <div class="package">
+                    <div class="rp_header">
+                        <h2>최신 패키지들을 만나보세요!</h2>
+                    </div>
+                    <div th:if="${recent != null and #lists.size(recent) > 0}" th:each="recent : ${recent}" class="rp_list">
+                        <div class="rpackage">
+                            <a th:href="@{/package/pget(packagenum=${recent.packagenum})}" class="get">
+                                <div class="rp_img"><img src="" alt=""></div>
+                                <div class="rp_info">
+                                    <div class="rp_title">
+                                        <h3>[[${recent.packageTitle}]]</h3>
+                                    </div>
+                                    <div class="rp_con">
+                                        [[${recent.packageContent}]]
+                                    </div>
+                                </div>
+                                <div class="rprice">
+                                    <h3>[[${recent.adultPrice}]]</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div th:if="${recent == null or #lists.size(recent) == 0}" class="rp_list no-list">
+                        <div>등록된 게시글이 없습니다.</div>
+                    </div>
                 </div>
-                <div class="p_list">
-                    <a href="">
-                        <div class="package">
-                            <div class="p_img"><img src="images/packageimg/384878.jpg" alt=""></div>
-                            <div class="p_info">
-                                <div class="p_title">
-                                    <h3>이세계 여행</h3>
+                <div class="package">
+                    <div class="pp_header">
+                        <h2>인기 패키지들을 만나보세요!</h2>
+                    </div>
+                    <div th:if="${pop != null and #lists.size(pop) > 0}" th:each="pop : ${pop}" class="pp_list">
+                        <div class="ppackage">
+                            <a th:href="@{/package/pget(packagenum=${pop.packagenum})}" class="get">
+                                <div class="pp_img"><img src="" alt=""></div>
+                                <div class="pp_info">
+                                    <div class="pp_title">
+                                        <h3>[[${pop.packageTitle}]]</h3>
+                                    </div>
+                                    <div class="pp_con">
+                                        [[${pop.packageContent}]]
+                                    </div>
                                 </div>
-                                <div class="p_con">
-                                    트럭에 치이세요 제발
+                                <div class="pprice">
+                                    <h3>[[${pop.adultPrice}]]</h3>
                                 </div>
-                            </div>
-                            <div class="price">
-                                <h3>공짜</h3>
-                            </div>
+                            </a>
                         </div>
-                    </a>
-                    <a href="">
-                        <div class="package">
-                            <div class="p_img"><img src="images/packageimg/384878.jpg" alt=""></div>
-                            <div class="p_info">
-                                <div class="p_title">
-                                    <h3>이세계 여행</h3>
+                    </div>
+                    <div th:if="${pop == null or #lists.size(pop) == 0}" class="pp_list no-list">
+                        <div>등록된 게시글이 없습니다.</div>
+                    </div>
+                </div>
+                <div class="package ">
+                    <div class="cp_header">
+                        <h2>가성비 패키지들을 만나보세요!</h2>
+                    </div>
+                    <div th:if="${cheap != null and #lists.size(cheap) > 0}" th:each="cheap : ${cheap}" class="cp_list">
+                        <div class="cpackage">
+                            <a th:href="@{/package/pget(packagenum=${cheap.packagenum})}" class="get">
+                                <div class="cp_img"><img src="" alt=""></div>
+                                <div class="cp_info">
+                                    <div class="pp_title">
+                                        <h3>[[${cheap.packageTitle}]]</h3>
+                                    </div>
+                                    <div class="cp_con">
+                                        [[${cheap.packageContent}]]
+                                    </div>
                                 </div>
-                                <div class="p_con">
-                                    트럭에 치이세요 제발
+                                <div class="cprice">
+                                    <h3>[[${cheap.adultPrice}]]</h3>
                                 </div>
-                            </div>
-                            <div class="price">
-                                <h3>공짜</h3>
-                            </div>
+                            </a>
                         </div>
-                    </a>
-                    <a href="">
-                        <div class="package">
-                            <div class="p_img"><img src="images/packageimg/384878.jpg" alt=""></div>
-                            <div class="p_info">
-                                <div class="p_title">
-                                    <h3>이세계 여행</h3>
-                                </div>
-                                <div class="p_con">
-                                    트럭에 치이세요 제발
-                                </div>
-                            </div>
-                            <div class="price">
-                                <h3>공짜</h3>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="">
-                        <div class="package">
-                            <div class="p_img"><img src="/images/packageimg/384878.jpg" alt=""></div>
-                            <div class="p_info">
-                                <div class="p_title">
-                                    <h3>이세계 여행</h3>
-                                </div>
-                                <div class="p_con">
-                                    트럭에 치이세요 제발
-                                </div>
-                            </div>
-                            <div class="price">
-                                <h3>공짜</h3>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="">
-                        <div class="package">
-                            <div class="p_img"><img src="/images/packageimg/384878.jpg" alt=""></div>
-                            <div class="p_info">
-                                <div class="p_title">
-                                    <h3>이세계 여행</h3>
-                                </div>
-                                <div class="p_con">
-                                    트럭에 치이세요 제발
-                                </div>
-                            </div>
-                            <div class="price">
-                                <h3>공짜</h3>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="">
-                        <div class="package">
-                            <div class="p_img"><img src="/images/packageimg.jpg" alt=""></div>
-                            <div class="p_info">
-                                <div class="p_title">
-                                    <h3>이세계 여행</h3>
-                                </div>
-                                <div class="p_con">
-                                    트럭에 치이세요 제발
-                                </div>
-                            </div>
-                            <div class="price">
-                                <h3>공짜</h3>
-                            </div>
-                        </div>
-                    </a>
-                   
-                   
+                    </div>
+                    <div th:if="${cheap == null or #lists.size(cheap) == 0}" class="pp_list no-list">
+                        <div>등록된 게시글이 없습니다.</div>
+                    </div>
                 </div>
             </div>
-            
-          
-
         </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    flatpickr("#myID", {
-            mode: "range",
-            dateFormat: "Y-m-d",
-            onClose: function(selectedDates, dateStr, instance) {
-                if (selectedDates.length === 2) {
-                    const formattedDate = selectedDates.map(date => {
-                        return instance.formatDate(date, "Y-m-d");
-                    }).join(" / ");
-                    instance.input.value = formattedDate;
-                }
+    flatpickr("#startDateInput", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        onClose: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 2) {
+                const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
+                const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
+                document.getElementById("startDateInput").value = startDate;
+                document.getElementById("endDateInput").value = endDate;
+                document.getElementById("startDateInputForm").value = startDate; // 폼에 시작 날짜 업데이트
+                document.getElementById("endDateInputForm").value = endDate; // 폼에 종료 날짜 업데이트
             }
-        });
+        }
+    });
+
     function opendes() {
         const target = document.getElementById("deslist");
-        console.log(target);
         target.classList.toggle("hide");
     }
+
     function openper() {
         const target = document.getElementById("perlist");
-        console.log(target);
         target.classList.toggle("hide");
     }
 
-
     document.addEventListener("DOMContentLoaded", function() {
-    const buttons = document.querySelectorAll(".pr_list button");
+        const prButtons = document.querySelectorAll(".pr_list button");
+        prButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const countText = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+                const count = parseInt(countText.match(/\d+/)[0]); // 숫자만 추출하여 정수로 변환
+                const personCountSpan = document.getElementById("personCount");
+                personCountSpan.textContent = count + "명"; // 인원 수 업데이트
+                document.getElementById("personInput").value = count; // 폼에 인원 수 업데이트
+                document.getElementById("personInputForm").value = count; // 검색 폼에 인원 수 업데이트
+                openper(); // perlist 닫기
+            });
+        });
 
-    buttons.forEach(function(button) {
-        button.addEventListener("click", function() {
-            const count = this.textContent.trim(); // 버튼의 텍스트를 가져옴
-            const personCountSpan = document.getElementById("personCount");
-            personCountSpan.textContent = count; // 인원 수 업데이트
-            openper(); // perlist 닫기
+        const dlButtons = document.querySelectorAll(".dl");
+        dlButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const destination = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+                const desChoiceSpan = document.getElementById("desChoice");
+                desChoiceSpan.textContent = destination; // 목적지 텍스트 업데이트
+                document.getElementById("destinationInput").value = destination; // 폼에 목적지 업데이트
+                document.getElementById("destinationInputForm").value = destination; // 검색 폼에 목적지 업데이트
+                opendes(); // deslist 닫기
+            });
+        });
+
+        document.querySelectorAll(".get").forEach(function(element) {
+            element.addEventListener("click", function(e) {
+                e.preventDefault();
+                let href = this.getAttribute("href");
+                let urlParams = new URLSearchParams(href.split("?")[1]);
+                let packagenum = urlParams.get("packagenum");
+                location.href = "/package/pget" + "?packagenum=" + packagenum;
+            });
         });
     });
-});
 </script>
 </html>

@@ -16,10 +16,12 @@ public interface PackageService {
 	List<PackageDTO> getPopList(Criteria cri);
 	List<PackageDTO> getCheapList(Criteria cri);
 	List<PackageDTO> getPopularGuideList(Criteria cri);
-	List<PackageDTO> getListByCountryCode(Criteria cri);
+	List<PackageDTO> getDetailRegionList(Criteria cri);
 	long getTotal(Criteria cri);
 	long getLastNum(String userid);
 	
 	boolean modify(PackageDTO pack, MultipartFile[] files) throws Exception;
 	boolean remove(long packagenum);
+
+	
 }
