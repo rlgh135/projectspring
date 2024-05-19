@@ -90,8 +90,8 @@
                     <div class="rp_header">
                         <h2>최신 패키지들을 만나보세요!</h2>
                     </div>
-                    <div th:if="${recent != null and #lists.size(recent) > 0}" th:each="recent : ${recent}" class="rp_list">
-                        <div class="rpackage">
+                    <div class="rp_list">
+                        <div th:if="${recent != null and #lists.size(recent) > 0}" th:each="recent : ${recent}" class="rpackage">
                             <a th:href="@{/package/pget(packagenum=${recent.packagenum})}" class="get">
                                 <div class="rp_img"><img src="" alt=""></div>
                                 <div class="rp_info">
@@ -116,8 +116,8 @@
                     <div class="pp_header">
                         <h2>인기 패키지들을 만나보세요!</h2>
                     </div>
-                    <div th:if="${pop != null and #lists.size(pop) > 0}" th:each="pop : ${pop}" class="pp_list">
-                        <div class="ppackage">
+                    <div  class="pp_list">
+                        <div th:if="${pop != null and #lists.size(pop) > 0}" th:each="pop : ${pop}"class="ppackage">
                             <a th:href="@{/package/pget(packagenum=${pop.packagenum})}" class="get">
                                 <div class="pp_img"><img src="" alt=""></div>
                                 <div class="pp_info">
@@ -142,8 +142,8 @@
                     <div class="cp_header">
                         <h2>가성비 패키지들을 만나보세요!</h2>
                     </div>
-                    <div th:if="${cheap != null and #lists.size(cheap) > 0}" th:each="cheap : ${cheap}" class="cp_list">
-                        <div class="cpackage">
+                    <div class="cp_list">
+                        <div th:if="${cheap != null and #lists.size(cheap) > 0}" th:each="cheap : ${cheap}" class="cpackage">
                             <a th:href="@{/package/pget(packagenum=${cheap.packagenum})}" class="get">
                                 <div class="cp_img"><img src="" alt=""></div>
                                 <div class="cp_info">

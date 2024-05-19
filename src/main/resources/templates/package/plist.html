@@ -59,9 +59,9 @@
                     </div>
                 </div>
                 <div class="listwrap">
-                    <div th:if="${list != null and list.size() > 0}" th:each="board:${list}"class="plist">
-	                    <div class="package">
-	                    	<a href="@{/package/pget(packagenum=${board.packagenum})}">
+                    <div class="plist">
+	                    <div th:if="${list != null and list.size() > 0}" th:each="board:${list}" class="package">
+	                    	<a th:href="@{/package/pget(packagenum=${board.packagenum})}">
 	                        <div class="thumbnail">
 	                            <img src="/images/packageimg/384878.jpg" alt="">
 	                        </div>
