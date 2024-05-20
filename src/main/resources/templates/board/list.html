@@ -54,6 +54,13 @@
         top: 45%;
         left: 33%;
     }
+	
+	.search_cancel {
+	    width: 30px; height: 30px;
+	    position: absolute;
+	    top: 47%;
+	    right: 33.2%;
+	 }
 
     .b_searchDetail {
         width: 500px; height: 250px;
@@ -196,16 +203,31 @@
         border: 1px solid rgb(233, 233, 233);
         padding: 3px;
     }
+	
+	.nation_select .region {
+	        border-top: 1px solid rgb(233, 233, 233);
+	        border-bottom: 1px solid rgb(233, 233, 233);
+			padding: 3px;
+	}
+	
+	.nation_select .region_detail {
+	        border-radius: 0 10px 10px 0 / 0 10px 10px 0;
+	        border: 1px solid rgb(233, 233, 233);
+	}
+	
+	.nation_select .nation > div, .region > div {
+		width: 100%;
+	}
 
-    .nation_select .nation > button {
+    .nation_select .nation > div > button, .region > div > button {
         display: block;
         width: 100%;
-        padding: 5px;
+        padding: 8px;
         border: none;
         background-color: #fff;
     }
 
-    .nation_select .nation > button > p {
+    .nation_select .nation > div > button > p, .nation_select .region > div > button > p {
         width: 100%;
         text-align: left;
         white-space: nowrap;
@@ -213,16 +235,7 @@
         text-overflow: ellipsis;
     }
 
-    .nation_select .region {
-        border-top: 1px solid rgb(233, 233, 233);
-        border-bottom: 1px solid rgb(233, 233, 233);
-    }
-
-    .nation_select .region_detail {
-        border-radius: 0 10px 10px 0 / 0 10px 10px 0;
-        border: 1px solid rgb(233, 233, 233);
-    }
-
+    
     .settings {
         width: 19px; height: 19px;
         position: absolute;
@@ -310,8 +323,6 @@
         font-size: 15px;
     }
 	
-	
-	
     .b_pagenation {
         margin-top: 70px;
         display: flex;
@@ -321,7 +332,6 @@
     .b_pagenation img {
         width: 20px; height: 20px;
         margin-top: 5px;
-        
     }
 
     .b_pagenation a {
@@ -343,9 +353,10 @@
 <body>
     <div class="wrap">
         <div class="b_banner">
-            <input type="text" placeholder="검색" class="b_search">
+            <input type="text" placeholder="검색" class="b_search" onkeydown="clickEnter(event)">
             <img src="/images/boardimg/b_search.png" alt="검색아이콘" class="b_searchimg">
-            <div class="b_searchDetail">
+			<img src="/images/boardimg/cross.png" alt="" class="search_cancel" style="visibility: hidden;">
+            <div class="b_searchDetail" style="display: none;">
                 <img src="/images/boardimg/x_icon.png" alt="" class="ximg">
                 <div class="recentsearch">
                     <div>최근 검색어</div>
@@ -359,7 +370,7 @@
         <div class="post_area">
             <div class="b_buttons">
                 <div class="sortbtn">
-                    <input type="button" value="최신 순" class="sort">
+                    <input type="button" value="최신 순" class="sort selected">
                     <input type="button" value="인기 순" class="sort">
                     <input type="button" value="좋아요 순" class="sort">
                 </div>
@@ -368,11 +379,25 @@
                     <button><img src="/images/boardimg/settings.png" alt="설정" class="settings">국가</button>
                     <div class="nation_select">
                         <div class="nation">
-                            <button><p>국내</p></button>
-                            <button><p>해외</p></button>
+							<div>
+	                            <button><p>국내</p></button>
+	                            <button><p>해외</p></button>
+							</div>
                         </div>
 
-                        <div class="region"></div>
+                        <div class="region">
+							<div>
+							<!--<div style="visibility: hidden;">-->
+								<button><p>서울</p></button>
+								<button><p>제주도</p></button>
+								<button><p>경기도</p></button>
+								<button><p>강원도</p></button>
+								<button><p>충청도</p></button>
+								<button><p>경상도</p></button>
+								<button><p>전라도</p></button>
+								<button><p>인천광역시</p></button>	
+							</div>
+						</div>
                         <div class="region_detail"></div>
                     </div>
                 </div>
@@ -403,20 +428,27 @@
 
             </section>
 			
-			<div th:if="${list == null or list.size == 0}">
+			<div th:if="${list == null or list.size == 0}" class="no_list">
 				<div class="no_post">등록된 게시글이 없습니다.</div>
 			</div>
         </div>
 
         <!-- 페이지 네이션 -->
         <div class="b_pagenation">
-            <a><img src="/images/boardimg/prev.png" alt="" class="b_prevbtn"></a>
-            <a>1</a>
+            <a th:href="${pageMaker.startPage - 1}"><img src="/images/boardimg/prev.png" alt="" class="b_prevbtn"></a>
+            
+			<th:block th:each="i : ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
+				<a th:if="${pageMaker.cri.pagenum == i}">[[${i}]]</a>
+				<a th:href="${i}" th:unless="${pageMaker.cri.pagenum == i}">[[${i}]]</a>
+			</th:block>
+			<!--
+			<a>1</a>
             <a>2</a>
             <a>3</a>
             <a>4</a>
             <a>5</a>
-            <a><img src="/images/boardimg/next.png" alt="" class="b_nextbtn"></a>
+			-->
+            <a th:href="${pageMaker.endPage + 1}"><img src="/images/boardimg/next.png" alt="" class="b_nextbtn"></a>
         </div>
 
     </div>
@@ -424,17 +456,75 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script th:inline="javascript">
 	const sort = document.getElementsByClassName("sort");
-	console.log(sort);
+	const b_search = document.querySelector(".b_search");
+	const b_searchDetail = document.querySelector(".b_searchDetail");
+	const ximg = document.querySelector(".ximg");
+	const search_cancel = document.querySelector(".search_cancel");
 	
+	// 검색창 focus 되었을 때
+	b_search.addEventListener("focus", function() {
+		b_searchDetail.style.display = "block";
+	});
+	
+	// 검색창과 최근검색어 창 클릭을 제외하고 다른 곳을 클릭한다면 최근검색어 창이 뜨지 않도록
+	// 문서 전체를 클릭했을 때
+	document.addEventListener("click", function(e) {
+		// 클릭한 부분이 검색창 또는 최근검색어 창인지 확인
+	    if (!b_search.contains(event.target) && !b_searchDetail.contains(event.target)) {
+			// 클릭한 부분이 검색창 또는 최근검색어 창이 아니라면 display: none;
+	        b_searchDetail.style.display = "none";
+	    }
+	});
+	
+	// 검색창에 검색어 입력하다가 다 지운 경우
+	b_search.addEventListener('input', function() {
+	    // 검색창에 입력한게 없다면 입력창에 있는 X 버튼 숨기기
+	    if (!b_search.value) {
+			search_cancel.style.visibility = 'hidden';
+	    } 
+		
+		else {
+			search_cancel.style.visibility = 'visible';
+	    }
+	});
+
+	// 최근 검색어 창에 있는 X 버튼 클릭했을 때
+	ximg.addEventListener("click", function() {
+		b_searchDetail.style.display = "none";
+		b_search.value = "";
+		search_cancel.style.visibility = "hidden";
+	});
+	
+	// 검색어 입력 창에 있는 X 버튼 클릭했을 때
+	search_cancel.addEventListener("click", function() {
+		b_search.value = "";
+		search_cancel.style.visibility = "hidden";
+		b_searchDetail.style.display = "none";
+	});
+	
+		
+	// 정렬 버튼(최신순, 좋아요순, 인기순) 클릭 시 listsort 함수 호출
 	for(let i = 0; i < sort.length; i++) {
 		sort[i].addEventListener("click", listsort);
 	}
 	
+	// 정렬 버튼(최신순, 좋아요순, 인기순) 클릭 시 리스트
 	function listsort(e) {
 		console.log(e.target);
 		
+		for(let i = 0; i < sort.length; i++) {
+			sort[i].classList.remove("selected");  // selected 클래스 모두 제거
+		}
+		
 		let obj = e.target;
 		let text = obj.value;  // 최신순, 좋아요순, 인기순
+		
+		obj.classList.add("selected");  // 클릭한 버튼에만 selected 클래스 추가
+		
+		let keyword = document.querySelector(".b_search").value;
+		console.log(keyword);
+		
+		// keyword = keyword == "" ? null : keyword;
 		
 		let str = "";
 		if(text == "최신 순") {
@@ -451,7 +541,7 @@
 		console.log(str)
 		
 		$.ajax({
-			url: "/board/sort?sort=" + str,
+			url: "/board/sort?sort=" + str + "&keyword=" + keyword,
 			method: "GET",
 			
 			success:function(data) {
@@ -482,13 +572,14 @@
 					sort[2].style.color = "#fff";
 				}
 				
+				// DOM 구현
 				$(".posts").empty();
+				$(".b_pagenation").empty();
 				
 				if(data.sortlist.length == 0) {
-					let divTag = $("<div>");
-					let divTag2 = $("<div>").attr("class", "no_post").text("등록된 게시글이 없습니다.");
-					divTag.append(divTag2);
-					$(".post_area").append(divTag);
+					$(".no_list").empty();  // 기존에 있던 .no_post 내용 없앰
+					let divTag = $("<div>").attr("class", "no_post").text("등록된 게시글이 없습니다.");
+					$(".no_list").append(divTag);
 				}
 				
 				else {
@@ -519,6 +610,14 @@
 						aTag.append(divPost);
 						
 						$(".posts").append(aTag);
+						
+						let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "");
+						let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
+						b_prevbtn.append(b_prevbtnImg);
+						
+						let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "");
+						let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
+						b_nextbtn.append(b_nextbtnImg);
 					}
 				}
 				
@@ -530,8 +629,104 @@
 			
 		})
 		
-		// location.replace(`/board/list?sort=${str}`);
 	}
+	
+	function clickEnter(e) {
+		if(e.keyCode == 13) {  // 엔터 키 클릭 시
+			search(e.target.value);
+			b_searchDetail.style.display = "none";
+		}
+	}
+	
+	function search(keyword) {
+		
+		if(keyword == "") {
+			alert("검색어를 입력해주세요");
+			e.target.focus();
+		}
+		
+		let sort = document.querySelector(".selected").value;
+		console.log(sort);
+		
+		let str = "";
+		if(sort == "최신 순") {
+			str = "recent";
+		}
+		
+		else if(sort == "인기 순") {
+			str = "popular"
+		}
+		
+		else {
+			str = "like"
+		}
+		console.log(str)
+		
+		$.ajax({
+			url: "/board/sort?sort=" + str + "&keyword=" + keyword,		
+			method: "GET",
+			
+			success:function(data) {
+				// console.log("O")
+				// console.log(result)
+				// console.log(result.searchList.length)
+				
+				// DOM 구현
+				$(".posts").empty();
+				
+				if(data.sortlist.length == 0) {
+					if($(".no_list").length === 0) {
+						let no_list = $("<div>").attr("class", "no_list");
+						$(".post_area").append(no_list);
+					}
+					
+					$(".no_list").empty();  // 기존에 있던 .no_post 내용 없앰
+					let divTag = $("<div>").attr("class", "no_post").text("등록된 게시글이 없습니다.");
+					$(".no_list").append(divTag);
+				}
+				
+				else {
+					$(".no_list").remove();
+					
+					for(let i = 0; i < data.sortlist.length; i++) {
+						// .attr: 속성 추가
+						// .addClass: 클래스 추가
+						let aTag = $("<a>").attr("href", "/board/get?boardnum=" + data.sortlist[i].boardnum);
+						let divPost = $("<div>").addClass("post");
+							
+						let divGuide = $("<div>").addClass("guide");
+						let profile = $("<img>").attr("src", "/images/boardimg/profile.png");
+						let spanTag = $("<span>").text(data.sortlist[i].userid);
+							
+						divGuide.append(profile, spanTag);
+							
+						let divpImg = $("<div>").addClass("p_img");
+						let boardimg = $("<img>").attr("src", "/images/boardimg/2.jpg");
+						
+						divpImg.append(boardimg);
+						
+						let divWrite = $("<div>").addClass("post_write");
+						let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
+						let postPrev = $("<div>").addClass("post_preview").text(data.sortlist[i].content);
+							
+						divWrite.append(postTitle, postPrev);
+						
+						divPost.append(divGuide, divpImg, divWrite);
+						aTag.append(divPost);
+						
+						$(".posts").append(aTag);
+					}
+				}
+			},
+			
+			error:function(data) {
+				// console.log("X")
+			}
+			
+		})
+	}
+	
+	
 	
 	
 

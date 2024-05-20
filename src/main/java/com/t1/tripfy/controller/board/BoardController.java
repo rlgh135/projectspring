@@ -38,9 +38,13 @@ public class BoardController {
 	
 	@GetMapping("sort")
 	@ResponseBody
-	public Map<String, Object> boardSort(@RequestParam(value = "sort", required = false) String method, Criteria cri, Model model) {  // 정렬 방법
+	public Map<String, Object> boardSort(@RequestParam(value = "sort", required = false) String method, Criteria cri) {  // 정렬 방법
 		System.out.println("sort: " + method);
-		System.out.println(cri);
+		System.out.println(cri.getKeyword());
+		
+		if(cri.getKeyword() == "") {
+			cri.setKeyword(null);
+		}
 		
 		List<BoardDTO> sortlist = new ArrayList<BoardDTO>();
 		
@@ -55,10 +59,9 @@ public class BoardController {
 				sortlist = service.getpopularList(cri);
 				break;
 				
-			case "like": 
+			case "like":
 				sortlist = service.getlikeList(cri);
 				break;
-			
 			}
 		}
 		
@@ -74,6 +77,20 @@ public class BoardController {
 		System.out.println(data);
 		
 		return data;
+	}
+	
+	@GetMapping("keyword")
+	@ResponseBody
+	public Map<String, Object> searchList(Criteria cri) {
+		System.out.println(cri);
+		List<BoardDTO> searchList = service.getList(cri);
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("searchList", searchList);
+		result.put("pageMaker", new PageDTO(service.getTotal(cri), cri));
+		
+		System.out.println(result);
+		return result;
 	}
 	
 	@GetMapping("get")

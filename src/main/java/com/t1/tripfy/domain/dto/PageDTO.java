@@ -18,7 +18,7 @@ public class PageDTO {
 		
 		this.endPage = (int)Math.ceil(pagenum/10.0)*10;
 		this.startPage = this.endPage - 9;
-		this.realEnd = (int)Math.ceil(total*1.0/10);
+		this.realEnd = (int)Math.ceil(total*1.0/20);
 		this.realEnd = this.realEnd == 0 ? 1 : this.realEnd;
 		this.endPage = endPage > realEnd ? realEnd : endPage;
 		

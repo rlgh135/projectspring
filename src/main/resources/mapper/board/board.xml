@@ -34,6 +34,7 @@
 	<select id="getList">
 		select * from board where
 		<include refid="cri"></include>
+		<if test="keyword != null">(userid like('%${keyword}%') or title like('%${keyword}%') or content like('%${keyword}%')) and</if>
 		boardnum > 0 order by boardnum desc limit #{startrow}, #{amount}
 	</select>
 	
@@ -41,6 +42,7 @@
 	<select id="getlikeList">
 		select * from board where
 		<include refid="cri"></include>
+		<if test="keyword != null">(userid like('%${keyword}%') or title like('%${keyword}%') or content like('%${keyword}%')) and</if>
 		boardnum > 0 order by likecnt desc limit #{startrow}, #{amount}
 	</select>	
 	
@@ -48,6 +50,7 @@
 	<select id="getpopularList">
 		select * from board where
 		<include refid="cri"></include>
+		<if test="keyword != null">(userid like('%${keyword}%') or title like('%${keyword}%') or content like('%${keyword}%')) and</if>
 		boardnum > 0 order by viewcnt desc limit #{startrow}, #{amount}
 	</select>	
 	
