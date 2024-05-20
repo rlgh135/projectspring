@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/css/package/pmain.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 </head>
-<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
-
 <body>
     <div id="wrap">
         <div id="body_container">
@@ -223,14 +222,17 @@
             });
         });
 
-        document.querySelectorAll(".get").forEach(function(element) {
-            element.addEventListener("click", function(e) {
-                e.preventDefault();
-                let href = this.getAttribute("href");
-                let urlParams = new URLSearchParams(href.split("?")[1]);
-                let packagenum = urlParams.get("packagenum");
-                location.href = "/package/pget" + "?packagenum=" + packagenum;
-            });
+        document.querySelector("#searchForm").addEventListener("submit", function(event) {
+            const region = document.getElementById("destinationInput").value;
+            const startDate = document.getElementById("startDateInput").value;
+            const endDate = document.getElementById("endDateInput").value;
+            const personCount = document.getElementById("personInput").value;
+
+            // 세션 스토리지에 검색 조건 저장
+            sessionStorage.setItem("region", region);
+            sessionStorage.setItem("startDate", startDate);
+            sessionStorage.setItem("endDate", endDate);
+            sessionStorage.setItem("personCount", personCount);
         });
     });
 

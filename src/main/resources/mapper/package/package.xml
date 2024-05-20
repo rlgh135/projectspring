@@ -70,18 +70,21 @@
 	
 	
 	<select id="getDetailRegionList">
-	    <![CDATA[
-	    select * from package
-	    where
-	    ]]>
-	    <include refid="cri"/>
-	    <![CDATA[
-	    startdate <= #{enddate}
-	    and enddate >= #{startdate}
-	    and maxcnt >= #{maxcnt}
-	    and regionname = #{regionname}
-	    and visibility = 'O'
-	    ]]>
+    <![CDATA[
+    select * from package
+    where
+    ]]>
+    <include refid="cri"/>
+    <![CDATA[
+    startdate <= #{enddate}
+    and enddate >= #{startdate}
+    and maxcnt >= #{maxcnt}
+    and regionname = #{regionname}
+    and visibility = 'O'
+    and (
+        startdate > #{startdate} or enddate <= #{enddate}
+    )
+    ]]>
 	</select>
 	
 	<select id="getTotal">

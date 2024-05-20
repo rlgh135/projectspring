@@ -9,11 +9,11 @@
 </head>
 <body>
     <div id="wrap" class="list">
-		<div class="menu">
-		   <div id="menu1"><a href="">해외투어</a></div>
-		   <div id="menu2"><a th:href="@{/package/pmain}">국내투어</a></div>
-		   <div id="menu3"><a th:href="@{/board/list}">게시판</a></div>
-		</div>
+        <div class="menu">
+           <div id="menu1"><a href="">해외투어</a></div>
+           <div id="menu2"><a th:href="@{/package/pmain}">국내투어</a></div>
+           <div id="menu3"><a th:href="@{/board/list}">게시판</a></div>
+        </div>
         <div class="plistresult">  
             <div class="sidesearch">
                 <div class="sidebar">
@@ -185,12 +185,16 @@
 
             if (region) {
                 document.getElementById("resultRegion").textContent = region;
+                document.getElementById("destinationInput").value = region;
             }
             if (startDate && endDate) {
                 document.getElementById("resultPeriod").textContent = startDate + " - " + endDate;
+                document.getElementById("startDateInputForm").value = startDate;
+                document.getElementById("endDateInputForm").value = endDate;
             }
             if (personCount) {
                 document.getElementById("resultPerson").textContent = personCount + "명";
+                document.getElementById("personInput").value = personCount;
             }
         }
 
@@ -214,8 +218,8 @@
 
     function validateForm() {
         const destination = document.getElementById("destinationInput").value;
-        const startDate = document.getElementById("startDateInput").value;
-        const endDate = document.getElementById("endDateInput").value;
+        const startDate = document.getElementById("startDateInputForm").value;
+        const endDate = document.getElementById("endDateInputForm").value;
         const personCount = document.getElementById("personInput").value;
 
         if (!destination) {
