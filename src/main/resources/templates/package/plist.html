@@ -5,98 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/css/package/plist.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 </head>
-<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 <body>
     <div id="wrap" class="list">
+		<div class="menu">
+		   <div id="menu1"><a href="">해외투어</a></div>
+		   <div id="menu2"><a th:href="@{/package/pmain}">국내투어</a></div>
+		   <div id="menu3"><a href="">게시판</a></div>
+		</div>
         <div class="plistresult">  
             <div class="sidesearch">
                 <div class="sidebar">
                     <div class="destination">
-                        <input type="button" value="지역"/>
-                    </div>
-                    <div class="period">
-                        <input type="button" placeholder="출발일/ 도착일" id ="myID" />
-                    </div>
-                    <div class="person">
-                        <button type="button"onclick="openper()"><span id="personCount">인원수</span></button>
-                    </div>
-                    <div id="perlist" class="hide">
-                        <div class="pr_header">
-                            <span onclick="openper()">x</span>
-                        </div>
-                        
-                        <div class="pr_choice">
-                            <div class="pr_list">
-                                <button class="pr"><span>1명</span></button>
-                                <button class="pr"><span>2명</span></button>
-                                <button class="pr"><span>3명</span></button>
-                                <button class="pr"><span>4명</span></button>
-                                <button class="pr"><span>5명</span></button>
-                                <button class="pr"><span>6명</span></button>
-                                <button class="pr"><span>7명</span></button>
-                                <button class="pr"><span>8명</span></button>
-                                <button class="pr"><span>9명</span></button>
-                                <button class="pr"><span>10명 ++ </span></button>
+                        <button type="button" onclick="opendes()">
+                            <span id="desChoice">어디로 여행하세요?</span>
+                        </button>
+                        <input type="hidden" name="regionname" id="destinationInput">
+                        <div id="deslist" class="hide">
+                            <div class="list">
+                                <div class="dl_header">
+                                    <span onclick="opendes()">x</span>
+                                </div>
+                                <hr>
+                                <div class="dl_choice">
+                                    <button type="button" class="dl"><span>서울</span></button>
+                                    <button type="button" class="dl"><span>제주도</span></button>
+                                    <button type="button" class="dl"><span>경기도</span></button>
+                                    <button type="button" class="dl"><span>강원도</span></button>
+                                    <button type="button" class="dl"><span>충청도</span></button>
+                                    <button type="button" class="dl"><span>경상도</span></button>
+                                    <button type="button" class="dl"><span>전라도</span></button>
+                                    <button type="button" class="dl"><span>인천</span></button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                  
+                    <div class="period">
+                        <input type="text" name="startdate" placeholder="출발일/도착일" id="startDateInput" readonly />
+                        <input type="text" name="enddate" placeholder="" id="endDateInput" readonly />
+                    </div>
+                    <div class="person">
+                        <button type="button" onclick="openper()">
+                            <span id="personCount">인원</span>
+                        </button>
+                        <input type="hidden" name="maxcnt" id="personInput">
+                        <div id="perlist" class="hide">
+                            <div class="pr_header">
+                                <span onclick="openper()">x</span>
+                            </div>
+                            <div class="pr_choice">
+                                <div class="pr_list">
+                                    <button type="button" class="pr"><span>1명</span></button>
+                                    <button type="button" class="pr"><span>2명</span></button>
+                                    <button type="button" class="pr"><span>3명</span></button>
+                                    <button type="button" class="pr"><span>4명</span></button>
+                                    <button type="button" class="pr"><span>5명</span></button>
+                                    <button type="button" class="pr"><span>6명</span></button>
+                                    <button type="button" class="pr"><span>7명</span></button>
+                                    <button type="button" class="pr"><span>8명</span></button>
+                                    <button type="button" class="pr"><span>9명</span></button>
+                                    <button type="button" class="pr"><span>10명 ++ </span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="searchForm" action="/package/plist" method="GET" onsubmit="return validateForm()">
+                        <input type="hidden" name="regionname" id="destinationInputForm">
+                        <input type="hidden" name="startdate" id="startDateInputForm">
+                        <input type="hidden" name="enddate" id="endDateInputForm">
+                        <input type="hidden" name="maxcnt" id="personInputForm">
+                        <div class="search_btn">
+                            <button type="submit">검색</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="searchresult">
                 <div class="reslutbar">
                     <div class="result">
-						<div class="text1">
-						    <span id="resultRegion"></span>
-						</div>
-						<div class="text2">
-						    <span id="resultPeriod"></span>
-						</div>
-						<div class="text3">
-						    <span id="resultPerson"></span>
-						</div>
+                        <div class="text1">
+                            <span id="resultRegion"></span>
+                        </div>
+                        <div class="text2">
+                            <span id="resultPeriod"></span>
+                        </div>
+                        <div class="text3">
+                            <span id="resultPerson"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="listwrap">
                     <div class="plist">
-	                    <div th:if="${list != null and list.size() > 0}" th:each="board:${list}" class="package">
-	                    	<a th:href="@{/package/pget(packagenum=${board.packagenum})}">
-	                        <div class="thumbnail">
-	                            <img src="/images/packageimg/384878.jpg" alt="">
-	                        </div>
-	                        <div class="info">
-	                            <h3>[[${board.packageTitle}]]</h3>
-	                            <p>[[${board.packageContent}]]</p>
-	                        </div>
-	                        <div class="price">
-	                            <h3>[[${board.adultPrice}]] 원</h3>
-	                        </div>
-	                    	</a>
-	                    </div> 
+                        <div th:if="${list != null and list.size() > 0}" th:each="board:${list}" class="package">
+                            <a th:href="@{/package/pget(packagenum=${board.packagenum})}">
+                            <div class="thumbnail">
+                                <img src="/images/packageimg/384878.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <h3>[[${board.packageTitle}]]</h3>
+                                <p>[[${board.packageContent}]]</p>
+                            </div>
+                            <div class="price">
+                                <h3>[[${board.adultPrice}]] 원</h3>
+                            </div>
+                            </a>
+                        </div> 
+                        <div th:if="${list == null or list.size() == 0}" class="row no-list">
+                            <p>등록된 게시글이 없습니다.</p>
+                        </div>
                     </div>
-					<div th:if="${list == null or list.size() == 0}" class="row no-list">
-						<p>등록된 게시글이 없습니다.</p>
-					</div>
                 </div>
             </div>
         </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    flatpickr("#myID", {
+    flatpickr("#startDateInput", {
         mode: "range",
         dateFormat: "Y-m-d",
+        minDate: "today",
         onClose: function(selectedDates, dateStr, instance) {
             if (selectedDates.length === 2) {
-                const formattedDate = selectedDates.map(date => {
-                    return instance.formatDate(date, "Y-m-d");
-                }).join(" / ");
-                instance.input.value = formattedDate;
+                const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
+                const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
+                document.getElementById("startDateInput").value = startDate;
+                document.getElementById("endDateInput").value = endDate;
+                document.getElementById("endDateInput").style.display = 'block';
+                document.getElementById("startDateInputForm").value = startDate; // 폼에 시작 날짜 업데이트
+                document.getElementById("endDateInputForm").value = endDate; // 폼에 종료 날짜 업데이트
             }
         }
     });
+
+    function opendes() {
+        const target = document.getElementById("deslist");
+        target.classList.toggle("hide");
+    }
 
     function openper() {
         const target = document.getElementById("perlist");
@@ -104,28 +151,89 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        const buttons = document.querySelectorAll(".pr_list button");
-
-        buttons.forEach(function(button) {
+        const prButtons = document.querySelectorAll(".pr_list button");
+        prButtons.forEach(function(button) {
             button.addEventListener("click", function() {
-                const count = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+                const countText = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+                const count = parseInt(countText.match(/\d+/)[0]); // 숫자만 추출하여 정수로 변환
                 const personCountSpan = document.getElementById("personCount");
-                personCountSpan.textContent = count; // 인원 수 업데이트
-                openper(); // perlist 닫기
+                personCountSpan.textContent = count + "명"; // 인원 수 업데이트
+                document.getElementById("personInput").value = count; // 폼에 인원 수 업데이트
+                document.getElementById("personInputForm").value = count; // 검색 폼에 인원 수 업데이트
+                openper();
             });
         });
 
-        // URL 파라미터를 통해 데이터 가져오기
-        const urlParams = new URLSearchParams(window.location.search);
-        const region = urlParams.get('regionname');
-        const startdate = urlParams.get('startdate');
-        const enddate = urlParams.get('enddate');
-        const maxcnt = urlParams.get('maxcnt');
+        const dlButtons = document.querySelectorAll(".dl");
+        dlButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const destination = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+                const desChoiceSpan = document.getElementById("desChoice");
+                desChoiceSpan.textContent = destination; // 목적지 텍스트 업데이트
+                document.getElementById("destinationInput").value = destination; // 폼에 목적지 업데이트
+                document.getElementById("destinationInputForm").value = destination; // 검색 폼에 목적지 업데이트
+                opendes();
+            });
+        });
 
-        // 결과를 span에 설정
-        document.getElementById('resultRegion').textContent = region;
-        document.getElementById('resultPeriod').textContent = startdate + " ~ " + enddate;
-        document.getElementById('resultPerson').textContent = maxcnt + "명";
+        // 세션 스토리지에서 검색 조건을 불러와서 결과 부분에만 표시하는 함수
+        function loadSearchConditions() {
+            const region = sessionStorage.getItem("region");
+            const startDate = sessionStorage.getItem("startDate");
+            const endDate = sessionStorage.getItem("endDate");
+            const personCount = sessionStorage.getItem("personCount");
+
+            if (region) {
+                document.getElementById("resultRegion").textContent = region;
+            }
+            if (startDate && endDate) {
+                document.getElementById("resultPeriod").textContent = startDate + " - " + endDate;
+            }
+            if (personCount) {
+                document.getElementById("resultPerson").textContent = personCount + "명";
+            }
+        }
+
+        // 페이지 로드 시 검색 조건 불러오기
+        loadSearchConditions();
+
+        // 검색 버튼 클릭 시 검색 조건을 세션 스토리지에 저장하는 함수 추가
+        document.querySelector("#searchForm").addEventListener("submit", function(event) {
+            const region = document.getElementById("destinationInput").value;
+            const startDate = document.getElementById("startDateInput").value;
+            const endDate = document.getElementById("endDateInput").value;
+            const personCount = document.getElementById("personInput").value;
+
+            // 세션 스토리지에 검색 조건 저장
+            sessionStorage.setItem("region", region);
+            sessionStorage.setItem("startDate", startDate);
+            sessionStorage.setItem("endDate", endDate);
+            sessionStorage.setItem("personCount", personCount);
+        });
     });
+
+    function validateForm() {
+        const destination = document.getElementById("destinationInput").value;
+        const startDate = document.getElementById("startDateInput").value;
+        const endDate = document.getElementById("endDateInput").value;
+        const personCount = document.getElementById("personInput").value;
+
+        if (!destination) {
+            alert("여행 목적지를 선택하세요.");
+            return false;
+        }
+
+        if (!startDate || !endDate) {
+            alert("여행 날짜를 선택하세요.");
+            return false;
+        }
+
+        if (!personCount) {
+            alert("인원 수를 선택하세요.");
+            return false;
+        }
+
+        return true;
+    }
 </script>
 </html>

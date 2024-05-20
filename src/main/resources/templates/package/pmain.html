@@ -13,7 +13,7 @@
         <div id="body_container">
             <div class="menu">
                 <div id="menu1"><a href="">해외투어</a></div>
-                <div id="menu2"><a href="">국내투어</a></div>
+                <div id="menu2"><a th:href="@{/package/pmain}">국내투어</a></div>
                 <div id="menu3"><a href="">게시판</a></div>
             </div>
             <div class="banner">
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                <form id="searchForm" action="/package/plist" method="GET">
+                <form id="searchForm" action="/package/plist" onsubmit="return validateForm()" method="GET">
                     <input type="hidden" name="regionname" id="destinationInputForm">
                     <input type="hidden" name="startdate" id="startDateInputForm">
                     <input type="hidden" name="enddate" id="endDateInputForm">
@@ -107,9 +107,9 @@
                                 </div>
                             </a>
                         </div>
-                    </div>
-                    <div th:if="${recent == null or #lists.size(recent) == 0}" class="rp_list no-list">
-                        <div>등록된 게시글이 없습니다.</div>
+	                    <div th:if="${recent == null or #lists.size(recent) == 0}" class="rp_list no-list">
+	                        <div>등록된 게시글이 없습니다.</div>
+	                    </div>
                     </div>
                 </div>
                 <div class="package">
@@ -133,9 +133,9 @@
                                 </div>
                             </a>
                         </div>
-                    </div>
-                    <div th:if="${pop == null or #lists.size(pop) == 0}" class="pp_list no-list">
-                        <div>등록된 게시글이 없습니다.</div>
+	                    <div th:if="${pop == null or #lists.size(pop) == 0}" class="pp_list no-list">
+	                        <div>등록된 게시글이 없습니다.</div>
+	                    </div>
                     </div>
                 </div>
                 <div class="package ">
@@ -159,9 +159,9 @@
                                 </div>
                             </a>
                         </div>
-                    </div>
-                    <div th:if="${cheap == null or #lists.size(cheap) == 0}" class="pp_list no-list">
-                        <div>등록된 게시글이 없습니다.</div>
+	                    <div th:if="${cheap == null or #lists.size(cheap) == 0}" class="pp_list no-list">
+	                        <div>등록된 게시글이 없습니다.</div>
+	                    </div>
                     </div>
                 </div>
             </div>
@@ -174,6 +174,7 @@
     flatpickr("#startDateInput", {
         mode: "range",
         dateFormat: "Y-m-d",
+		minDate: "today",
         onClose: function(selectedDates, dateStr, instance) {
             if (selectedDates.length === 2) {
                 const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
@@ -232,5 +233,29 @@
             });
         });
     });
+
+    function validateForm() {
+        const destination = document.getElementById("destinationInput").value;
+        const startDate = document.getElementById("startDateInput").value;
+        const endDate = document.getElementById("endDateInput").value;
+        const personCount = document.getElementById("personInput").value;
+
+        if (!destination) {
+            alert("여행 목적지를 선택하세요.");
+            return false;
+        }
+
+        if (!startDate || !endDate) {
+            alert("여행 날짜를 선택하세요.");
+            return false;
+        }
+
+        if (!personCount) {
+            alert("인원 수를 선택하세요.");
+            return false;
+        }
+
+        return true;
+    }
 </script>
 </html>

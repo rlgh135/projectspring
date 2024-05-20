@@ -9,6 +9,17 @@
 body{
     background-color:white;
 }
+.menu{
+    width:20%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10%;
+}
+.menu a{
+    text-decoration: none;
+    font-size: 20px;
+    color:black;
+}
 .plistresult{
     display: flex;
     margin-top: 20px;
@@ -16,6 +27,7 @@ body{
 .sidesearch{
     width:300px;
 }
+
 .sidebar{
     width:300px;
     height: 500px;
@@ -24,14 +36,25 @@ body{
     border-radius: 20px;
     position: fixed;
     text-align: center;
-}    
+}  
+.sidebar > #searchForm button{
+    background-color: dodgerblue;
+    border: none;
+    font-size: 20px;
+    color:white;
+    height: 50px;
+    width: 250px;
+    border-radius: 20px;
+    margin-top: 40px;
+    
+}  
 .destination{
     width: 250px;
     height: 100px;
     margin: 0 auto;
     margin-top: 50px;
 }
-.destination input[type="button"]{
+.destination button{
     width: 250px;
     height: 50px;
     text-align: center;
@@ -42,14 +65,60 @@ body{
     cursor: pointer;
     color: gray;
 }
+#deslist{
+    border: 1px solid lightgray;
+    border-radius: 5%;
+    background-color: white;
+    position: absolute;
+    z-index: 2;
+    width: 250px;
+    height: 600px;
+    margin: 0 auto;
+    overflow-y: scroll;
+}
+#deslist > .list {
+    width:250px;
+    height: 100%;
+
+}
+.dl_header{
+    width: 250px;
+    height: 50px;
+    margin: 0 auto;
+}
+.dl_header span{
+    font-size: 30px;
+    cursor: pointer;
+    height: 50px;
+    width: 250px;
+    margin: 0 auto;
+    color: gray;
+}
+
+.dl_choice{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.dl_choice button{
+    width : 170px;
+    height: 50px;
+    font-size: 20px;
+    background-color: dodgerblue;
+    border-radius: 10px;
+    margin-top: 10px;
+    color: white;
+    
+}
 .period{
     width: 250px;
     height: 100px;
     margin: 0 auto;
     margin-top: 20px;
 }
-.period > #myID{
-    width: 250px;
+.period input{
+   	width: 250px;
     height: 50px;
     text-align: center;
     font-size: 20px;
@@ -57,6 +126,14 @@ body{
     border: 1px solid lightgray;
     border-radius: 20px;
     cursor: pointer;
+    color: gray;
+}
+.period input:focus{
+	outline: none;
+} 
+#endDateInput{
+	color:gray;
+	display:none;
 }
 .person{
     width: 250px;
@@ -158,13 +235,13 @@ body{
     background-color: white;
     position: absolute;
     z-index: 2;
-    width: 300px;
+    width: 250px;
     height: 400px;
     margin: 0 auto;
     margin-top: 0;
 }
 #perlist > .pr_header{
-    width: 200px;
+    width: 250px;
     height: 50px;
     margin: 0 auto;
 }
@@ -172,7 +249,7 @@ body{
     font-size: 30px;
     cursor: pointer;
     height: 50px;
-    width: 350px;
+    width: 250px;
     margin: 0 auto;
     color: gray;
 }
@@ -183,7 +260,7 @@ body{
     border-top: 1px solid gray;
     display:flex;
     overflow: scroll;
-    width: 200px;
+    width: 250px;
     margin:0 auto;
 }
 .pr_choice > .pr_list{
@@ -193,10 +270,10 @@ body{
     justify-content: space-around;
 }
 .pr_list button{
-    width : 70px;
+    width : 110px;
     height: 50px;
     font-size: 15px;
-    background-color: skyblue;
+    background-color: dodgerblue;
     border-radius: 10px;
     margin-top: 10px;
     color: white; 
