@@ -78,7 +78,7 @@
 	    <![CDATA[
 	    startdate <= #{enddate}
 	    and enddate >= #{startdate}
-	    and maxcnt > #{maxcnt}
+	    and maxcnt >= #{maxcnt}
 	    and regionname = #{regionname}
 	    and visibility = 'O'
 	    ]]>
