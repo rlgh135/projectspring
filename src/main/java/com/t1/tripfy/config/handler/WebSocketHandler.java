@@ -252,6 +252,19 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	}
 
 	// 메시지 발송시
+	/* 대충 해야할거
+	 * 
+	 * 유효성
+	 * 송신자 확인
+	 * 수신된 채팅방 확인
+	 * 해당 채팅방의 다른 사용자가 웹소켓 연결되어있는지 확인
+	 *   ㄴ분기                     -웹소켓 연결이 없는 경우
+	 *     ㄴ웹소켓에 연결돼있는경우   SSE 연결 확인
+	 *       전송                      ㄴ분기                    -바로 아래로 이동
+	 *                                   ㄴSSE 연결 확인되는 경우
+	 *                                     전송
+	 * 다 끝났으면 DB에 저장
+	 * */
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		

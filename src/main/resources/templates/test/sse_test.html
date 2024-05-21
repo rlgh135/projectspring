@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SSE TEST</title>
+	<style>
+		img {
+			display: inline-block;
+			height: 50px;
+			width: 50px;
+			object-fit: cover;
+		}
+		
+		#lightbox {
+			display: inline-block;
+			height: 20px;
+			width: 20px;
+		}
+		
+		.light-red {
+			background-color: red;
+		}
+		.light-blue {
+			background-color: blue;
+		}
+		.light-green {
+			background-color: lawngreen;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header">
+			<img src="/images/layoutimg/logowink.png" alt="logo">
+			<h2>SSE 자동 재연결 테스트</h2>
+		</div>
+		<div id="main">
+			<input type="text" id="inp-userid" placeholder="userid">
+			<input type="submit" id="inp-submit" value="SSE 연결">
+		</div>
+		<div id="conn-screen">
+			<div id="lightbox" class="light-red"></div>
+			<p id="status"></p>
+		</div>
+	</div>
+</body>
+<script>
+	const inputBox = document.getElementById("inp-userid");
+	const submitBtn = document.getElementById("inp-submit");
+	const lightBox = document.getElementById("lightbox");
+	const statusP = document.getElementById("status");
+	
+	let EVENTSOURCE = null;
+	
+	let closeTime = null;
+	
+	submitBtn.addEventListener("click", (e) => {
+		const userid = inputBox.value;
+		if(!(!!userid) || userid.trim().length === 0) {
+			statusP.innerHTML = "userid를 적어라";
+			return;
+		}
+		
+		EVENTSOURCE = new EventSource(
+			"http://localhost:8080/sse/subscribe?clientid=" + userid
+		);
+		EVENTSOURCE.addEventListener("open", (e) => {
+			const openTime = Date.now();
+			let output = "conn open, SSE, userid=" + userid + ", in=" + utcMilliToString(openTime);
+			if(!(!!closeTime)) {
+				output += "\nreconnect in=" + ((openTime - closeTime) / 1000) + "s (" + (openTime - closeTime) + "ms)";
+				closeTime = null;
+			}
+			console.log(output);
+			handlingLightBox("light-blue");
+			statusP.innerHTML = "연결";
+		});
+		EVENTSOURCE.addEventListener("connected", (e) => {
+			const receiveTime = Date.now();
+			//const output = "receive, connected, SSE, type=" + e.type + ", lastEventId=" + e.lastEventId + ", data=" + JSON.parse(e.date).message + "\nin=" + utcMilliToString(receiveTime);
+			const output = "receive, connected, SSE, type=" + e.type + ", lastEventId=" + e.lastEventId + ", retry=" + e.retry + "\ndata=" + e.data + ", in=" + utcMilliToString(receiveTime);
+			console.log(output);
+			handlingLightBox("light-green");
+			statusP.innerHTML = "연결 - 더미데이터 수신";
+		});
+		EVENTSOURCE.onerror = (err) => {
+			closeTime = Date.now();
+			const output = "error, SSE, in=" + utcMilliToString(closeTime) + "\nclose SSE connection due to " + err.toString();
+			console.log(output);
+			//console.log(err);
+			handlingLightBox("light-red");
+			statusP.innerHTML = "연결 중단 - 오류 발생";
+		};
+	});
+	
+	/*
+	재연결 컨트롤 내지는 오버라이드 로직
+	https://stackoverflow.com/questions/21831206/eventsource-permanent-auto-reconnection
+	제일 밑쪽 답변
+	
+	요약 : 
+	아마 timeout시 onerror로 한번 감
+	혹은 서버가 꺼졌거나
+	- 보니까 onerror 거치는게 맞음
+	그럴때 브라우저가 알아서 재송신하게 냅두는 대신 EVENTSOUCE.close()를 때려서 종료시키고
+	재연결 시도 메서드를 호출시킨다
+	이제 거기서 적절히 전역 시간체크 변수 등을 통해 재연결 시도 유예시간을 서서히 늘려줄 수도 있고
+	(1s - 2s - 4s - 8s - 16s - 32s - 64s - ... 이런 식으로)
+	근데 시발 retry값은 어디서 꺼내냐
+	
+	정 retry 값을 못 찾겠다면 위의 예시를 통해서 해결할 수도 있을거임
+	서버단에서는 클라단의 미통보 연결해제를 처리하기 위한 긴 timeout을 주고(60 * 1000 등)
+	실제 timeout은 위의 방법을 써서 여기서 처리하는거임
+	클라에서 체크한 timeout이 지났으면 바로 close()를 때리고 재연결을 하자고
+	
+	*/
+	
+	function utcMilliToString(milliseconds) {
+		return new Date(milliseconds).toISOString();
+	}
+	
+	function handlingLightBox(wantedClass) {
+		const lightClassArr = ["light-red", "light-blue", "light-green"];
+		if(!lightClassArr.includes(wantedClass))
+			throw new Error("wrong parameter in handlingLightBox()");
+		
+		lightClassArr.forEach((item, index, arr) => {
+			if(item === wantedClass) {
+				lightBox.classList.add(item);
+			} else {
+				lightBox.classList.remove("item");
+			}
+		});	
+	}
+</script>
+</html>
