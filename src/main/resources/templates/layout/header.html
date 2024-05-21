@@ -1,4 +1,5 @@
 <th:block th:fragment="header(loginUser)">
+	
 	<link rel="stylesheet" href="/css/layout/headerstyle.css">
 	<!-- 탑 해더 부분 -->
 	<div id="top_wrap">
@@ -80,9 +81,20 @@
 				<div class="user_gnb_wrap">
 					<ul class="user_gnb">
 						<li class="userinfo_gnb">
-							<a href="/user/myinfo">
-								<img src="/images/userimg/defaultbadge.svg" alt="유저프로필">
+							<a href="javascript:openwarea()">
+								<img th:src="@{/images/userimg/{thumbnail}(thumbnail=${thumbnail})}">
 							</a>
+							<div id="pfwarea" class="pfwhide">
+								<div onclick="openwarea()" style="cursor: pointer;">
+									닫기
+								</div>
+								<div>
+									<button id="">게시글 작성</button>
+								</div>
+								<div>
+									<button id="modalOpenButton">패키지 작성</button>
+								</div>
+							</div>
 						</li>
 						<li class="userinfo_gnb">
 							<a href="/user/logout">
@@ -95,6 +107,7 @@
 
 		</div>
 	</div>
+	<th:block th:include="~{layout/packageModal::packageModal}"></th:block>
 	<script>
 		const modal = document.querySelector('.modal');
 		const modalOpen = document.querySelector('.modal_btn');
@@ -111,5 +124,11 @@
 		function goToJoin() {
 			location.href = "/user/join";
 		}
+		
+		function openwarea(){
+			const pftarget = document.getElementById("pfwarea");
+			pftarget.classList.toggle("pfwhide");
+		}
 	</script>
+	
 </th:block>

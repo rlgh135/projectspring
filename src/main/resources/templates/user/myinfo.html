@@ -1,20 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myinfo</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>myinfo</title>
 	<link rel="stylesheet" href="/css/user/myinfostyle.css">
 </head>
 <body>
+	<th:block th:include="~{layout/packageModal::packageModal}"></th:block>
 	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
-	<section>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
+	
+	<div class="pfmdform">
+		<form id="ptform" method="post" action="/user/changeimg" enctype="application/x-www-form-urlencoded">
+			<p>프로필 사진 변경</p>
+			<div id="profilecontainer">
+				<label for="uploadfileform">
+				<div id="profile" th:onclick="profilechagne([[${session.loginUser}]], [[${thumbnail}]])">
+					<img id="formprofileimg"  th:src="@{/images/userimg/{thumbnail}(thumbnail=${thumbnail})}">
+				</div>
+				</label>
+					
+			</div>
+			<div class="ptupload">
+				<input type="hidden" name="changedfilename" value="">
+				<input id="uploadfileform" type="file" name="changedfile" onchange="chooseimg(this)" style="display: none;">
+			</div>
+			<div class="ptfaarea">
+				<a th:href="'javascript:profilechagne(\''+${session.loginUser}+'\', \''+${thumbnail}+'\')'">변경완료</a>
+				<a class="pfmdclose" href="javascript:closepfmdform()">나가기</a>
+			</div>
+		</form>
+	</div>
+	<section id="myinfowrap">
+		<div id="profilewrap">
+			<div id="profileupperwrap">
+				<div id="profilecontainer">
+					<div id="profile" class="pfmdopen">
+						<img th:src="@{/images/userimg/{thumbnail}(thumbnail=${thumbnail})}">
+					</div>
+				</div>
+				<div id="infocontainer">
+					<div class="nameguide">
+						<p id="profname">[[${user.userid}]]</p>
+						<p id="isguide"><img src="/images/userimg/guidebadge.png" alt=""></p>
+						<div id="editbtn">
+							<div id="redalert"></div>
+							<input type="button" value="패키지관리" class="profmopenbtn">
+						</div>
+					</div>
+					<ul class="actcntlist">
+						<li>
+							<p>게시글</p>
+							<p>10</p>
+						</li>
+						<li>
+							<p>댓글</p>
+							<p>30</p>
+						</li>
+						<li>
+							<p>좋아요</p>
+							<p>3</p>
+						</li>
+					</ul>
+					<p style="margin-top: 20px;">
+						tripfy와 n일동안 함께했어요. 아래 리본하면 좋을듯
+					</p>
+				</div>
+			</div>
+			<div id="profilelowerwrap">
+				<ul id="choicebtns">
+					<li id="myboard" onclick="showMyBoards()">내 게시글</li>
+					<li id="joinpackage" onclick="showJoinPacks()">참여한 여행</li>
+				</ul>
+				<div id="infosarea">
+
+				</div>
+			</div>
+		</div>
+		<div id="backbtnarea">
+			<input type="button" value="돌아가기">
+		</div>
+		<!--mmmmmmmmmmmmmmmmmmmmmmmmmmmmm-->
 	</section>
+	<div id="guidemodal">
+		<div id="guidewarp">
+			<div id="profmclosebtn">닫기버튼</div>
+			<div id="guidecontentswrap">
+				<div id="guidepfarea">
+					<div>
+						<img src="/images/userimg/defaultbadge.png" alt="">
+					</div>
+					<div>
+						<ul class="actcntlist">
+							<li>
+								<p>내 패키지</p>
+								<p>10 개</p>
+							</li>
+							<li>
+								<p>후기</p>
+								<p>23 개</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div id="guideworkarea">
+					<ul id="choicebtns">
+						<li id="myboard" onclick="showMyPacks('loginUser')">내 패키지</li>
+						<li id="joinpackage" onclick="showPackReviews('loginUser')">패키지 후기</li>
+					</ul>
+					<div id="guideinfosarea">
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 </body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+	const pfmdform = document.querySelector('.pfmdform');
+	const pfmdopen = document.querySelector('.pfmdopen');
+	const pfmdclose = document.querySelector('.pfmdclose');
+	
+	pfmdopen.addEventListener('click', function () {
+		pfmdform.style.display = 'block';
+	});
+	pfmdclose.addEventListener('click', function () {
+		pfmdform.style.display = 'none';
+	});
+	
+	const guidemodal = document.querySelector('#guidemodal');
+	const profmopenbtn = document.querySelector('.profmopenbtn');
+	const profmclosebtn = document.querySelector('#profmclosebtn');
+	
+	profmopenbtn.addEventListener('click', function () {
+		guidemodal.style.display = 'block';
+	});
+	profmclosebtn.addEventListener('click', function () {
+		guidemodal.style.display = 'none';
+	});
+	
+    function showMyBoards() {
+        const target = document.getElementById("myboard");
+        target.classList.toggle("clicklist");
+    }
+	
+	function chooseimg(obj){
+		console.log(obj.files[0]);
+		let file = obj.files[0];
+		if(!file.type.match("image.*")){
+		     alert("이미지를 등록해야 합니다.")
+		     return;
+		}
+		let reader = new FileReader();
+		reader.readAsDataURL(file);
+		
+		reader.onload = function (e){ 
+			console.log(e);
+			$('#formprofileimg').attr("src", e.target.result);
+		}
+		 
+	}
+	function profilechagne(userid, sysname){
+		
+	}
+				
+</script>
 </html>

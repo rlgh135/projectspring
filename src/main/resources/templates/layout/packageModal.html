@@ -1,0 +1,23 @@
+<th:block th:fragment="packageModal">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.css">
+	<!--<link rel="stylesheet" href="/css/package/packageModal.css">-->
+	<form action="/package/write" name="packageForm" id="packageForm" method="post" enctype="multipart/form-data">
+	        <input type="hidden" id="countrycode" name="countrycode">
+	        <input type="hidden" name="regionname" id="regionname" >
+	        <input type="hidden" name="startdate" id="startdate">
+	        <input type="hidden" name="enddate" id="enddate">
+	        <input type="hidden" name="packageTitle" id="package_title">
+	        <input type="hidden" name="packageContent" id="package_content">
+	        <input type="hidden" name="maxcnt" id="maxcnt">
+	        <input type="hidden" name="adultPrice" id="adult_price">
+	        <input type="hidden" name="childPrice" id="child_price">
+	        <input type="file" name="packageFile" id="package_file" accept="image/bmp,image/gif,image/jpg,image/jpeg,image/png,image/raw,image/tif,image/heif,image/heic,image/mp4,image/avi,image/mov,image/wmv,image/mkv,image/mpg,image/rm,image/asf,image/m4v,image/mpeg,image/mpg" style="display: none;">
+	      </form>
+	    <div id="modalContainer" class="hidden"></div>
+<script src="/js/user/jquery-3.7.1.min.js"></script>
+<script src="/js/package/packageModal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.js"></script>
+</th:block>

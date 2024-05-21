@@ -27,11 +27,9 @@
 	
 	<insert id="insertPack">
 		insert into package
-		(guidenum, package_title, packagecontent
-		max_cnt, adult_price, child_price, startdate, enddate, tourdays, deadline)
+		(guidenum, package_title, package_content,maxcnt, adult_price, child_price, startdate, enddate, tourdays, deadline, regionname, countrycode)
 		values
-		(#{guidenum}, #{package_title}, #{packagecontent}, s#{max_cnt}, #{adult_price},
-		#{child_price}, #{startdate}, #{enddate}, #{tourdays}, #{deadline})	
+		(#{guidenum}, #{packageTitle}, #{packageContent}, #{maxcnt}, #{adultPrice}, #{childPrice}, #{startdate}, #{enddate}, #{tourdays}, #{deadline}, #{regionname}, #{countrycode})	
 	</insert>
 	
 	<update id="insertPackContent">
@@ -82,7 +80,7 @@
     and regionname = #{regionname}
     and visibility = 'O'
     and (
-        startdate > #{startdate} or enddate <= #{enddate}
+        startdate >= #{startdate} and enddate <= #{enddate}
     )
     ]]>
 	</select>
@@ -94,7 +92,7 @@
 	</select>
 	
 	<select id="getLastNum">
-		select max(packagenum) from package where userid=#{userid}
+		select max(packagenum) from package where guidenum=#{guidenum}
 	</select>
 	
 	

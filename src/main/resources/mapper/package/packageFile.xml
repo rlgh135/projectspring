@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t1.tripfy.mapper.pack.PackageFileMapper">
+	<insert id="insertFile">
+		insert into package_file values(#{packagenum},#{pfSysname},#{pfOrgname})
+	</insert>
+	<select id="getFiles">
+		select * from package_file where packagenum=#{packagenum}
+	</select>
+	
+	<delete id="deleteFileBySystemname">
+		delete from package_file where pf_sysname=#{pf_sysname}
+	</delete>
+</mapper>
