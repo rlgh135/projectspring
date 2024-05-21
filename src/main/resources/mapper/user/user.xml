@@ -16,6 +16,9 @@
 	<select id="getUserProfileName">
 		select sysname from user_img where userid=#{userid}
 	</select>
+	<select id="getGuideNum">
+		select * from guide_user where userid=#{userid}
+	</select>
 	<update id="updateUser">
 		
 	</update>

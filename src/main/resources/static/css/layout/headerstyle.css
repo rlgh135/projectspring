@@ -242,3 +242,14 @@ a:hover, a:active {text-decoration: none; color:black;}
 .modal_popup form *{
 	margin-top: 10px;
 }
+.pfwhide{
+	display: none;
+}
+#pfwarea{
+	width: 200px;
+	height: 100px;
+	position: absolute;
+}
+.userinfo_gnb:first-child{
+	display: flex;
+}
