@@ -8,6 +8,7 @@
 </head>
 <body>
 	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+	<th:block th:include="~{layout/packageModal::packageModal}"></th:block>
 	<section>
 		<br>
 		<br>
@@ -16,5 +17,6 @@
 		<br>
 		<br>
 	</section>
+	<button id="modalOpenButton">모달창 열기</button>
 </body>
 </html>

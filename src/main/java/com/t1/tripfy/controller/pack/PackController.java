@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
@@ -84,5 +86,26 @@ public class PackController {
 		return "package/pay";
 	}
 	
-
+	@PostMapping("write")
+	public String write(PackageDTO pack, MultipartFile packageFile,HttpServletRequest req) throws Exception {
+		//가이드num 세션있다고 가정
+		long guidenum = 1;
+		pack.setGuidenum(guidenum);
+		System.out.println(packageFile);
+		System.out.println(pack.getCountrycode());
+		System.out.println(pack.getRegionname());
+		if(service.regist(pack, packageFile)) {
+			long packagenum = service.getLastNum(pack.getGuidenum());
+			return "redirect:/package/tlwrite?packagenum="+packagenum;
+		}
+		else {
+			return "redirect:/index";
+		}
+	}
+	
+	@GetMapping("tlwrite")
+	public String getMethodName(@RequestParam String packagenum, Model model) {
+		model.addAttribute("packagenum", packagenum);
+		return "/package/ptimeline";
+	}
 }

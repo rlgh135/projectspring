@@ -20,7 +20,7 @@ public interface PackageMapper {
 	List<PackageDTO>getDetailRegionList(Criteria cri);
 	
 	long getTotal(Criteria cri);
-	long getLastNum(String userid);
+	long getLastNum(long guidenum);
 	PackageDTO getPackageByPackageNum(long packagenum);
 	
 	int updatePack(PackageDTO pack);

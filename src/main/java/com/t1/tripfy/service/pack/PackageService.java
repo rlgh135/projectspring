@@ -10,7 +10,7 @@ import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 
 public interface PackageService {
-	boolean regist(PackageDTO pack, MultipartFile[] files) throws Exception;
+	boolean regist(PackageDTO pack, MultipartFile file) throws Exception;
 	
 	PackageDTO getDetail(long packagenum);
 	UserDTO getUser(String userid);
@@ -20,7 +20,7 @@ public interface PackageService {
 	List<PackageDTO> getPopularGuideList(Criteria cri);
 	List<PackageDTO> getDetailRegionList(Criteria cri);
 	long getTotal(Criteria cri);
-	long getLastNum(String userid);
+	long getLastNum(long guidenum);
 	
 	boolean modify(PackageDTO pack, MultipartFile[] files) throws Exception;
 	boolean remove(long packagenum);
