@@ -27,7 +27,7 @@
 	
 	<insert id="insertPack">
 		insert into package
-		(guidenum, package_title, packagecontent
+		(guidenum, package_title, package_content,
 		max_cnt, adult_price, child_price, startdate, enddate, tourdays, deadline)
 		values
 		(#{guidenum}, #{package_title}, #{packagecontent}, s#{max_cnt}, #{adult_price},
