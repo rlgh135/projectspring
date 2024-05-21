@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.user.UserDTO;
+import com.t1.tripfy.mapper.user.UserMapper;
 import com.t1.tripfy.service.pack.PackageService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,6 +65,23 @@ public class PackController {
 			return "board/modify";
 		}
 		return "package/pget";
+	}
+	
+	
+	@GetMapping("pay")
+	public String pay(long packagenum, HttpServletRequest req, HttpServletResponse resp, Model model) {
+		System.out.println("packagenum: " + packagenum);
+		String requestURI = req.getRequestURI();
+		HttpSession session = req.getSession();
+		PackageDTO pack = service.getDetail(packagenum);
+		model.addAttribute("package",pack);
+		String loginUser = (String)session.getAttribute("loginUser");
+		model.addAttribute("loginUser",loginUser);
+		UserDTO user = service.getUser(loginUser);
+		model.addAttribute("user",user);
+		
+		
+		return "package/pay";
 	}
 	
 

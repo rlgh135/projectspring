@@ -70,11 +70,11 @@
                             </div>
                         </div>
                     </div>
-                    <form id="searchForm" action="/package/plist" method="GET" onsubmit="return validateForm()">
-                        <input type="hidden" name="regionname" id="destinationInputForm">
-                        <input type="hidden" name="startdate" id="startDateInputForm">
-                        <input type="hidden" name="enddate" id="endDateInputForm">
-                        <input type="hidden" name="maxcnt" id="personInputForm">
+                    <form id="searchForm" action="/package/plist" onsubmit="return validateForm()" method="GET" >
+						<input type="hidden" name="regionname" id="destinationInputForm">
+						<input type="hidden" name="startdate" id="startDateInputForm">
+						<input type="hidden" name="enddate" id="endDateInputForm">
+						<input type="hidden" name="maxcnt" id="personInputForm">
                         <div class="search_btn">
                             <button type="submit">검색</button>
                         </div>
@@ -151,32 +151,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        const prButtons = document.querySelectorAll(".pr_list button");
-        prButtons.forEach(function(button) {
-            button.addEventListener("click", function() {
-                const countText = this.textContent.trim(); // 버튼의 텍스트를 가져옴
-                const count = parseInt(countText.match(/\d+/)[0]); // 숫자만 추출하여 정수로 변환
-                const personCountSpan = document.getElementById("personCount");
-                personCountSpan.textContent = count + "명"; // 인원 수 업데이트
-                document.getElementById("personInput").value = count; // 폼에 인원 수 업데이트
-                document.getElementById("personInputForm").value = count; // 검색 폼에 인원 수 업데이트
-                openper();
-            });
-        });
-
-        const dlButtons = document.querySelectorAll(".dl");
-        dlButtons.forEach(function(button) {
-            button.addEventListener("click", function() {
-                const destination = this.textContent.trim(); // 버튼의 텍스트를 가져옴
-                const desChoiceSpan = document.getElementById("desChoice");
-                desChoiceSpan.textContent = destination; // 목적지 텍스트 업데이트
-                document.getElementById("destinationInput").value = destination; // 폼에 목적지 업데이트
-                document.getElementById("destinationInputForm").value = destination; // 검색 폼에 목적지 업데이트
-                opendes();
-            });
-        });
-
-        // 세션 스토리지에서 검색 조건을 불러와서 결과 부분에만 표시하는 함수
+        // 세션 스토리지에서 검색 조건을 불러와서 결과 부분에 표시하는 함수
         function loadSearchConditions() {
             const region = sessionStorage.getItem("region");
             const startDate = sessionStorage.getItem("startDate");
@@ -186,20 +161,53 @@
             if (region) {
                 document.getElementById("resultRegion").textContent = region;
                 document.getElementById("destinationInput").value = region;
+                document.getElementById("destinationInputForm").value = region;
+                document.getElementById("desChoice").textContent = region;
             }
             if (startDate && endDate) {
                 document.getElementById("resultPeriod").textContent = startDate + " - " + endDate;
+                document.getElementById("startDateInput").value = startDate;
+                document.getElementById("endDateInput").value = endDate;
                 document.getElementById("startDateInputForm").value = startDate;
                 document.getElementById("endDateInputForm").value = endDate;
             }
             if (personCount) {
                 document.getElementById("resultPerson").textContent = personCount + "명";
                 document.getElementById("personInput").value = personCount;
+                document.getElementById("personInputForm").value = personCount;
+                document.getElementById("personCount").textContent = personCount + "명";
             }
         }
 
-        // 페이지 로드 시 검색 조건 불러오기
+        // 페이지가 로드될 때 세션 스토리지에서 검색 조건을 불러옵니다.
         loadSearchConditions();
+
+        const prButtons = document.querySelectorAll(".pr_list button");
+        prButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const countText = this.textContent.trim();
+                const count = parseInt(countText.match(/\d+/)[0]);
+                const personCountSpan = document.getElementById("personCount");
+                personCountSpan.textContent = count + "명";
+                document.getElementById("personInput").value = count;
+                document.getElementById("personInputForm").value = count;
+                console.log("Person Count Set:", count); // 디버그 메시지
+                openper();
+            });
+        });
+
+        const dlButtons = document.querySelectorAll(".dl");
+        dlButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const destination = this.textContent.trim();
+                const desChoiceSpan = document.getElementById("desChoice");
+                desChoiceSpan.textContent = destination;
+                document.getElementById("destinationInput").value = destination;
+                document.getElementById("destinationInputForm").value = destination;
+                console.log("Destination Set:", destination); // 디버그 메시지
+                opendes();
+            });
+        });
 
         // 검색 버튼 클릭 시 검색 조건을 세션 스토리지에 저장하는 함수 추가
         document.querySelector("#searchForm").addEventListener("submit", function(event) {
@@ -218,26 +226,31 @@
 
     function validateForm() {
         const destination = document.getElementById("destinationInput").value;
-        const startDate = document.getElementById("startDateInputForm").value;
-        const endDate = document.getElementById("endDateInputForm").value;
+        const startDate = document.getElementById("startDateInput").value;
+        const endDate = document.getElementById("endDateInput").value;
         const personCount = document.getElementById("personInput").value;
+
+        console.log("Destination:", destination);
+        console.log("Start Date:", startDate);
+        console.log("End Date:", endDate);
+        console.log("Person Count:", personCount);
 
         if (!destination) {
             alert("여행 목적지를 선택하세요.");
-            return false;
+            return false; // 폼 제출을 방지
         }
 
         if (!startDate || !endDate) {
             alert("여행 날짜를 선택하세요.");
-            return false;
+            return false; // 폼 제출을 방지
         }
 
         if (!personCount) {
             alert("인원 수를 선택하세요.");
-            return false;
+            return false; // 폼 제출을 방지
         }
 
-        return true;
+        return true; // 폼 제출을 허용
     }
 </script>
 </html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/package/pay.css">
+</head>
+<body>
+    <div id="wrap">
+        <div class="header">
+            <div class="menu">
+                <div id="menu1"><a href="">해외투어</a></div>
+                <div id="menu2"><a th:href="@{/package/pmain}">국내투어</a></div>
+                <div id="menu3"><a th:href="@{/board/list}">게시판</a></div>
+            </div>
+        </div>
+        <div class="bodycontainer">
+            <div class="package_info">
+                <div class="pihead">
+                    <p>01</p>
+                    <h3>상품정보</h3>
+                </div>
+                <table class="info">
+                    <tbody>
+                        <tr class="first">
+                            <th>상품제목</th>
+                            <td colspan="3">[[${package.packageTitle}]]</td>
+                        </tr>
+                        <tr>
+                            <th>여행기간</th>
+                            <td colspan="3">
+                                <strong>[[${package.tourdays}]]일</strong>
+                                <span>([[${package.startdate}]]</span> ~ <span>[[${package.enddate}]])</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>금액</th>
+                            <td colspan="3" id="totalPrice" th:data-adultprice="${package.adultPrice}" th:data-childprice="${package.childPrice}">
+                                성인 가격: [[${package.adultPrice}]], 아이 가격: [[${package.childPrice}]]
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="agree">
+                <div class="aghead">
+                    <p>02</p>
+                    <h3>약관동의</h3>
+                </div>
+                <ul class="agreeTab">
+                    <li class="first">취소수수료특약</li>
+                    <li class="second">여행약관</li>
+                    <li class="third">개인정보수집이용</li>
+                    <li class="forth">개인정보 제3자 제공</li>
+                </ul>
+                <div class="scrollTab">
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque consequuntur voluptatum quae beatae veniam expedita fugit esse inventore, quis architecto tenetur odit accusantium sit quam ducimus officiis delectus? Eligendi, beatae?
+                </div>
+                <div class="checkTab">
+                    <div class="check1">
+                        <input type="checkbox" class="input-check" id="allAgree">
+                        <label for="allAgree">모든 약관에 동의</label>
+                        <input type="checkbox" class="input-check" id="allDisAgree">
+                        <label for="allDisAgree">모든 동의 취소</label>
+                    </div>
+                    <div class="check2">
+                        <input type="checkbox" class="input-check">
+                        <label for="allAgree">취소 수수료 특약 동의</label>
+                        <input type="checkbox" class="input-check">
+                        <label for="allAgree">여행약관 동의</label>
+                        <input type="checkbox" class="input-check">
+                        <label for="allAgree">개인정보 수집이용 동의</label>
+                        <input type="checkbox" class="input-check">
+                        <label for="allAgree">개인정보 제3자 제공 동의</label>
+                    </div>
+                </div>
+                <div class="userinfo">
+                    <div class="uihead">
+                        <p>03</p>
+                        <h3>예약자 정보</h3>
+                    </div>
+                    <table>
+                        <tbody>
+                            <tr class="user">
+                                <th>예약자</th>
+                                <td colspan="3"><!--/*[[${user.userid}]]*/--></td>
+                            </tr>
+                            <tr>
+                                <th>이메일</th>
+                                <td colspan="3"><!--/*[[${user.email}]]*/--></td>
+                            </tr>
+                            <tr>
+                                <th>휴대폰</th>
+                                <td colspan="3"><!--/*[[${user.phone}]]*/--></td>
+                            </tr>
+                            <tr>
+                                <th>예약정보</th>
+                                <td colspan="3" id="reservationInfo"> 성인 :  / 아이 : </td>
+                            </tr>
+                            <tr>
+                                <th>결제금액</th>
+                                <td colspan="3"id="totalAmount"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pay">
+                    <form action="">
+                        <div class="pay_btn">
+                            <button type="submit">
+                                결제하기
+                            </button>
+                        </div>
+                    </form>
+                    <button><a th:href="@{/package/pget(packagenum=${package.packagenum})}">취소</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+// 총 금액 계산
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const adultCount = parseInt(urlParams.get('adultCount')) || 0;
+    console.log('Adult Count:', adultCount);
+    const childCount = parseInt(urlParams.get('childCount')) || 0;
+    console.log('Child Count:', childCount);
+
+    const totalPriceElement = document.getElementById('totalPrice');
+    const adultPrice = parseInt(totalPriceElement.dataset.adultprice) || 0;
+    console.log('Adult Price:', adultPrice);
+    const childPrice = parseInt(totalPriceElement.dataset.childprice) || 0;
+    console.log('Child Price:', childPrice);
+
+    const totalPrice = (adultCount * adultPrice) + (childCount * childPrice);
+
+    // 예약 정보 업데이트
+    const reservationInfoElement = document.getElementById('reservationInfo');
+    reservationInfoElement.textContent = `성인: ${adultCount} / 아이: ${childCount}`;
+
+    // 총 금액 업데이트
+    const totalAmountElement = document.getElementById('totalAmount');
+    totalAmountElement.textContent = totalPrice.toLocaleString() + " 원";
+
+    // 여기서부턴 체크박스 스크립트입니다 ---------------------
+    // 체크박스 요소
+    const allAgreeCheckbox = document.getElementById('allAgree');
+    const allDisAgreeCheckbox = document.getElementById('allDisAgree');
+    const checkboxes = document.querySelectorAll('.check2 .input-check');
+    const payButton = document.querySelector('.pay_btn button');
+
+    allAgreeCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            allDisAgreeCheckbox.checked = false; // 모든 동의 취소 체크박스를 변경
+        }
+    });
+
+    allDisAgreeCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            allAgreeCheckbox.checked = false; // 모든 약관 동의 체크박스를 변경
+        }
+    });
+
+    // 개별 체크박스에 이벤트 리스너 추가하여 allAgree 및 allDisAgree 상태 관리
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            const noneChecked = Array.from(checkboxes).every(cb => !cb.checked);
+
+            allAgreeCheckbox.checked = allChecked;
+            allDisAgreeCheckbox.checked = noneChecked;
+        });
+    });
+
+    // 결제 버튼 클릭 시 체크박스 확인
+    payButton.addEventListener('click', function(event) {
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        if (!allChecked) {
+            event.preventDefault(); // 폼 제출 막기
+            alert('동의사항을 모두 체크해주세요.');
+        }
+    });
+
+});
+</script>
+
+</html>

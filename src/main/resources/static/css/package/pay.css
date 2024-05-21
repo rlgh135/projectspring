@@ -1,0 +1,186 @@
+*{
+    box-sizing: border-box;
+}
+#wrap{
+    width: 1400px;
+    margin: 0 auto;
+    position: relative;
+}
+body{
+    background-color:white;
+}
+.header{
+    margin-top: 50px;
+}
+.menu{
+    width:20%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10%;
+}
+.menu a{
+    text-decoration: none;
+    font-size: 20px;
+    color:black;
+}
+.menu a:hover{
+    cursor: pointer;
+    color:dodgerblue;
+}
+.bodycontainer{
+    margin-top: 50px;
+}
+
+.package_info{
+    display: block;
+}
+.pihead, .aghead, .uihead{
+    display: flex;
+    align-items: center;
+}
+.pihead h3, .aghead h3, .uihead h3{
+    font-size: 30px;
+}
+.pihead p, .aghead p, .uihead p{
+    font-size: 50px;
+    margin-right: 10px;
+    color:rgb(0, 128, 255);
+}
+
+table.info, table.info th, table.info td {
+    border: 1px solid black;
+    border-left: none;
+    border-right: none;
+    border-collapse: collapse;
+}
+
+table.info {
+    width: 60%;
+    margin: 0 auto;
+}
+
+th {
+    width: 25%;
+    height: 60px;
+    background-color: rgb(125, 188, 251);
+    color:white;
+}
+
+td {
+    width: 75%;
+    height: 60px;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+    font-size: 18px;
+}
+.agree{
+    width: 100%;
+}
+ul{
+    display: flex;
+    width: 80%;
+    height: 50px;
+    padding: 0;
+    margin: 0 auto;
+    font-size: 23px;
+}
+li{
+    width: 25%;
+    height: 50px;
+    list-style: none;
+    border:1px solid black;
+    border-right: none;
+    height: 50px; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+.first{
+    border-left: none;
+}
+
+.scrollTab{
+    margin: 0 auto;
+    margin-top: 10px;
+    width: 80%;
+    height: 250px;
+    border: 1px solid black;
+    overflow: scroll;
+}
+.checkTab{
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+.check1, .check2{
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.check2{
+    margin-top: 20px;
+}
+.check1 input, .check2 input{
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+.check1 input:hover, .check2 input:hover{
+    cursor: pointer;
+}
+.check1 label, .check2 label{
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+.userinfo table, .userinfo th, .userinfo td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    border-left: none;
+    border-right: none;
+}
+
+.userinfo table {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.userinfo th {
+    width: 25%;
+    height: 60px;
+}
+
+.userinfo td {
+    width: 75%;
+    height: 60px;
+}
+
+.userinfo th, .userinfo td {
+    padding: 8px;
+    text-align: center;
+    font-size: 18px;
+}
+.pay{
+    width: 40%;
+    margin: 0 auto;
+    display: flex;
+    margin-top: 70px;
+    justify-content: space-around;
+}
+.pay button{
+    width: 250px;
+    height: 80px;
+    font-size: 28px;
+    color: white;
+    background-color: rgb(0, 95, 238);
+    border-radius: 10px;
+}
+button a{
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+	color:white;
+}

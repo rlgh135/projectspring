@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.mapper.pack.PackageMapper;
+import com.t1.tripfy.mapper.user.UserMapper;
 
 @Service
 public class PackageServiceImpl implements PackageService{
@@ -19,6 +21,8 @@ public class PackageServiceImpl implements PackageService{
 //	
 	@Autowired
 	private PackageMapper pmapper;
+	@Autowired
+	private UserMapper umapper;
 //	@Autowired
 //	private FileMapper fmapper;
 	
@@ -56,6 +60,10 @@ public class PackageServiceImpl implements PackageService{
 	@Override
 	public PackageDTO getDetail(long packagenum) {
 		return pmapper.getPackageByPackageNum(packagenum);
+	}
+	@Override
+	public UserDTO getUser(String userid) {
+		return umapper.getUserById(userid);
 	}
 	@Override
 	public long getLastNum(String userid) {

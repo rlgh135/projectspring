@@ -28,9 +28,9 @@
 	<insert id="insertPack">
 		insert into package
 		(guidenum, package_title, package_content,
-		max_cnt, adult_price, child_price, startdate, enddate, tourdays, deadline)
+		maxcnt, adult_price, child_price, startdate, enddate, tourdays, deadline)
 		values
-		(#{guidenum}, #{package_title}, #{packagecontent}, s#{max_cnt}, #{adult_price},
+		(#{guidenum}, #{package_title}, #{packagecontent}, #{maxcnt}, #{adult_price},
 		#{child_price}, #{startdate}, #{enddate}, #{tourdays}, #{deadline})	
 	</insert>
 	
@@ -82,7 +82,7 @@
     and regionname = #{regionname}
     and visibility = 'O'
     and (
-        startdate > #{startdate} or enddate <= #{enddate}
+        startdate >= #{startdate} and enddate <= #{enddate}
     )
     ]]>
 	</select>
