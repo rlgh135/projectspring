@@ -71,7 +71,7 @@ public class UserController {
 	public String myInfo(HttpServletRequest req, Model model) {
 		HttpSession session = req.getSession();
 		//썸네일 가져오기
-		String loginUser = (String)session.getAttribute("loginUser");		
+		String loginUser = (String)session.getAttribute("loginUser");
 		String thumbnail = service.getProfileImgName(loginUser);
 		System.out.println(thumbnail);
 		
@@ -122,7 +122,9 @@ public class UserController {
 			} else {
 				session.setAttribute("guideNum", 0);				
 			}
-			return "/user/myinfo";
+			
+			System.out.println("login 가이드검사 : " +session.getAttribute("guideNum"));
+			return "redirect:/user/myinfo";
 		}
 		else {
 			//
