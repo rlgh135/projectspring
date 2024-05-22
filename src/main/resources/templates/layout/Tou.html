@@ -120,56 +120,57 @@
 
 
 <h3 class="pk_mini_title3"> 개인정보수집이용</h3>
-<img src="./img/personinfo.png" alt="">
+여기는 표만들거임
 
 <h3 class="pk_mini_title4">개인정보 제3자 이용</h3>
-<img src="./img/info_third.png" alt="">
+여기도 표 만들거임
 </div>
     </div>
-</th:block>
+
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var firstTab = document.querySelector('.first');
-    var secondTab = document.querySelector('.second');
-    var thirdTab = document.querySelector('.third');
-    var forthTab = document.querySelector('.forth');
-
-    var pk_mini_title1 = document.querySelector('.pk_mini_title1');
-    var pk_mini_title2 = document.querySelector('.pk_mini_title2');
-    var pk_mini_title3 = document.querySelector('.pk_mini_title3');
-    var pk_mini_title4 = document.querySelector('.pk_mini_title4');
-
-    firstTab.addEventListener('click', function() {
-        pk_mini_title1.scrollIntoView({ behavior: 'smooth' });
-        firstTab.style.backgroundColor = 'rgb(125, 188, 251)';
-        secondTab.style.backgroundColor = '';
-        thirdTab.style.backgroundColor = '';
-        forthTab.style.backgroundColor = '';
-    });
-
-    secondTab.addEventListener('click', function() {
-        pk_mini_title2.scrollIntoView({ behavior: 'smooth' });
-        firstTab.style.backgroundColor = '';
-        secondTab.style.backgroundColor = 'rgb(125, 188, 251)';
-        thirdTab.style.backgroundColor = '';
-        forthTab.style.backgroundColor = '';
-    });
-
-    thirdTab.addEventListener('click', function() {
-        pk_mini_title3.scrollIntoView({ behavior: 'smooth' });
-        firstTab.style.backgroundColor = '';
-        secondTab.style.backgroundColor = '';
-        thirdTab.style.backgroundColor = 'rgb(125, 188, 251)';
-        forthTab.style.backgroundColor = '';
-    });
-
-    forthTab.addEventListener('click', function() {
-        pk_mini_title4.scrollIntoView({ behavior: 'smooth' });
-        firstTab.style.backgroundColor = '';
-        secondTab.style.backgroundColor = '';
-        thirdTab.style.backgroundColor = '';
-        forthTab.style.backgroundColor = 'rgb(125, 188, 251)';
-    });
-});
+	document.addEventListener("DOMContentLoaded", function() {
+	    var firstTab = document.querySelector('.first strong');
+	    var secondTab = document.querySelector('.second strong');
+	    var thirdTab = document.querySelector('.third strong');
+	    var forthTab = document.querySelector('.forth strong');
+	
+	    var pk_mini_title1 = document.querySelector('.pk_mini_title1');
+	    var pk_mini_title2 = document.querySelector('.pk_mini_title2');
+	    var pk_mini_title3 = document.querySelector('.pk_mini_title3');
+	    var pk_mini_title4 = document.querySelector('.pk_mini_title4');
+	
+	    firstTab.addEventListener('click', function(event) {
+	        event.preventDefault();
+	        pk_mini_title1.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+	        setActiveTab(firstTab);
+	    });
+	
+	    secondTab.addEventListener('click', function(event) {
+	        event.preventDefault();
+	        pk_mini_title2.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+	        setActiveTab(secondTab);
+	    });
+	
+	    thirdTab.addEventListener('click', function(event) {
+	        event.preventDefault();
+	        pk_mini_title3.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+	        setActiveTab(thirdTab);
+	    });
+	
+	    forthTab.addEventListener('click', function(event) {
+	        event.preventDefault();
+	        pk_mini_title4.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+	        setActiveTab(forthTab);
+	    });
+	
+	    function setActiveTab(tab) {
+	        var allTabs = document.querySelectorAll('.pakcage_agreeTab li strong');
+	        allTabs.forEach(function(item) {
+	            item.parentElement.style.backgroundColor = '';
+	        });
+	        tab.parentElement.style.backgroundColor = 'rgb(125, 188, 251)';
+	    }
+	});
 
 </script>
+</th:block>
