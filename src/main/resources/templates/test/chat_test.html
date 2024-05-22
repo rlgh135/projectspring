@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CHAT TEST</title>
+	<style>
+		html {
+			font-size: 10px;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0; padding: 0; border: 0;
+		}
+
+		#wrapper {
+			padding-top: 1rem;
+			padding-left: 1rem;
+		}
+
+		.main-cont {
+			display: inline-block;
+			width: 35rem;
+			min-height: 6rem;
+			margin-right: 1rem;
+			background-color: lightcoral;
+		}
+
+		.input-cont {
+			width: 100%;
+			height: 3rem;
+			padding-top: 0.5rem;
+			padding-left: 0.5rem;
+			background-color: lightblue;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		input[type=text] {
+			width: 20rem;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+
+		<!-- 채팅방 리스트 -->
+		<div id="cont-chatlist" class="main-cont">
+			<div id="cont-chatinit" class="input-cont">
+				<input type="text" id="input-chatinit-pkgnum" placeholder="packagenum">
+				<input type="submit" value="init chat" id="input-chatinit-submit">
+				<!-- 채팅 버튼 클릭시 Ajax로 가져오는 것을 모사함 -->
+				<input type="submit" value="load chat" id="input-chatinit-loadchat">
+			</div>
+			<p id="info-unable-print-chatlist">현재 입장해있는 채팅방이 없습니다</p>
+			<div id="chatlistview"></div>
+		</div>
+
+		<!-- 채팅창 -->
+		<div id="cont-chatview" class="main-cont">
+			<div id="cont-chatinput" class="input-cont">
+				<input type="text" id="input-chatinput-content" placeholder="content">
+				<input type="submit" value="input chat" id="input-chatinput-submit">
+			</div>
+			<p id="info-unable-print-chatview">채팅방이 선택되지 않았습니다</p>
+			<div id="chatview"></div>
+		</div>
+
+		<!-- 알림 -->
+		<div id="cont-sseview" class="main-cont">
+			<p id="info-unable-print-sseview">알림이 없습니다</p>
+			<div id="sseview"></div>
+		</div>
+
+	</div>
+</body>
+<!-- 
+	사용자가 로그인한 상태로 이 페이지에 접근한 것으로 가정하고 작성함
+
+	입력값 검증은 없음
+ -->
+<script>
+	// 페이지 로딩시 기입해줘야 함
+	const USER_ID = null;
+
+	// 웹소켓 커넥션
+	let WEBSOCKET = null;
+	// SSE 커넥션
+	let EVENTSOURCE = null;
+
+	// input:text, password
+	const INPUT_PKGNUM = document.getElementById("input-chatinit-pkgnum");
+	const INPUT_CONTENT = document.getElementById("input-chatinput-content");
+	// input:submit
+	const SUBMIT_INIT_CHAT = document.getElementById("input-chatinit-submit");
+	const SUBMIT_LOAD_CHAT = document.getElementById("input-chatinit-loadchat");
+	const SUBMIT_INPUT_CHAT = document.getElementById("input-chatinput-submit");
+
+	// view
+	const VIEW_CHAT_LIST = document.getElementById("chatlistview");
+	const VIEW_CHAT = document.getElementById("chatview");
+	const VIEW_SSE = document.getElementById("sseview");
+
+	// info printer
+	const INFO_CHAT_LIST = document.getElementById("info-unable-print-chatlist");
+	const INFO_CHAT = document.getElementById("info-unable-print-chatview");
+	const INFO_SSE = document.getElementById("info-unable-print-sseview");
+
+	// onload ----------------------------------------------------------------------------------------------------
+	window.onload()
+
+	// eventlistener ----------------------------------------------------------------------------------------------------
+	// ajax로 채팅방 개설을 요청
+	SUBMIT_INIT_CHAT.addEventListener("click", (e) => {
+		const targetPkg = INPUT_PKGNUM.value;
+		ajaxPost("localhost:8080", "chat", {
+			"userid": USER_ID,
+			"packagenum": targetPkg
+		})
+		.then((data) => {
+			// 대충 채팅방 리스트쪽 돔 수정해주고
+			// 채팅창도 수정
+			// 채팅창 수정 전에 우선 웹소켓 연결을 확인
+			// 없으면 연결해준다
+		})
+		.catch((error) => {
+			// 오류 발생시 로직
+		});
+	});
+	// ajax로 채팅방 리스트 로딩 요청
+	SUBMIT_LOAD_CHAT.addEventListener("click", (e) => {
+		ajaxGet("localhost:8080", "chat", {
+			"userid": USER_ID
+		})
+		.then((data) => {
+			// 채팅방 DOM 수정 로직
+		})
+		.catch((error) => {
+			// 에러 발생시 로직
+		})
+	});
+	// 웹소켓으로 메시지 전송 요청
+	SUBMIT_INPUT_CHAT.addEventListener("click", (e) => {
+
+		// 아마 전송전에 웹소켓이 연결은 되어있긴 하는지 체크하는게 필요할거임
+		// 추가 240522
+		// 자바쪽 얘기이긴 한데
+		// 웹소켓 연결시 해당 유저의 모든 SSE 연결을 끊어줘야 함
+	});
+
+	// conn func ----------------------------------------------------------------------------------------------------
+	//SSE 연결
+	function setServerSendEventConnection(userid) {
+		EVENTSOURCE = new EventSource(
+			"http://localhost:8080/sse/subscribe?clientid=" + userid
+		);
+
+		// 이벤트리스너 할당
+		EVENTSOURCE.addEventListener("open", (e) => {
+			
+		});
+		EVENTSOURCE.addEventListener("connected", (e) => {
+			
+		});
+		EVENTSOURCE.addEventListener("broadcast", (e) => {
+			
+		});
+		EVENTSOURCE.onerror = (err) => {
+			
+		};
+		EVENTSOURCE.onclose = () => {
+
+		};
+	}
+	// 웹소켓 연결
+	function setWebSocketConnection(userid) {
+		WEBSOCKET = new WebSocket("ws://localhost:8080/wschat/" + userid);
+
+		WEBSOCKET.onopen = (e) => {
+
+		};
+		WEBSOCKET.onmessage = (e) => {
+			
+		};
+		WEBSOCKET.onerror = (e) => {
+			
+		};
+		WEBSOCKET.onclose = (e) => {
+			
+		};
+	}
+
+	// Ajax ----------------------------------------------------------------------------------------------------
+
+	// 이거 요청 성공/실패시 행동을 함수 변수로 보내줘도 괜찮을거같음
+
+	//queryStrings는 key=value 의 형태로 url에 삽입됨
+	// 이거 GET으로도 값 받을 수 있어야하는거아님? <== 수정함
+	async function ajaxGet(host, path, queryStrings={}) {
+		let qs = "";
+		if(Object.keys(queryStrings).length > 0) {
+			qs += "?";
+			for(let key in queryStrings) {
+				qs += key + "=" + queryStrings[key] + "&";
+			}
+			qs = qs.replace(/\&$/, "");
+		}
+
+		const url = "http://" + host + "/" + path + qs;
+
+		const res = await fetch(url);
+		const data = await res.json();
+
+		if(res.ok) {
+			return data;
+		} else {
+			throw Error(res);
+		}
+	}
+	// JSON 전송용 ajax
+	async function ajaxPost(host, path, body, header={}) {
+		const url = "http://" + host + "/" + path;
+		const options = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				...headers,
+			},
+			body: JSON.stringify(body)
+		};
+
+		const res = await fetch(url, options);
+		const data = await res.json();
+
+		if(res.ok) {
+			return data;
+		} else {
+			throw Error(res);
+		}
+	}
+
+	// DOM 구현 ----------------------------------------------------------------------------------------------------
+	// d
+</script>
+</html>

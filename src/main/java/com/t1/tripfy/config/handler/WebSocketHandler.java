@@ -206,6 +206,28 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	 *     i. 좀 애매한게 UUID는 클라에서도 알아야 하니까 세션이랑은 좀 맞지가 않음
 	 * */
 	
+	/* 웹소켓 연결 단위 240522
+	 * https://stackoverflow.com/questions/23300615/how-does-websockets-deal-with-for-two-tabs-of-the-same-browser
+	 * 결 :
+	 * SSE처럼 웹소켓도 탭 - 각 웹 페이지별로 각각의 연결을 가짐
+	 * 
+	 * 웹소켓 연결 단위 구성? 240522
+	 * 기존의 방식(userid <-> WebSocketSession 1대1 매핑)으로 로그인 유저 1명당 하나의 웹소켓만 가질 수 있게 하거나
+	 * SSE처럼 로그인 유저가 각각 여러개의 웹소켓(여러개의 웹 페이지)을 가질 수 있게 하기 정도?
+	 * 
+	 * SSE처럼 가려면 거처럼 각 웹소켓 연결(WebSocketSession)을 구별할 수 있는 UUID등이 필요함
+	 * 
+	 * 일단 성능을 고려해서 userid별 하나의 웹소켓만 가질 수 있게 함 - 240522
+	 * 
+	 * 웹소켓 연결 시점 240522
+	 * 일단 대충..
+	 * 채팅 뷰를 열었을때 연결?
+	 *  채팅 버튼을 눌러서 채팅창을 띄우고 화면에 채팅방 리스트가 떠야할 때 연결하는거임
+	 * 근데 채팅방에 들어갔을 때에만 연결하고
+	 *  평상시에는 SSE로 알림 수신, Ajax로 정보(채팅방 리스트 등) 요청을 하는 정도로 구현할 수도 있음
+	 * 일단 밑에거로 감
+	 * */
+	
 	//임마는 유저 <-> 서버간 1대1 세션(WebSocketSession 객체)를 저장하는 친구
 	// 최소한 내가 이해하기로는 WebSocketSession 객체는 HttpSession처럼 각 유저별로 따로 존재함
 	// WebSocketSession 임마로 sendMessage()등을 할 수 있으니 이렇게 따로 모아놓았다가
@@ -227,9 +249,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			session.close(CloseStatus.PROTOCOL_ERROR);
 			return;
 		}
-		//요청 userid가 로그인 한 유저인지 확인
-		// 요청 userid가 HttpSession에 없으면 연결을 끊고 메서드 종료
-		// 요청 userid가 해당 클라이언트 HttpSession의 loginUser값과 다르면 연결을 끊고 메서드 종료
+		//요청 userid가 로그인 한 유저의 userid인지 확인
+		// 요청 userid가 HttpSession에 없으면(비로그인 클라이언트의 연결 시도) 연결을 끊고 메서드 종료
+		// 요청 userid가 해당 클라이언트 HttpSession의 loginUser값과 다르면(로그인 클라이언트가 남의 userid로 연결 시도) 연결을 끊고 메서드 종료
+		//로그인한 유저가 자신의 userid로 요청했는지 확인하는 구간
 		if(session.getAttributes().get("loginUser") == null || !session.getAttributes().get("loginUser").equals(userid)) {
 			session.close(CloseStatus.PROTOCOL_ERROR);
 			if(log.isDebugEnabled()) {
@@ -241,15 +264,21 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	//3. 웹소켓 기존 연결이 존재하는지 확인
 		// 기존의 웹소켓 연결(WebSocketSession)이 살아있으면 끊어준다
 		if(WEBSOCKET_SESSIONS.containsKey(userid)) {
-			WebSocketSession tempSess = WEBSOCKET_SESSIONS.remove(userid);
+			WebSocketSession tempSess = WEBSOCKET_SESSIONS.get(userid);
 			if(tempSess != null) {
 				tempSess.close(CloseStatus.SESSION_NOT_RELIABLE);
+			}
+			if(log.isDebugEnabled()) {
+				log.debug("disconnect existing connection, new connection request, WebSocket, userid={}", userid);
 			}
 		}
 		
 	//4. 웹소켓 등록
 		WEBSOCKET_SESSIONS.put(userid, session);
+	
+	//4-1. 기존 SSE 연결 해제
 		
+	
 	//5. 안 읽은 채팅 개수 끌고오기
 		// ChatServiceImpl가 필요함
 		
@@ -285,14 +314,15 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	}
 
 	// 웹소켓 연결 해제시
+	/* 이거 어디서 어떤 CloseStatus를 주건 여기로 오니까 log.debug()도 여기로 옮기고
+	 * 세션맵 remove도 여기서 처리하게 하자
+	 * */
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		//세션 저장 객체에서 삭제해준다
 		//이거 사용자 로그아웃 시에도 우선적으로 호출하게 해야 함
 		if(WEBSOCKET_SESSIONS.containsValue(session)) {
-			WebSocketSession tempSess = WEBSOCKET_SESSIONS.remove(session.getAttributes().get("loginUser"));
-			if(tempSess.isOpen())
-				tempSess.close();
+			WEBSOCKET_SESSIONS.remove(session.getAttributes().get("loginUser"));
 		}
 	}
 }
