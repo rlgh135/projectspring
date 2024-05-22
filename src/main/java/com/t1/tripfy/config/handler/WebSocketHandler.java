@@ -271,6 +271,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	 *                                   ㄴSSE 연결 확인되는 경우
 	 *                                     전송
 	 * 다 끝났으면 DB에 저장
+	 * 
+	 * + 시간 관련 추가 - 240522
+	 * 메시지 송신 시간의 기준
+	 * 1. WebSocketHandler.handleTextMessage 시점
+	 * 2. DB insert 시점(CURRENT_TIMESTAMP)
+	 * 간단한건 DB insert 시점
+	 * 일단 ChatDetailDTO의 시간 필드를 TimeStamp -> LocalDateTime으로 변경함
 	 * */
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {

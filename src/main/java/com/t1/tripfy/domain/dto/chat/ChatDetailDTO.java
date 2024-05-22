@@ -1,6 +1,6 @@
 package com.t1.tripfy.domain.dto.chat;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,5 +12,5 @@ public class ChatDetailDTO {
 	private Long chatRoomIdx;
 	private String userid;
 	private String chatDetailContent;
-	private Timestamp regdate; 
+	private LocalDateTime regdate;
 }
