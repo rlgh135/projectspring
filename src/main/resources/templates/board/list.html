@@ -1156,6 +1156,8 @@
 						let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
 						b_nextbtn.append(b_nextbtnImg);							
 						$(".b_pagenation").append(b_nextbtn);
+						
+						exam();
 					}
 				},
 				
@@ -1195,8 +1197,92 @@
 		region_div.style.visibility = "hidden";
 	}
 	
-	// 페이징 처리 부분의 이전 버튼과 다음 버튼, 이동할 페이지 번호 버튼 클릭 시 이벤트 막음
+	function exam() {
+		const changePage = document.getElementsByClassName("changePage");
+		
+		for(let i = 0; i < changePage.length; i++) {
+			changePage[i].addEventListener("click", function(e) {
+				e.preventDefault();  // 이벤트 막음
+				pageChange(e);
+			})
+		}
+	}
 	
+	
+	
+	// 페이징 처리 부분의 이전 버튼과 다음 버튼, 이동할 페이지 번호 버튼 클릭 시 이벤트 막음
+	const changePage = document.getElementsByClassName("changePage");
+	
+	for(let i = 0; i < changePage.length; i++) {
+		changePage[i].addEventListener("click", function(e) {
+			e.preventDefault();  // 이벤트 막음
+			pageChange(e);
+		})
+	}
+	
+	function pageChange(e) {
+		console.log(e.target)
+		console.log(e.target.text)
+		
+		// 이동할 페이지 번호
+		let pagenum = e.target.text;
+		
+		if(pagenum != undefined) {
+			// 정렬 방법
+			let sort = document.querySelector(".selected").value;
+			console.log(sort);
+			
+			let str = "";
+			if(sort == "최신 순") {
+				str = "recent";
+			}
+			
+			else if(sort == "인기 순") {
+				str = "popular";
+			}
+			
+			else {
+				str = "like";
+			}
+			console.log(str);
+			
+			// 키워드
+			let keyword = document.querySelector(".b_search").value;
+			console.log(keyword);
+			
+			// 국가 코드 및 지역 이름
+			const country_select = document.querySelector(".country_select");
+			const area_select = document.querySelector(".area_select");
+			console.log(country_select)
+			console.log(area_select)
+					
+			let countryName = "";
+			let regionName = "";
+			if(country_select != null) {
+				countryName = country_select.name;
+				console.log("countryName: " + countryName)
+			}
+			
+			if(area_select != null) {
+				regionName = area_select.name;
+				console.log("regionName: " + regionName)
+			}
+			
+			location.replace("/board/list?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName + "&pagenum=" + pagenum);
+		}
+		
+		else {
+			if(e.target.text == 0) {
+				alert("이동할 수 있는 이전 페이지가 없습니다.")
+			}
+			
+			else {
+				alert("이동할 수 있는 다음 페이지가 없습니다.")
+			}
+		}
+		
+		
+	}
 
 	
 

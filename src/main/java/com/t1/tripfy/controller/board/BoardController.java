@@ -27,11 +27,44 @@ public class BoardController {
 	private BoardService service;
 
 	@GetMapping("list")
-	public void boardlist(Criteria cri, Model model) {
+	public void boardlist(@RequestParam(value = "sort", required = false) String method, Criteria cri, Model model) {
+		
+		if(cri.getKeyword() == "") {
+			cri.setKeyword(null);
+		}
+		
+		if(cri.getRegionname() == "") {
+			cri.setRegionname(null);
+		}
+		
+		if(cri.getCountrycode() == "") {
+			cri.setCountrycode(null);
+		}
+		
+		List<BoardDTO> list = new ArrayList<BoardDTO>();
+		
+		if(method != null && !method.isEmpty()) {  // sort 파라미터 있는 경우(/board/list?sort="")
+			
+			switch (method) {
+			case "recent": 
+				list = service.getList(cri);
+				break;
+			
+			case "popular":
+				list = service.getpopularList(cri);
+				break;
+				
+			case "like":
+				list = service.getlikeList(cri);
+				break;
+			}
+		}
+		
+		else {  // sort 파라미터 없을 경우(/board/list 요청 시)
+			list = service.getList(cri);
+		}
 		System.out.println(cri);
-		
-		List<BoardDTO> list = service.getList(cri);
-		
+		System.out.println("sort: " + method);
 		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
 	}
@@ -88,6 +121,7 @@ public class BoardController {
 		
 		return data;
 	}
+	
 	
 	@GetMapping("get")
 	public void boardget(long boardnum, Model model) {  // boardnum, model
