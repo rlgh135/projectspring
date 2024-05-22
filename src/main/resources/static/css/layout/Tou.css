@@ -1,0 +1,56 @@
+body{
+    width: 1400px;
+    margin: 0 auto;
+}
+.package_agreeTab{
+    width: 100%;
+}
+ul{
+    width: 100%;
+    display: flex;
+    height: 50px;
+    padding: 0;
+    font-size: 23px;
+}
+li{
+    width: 25%;
+    height: 50px;
+    list-style: none;
+    border:1px solid black;
+    border-right: none;
+    height: 50px; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    cursor: pointer;
+}
+.first{
+    border-left: none;
+}
+
+.package_scrollTab{
+    width: 100%;
+    height: 300px;
+    border: 1px solid black;
+    overflow: scroll;
+    margin-top: 10px;
+   
+}
+.pcksclinfo{
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.pcksclinfo h3{
+    margin-top: 25px;
+}
+
+.package_scrollTab img{
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+

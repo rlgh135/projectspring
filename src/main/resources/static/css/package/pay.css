@@ -79,37 +79,9 @@ th, td {
 .agree{
     width: 100%;
 }
-ul{
-    display: flex;
-    width: 80%;
-    height: 50px;
-    padding: 0;
-    margin: 0 auto;
-    font-size: 23px;
-}
-li{
-    width: 25%;
-    height: 50px;
-    list-style: none;
-    border:1px solid black;
-    border-right: none;
-    height: 50px; 
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-}
-.first{
-    border-left: none;
-}
 
-.scrollTab{
-    margin: 0 auto;
-    margin-top: 10px;
-    width: 80%;
-    height: 250px;
-    border: 1px solid black;
-    overflow: scroll;
-}
+
+
 .checkTab{
     width: 80%;
     margin: 0 auto;
