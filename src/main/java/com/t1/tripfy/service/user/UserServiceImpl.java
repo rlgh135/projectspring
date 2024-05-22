@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
+import com.t1.tripfy.mapper.board.BoardMapper;
 import com.t1.tripfy.mapper.user.UserMapper;
 import com.t1.tripfy.util.PathUtil;
 
@@ -30,6 +34,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserMapper umapper;
+	
+	@Autowired
+	private BoardMapper bmapper;
 	
 	@Override
 	public boolean join(UserDTO user) {
@@ -120,5 +127,15 @@ public class UserServiceImpl implements UserService{
 		// 통해 자원화*new InputStreamResource()
 		Resource resource = new InputStreamResource(Files.newInputStream(path));
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+	
+	@Override
+	public List<BoardDTO> getMyBoardList(Criteria cri, String userid) {
+		return bmapper.getMyList(cri, userid);
+	}
+	
+	@Override
+	public long getMyTotal(Criteria cri) {
+		return bmapper.getTotal(cri);
 	}
 }

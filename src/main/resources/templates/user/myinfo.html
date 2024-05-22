@@ -42,7 +42,7 @@
 				<div id="infocontainer">
 					<div class="nameguide">
 						<p id="profname">[[${user.userid}]]</p>
-						<p id="isguide"><img src="/images/userimg/guidebadge.png" alt=""></p>
+						<p th:if="${session.guideNum!=0}" id="isguide"><img src="/images/userimg/guidebadge.png" alt=""></p>
 						<div id="editbtn">
 							<div id="redalert"></div>
 							<input type="button" value="패키지관리" class="profmopenbtn">
@@ -51,7 +51,8 @@
 					<ul class="actcntlist">
 						<li>
 							<p>게시글</p>
-							<p>10</p>
+							<p th:if="${list.size()>0}">[[${list.size()}]]</p>
+							<p th:unless="${list.size()>0}">0</p>
 						</li>
 						<li>
 							<p>댓글</p>
@@ -62,6 +63,7 @@
 							<p>3</p>
 						</li>
 					</ul>
+					
 					<p style="margin-top: 20px;">
 						tripfy와 n일동안 함께했어요. 아래 리본하면 좋을듯
 					</p>
@@ -72,8 +74,29 @@
 					<li id="myboard" onclick="showMyBoards()">내 게시글</li>
 					<li id="joinpackage" onclick="showJoinPacks()">참여한 여행</li>
 				</ul>
-				<div id="infosarea">
-
+				<div id="mypostsection">
+					<div id="mainmypost">
+						<a th:if="${list != null and list.size > 0}" th:each="board:${list}"
+							th:href="@{/board/get(boardnum=${board.boardnum})}">
+							<div class="mypost">
+								<div class="p_img">
+									<img src="/images/boardimg/2.jpg" alt="">
+								</div>
+								<div class="post_write">
+									<div class="pstguide">
+										<img src="/images/boardimg/profile.png" alt="">
+										<span>[[${board.userid}]]</span>
+									</div>
+									<div class="line"></div>
+									<div class="post_title">[[${board.title}]]</div>
+									<div class="post_preview">[[${board.content}]]</div>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div id="mypagesarea">
+				
+					</div>
 				</div>
 			</div>
 		</div>
@@ -144,7 +167,9 @@
 	
     function showMyBoards() {
         const target = document.getElementById("myboard");
-        target.classList.toggle("clicklist");
+        target.classList.toggle("mypstselected-btn");
+		const targetbody = document.getElementById("mypostsection");
+		targetbody.classList.toggle("mypstselected-body");
     }
 	
 	function chooseimg(obj){

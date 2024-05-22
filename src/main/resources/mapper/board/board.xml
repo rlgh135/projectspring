@@ -40,6 +40,13 @@
 		boardnum > 0 order by boardnum desc limit #{startrow}, #{amount}
 	</select>
 	
+	<!-- 내 게시글 긁어오기(최근) -->
+	<select id="getMyList">
+		select * from board where
+		(userid = '${userid}' and
+		boardnum > 0) order by boardnum desc limit #{cri.startrow}, #{cri.amount}
+	</select>
+	
 	<!-- 좋아요 순 게시글 긁어오기 -->
 	<select id="getlikeList">
 		select * from board where

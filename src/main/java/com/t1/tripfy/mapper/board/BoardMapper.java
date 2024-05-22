@@ -14,6 +14,7 @@ public interface BoardMapper {
 	
 	// 전체 게시글 긁어오기
 	List<BoardDTO> getList(Criteria cri);
+	List<BoardDTO> getMyList(Criteria cri, String userid);
 
 	// 
 	long getTotal(Criteria cri);

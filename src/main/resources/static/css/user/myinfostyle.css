@@ -15,8 +15,6 @@ a {
 	background-color: transparent;
 	color: #424242;
 }
-body{
-}
 @font-face {
 	font-family: CustomFont;
 	/* 폰트의 이름을 지정합니다. */
@@ -106,6 +104,7 @@ input[type="button"] {
 .actcntlist {
 	margin-top: 20px;
 	display: flex;
+	width: fit-content;
 }
 
 .actcntlist li {
@@ -153,13 +152,6 @@ input[type="button"] {
 	font-weight: bold;
 }
 
-.clicklist {
-	color: #2196f3;
-	border: 2px solid #2196f3;
-	border-bottom: none;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-}
 #backbtnarea {
 	margin-top: 20px;
 	width: 200px;
@@ -249,6 +241,113 @@ input[type="button"] {
 	margin-left: 20px;
 }
 
+/*myboard*/
+#choicebtns li{
+	height: 35px;
+	font-size: 20px;
+	line-height: 35px;
+	padding: 0 5px;
+}
+#choicebtns li:first-child{
+	margin-left: 20px;
+}
+#mypostsection{
+	width: 960px;
+	margin: 0 auto;
+	padding: 0 10px;
+	background-color: #ffffff;
+	border-top-left-radius: 25px;
+	border-top-right-radius: 25px;
+	border-bottom-left-radius: 25px;
+	border-bottom-right-radius: 25px;
+}
+.pstguide img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-size: cover;
+}
+.p_img{
+	width: 180px;
+}
+.p_img img{
+	width: 180px;
+	margin-top: 2px;
+	height: 140px;
+	border-radius: 5px;
+}
+#mainmypost{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	padding: 0 10px;
+}
+#mainmypost a {
+	display: block;
+	width: 420px;
+	height: 160px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	
+}
+#mainmypost a:nth-child(even){
+	width: 440px;
+}
+.mypost{
+	display: flex;
+	flex-wrap: wrap;
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+}
+
+.mypost:hover{
+	border: 3px solid #2196f3;
+}
+.post_write{
+	width: 220px;
+	padding-left: 20px;
+	margin-top: 5px;
+}
+
+.pstguide{
+	height: 40px;
+	display: flex;
+}
+.pstguide span{
+	height: 40px;	
+	margin-left: 15px;
+	font-size: 20px;
+	line-height: 40px;
+}
+.line{
+	content: "";
+	margin-top: 7px;
+	width: 200px;
+	height: 1px;
+	margin: 0 auto;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.post_title{
+	margin-top: 7px;
+}
+.post_preview{
+	margin-top: 7px;
+	height: 45px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.mypstselected-btn{
+	color: #2196f3;
+	background-color: #ffffff;
+	border-bottom: none;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+.mypstselected-body{
+	border-top-left-radius: 0px !important;
+}
+.clicklist {
+}
 /*guide*/
 #guidemodal {
 /*팝업 배경*/

@@ -1,5 +1,7 @@
 package com.t1.tripfy.controller.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.PageDTO;
+import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
@@ -68,7 +73,7 @@ public class UserController {
 	}
 	
 	@GetMapping("myinfo")
-	public String myInfo(HttpServletRequest req, Model model) {
+	public String myInfo(HttpServletRequest req, Model model, Criteria cri) {
 		HttpSession session = req.getSession();
 		//썸네일 가져오기
 		String loginUser = (String)session.getAttribute("loginUser");
@@ -82,7 +87,10 @@ public class UserController {
 		model.addAttribute("user", user);
 		
 		//내가 쓴 게시글 추가하기
-		
+		cri = new Criteria(1, 6);
+		List<BoardDTO> mylist = service.getMyBoardList(cri, loginUser);
+		model.addAttribute("list",mylist);
+		model.addAttribute("pageMaker",new PageDTO(service.getMyTotal(cri), cri));
 		//내가 쓴 패키지 추가하기
 		
 		//내가 받은 가이드 댓글 추가하기

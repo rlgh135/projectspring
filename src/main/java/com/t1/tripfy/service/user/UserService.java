@@ -1,9 +1,13 @@
 package com.t1.tripfy.service.user;
 
+import java.util.List;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 
@@ -17,4 +21,6 @@ public interface UserService {
 	GuideUserDTO getGuideNum(String userid);
 	String getProfileImgName(String userid);
 	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;
+	long getMyTotal(Criteria cri);
+	List<BoardDTO> getMyBoardList(Criteria cri, String userid);
 }
