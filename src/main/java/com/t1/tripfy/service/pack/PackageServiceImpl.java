@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
@@ -150,5 +151,10 @@ public class PackageServiceImpl implements PackageService{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	public void saveReservation(ReservationDTO reservationDTO) {
+        pmapper.saveReservation(reservationDTO);
+    }
+	
 	
 }

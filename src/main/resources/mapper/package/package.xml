@@ -26,11 +26,11 @@
 	</sql>
 	
 	<insert id="insertPack">
-		insert into package
-		(guidenum, package_title, package_content,maxcnt, adult_price, child_price, startdate, enddate, tourdays, deadline, regionname, countrycode)
-		values
-		(#{guidenum}, #{packageTitle}, #{packageContent}, #{maxcnt}, #{adultPrice}, #{childPrice}, #{startdate}, #{enddate}, #{tourdays}, #{deadline}, #{regionname}, #{countrycode})	
-	</insert>
+      insert into package
+      (guidenum, package_title, package_content,maxcnt, adult_price, child_price, startdate, enddate, tourdays, deadline, regionname, countrycode)
+      values
+      (#{guidenum}, #{packageTitle}, #{packageContent}, #{maxcnt}, #{adultPrice}, #{childPrice}, #{startdate}, #{enddate}, #{tourdays}, #{deadline}, #{regionname}, #{countrycode})   
+   </insert>
 	
 	<update id="insertPackContent">
 		update package
@@ -100,7 +100,7 @@
 		select * from package where packagenum = #{packagenum}
 	</select>
 	
-		<update id="updatePackage">
+	<update id="updatePackage">
 		update package
 		set package_title = {#package_title}, package_content = #{package_content}, 
 		maxcnt = #{maxcnt}, adult_price =  #{adult_price}, child_price = #{child_price},
@@ -113,5 +113,8 @@
 		delect from package where packagenum = #{packagenum} 
 	</delete>
 	
-	
+	 <insert id="saveReservation">
+	     INSERT INTO reservation (packagenum, adult_cnt, child_cnt, userid, phone, email, keycode, price, pay_method, isDelete)
+	     VALUES (#{packagenum}, #{adultCnt}, #{childCnt}, #{userid}, #{phone}, #{email}, #{keycode}, #{price}, #{payMethod}, #{isDelete})
+	 </insert>
 </mapper>

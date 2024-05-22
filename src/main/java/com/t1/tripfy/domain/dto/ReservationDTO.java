@@ -4,13 +4,15 @@ import lombok.Data;
 
 @Data
 public class ReservationDTO {
-	private long reservationnum;
-	private long packagenum;
-	private int adultCnt;
-	private int childCnt;
-	private String userid;
-	private String keycode;
-	private String price;
-	private String payMethod;
-	private int isDelete;
+    private long reservationnum;
+    private long packagenum;
+    private int adultCnt;
+    private int childCnt;
+    private String userid;
+    private String phone;
+    private String email;
+    private String keycode;
+    private String price;
+    private String payMethod;
+    private int isDelete;
 }

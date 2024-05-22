@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 
@@ -22,8 +23,12 @@ public interface PackageService {
 	long getTotal(Criteria cri);
 	long getLastNum(long guidenum);
 	
+	
 	boolean modify(PackageDTO pack, MultipartFile[] files) throws Exception;
 	boolean remove(long packagenum);
+
+	void saveReservation(ReservationDTO reservationDTO);
+
 
 	
 }

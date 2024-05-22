@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 
 @Mapper
@@ -25,4 +26,6 @@ public interface PackageMapper {
 	
 	int updatePack(PackageDTO pack);
 	int deletePack(long packagenum);	
+	
+	void saveReservation(ReservationDTO reservation);
 }

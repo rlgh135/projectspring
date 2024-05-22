@@ -151,6 +151,8 @@ CREATE TABLE `reservation` (
   `adult_cnt` int,
   `child_cnt` int,
   `userid` varchar(300),
+  `phone` varchar(300),
+  `email` varchar(300),
   `keycode` varchar(300),
   `price` varchar(300),
   `pay_method` varchar(300),
