@@ -19,5 +19,6 @@ public interface BoardService {
 	// 인기 순 게시글 긁어오기
 	List<BoardDTO> getpopularList(Criteria cri);
 	
+	// 총 게시글 개수
 	long getTotal(Criteria cri);
 }

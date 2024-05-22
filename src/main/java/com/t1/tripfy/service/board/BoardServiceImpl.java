@@ -25,6 +25,7 @@ public class BoardServiceImpl implements BoardService {
 		return bmapper.getList(cri);
 	}
 
+	// 총 게시글 개수
 	@Override
 	public long getTotal(Criteria cri) {
 		return bmapper.getTotal(cri);

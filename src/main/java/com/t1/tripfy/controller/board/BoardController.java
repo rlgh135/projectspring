@@ -46,6 +46,16 @@ public class BoardController {
 			cri.setKeyword(null);
 		}
 		
+		if(cri.getRegionname() == "") {
+			cri.setRegionname(null);
+		}
+		
+		if(cri.getCountrycode() == "") {
+			cri.setCountrycode(null);
+		}
+		
+		System.out.println(cri);
+		
 		List<BoardDTO> sortlist = new ArrayList<BoardDTO>();
 		
 		if(method != null && !method.isEmpty()) {  // sort 파라미터 있는 경우(/board/list?sort="")
@@ -79,25 +89,10 @@ public class BoardController {
 		return data;
 	}
 	
-	@GetMapping("keyword")
-	@ResponseBody
-	public Map<String, Object> searchList(Criteria cri) {
-		System.out.println(cri);
-		List<BoardDTO> searchList = service.getList(cri);
-		
-		Map<String, Object> result = new HashMap<>();
-		result.put("searchList", searchList);
-		result.put("pageMaker", new PageDTO(service.getTotal(cri), cri));
-		
-		System.out.println(result);
-		return result;
-	}
-	
 	@GetMapping("get")
 	public void boardget(long boardnum, Model model) {  // boardnum, model
 		System.out.println(boardnum);
 		BoardDTO board = service.getDetail(boardnum);
 		model.addAttribute("board", board);
 	}
-
 }
