@@ -8,11 +8,16 @@ import org.springframework.stereotype.Service;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
+import com.t1.tripfy.mapper.board.BoardReplyMapper;
 
 @Service
 public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardMapper bmapper;
+	
+	@Autowired
+	private BoardReplyMapper brmapper;
+	
 	
 	@Override
 	public BoardDTO getDetail(long boardnum) {
@@ -41,5 +46,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardDTO> getpopularList(Criteria cri) {
 		return bmapper.getpopularList(cri);
+	}
+
+	// boardnum으로 댓글 개수
+	@Override
+	public int getReplyCnt(long boardnum) {
+		return brmapper.getReplyCnt(boardnum);
 	}
 }

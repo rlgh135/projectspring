@@ -21,4 +21,7 @@ public interface BoardService {
 	
 	// 총 게시글 개수
 	long getTotal(Criteria cri);
+
+	// boardnum으로 댓글 개수
+	int getReplyCnt(long boardnum);
 }

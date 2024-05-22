@@ -91,8 +91,12 @@ public class BoardController {
 	
 	@GetMapping("get")
 	public void boardget(long boardnum, Model model) {  // boardnum, model
-		System.out.println(boardnum);
+		// System.out.println("boardnum:" + boardnum);
 		BoardDTO board = service.getDetail(boardnum);
+		int replyCnt = service.getReplyCnt(boardnum);
+		// System.out.println("replyCnt: " + replyCnt);
+		
 		model.addAttribute("board", board);
+		model.addAttribute("replyCnt", replyCnt);
 	}
 }

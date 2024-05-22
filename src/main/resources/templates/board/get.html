@@ -7,12 +7,27 @@
 <style>
     /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
     * {margin: 0; padding: 0; box-sizing: border-box;}
+	
+	.menu {
+	    width:20%; height: 80px;
+	    display: flex;
+	    justify-content: space-between;
+	    margin-left: 10%;
+		padding-top: 28px;
+	}
+	
+	.menu a {
+	    text-decoration: none;
+	    font-size: 20px;
+	    color:black;
+	}
 
     .wrap {
         width: 1400px;
         margin: 0 auto;
     }
 
+		
     .main_photo img {
         width: 100%;
         height: 470px;
@@ -156,29 +171,31 @@
     .guide_profile {
         margin-top: 10px;
         border-radius: 10px;
-        padding: 10px;
+        padding: 8px;
         position: relative;
         background-color: #f5f5f5;
-        padding-bottom: 15px;
+        /*padding-bottom: 15px;*/
     }
 
     .guide_profile img {
         width: 35px;
         height: 35px;
         margin-right: 9px;
+		margin-top: 7px;
+		
     }
 
     .guide_profile span {
         position: absolute;
-        top: 11px;
+        top: 16px;
         font-size: 18px;
     }
-
+	/*
     .guide_profile p {
         margin-top: 5px;
         font-size: 13px;
     }
-
+	*/
     .location {
         margin-top: 60px;
     }
@@ -205,7 +222,13 @@
 </style>
 </head>
 <body>
+	<div class="menu">
+		<div id="menu1"><a href="">해외투어</a></div>
+		<div id="menu2"><a th:href="@{/package/pmain}">국내투어</a></div>
+		<div id="menu3"><a th:href="@{/board/list}">게시판</a></div>
+	</div>
     <div class="wrap">
+		
         <div class="main_photo">
             <img src="/images/boardimg/2.jpg" alt="">
         </div>
@@ -219,14 +242,14 @@
                 <div class="cnt_info">
                     <span>조회수 [[${board.viewcnt}]]</span>
 					<span>좋아요 [[${board.likecnt}]]</span>
-                    <span>댓글 5</span>
+                    <span>댓글 [[${replyCnt}]]</span>
                 </div>
 
                 <div class="trip_schedule">
                     <h4>여행 일정</h4>
                     <div class="schedule_detail">
-                        <p>2024.05.14 - 2024-05.14</p>
-                        <p>[[${board.regionname}]]</p>
+                        <p>2024.05.14 - 2024.05.14</p>
+                        <p th:text="${board.countrycode} == 'kr' ? '대한민국, ' + ${board.regionname} : ${board.regionname}"></p>
                     </div>
 
                     <div class="trip_introduction">
@@ -238,7 +261,7 @@
                         <h4>댓글</h4>
                         <div>
                             <textarea name="replycontent" class="replycontent" placeholder="댓글을 입력해주세요."></textarea>
-                            <input type="button" value="등록">
+                            <input type="button" value="등록" onclick="replySubmit();">
                         </div>
                     </div>
                 </div>
@@ -249,11 +272,11 @@
 
             <div class="">
                 <div class="guide_info">
-                    <h4>가이드</h4>
+                    <h4>작성자</h4>
                     <div class="guide_profile">
                         <img src="/images/boardimg/profile.png" alt="">
                         <span>[[${board.userid}]]</span>
-                        <p>자기 소개를 아직 작성하지 않았습니다</p>
+						<!--<p>자기 소개를 아직 작성하지 않았습니다</p>-->
                     </div>
 
                     <div class="location">
@@ -271,4 +294,23 @@
         </div>
     </div>
 </body>
+<script>
+	// 댓글
+	function replySubmit() {
+		const replycontent = document.querySelector(".replycontent");
+		let loginUser = /*[[${session.loginUser}]]*/'';
+		console.log(loginUser)
+		
+		console.log(replycontent.value)
+		if(replycontent.value == "") {
+			alert("댓글을 입력해주세요.");
+			replycontent.focus();
+		}
+		
+		
+		
+		
+	}
+	
+</script>
 </html>
