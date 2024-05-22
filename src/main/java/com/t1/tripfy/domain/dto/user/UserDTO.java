@@ -15,4 +15,5 @@ public class UserDTO {
 	private String regdate;
 	private long userWarncnt;
 	private int isDelete;
+	private String introduce;
 }

@@ -8,4 +8,5 @@ public class GuideDTO {
 	private String userid;
 	private long guideLikecnt;
 	private long guideWarncnt;
+	private String introduce;
 }

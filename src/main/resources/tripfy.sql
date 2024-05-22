@@ -17,7 +17,8 @@ CREATE TABLE `user` (
   */
   `regdate` date DEFAULT (current_date),
   `user_warncnt` bigint DEFAULT 0,
-  `isDelete` int DEFAULT 0
+  `isDelete` int DEFAULT 0,
+  `introduce` text
 );
 
 CREATE TABLE `user_img` (
@@ -35,7 +36,8 @@ CREATE TABLE `guide` (
   `guidenum` bigint PRIMARY KEY AUTO_INCREMENT,
   `userid` varchar(300),
   `guide_likecnt` bigint DEFAULT 0,
-  `guide_warncnt` bigint DEFAULT 0
+  `guide_warncnt` bigint DEFAULT 0,
+  `introduce` text
 );
 
 create table `guide_user`(
