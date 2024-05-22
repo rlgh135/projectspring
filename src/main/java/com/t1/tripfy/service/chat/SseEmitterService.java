@@ -81,11 +81,11 @@ public class SseEmitterService {
 		
 		//SseEmitter에 이벤트 핸들러 등록
 		emit.onTimeout(() -> {
-			deleteSseSession(userid, uuid);
 			if(log.isDebugEnabled()) { 
 				log.info("timeout, SseEmitter, userid={}, UUID={}", userid, uuid);
 				debugPrintAllElementsOfCache("onTimeout userid=" + userid + " UUID=" + uuid); 
 			}
+			emit.complete();
 		});
 		emit.onError((e) -> {
 			/* 발생 가능한 오류 목록 출:https://jsonobject.tistory.com/558
@@ -111,6 +111,7 @@ public class SseEmitterService {
 			if(log.isDebugEnabled()) {
 				log.info("error, SseEmitter, userid=" + userid + ", UUID=" + uuid, e);
 			}
+			emit.complete();
 		});
 		emit.onCompletion(() -> {
 			deleteSseSession(userid, uuid);
@@ -169,7 +170,6 @@ public class SseEmitterService {
 				debugPrintAllElementsOfCache("connected msg sending catch userid=" + userid + " UUID=" + uuid);
 			}
 			emit.completeWithError(e);
-			deleteSseSession(userid, uuid);
 			return null;
 		}
 		

@@ -8,6 +8,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
 	/* 
@@ -225,9 +228,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			return;
 		}
 		//요청 userid가 로그인 한 유저인지 확인
+		// 요청 userid가 HttpSession에 없으면 연결을 끊고 메서드 종료
 		// 요청 userid가 해당 클라이언트 HttpSession의 loginUser값과 다르면 연결을 끊고 메서드 종료
-		if(!session.getAttributes().get("loginUser").equals(userid)) {
+		if(session.getAttributes().get("loginUser") == null || !session.getAttributes().get("loginUser").equals(userid)) {
 			session.close(CloseStatus.PROTOCOL_ERROR);
+			if(log.isDebugEnabled()) {
+				log.debug("disconnect, wrong request, WebSocket, userid={}", userid);
+			}
 			return;
 		}
 		
