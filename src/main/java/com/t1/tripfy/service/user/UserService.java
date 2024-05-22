@@ -1,5 +1,7 @@
 package com.t1.tripfy.service.user;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
@@ -14,4 +16,5 @@ public interface UserService {
 	UserDTO getUser(String userid);
 	GuideUserDTO getGuideNum(String userid);
 	String getProfileImgName(String userid);
+	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;
 }

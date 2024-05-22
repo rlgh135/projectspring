@@ -8,23 +8,22 @@
 	<link rel="stylesheet" href="/css/user/myinfostyle.css">
 </head>
 <body>
-	<th:block th:include="~{layout/packageModal::packageModal}"></th:block>
 	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
 	
 	<div class="pfmdform">
-		<form id="ptform" method="post" action="/user/changeimg" enctype="application/x-www-form-urlencoded">
+		<form id="ptform" name="ptform" method="post" action="/user/changeimg" enctype="multipart/form-data">
 			<p>프로필 사진 변경</p>
 			<div id="profilecontainer">
 				<label for="uploadfileform">
-				<div id="profile" th:onclick="profilechagne([[${session.loginUser}]], [[${thumbnail}]])">
-					<img id="formprofileimg"  th:src="@{/images/userimg/{thumbnail}(thumbnail=${thumbnail})}">
+				<div id="profile">
+					<img id="formprofileimg"  th:src="${'/user/thumbnail?sysname='+thumbnail}">
 				</div>
 				</label>
 					
 			</div>
 			<div class="ptupload">
 				<input type="hidden" name="changedfilename" value="">
-				<input id="uploadfileform" type="file" name="changedfile" onchange="chooseimg(this)" style="display: none;">
+				<input id="uploadfileform" type="file" name="thumbnail" onchange="chooseimg(this)" style="display: none;">
 			</div>
 			<div class="ptfaarea">
 				<a th:href="'javascript:profilechagne(\''+${session.loginUser}+'\', \''+${thumbnail}+'\')'">변경완료</a>
@@ -37,7 +36,7 @@
 			<div id="profileupperwrap">
 				<div id="profilecontainer">
 					<div id="profile" class="pfmdopen">
-						<img th:src="@{/images/userimg/{thumbnail}(thumbnail=${thumbnail})}">
+						<img th:src="${'/user/thumbnail?sysname='+thumbnail}">
 					</div>
 				</div>
 				<div id="infocontainer">
@@ -165,7 +164,8 @@
 		 
 	}
 	function profilechagne(userid, sysname){
-		
+		const ptform = document.ptform;
+		ptform.submit();
 	}
 				
 </script>

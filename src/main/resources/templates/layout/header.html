@@ -82,7 +82,7 @@
 					<ul class="user_gnb">
 						<li class="userinfo_gnb">
 							<a href="javascript:openwarea()">
-								<img th:src="@{/images/userimg/{thumbnail}(thumbnail=${thumbnail})}">
+								<img th:src="${'/user/thumbnail?sysname='+session.userpfimg}">
 							</a>
 							<div id="pfwarea" class="pfwhide">
 								<div onclick="openwarea()" style="cursor: pointer;">

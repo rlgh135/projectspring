@@ -1,6 +1,8 @@
 package com.t1.tripfy.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +73,7 @@ public class UserController {
 		//썸네일 가져오기
 		String loginUser = (String)session.getAttribute("loginUser");		
 		String thumbnail = service.getProfileImgName(loginUser);
+		System.out.println(thumbnail);
 		
 		model.addAttribute("thumbnail", thumbnail);
 		
@@ -85,6 +88,11 @@ public class UserController {
 		//내가 받은 가이드 댓글 추가하기
 		
 		return "/user/myinfo";
+	}
+	
+	@GetMapping("thumbnail")
+	public ResponseEntity<Resource> thumbnail(String sysname) throws Exception {
+		return service.getThumbnailResource(sysname);
 	}
 	
 	//post
@@ -114,7 +122,7 @@ public class UserController {
 			} else {
 				session.setAttribute("guideNum", 0);				
 			}
-			return "redirect:/user/myinfo";
+			return "/user/myinfo";
 		}
 		else {
 			//
@@ -134,9 +142,11 @@ public class UserController {
 		String userid = (String)session.getAttribute("loginUser");
 		
 		if(service.updateProfileimg(thumbnail, userid)) {
-			
+			session.setAttribute("userpfimg", service.getProfileImgName(userid));
+			return "redirect:/user/myinfo";
 		}
 		
+		return "redirect:/";
 	}
 
 }
