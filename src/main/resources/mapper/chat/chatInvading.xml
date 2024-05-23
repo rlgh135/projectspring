@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t1.tripfy.mapper.chat.ChatInvadingMapper">
+	<!-- chat_user.chat_room_idx로 chat_room.packagenum, package.package_title 가져오기 -->
+	<!--
+		일단 지금은 서브쿼리 형태로 작성했는데 나중가면 좀 만져줘야 될지도 모름 
+		여차하면 ChatInvadingMapper를 날리고 PackageMapper쪽에서 가져오는 식으로 하는게 나을지도
+	-->
+	<select id="selectPackageInfoByChatRoomIdx">
+		SELECT package_title, packagenum
+		FROM package
+		WHERE packagenum = (
+			SELECT packagenum
+			FROM chat_room
+			WHERE chat_room_idx = #{chatRoomIdx}
+		)
+	</select>
+</mapper>

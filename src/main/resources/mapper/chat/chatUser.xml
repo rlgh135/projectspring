@@ -8,5 +8,16 @@
 		SELECT * FROM chat_user
 		WHERE userid = #{userid}
 	</select>
-	
+	<!--
+		채팅방에 가입해있는 상대방의 userid를 가져오기
+		1대1 채팅 전용
+	-->
+	<select id="selectOpponentUserid">
+		SELECT userid
+		FROM chat_user
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+		AND
+			userid != #{userid}
+	</select>
 </mapper>

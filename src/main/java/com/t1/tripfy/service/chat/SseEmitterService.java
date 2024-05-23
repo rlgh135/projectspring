@@ -70,6 +70,7 @@ public class SseEmitterService {
 	//클라이언트 재접속 시도 유예기간
 	private static final long RECONNECTION_AFTER_TIMEOUT = 1 * 1000;
 	
+	//이거 좀 생각해봐야됨 last-event-id로 들어가는, 해당 기능의 분별점이 되는 값이니까 이렇게 관리하면 안돼 - 240523
 	private static long connEventCount = 0L;
 	private static long broadcastEventCount = 0L;
 	
@@ -133,7 +134,7 @@ public class SseEmitterService {
 		
 		emitterMap.put(uuid, emit);
 		if(!sseSessions.containsKey(userid)) {
-			sseSessions.put(userid, createNewSseSessionValue(userid));
+			sseSessions.put(userid, createNewSseSessionValue());
 		}
 		sseSessions.get(userid).add(uuid);
 		
@@ -192,7 +193,7 @@ public class SseEmitterService {
 		return UUID.randomUUID();
 	}
 	
-	private List<UUID> createNewSseSessionValue(String userid) {
+	private List<UUID> createNewSseSessionValue() {
 		return new ArrayList<>();
 	}
 	

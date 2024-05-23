@@ -1,6 +1,9 @@
 package com.t1.tripfy.service.chat;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
 
 public interface ChatService {
 	// 중요
@@ -10,4 +13,7 @@ public interface ChatService {
 	
 	// 안 읽은 채팅 개수 가져오기
 	Integer selectCountOfUnreadChatByUserid(String userid);
+	
+	// 채팅방 리스트 + 각 채팅방의 마지막 메시지 + 안 읽은 메시지 개수 가져오기
+	List<ChatListPayloadDTO> selectChatList(String userid);
 }

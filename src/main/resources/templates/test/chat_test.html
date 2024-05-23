@@ -110,7 +110,8 @@
 	const INFO_SSE = document.getElementById("info-unable-print-sseview");
 
 	// onload ----------------------------------------------------------------------------------------------------
-	window.onload()
+	// window.onload()
+	// window.addEventListener("load", setServerSendEventConnection(USER_ID, 1000));
 
 	// eventlistener ----------------------------------------------------------------------------------------------------
 	// ajax로 채팅방 개설을 요청
@@ -130,6 +131,25 @@
 			// 오류 발생시 로직
 		});
 	});
+	/*
+		ajax GET chat room list
+		{
+			"userid": "testuser01",  요청자 userid
+			"chatlist": [
+				{
+					"roomidx": 1,
+					"pkgnum": 1,
+					"pkgname": "팔라우 5박 6일 1일시내 5일 통통배 바다 스노클링 해파리호수"
+					"userid": "selleruser01",  상대 유저 id
+					"recentchatidx": 123, 제일 최신 메시지의 chat_detail_idx
+					"recentchatbody": "test last boddy",
+					"regdate": "2024-05-23 10:07:12",
+					"uncheckedmsg": 1234  확인 안한 채팅 개수
+				},
+				...
+			]
+		}
+	*/
 	// ajax로 채팅방 리스트 로딩 요청
 	SUBMIT_LOAD_CHAT.addEventListener("click", (e) => {
 		ajaxGet("localhost:8080", "chat", {
@@ -137,6 +157,8 @@
 		})
 		.then((data) => {
 			// 채팅방 DOM 수정 로직
+			VIEW_CHAT_LIST.textContent = "";
+			addActionDives(VIEW_CHAT_LIST, data.chatlist);
 		})
 		.catch((error) => {
 			// 에러 발생시 로직
@@ -152,27 +174,44 @@
 	});
 
 	// conn func ----------------------------------------------------------------------------------------------------
+	/*
+		SSE broadcast JSON
+		{
+			"roomidx": 123,  chat_room_idx
+			"pkgnum": 123,  packagenum
+			"chatidx": 1234,  chat_detail.chat_detail_idx
+			"sender": "qwerty",  chat_detail.userid
+			"chatbody": "test msg yeah",  chat_detail_content
+			"regdate": "2024-05-23 10:06:12"  regdate
+		}
+	*/
 	//SSE 연결
-	function setServerSendEventConnection(userid) {
+	function setServerSendEventConnection(userid, reconn_after_timeout) {
 		EVENTSOURCE = new EventSource(
 			"http://localhost:8080/sse/subscribe?clientid=" + userid
 		);
 
 		// 이벤트리스너 할당
 		EVENTSOURCE.addEventListener("open", (e) => {
-			
+			addP(VIEW_SSE, "SSE opened", null);
 		});
 		EVENTSOURCE.addEventListener("connected", (e) => {
-			
+			addP(VIEW_SSE, "SSE conn msg received - " + e.lastEventId, e.lastEventId)
 		});
 		EVENTSOURCE.addEventListener("broadcast", (e) => {
-			
+			const res = JSON.parse(e.data);
+
+			const str = "room=" + res.roomidx + " pkg=" + res.pkgnum + " idx=" + res.chatidx
+						+ " from=" + res.sender + " body=" + res.chatbody + " reg=" + res.regdate;
+
+			addP(VIEW_SSE, str, e.lastEventId);
 		});
 		EVENTSOURCE.onerror = (err) => {
-			
+			addP(VIEW_SSE, "SSE error", null);
+			EVENTSOURCE.close();
 		};
 		EVENTSOURCE.onclose = () => {
-
+			addP(VIEW_SSE, "SSE closed", null);
 		};
 	}
 	// 웹소켓 연결
@@ -244,5 +283,45 @@
 
 	// DOM 구현 ----------------------------------------------------------------------------------------------------
 	// d
+	/*
+		이거 chatlist 를 구현하는거로 땡치면 안되고 따로 저장해둬야함
+	*/
+	function addP(tgtView, body, id = null) {
+		const p = document.createElement("p");
+		if(id != null) {
+			p.id = id;
+		}
+		p.innerHTML = body;
+		tgtView.prepend(p);
+	}
+	// 이거 나중에 innerHTML 방식으로 바꿔야 함
+	function addActionDives(tgtView, chatList) {
+		for(chatRoom of chatList) {
+			const div = document.createElement("div");
+			div.id = "pkgnum-" + chatRoom.pkgnum;
+			div.addEventListener("click", chatRoomClick);
+			const pPkgName = document.createElement("p");
+			pPkgName.innerHTML = chatRoom.pkgname;
+			div.appendChild(pPkgName);
+			const pUserid = document.createElement("p");
+			pUserid.innerHTML = chatRoom.userid;
+			div.appendChild(pUserid);
+			const pRecentChatBody = document.createElement("p");
+			pRecentChatBody.innerHTML = chatRoom.recentchatbody;
+			div.appendChild(pRecentChatBody);
+			const pRegDate = document.createElement("p");
+			pRegDate.innerHTML = chatRoom.regdate;
+			div.appendChild(pRegDate);
+			const pUnchkMsg = document.createElement("p");
+			pUnchkMsg.innerHTML = chatRoom.regdate;
+			div.appendChild(pUnchkMsg);
+			tgtView.appendChild(div);
+		}
+	}
+
+	function chatRoomClick(e) {
+		//연결되어있는 웹소켓이 없으면 연결
+		//SSE는 끊어준다
+	}
 </script>
 </html>
