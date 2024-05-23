@@ -19,11 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
+import com.t1.tripfy.mapper.pack.PackageMapper;
+import com.t1.tripfy.mapper.pack.ReservationMapper;
 import com.t1.tripfy.mapper.user.UserMapper;
 import com.t1.tripfy.util.PathUtil;
 
@@ -37,6 +41,12 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private BoardMapper bmapper;
+	
+	@Autowired
+	private ReservationMapper resmapper;
+	
+	@Autowired
+	private PackageMapper pmapper;
 	
 	@Override
 	public boolean join(UserDTO user) {
@@ -115,17 +125,14 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public ResponseEntity<Resource> getThumbnailResource(String sysname) throws Exception{
-		// 경로에 관련된 객체(자원으로 가지고 와야 하는 파일에 대한 경로)
 		Path path = Paths.get(saveFolder + sysname);
-		// 경로에 있는 파일의 MIME 타입을 조사해서 그대로 담기
 		String contentType = Files.probeContentType(path);
-		// 응답 헤더 생성
 		HttpHeaders headers = new HttpHeaders();
+		
 		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
 
-		// 해당 경로(path)에 있는 파일로부터 뻗어나오는 InputStream*Files.newInputStream(path)을
-		// 통해 자원화*new InputStreamResource()
 		Resource resource = new InputStreamResource(Files.newInputStream(path));
+		
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 	
@@ -137,5 +144,15 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public long getMyTotal(Criteria cri) {
 		return bmapper.getTotal(cri);
+	}
+	
+	@Override
+	public List<ReservationDTO> getMyReservation(Criteria cri, String userid) {
+		return resmapper.getMyReservation(cri, userid);
+	}
+	
+	@Override
+	public PackageDTO getJoinPackage(long packagenum) {
+		return pmapper.getPackageByPackageNum(packagenum);
 	}
 }

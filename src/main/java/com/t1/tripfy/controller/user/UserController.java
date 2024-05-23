@@ -1,6 +1,8 @@
 package com.t1.tripfy.controller.user;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -11,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
+import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
-import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.service.user.UserService;
 
 import jakarta.servlet.http.Cookie;
@@ -103,6 +106,39 @@ public class UserController {
 		return service.getThumbnailResource(sysname);
 	}
 	
+	@GetMapping("myboard")
+	@ResponseBody
+	public List<BoardDTO> getMyBoard(HttpServletRequest req){
+		Criteria cri = new Criteria(1, 6);
+		String loginUser = (String)req.getAttribute("loginUser");
+		return service.getMyBoardList(cri, loginUser);
+	}
+	
+	@GetMapping("mypackage")
+	@ResponseBody
+	public Map<String, Object> getMyPackage(Criteria cri, HttpServletRequest req){
+		cri = new Criteria(1, 6);
+		String userid = (String)req.getAttribute("loginUser");
+
+		List<ReservationDTO> myreservation = service.getMyReservation(cri, userid);
+		
+		List<PackageDTO> joinpackage = null;
+		Map<String, Object> datas = new HashMap<>();
+
+		if(myreservation.size()>0) {
+			for (ReservationDTO reservation : myreservation) {
+				joinpackage.add(service.getJoinPackage(reservation.getPackagenum()));
+			}			
+			datas.put("myreservation", myreservation);
+			datas.put("joinpackage", joinpackage);
+		} else {
+			datas.put("nodata", "참여한 패키지가 없어요");
+		}
+		
+
+		return datas;
+
+	}
 	//post
 	@PostMapping("join")
 	public String join(UserDTO user, HttpServletResponse resp) {

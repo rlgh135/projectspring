@@ -334,6 +334,7 @@ input[type="button"] {
 	height: 45px;
 }
 .post_preview{
+	width: 200px;
 	height: 22px;
 	margin-top: 15px;
 	overflow: hidden;
@@ -349,7 +350,41 @@ input[type="button"] {
 .mypstselected-body{
 	border-top-left-radius: 0px !important;
 }
-.clicklist {
+.showboardspecs {
+	display: flex;
+	width: fit-content;
+	margin-left: auto;
+}
+.showboardspecs li img{
+	width: 18px;
+	height: 18px;
+}
+.b_pagenation {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+.b_pagenation img {
+	width: 20px;
+	height: 20px;
+	margin-top: 5px;
+}
+
+.b_pagenation a {
+	font-size: 18px;
+	font-weight: bold;
+	width: 33px;
+	height: 33px;
+	text-align: center;
+	margin-right: 15px;
+	border: 1px solid rgb(233, 233, 233);
+	border-radius: 5px;
+	line-height: 28px;
+}
+
+.b_pagenation a:last-of-type {
+	margin-right: 0;
 }
 /*guide*/
 #guidemodal {

@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 
@@ -23,4 +25,6 @@ public interface UserService {
 	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;
 	long getMyTotal(Criteria cri);
 	List<BoardDTO> getMyBoardList(Criteria cri, String userid);
+	List<ReservationDTO> getMyReservation(Criteria cri, String userid);
+	PackageDTO getJoinPackage(long packagenum);
 }

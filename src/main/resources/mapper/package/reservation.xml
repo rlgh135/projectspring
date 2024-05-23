@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t1.tripfy.mapper.pack.ReservationMapper">
+
+	<sql id="cri">
+		<if test="keyword != '' and type != ''">
+			<trim prefixOverrides="or" prefix="(" suffix=") and">
+				<foreach collection="typeArr" item="type">
+					or
+					<choose>
+						<when test="type == 'T'.toString()">
+							boardtitle like('%${keyword}%')
+						</when>
+						<when test="type == 'C'.toString()">
+							boardcontents like('%${keyword}%')
+						</when>
+						<when test="type == 'W'.toString()">
+							userid like('%${keyword}%')
+						</when>
+					</choose>
+				</foreach>
+			</trim>
+		</if>
+	</sql>
+
+	<!--회원 예약리스트-->
+	<select id="getMyReservation">
+		select * from reservation where
+		(userid = '${userid}' and
+		reservationnum > 0) order by reservationnum desc limit #{cri.startrow}, #{cri.amount}
+	</select>
+
+</mapper>

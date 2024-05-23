@@ -71,10 +71,11 @@
 			</div>
 			<div id="profilelowerwrap">
 				<ul id="choicebtns">
-					<li id="myboard" onclick="showMyBoards()">내 게시글</li>
+					<li style="display: none;"><input id="mypstshowtype" type="hidden" value="board"></li>
+					<li id="myboard" onclick="showMyBoards()" class="mypstselected-btn">내 게시글</li>
 					<li id="joinpackage" onclick="showJoinPacks()">참여한 여행</li>
 				</ul>
-				<div id="mypostsection">
+				<div id="mypostsection" class="mypstselected-body">
 					<div id="mainmypost">
 						<a th:if="${list != null and list.size > 0}" th:each="board:${list}"
 							th:href="@{/board/get(boardnum=${board.boardnum})}">
@@ -84,7 +85,7 @@
 								</div>
 								<div class="post_write">
 									<div class="pstguide">
-										<img src="/images/boardimg/profile.png" alt="">
+										<img th:src="${'/user/thumbnail?sysname='+thumbnail}" alt="">
 										<span>[[${board.userid}]]</span>
 									</div>
 									<div class="line"></div>
@@ -92,15 +93,15 @@
 									<div class="post_preview">
 										<ul class="showboardspecs">
 											<li>
-												<img src="">
+												<img src="/images/boardimg/location.png">
 												<span>[[${board.viewcnt}]]</span>
 											</li>
 											<li>
-												<img src="">
+												<img src="/images/boardimg/location.png">
 												<span>[[${board.likecnt}]]</span>
 											</li>
 											<li>
-												<img src="">
+												<img src="/images/boardimg/location.png">
 												<span>[[${board.replycnt}]]</span>												
 											</li>
 										</ul>
@@ -109,8 +110,12 @@
 							</div>
 						</a>
 					</div>
-					<div id="mypagesarea">
-				
+					<div id="mypagesarea" class="b_pagenation">
+						<a class="" href="javascript:movepage(-1)"><img src="/images/boardimg/prev.png" alt=""
+								class="b_prevbtn">이전페이지</a>
+						<span id="myinfocurpagespan">1</span>
+						<a class="" href="javascript:movepge(1)">다음페이지<img src="/images/boardimg/next.png" alt=""
+								class="b_nextbtn"></a>
 					</div>
 				</div>
 			</div>
@@ -147,7 +152,7 @@
 						<li id="joinpackage" onclick="showPackReviews('loginUser')">패키지 후기</li>
 					</ul>
 					<div id="guideinfosarea">
-
+						
 					</div>
 				</div>
 			</div>
@@ -180,12 +185,56 @@
 		guidemodal.style.display = 'none';
 	});
 	
+    const myboard = document.getElementById("myboard");
+	const joinpackage = document.getElementById("joinpackage");
+	
+	const mypostsection = document.getElementById("mypostsection");
     function showMyBoards() {
-        const target = document.getElementById("myboard");
-        target.classList.toggle("mypstselected-btn");
-		const targetbody = document.getElementById("mypostsection");
-		targetbody.classList.toggle("mypstselected-body");
+		if($("#mypstshowtype").val()=='board'){
+			console.log("이미 보드입니다");
+			return;
+		}
+		
+		$.ajax({
+			url: "/user/myboard",
+			method: "GET",
+			
+			success:function(){
+				myboard.classList.toggle("mypstselected-btn");
+				joinpackage.classList.toggle("mypstselected-btn");
+				mypostsection.classList.toggle("mypstselected-body");
+				$("#mypstshowtype").val("board");
+				
+			},
+			
+			error:function(){
+				console.log("board 통신에러");
+			}
+		})
     }
+	
+	function showJoinPacks() {
+		if($("#mypstshowtype").val()=='package'){
+			console.log("이미 패키지입니다");
+			return;
+		}
+		$.ajax({
+			url: "/user/mypackage",
+			method: "GET",
+			
+			success:function(){
+				myboard.classList.toggle("mypstselected-btn");
+				joinpackage.classList.toggle("mypstselected-btn");
+				mypostsection.classList.toggle("mypstselected-body");
+				$("#mypstshowtype").val("package");
+				
+			},
+			
+			error:function(){
+				console.log("package 통신에러");				
+			}
+		})
+	}
 	
 	function chooseimg(obj){
 		console.log(obj.files[0]);
@@ -207,6 +256,32 @@
 		const ptform = document.ptform;
 		ptform.submit();
 	}
-				
+	
+	const curpage = 1;
+	
+	function movepage(diff){
+		var movepage = curpage+diff;
+		
+		if(movepage==0){
+			alert("현재 1페이지 입니다.");
+			return;
+		}
+		
+		$.ajax({
+			url:"/user/movepage?targetpage="+movepage,
+			method: "GET",
+			
+			success:function(data) {
+				console.log(data);
+				curpage = movepage;
+				console.log("현재 페이지:"+curpage);
+			},
+			
+			error:function(){
+				console.log("통신 실패");
+				alert("통신 실패");
+			}
+		});
+	}	
 </script>
 </html>
