@@ -525,12 +525,19 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script th:inline="javascript">
-	const sort = document.getElementsByClassName("sort");
-	const b_search = document.querySelector(".b_search");
+	const sort = document.getElementsByClassName("sort");  // 최신순, 인기순, 좋아요순 버튼
+	const b_search = document.querySelector(".b_search");  // 검색창
 	const b_searchDetail = document.querySelector(".b_searchDetail");
 	const ximg = document.querySelector(".ximg");
 	const search_cancel = document.querySelector(".search_cancel");
 	const region_div = document.querySelector(".region > div");
+	const country_select = document.querySelector(".country_select");  // 국내, 해외
+	const area_select = document.querySelector(".area_select");  // 서울, 경기도 등 지역
+	
+	
+	
+	console.log(country_select)
+	console.log(area_select)
 	
 		
 	// 검색창 focus 되었을 때
@@ -680,7 +687,7 @@
 						
 						// 페이지 네이션
 						// 이전 버튼
-						let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "");
+						let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
 						let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
 						b_prevbtn.append(b_prevbtnImg);
 						$(".b_pagenation").append(b_prevbtn);
@@ -690,7 +697,7 @@
 						$(".b_pagenation").append(currentPage);
 						
 						// 다음 버튼
-						let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "");
+						let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
 						let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
 						b_nextbtn.append(b_nextbtnImg);							
 						$(".b_pagenation").append(b_nextbtn);
@@ -838,7 +845,7 @@
 						
 						// 페이지 네이션
 						// 이전 버튼
-						let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "");
+						let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
 						let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
 						b_prevbtn.append(b_prevbtnImg);
 						$(".b_pagenation").append(b_prevbtn);
@@ -848,7 +855,7 @@
 						$(".b_pagenation").append(currentPage);
 						
 						// 다음 버튼
-						let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "");
+						let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
 						let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
 						b_nextbtn.append(b_nextbtnImg);							
 						$(".b_pagenation").append(b_nextbtn);
@@ -1083,7 +1090,7 @@
 							
 							// 페이지 네이션
 							// 이전 버튼
-							let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "");
+							let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
 							let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
 							b_prevbtn.append(b_prevbtnImg);
 							$(".b_pagenation").append(b_prevbtn);
@@ -1093,7 +1100,7 @@
 							$(".b_pagenation").append(currentPage);
 							
 							// 다음 버튼
-							let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "");
+							let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
 							let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
 							b_nextbtn.append(b_nextbtnImg);							
 							$(".b_pagenation").append(b_nextbtn);
@@ -1157,7 +1164,6 @@
 						b_nextbtn.append(b_nextbtnImg);							
 						$(".b_pagenation").append(b_nextbtn);
 						
-						exam();
 					}
 				},
 				
@@ -1197,80 +1203,74 @@
 		region_div.style.visibility = "hidden";
 	}
 	
-	function exam() {
-		const changePage = document.getElementsByClassName("changePage");
-		
-		for(let i = 0; i < changePage.length; i++) {
-			changePage[i].addEventListener("click", function(e) {
-				e.preventDefault();  // 이벤트 막음
-				pageChange(e);
-			})
-		}
-	}
-	
-	
-	
 	// 페이징 처리 부분의 이전 버튼과 다음 버튼, 이동할 페이지 번호 버튼 클릭 시 이벤트 막음
-	const changePage = document.getElementsByClassName("changePage");
-	
-	for(let i = 0; i < changePage.length; i++) {
-		changePage[i].addEventListener("click", function(e) {
-			e.preventDefault();  // 이벤트 막음
+	$(document).ready(function() {
+	    $(document).on('click', '.changePage', function(e) {
+	        e.preventDefault(); // 이벤트 막음
 			pageChange(e);
-		})
-	}
+	    });
+		
+		$(document).on('click', '.b_nextbtn', function(e) {
+		    e.preventDefault(); // 이벤트 막음
+			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		});
+		
+		$(document).on('click', '.b_prevbtn', function(e) {
+		    e.preventDefault(); // 이벤트 막음
+			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		});
+	});
 	
 	function pageChange(e) {
 		console.log(e.target)
-		console.log(e.target.text)
+		console.log(e.target.textContent)
 		
 		// 이동할 페이지 번호
-		let pagenum = e.target.text;
+		let pagenum = e.target.textContent;
 		
-		if(pagenum != undefined) {
-			// 정렬 방법
-			let sort = document.querySelector(".selected").value;
-			console.log(sort);
-			
-			let str = "";
-			if(sort == "최신 순") {
-				str = "recent";
-			}
-			
-			else if(sort == "인기 순") {
-				str = "popular";
-			}
-			
-			else {
-				str = "like";
-			}
-			console.log(str);
-			
-			// 키워드
-			let keyword = document.querySelector(".b_search").value;
-			console.log(keyword);
-			
-			// 국가 코드 및 지역 이름
-			const country_select = document.querySelector(".country_select");
-			const area_select = document.querySelector(".area_select");
-			console.log(country_select)
-			console.log(area_select)
-					
-			let countryName = "";
-			let regionName = "";
-			if(country_select != null) {
-				countryName = country_select.name;
-				console.log("countryName: " + countryName)
-			}
-			
-			if(area_select != null) {
-				regionName = area_select.name;
-				console.log("regionName: " + regionName)
-			}
-			
-			location.replace("/board/list?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName + "&pagenum=" + pagenum);
+		
+		// 정렬 방법
+		let sort = document.querySelector(".selected").value;
+		console.log(sort);
+		
+		let str = "";
+		if(sort == "최신 순") {
+			str = "recent";
 		}
 		
+		else if(sort == "인기 순") {
+			str = "popular";
+		}
+		
+		else {
+			str = "like";
+		}
+		console.log(str);
+		
+		// 키워드
+		let keyword = document.querySelector(".b_search").value;
+		console.log(keyword);
+		
+		// 국가 코드 및 지역 이름
+		const country_select = document.querySelector(".country_select");
+		const area_select = document.querySelector(".area_select");
+		console.log(country_select)
+		console.log(area_select)
+				
+		let countryName = "";
+		let regionName = "";
+		if(country_select != null) {
+			countryName = country_select.name;
+			console.log("countryName: " + countryName)
+		}
+		
+		if(area_select != null) {
+			regionName = area_select.name;
+			console.log("regionName: " + regionName)
+		}
+		
+		location.replace("/board/list?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName + "&pagenum=" + pagenum);
+		/*
 		else {
 			if(e.target.text == 0) {
 				alert("이동할 수 있는 이전 페이지가 없습니다.")
@@ -1280,7 +1280,7 @@
 				alert("이동할 수 있는 다음 페이지가 없습니다.")
 			}
 		}
-		
+		*/
 		
 	}
 
