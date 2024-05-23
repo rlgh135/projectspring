@@ -77,4 +77,10 @@
 		boardnum > 0
 	</select>
 	
+	<update id="addReplyCnt">
+		update board set replycnt = replycnt+1 where boardnum=#{boardnum};
+	</update>
+	<update id="reduceReplyCnt">
+		update board set replycnt = replycnt-1 where boardnum=#{boardnum};
+	</update>
 </mapper>

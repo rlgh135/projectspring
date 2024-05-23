@@ -77,7 +77,8 @@ CREATE TABLE `board` (
   `regionname` varchar(300),
   `countrycode` varchar(300),
   `likecnt` bigint,
-  `viewcnt` bigint
+  `viewcnt` bigint,
+  `replycnt` bigint default 0
 );
 
 CREATE TABLE `boardaddr` (

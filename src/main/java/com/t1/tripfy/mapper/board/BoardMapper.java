@@ -25,4 +25,7 @@ public interface BoardMapper {
 	// 인기 순 게시글 긁어오기
 	List<BoardDTO> getpopularList(Criteria cri);
 
+	//댓글 수 업다운
+	int addReplyCnt(long boardnum);
+	int reduceReplyCnt(long boardnum);
 }

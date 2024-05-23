@@ -14,5 +14,5 @@ public class BoardDTO {
 	private String countrycode;
 	private long likecnt;
 	private long viewcnt;
-	
+	private long replycnt;
 }
