@@ -133,6 +133,7 @@ public class UserController {
 			datas.put("myreservation", myreservation);
 			datas.put("joinpackage", joinpackage);
 		} else {
+			datas.put("joinpackage", joinpackage);
 			datas.put("nodata", "참여한 패키지가 없어요");
 		}
 		
@@ -140,6 +141,20 @@ public class UserController {
 		return datas;
 
 	}
+	
+	@GetMapping("/user/sogae")
+	public String changeSogae(HttpServletRequest req, String introduce) {
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		String backuri = req.getHeader("Referer");
+		System.out.println("돌아가는 경로:"+backuri);
+		if(service.changeSogae(userid, introduce)) {
+			return "redirect:"+backuri;
+		} else {
+			return "redirect:/";
+		}
+	}
+	
+	
 	//post
 	@PostMapping("join")
 	public String join(UserDTO user, HttpServletResponse resp) {
@@ -157,6 +172,11 @@ public class UserController {
 	@PostMapping("login")
 	public String login(String userid, String userpw, HttpServletRequest req) {
 		HttpSession session = req.getSession();
+		String backuri = req.getHeader("Referer");
+		if(backuri.equals("http://localhost:8080/")) {
+			backuri = "/user/myinfo";
+		}
+		
 		if(service.login(userid, userpw)) {
 			session.setAttribute("loginUser", userid);
 			session.setAttribute("userpfimg", service.getProfileImgName(userid));
@@ -169,7 +189,7 @@ public class UserController {
 			}
 			
 			System.out.println("login 가이드검사 : " +session.getAttribute("guideNum"));
-			return "redirect:/user/myinfo";
+			return "redirect:"+backuri;
 		}
 		else {
 			//
@@ -196,4 +216,6 @@ public class UserController {
 		return "redirect:/";
 	}
 
+	
+	
 }

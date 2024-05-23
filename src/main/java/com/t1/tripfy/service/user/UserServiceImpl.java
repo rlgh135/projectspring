@@ -155,4 +155,9 @@ public class UserServiceImpl implements UserService{
 	public PackageDTO getJoinPackage(long packagenum) {
 		return pmapper.getPackageByPackageNum(packagenum);
 	}
+	
+	@Override
+	public boolean changeSogae(String userid, String introduce) {
+		return umapper.updateSogae(userid, introduce)==1;
+	}
 }

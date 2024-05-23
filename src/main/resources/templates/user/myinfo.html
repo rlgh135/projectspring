@@ -44,8 +44,13 @@
 						<p id="profname">[[${user.userid}]]</p>
 						<p th:if="${session.guideNum!=0}" id="isguide"><img src="/images/userimg/guidebadge.png" alt=""></p>
 						<div id="editbtn">
-							<div id="redalert"></div>
-							<input type="button" value="패키지관리" class="profmopenbtn">
+							<th:block th:if="${session.guideNum!=0}">
+								<div id="redalert"></div>
+								<input type="button" value="가이드메뉴" class="profmopenbtn" onclick="location.href='/user/guide'">
+							</th:block>
+							<th:block th:unless="${session.guideNum!=0}">
+								<input type="button" value="가이드신청" class="profmopenbtn" onclick="location.href='/user/joinguide'">
+							</th:block>
 						</div>
 					</div>
 					<ul class="actcntlist">
@@ -64,16 +69,25 @@
 						</li>
 					</ul>
 					
-					<p style="margin-top: 20px;">
-						tripfy와 n일동안 함께했어요. 아래 리본하면 좋을듯
-					</p>
+					<div class="sogaebox">
+						<div>
+							<p>자기소개</p>
+							<input type="button" name="open" id="openSogeEdit" class="hiddens sogaetriger">
+							<input type="button" id="sogeWan" class="hiddens sogehide" onclick="sogesubmit()" value="완료">
+							<input type="button" id="sogeCansle" class="hiddens sogehide sogaetriger" value="취소">
+						</div>
+						<form action="/user/sogae" method="get" name="sogaeform">
+							<input type="hidden" name="_method" value="PUT"/>
+							<textarea name="introduce" readonly>[[${user.introduce}]]</textarea>
+						</form>
+					</div>
 				</div>
 			</div>
 			<div id="profilelowerwrap">
 				<ul id="choicebtns">
-					<li style="display: none;"><input id="mypstshowtype" type="hidden" value="board"></li>
 					<li id="myboard" onclick="showMyBoards()" class="mypstselected-btn">내 게시글</li>
 					<li id="joinpackage" onclick="showJoinPacks()">참여한 여행</li>
+					<li style="display: none;"><input id="mypstshowtype" type="hidden" value="board"></li>
 				</ul>
 				<div id="mypostsection" class="mypstselected-body">
 					<div id="mainmypost">
@@ -111,11 +125,9 @@
 						</a>
 					</div>
 					<div id="mypagesarea" class="b_pagenation">
-						<a class="" href="javascript:movepage(-1)"><img src="/images/boardimg/prev.png" alt=""
-								class="b_prevbtn">이전페이지</a>
+						<a class="" href="javascript:movepage(-1)">이전</a>
 						<span id="myinfocurpagespan">1</span>
-						<a class="" href="javascript:movepge(1)">다음페이지<img src="/images/boardimg/next.png" alt=""
-								class="b_nextbtn"></a>
+						<a class="" href="javascript:movepge(1)">다음</a>
 					</div>
 				</div>
 			</div>
@@ -161,8 +173,31 @@
 	
 </body>
 
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+		const userthumbnail = [[${thumbnail}]];
+		const userdir = [[${'/user/thumbnail?sysname='+thumbnail}]];
+	/*]]>*/
+</script>
 <script>
+	
+	let orgval = $('textarea[name="introduce"]').val();
+	$(".sogaetriger").click(function (){
+		$(".hiddens").toggleClass("sogehide");
+		$('textarea[name="introduce"]').prop('readonly',!$('textarea[name="introduce"]').prop('readonly'));
+		
+		if($(this).val()=="취소"){
+			$('textarea[name="introduce"]').val(orgval);
+		}
+	})
+	
+	function sogesubmit(){
+		const sogaeform = document.sogaeform;
+		sogaeform.submit();
+	}
+	
 	const pfmdform = document.querySelector('.pfmdform');
 	const pfmdopen = document.querySelector('.pfmdopen');
 	const pfmdclose = document.querySelector('.pfmdclose');
@@ -189,11 +224,14 @@
 	const joinpackage = document.getElementById("joinpackage");
 	
 	const mypostsection = document.getElementById("mypostsection");
+	
     function showMyBoards() {
 		if($("#mypstshowtype").val()=='board'){
 			console.log("이미 보드입니다");
 			return;
 		}
+		
+		const postsection = document.getElementById("mainmypost");
 		
 		$.ajax({
 			url: "/user/myboard",
@@ -207,6 +245,97 @@
 				
 				console.log(datas);
 				
+				if(datas.length==0||datas==null){
+					postsection.innerHTML = "";
+					let emptysignnode = document.createElement('img');
+					emptysignnode.src = '/images/layoutimg/indeximg01.png';
+					emptysignnode.className = 'centered-mpimg';
+				} else {
+					postsection.innerHTML = "";
+					for(let i in datas){
+						const board = datas[i];
+						
+						// <a> 요소 생성
+						const a = document.createElement('a');
+						a.href = '/board/get?boardnum='+board.boardnum;
+						
+						// <div class="mypost"> 요소 생성
+						const mypostDiv = document.createElement('div');
+						mypostDiv.className = 'mypost';
+						
+						// <div class="p_img"> 요소 생성 및 이미지 추가
+						const pImgDiv = document.createElement('div');
+						pImgDiv.className = 'p_img';
+						const img1 = document.createElement('img');
+						img1.src = '/images/boardimg/2.jpg';
+						img1.alt = '';
+						pImgDiv.appendChild(img1);
+						
+						// <div class="post_write"> 요소 생성
+						const postWriteDiv = document.createElement('div');
+						postWriteDiv.className = 'post_write';
+						
+						// <div class="pstguide"> 요소 생성 및 내용 추가
+						const pstGuideDiv = document.createElement('div');
+						pstGuideDiv.className = 'pstguide';
+						const img2 = document.createElement('img');
+						img2.src = userdir;
+						img2.alt = '';
+						const span1 = document.createElement('span');
+						span1.textContent = board.userid;
+						pstGuideDiv.appendChild(img2);
+						pstGuideDiv.appendChild(span1);
+						
+						// <div class="line"> 요소 생성
+						const lineDiv = document.createElement('div');
+						lineDiv.className = 'line';
+						
+						// <div class="post_title"> 요소 생성 및 내용 추가
+						const postTitleDiv = document.createElement('div');
+						postTitleDiv.className = 'post_title';
+						postTitleDiv.textContent = board.title;
+						
+						// <div class="post_preview"> 요소 생성
+						const postPreviewDiv = document.createElement('div');
+						postPreviewDiv.className = 'post_preview';
+						
+						// <ul class="showboardspecs"> 요소 생성 및 내용 추가
+						const ul = document.createElement('ul');
+						ul.className = 'showboardspecs';
+						
+						const createLi = (imgSrc, textContent) => {
+						    const li = document.createElement('li');
+						    const img = document.createElement('img');
+						    img.src = imgSrc;
+						    const span = document.createElement('span');
+						    span.textContent = textContent;
+						    li.appendChild(img);
+						    li.appendChild(span);
+						    return li;
+						};
+						
+						ul.appendChild(createLi('/images/boardimg/location.png', board.viewcnt));
+						ul.appendChild(createLi('/images/boardimg/location.png', board.likecnt));
+						ul.appendChild(createLi('/images/boardimg/location.png', board.replycnt));
+						
+						postPreviewDiv.appendChild(ul);
+						
+						// 요소들을 조립
+						postWriteDiv.appendChild(pstGuideDiv);
+						postWriteDiv.appendChild(lineDiv);
+						postWriteDiv.appendChild(postTitleDiv);
+						postWriteDiv.appendChild(postPreviewDiv);
+						
+						mypostDiv.appendChild(pImgDiv);
+						mypostDiv.appendChild(postWriteDiv);
+						
+						a.appendChild(mypostDiv);
+						
+						// 부모 div에 최종 요소 추가
+						postsection.appendChild(a);
+					}
+					
+				}
 			},
 			
 			error:function(){
@@ -220,6 +349,9 @@
 			console.log("이미 패키지입니다");
 			return;
 		}
+		
+		const postsection = document.getElementById("mainmypost");
+		
 		$.ajax({
 			url: "/user/mypackage",
 			method: "GET",
@@ -229,8 +361,18 @@
 				joinpackage.classList.toggle("mypstselected-btn");
 				mypostsection.classList.toggle("mypstselected-body");
 				$("#mypstshowtype").val("package");
-				
 				console.log(datas);
+				
+				if(datas.joinpackage==null){
+					postsection.innerHTML = "";
+					let emptysignnode = document.createElement('img');
+					emptysignnode.src = '/images/layoutimg/indeximg01.png';
+					emptysignnode.className = 'centered-mpimg';
+					
+					postsection.appendChild(emptysignnode);
+				} else {
+					
+				}
 			},
 			
 			error:function(){
@@ -278,6 +420,8 @@
 				console.log(data);
 				curpage = movepage;
 				console.log("현재 페이지:"+curpage);
+				
+				
 			},
 			
 			error:function(){

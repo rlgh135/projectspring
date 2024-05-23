@@ -25,6 +25,9 @@
 	<update id="updateProfileimg">
 		update user_img set sysname=#{sysname}, orgname=#{orgname} where userid=#{userid};
 	</update>
+	<update id="updateSogae">
+		update user set introduce=#{introduce} where userid=#{userid};
+	</update>
 	<delete id="deleteUser">
 		delete from user where userid=#{userid}
 	</delete>

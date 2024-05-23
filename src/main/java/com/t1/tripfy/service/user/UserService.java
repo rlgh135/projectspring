@@ -27,4 +27,5 @@ public interface UserService {
 	List<BoardDTO> getMyBoardList(Criteria cri, String userid);
 	List<ReservationDTO> getMyReservation(Criteria cri, String userid);
 	PackageDTO getJoinPackage(long packagenum);
+	boolean changeSogae(String userid, String introduce);
 }

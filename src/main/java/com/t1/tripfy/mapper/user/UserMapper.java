@@ -20,6 +20,7 @@ public interface UserMapper {
 	//U
 	int updateUser(UserDTO user);
 	int updateProfileimg(UserImgDTO userimg);
+	int updateSogae(String userid, String introduce);
 	
 	//D
 	int deleteUser(String userid);

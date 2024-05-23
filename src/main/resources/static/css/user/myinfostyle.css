@@ -21,10 +21,24 @@ a {
 	src: url('/font/MCKLSH__.ttf') format('truetype');
 	/* .ttf 파일의 경로를 지정합니다. */
 }
-
-section, section *{
-	border: 1px soild black;
+textarea{
+	resize: none;
+	width:100%;
+	margin:0;
+	padding:0;
+	border:0;
+	font-size:15px;
+	vertical-align:top;
+	border-radius:0;
+	box-sizing:content-box;
+	appearance:none;
+	padding: 5px;
+	border-radius: 2px;
 }
+textarea:focus{
+	outline: none;
+}
+
 
 input {
 	background: none;
@@ -46,6 +60,7 @@ input[type="button"] {
 	background-color: aliceblue;
 	background-color: rgba(0, 0, 0, 0.05);
 	border-radius: 25px;
+	padding-bottom: 30px;
 }
 
 #backbtnarea {
@@ -277,6 +292,8 @@ input[type="button"] {
 	border-radius: 5px;
 }
 #mainmypost{
+	width: 960px;
+	height: 520px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
@@ -293,6 +310,11 @@ input[type="button"] {
 #mainmypost a:nth-child(even){
 	width: 440px;
 }
+.centered-mpimg {
+   width: 350px;
+   height: 350px;
+}
+
 .mypost{
 	display: flex;
 	flex-wrap: wrap;
@@ -373,19 +395,63 @@ input[type="button"] {
 
 .b_pagenation a {
 	font-size: 18px;
-	font-weight: bold;
-	width: 33px;
 	height: 33px;
 	text-align: center;
 	margin-right: 15px;
-	border: 1px solid rgb(233, 233, 233);
 	border-radius: 5px;
 	line-height: 28px;
 }
-
+.b_pagenation a:hover{
+	color: #2196f3;
+}
+.b_pagenation span {
+	width: 60px;
+	height: 33px;
+	color: rgba(0, 0, 0, 0.25);
+	line-height: 25px;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+}
 .b_pagenation a:last-of-type {
 	margin-right: 0;
 }
+
+
+/*소개*/
+.sogaebox{
+	margin-top: 20px;
+}
+.sogaebox > div {
+	display: flex;
+}
+.sogaebox > div p {
+	font-size: 20px;
+	font-weight: bold;
+	height: 40px;
+	line-height: 40px;
+}
+.sogaebox > div input{
+	width: 40px;
+	height: 30px;
+	font-size: 15px;
+	line-height: 40px;
+	margin-left: 10px;
+	margin-top: 5px;
+	font-family: CustomFont;
+}
+#openSogeEdit{
+	width: 20px;
+	height: 20px;
+	background-image: url('/images/layoutimg/writebtn.png');
+	background-size: cover;
+	margin-top: 11px;
+	margin-bottom: 10px;
+}
+.sogehide{
+	display: none;
+}
+
 /*guide*/
 #guidemodal {
 /*팝업 배경*/
