@@ -48,7 +48,7 @@ body{
 }
 
 table.info, table.info th, table.info td {
-    border: 1px solid black;
+    border: 1px solid lightgray;
     border-left: none;
     border-right: none;
     border-collapse: collapse;
@@ -58,20 +58,37 @@ table.info {
     width: 60%;
     margin: 0 auto;
 }
-
-th {
+.info th {
     width: 25%;
     height: 60px;
     background-color: rgb(125, 188, 251);
     color:white;
 }
 
-td {
+.info td {
     width: 75%;
     height: 60px;
 }
 
-th, td {
+.info th, .info td {
+    padding: 8px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.userinfo th {
+    width: 25%;
+    height: 60px;
+    background-color: rgb(125, 188, 251);
+    color:white;
+}
+
+.userinfo td {
+    width: 75%;
+    height: 60px;
+}
+
+.userinfo th, .userinfo td {
     padding: 8px;
     text-align: center;
     font-size: 18px;
@@ -91,7 +108,7 @@ li{
     width: 25%;
     height: 50px;
     list-style: none;
-    border:1px solid black;
+    border:1px solid lightgray;
     border-right: none;
     height: 50px; 
     display: flex;
@@ -107,13 +124,13 @@ li{
     margin-top: 10px;
     width: 80%;
     height: 250px;
-    border: 1px solid black;
+    border: 1px solid lightgray;
     overflow: scroll;
 }
 .checkTab{
     width: 80%;
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: 40px;
 }
 .check1, .check2{
     display: flex;
@@ -137,7 +154,7 @@ li{
 }
 
 .userinfo table, .userinfo th, .userinfo td {
-    border: 1px solid black;
+    border: 1px solid lightgray;
     border-collapse: collapse;
     border-left: none;
     border-right: none;
