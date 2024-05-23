@@ -8,13 +8,9 @@
     <script src="https://js.bootpay.co.kr/bootpay-4.3.4.min.js" type="application/javascript"></script>
 </head>
 <body>
+	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
     <div id="wrap">
         <div class="header">
-            <div class="menu">
-                <div id="menu1"><a href="">해외투어</a></div>
-                <div id="menu2"><a th:href="@{/package/pmain}">국내투어</a></div>
-                <div id="menu3"><a th:href="@{/board/list}">게시판</a></div>
-            </div>
         </div>
         <div class="bodycontainer">
             <div class="package_info">
@@ -78,15 +74,15 @@
                         <tbody>
                             <tr class="user">
                                 <th>예약자</th>
-                                <td colspan="3"><!--/*[[${user.userid}]]*/--></td>
+                                <td colspan="3" id="userID"th:data-userid="${user.userid}">[[${user.userid}]]</td>
                             </tr>
                             <tr>
                                 <th>이메일</th>
-                                <td colspan="3"><!--/*[[${user.email}]]*/--></td>
+                                <td colspan="3"	id="userEmail" th:data-email="${user.email}">[[${user.email}]]</td>
                             </tr>
                             <tr>
                                 <th>휴대폰</th>
-                                <td colspan="3"><!--/*[[${user.phone}]]*/--></td>
+                                <td colspan="3" id="userPhone" th:data-phone="${user.phone}">[[${user.phone}]]</td>
                             </tr>
                             <tr>
                                 <th>예약정보</th>
@@ -188,12 +184,14 @@
 	    const packageTitle = packageTitleElement.dataset.title || "패키지 제목없음";
 	    const packageNumElement = document.getElementById('packageNum');
 	    const packageNum = packageNumElement.dataset.num || "상품 아이디 없음";
+	    const userIdElement = document.getElementById('userID');
+	    const userPhoneElement = document.getElementById('userPhone');
+	    const userEmailElement = document.getElementById('userEmail');
 	
 	    const totalAmount = document.getElementById('totalAmount').textContent.replace(/[^0-9]/g, '');
-		console.log(totalAmount);
-	    const userId = "회원아이디";  // 여기에 실제 사용자 아이디를 할당하세요.
-	    const userPhone = "01000000000";  // 여기에 실제 사용자 전화번호를 할당하세요.
-	    const userEmail = "test@test.com";  // 여기에 실제 사용자 이메일을 할당하세요.
+	    const userId = userIdElement.textContent.trim();  // 여기서 실제 사용자 아이디를 가져옵니다.
+	    const userPhone = userPhoneElement.textContent.trim();  // 여기서 실제 사용자 전화번호를 가져옵니다.
+	    const userEmail = userEmailElement.textContent.trim();  // 여기서 실제 사용자 이메일을 가져옵니다.
 	
 	    Bootpay.requestPayment({
 	        "application_id": "664c50f4da291fb9231e115d",
@@ -258,9 +256,9 @@
 	            packagenum: packageNum,
 	            adultCnt: parseInt(urlParams.get('adultCount')) || 0,
 	            childCnt: parseInt(urlParams.get('childCount')) || 0,
-	            userid: userId,
-	            phone: userPhone,
-	            email: userEmail,
+				userid: userId.trim(),
+				phone: userPhone.trim(),
+				email: userEmail.trim(),
 	            keycode: paymentResponse.data.receipt_id || null,
 	            price: totalAmount,
 	            payMethod: paymentResponse.data.method || null,

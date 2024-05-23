@@ -4,6 +4,7 @@
 #wrap{
     width: 1400px;
     margin: 0 auto;
+    margin-top:120px;
     position: relative;
 }
 body{
@@ -95,28 +96,6 @@ table.info {
 }
 .agree{
     width: 100%;
-}
-ul{
-    display: flex;
-    width: 80%;
-    height: 50px;
-    padding: 0;
-    margin: 0 auto;
-    font-size: 23px;
-}
-li{
-    width: 25%;
-    height: 50px;
-    list-style: none;
-    border:1px solid lightgray;
-    border-right: none;
-    height: 50px; 
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-}
-.first{
-    border-left: none;
 }
 
 .scrollTab{

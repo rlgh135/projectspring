@@ -7,13 +7,9 @@
     <link rel="stylesheet" href="/css/package/pget.css">
 </head>
 <body>
+	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
     <div id="wrap" class="get">
         <div class="body_container">
-            <div class="nav">
-                <div id="nav1"><a href="">해외투어</a></div>
-                <div id="nav2"><a th:href="@{/package/pmain}">국내투어</a></div>
-                <div id="nav3"><a th:href="@{/board/list}">게시판</a></div>
-            </div>
             <div class="packageinfo">
                 <div class="pthumbnail">
                     <img src="/images/packageimg/KakaoTalk_Photo_2024-02-08-10-18-29 001.jpeg" alt="">

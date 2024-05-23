@@ -16,18 +16,18 @@ li{
     width: 25%;
     height: 50px;
     list-style: none;
-    border:1px solid lightgray;
     border-right: none;
     height: 50px; 
     display: flex;
     align-items: center;
     justify-content: center; 
     cursor: pointer;
-    background-color: dodgerblue;
     color:white;
 }
-.first{
+.firstag, .secondag, .thirdag, .forthag{
     border-left: none;
+    background-color: dodgerblue;
+    border:1px solid lightgray;
 }
 
 .package_scrollTab{
