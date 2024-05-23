@@ -27,7 +27,6 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,6 +91,7 @@ public class UserController {
 		//내가 쓴 게시글 추가하기
 		cri = new Criteria(1, 6);
 		List<BoardDTO> mylist = service.getMyBoardList(cri, loginUser);
+		System.out.println("마이인포: "+mylist.size());
 		model.addAttribute("list",mylist);
 		model.addAttribute("pageMaker",new PageDTO(service.getMyTotal(cri), cri));
 		//내가 쓴 패키지 추가하기
@@ -108,10 +108,11 @@ public class UserController {
 	
 	@GetMapping("myboard")
 	@ResponseBody
-	public List<BoardDTO> getMyBoard(HttpServletRequest req){
-		Criteria cri = new Criteria(1, 6);
-		String loginUser = (String)req.getAttribute("loginUser");
-		return service.getMyBoardList(cri, loginUser);
+	public List<BoardDTO> getMyBoard(Criteria cri,HttpServletRequest req){
+		cri = new Criteria(1, 6);
+		String loginuser = (String)req.getSession().getAttribute("loginUser");
+		System.out.println("마이보드: "+service.getMyBoardList(cri, loginuser).size());
+		return service.getMyBoardList(cri, loginuser);
 	}
 	
 	@GetMapping("mypackage")

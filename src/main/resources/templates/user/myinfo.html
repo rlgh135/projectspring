@@ -199,11 +199,13 @@
 			url: "/user/myboard",
 			method: "GET",
 			
-			success:function(){
+			success:function(datas){
 				myboard.classList.toggle("mypstselected-btn");
 				joinpackage.classList.toggle("mypstselected-btn");
 				mypostsection.classList.toggle("mypstselected-body");
 				$("#mypstshowtype").val("board");
+				
+				console.log(datas);
 				
 			},
 			
@@ -222,12 +224,13 @@
 			url: "/user/mypackage",
 			method: "GET",
 			
-			success:function(){
+			success:function(datas){
 				myboard.classList.toggle("mypstselected-btn");
 				joinpackage.classList.toggle("mypstselected-btn");
 				mypostsection.classList.toggle("mypstselected-body");
 				$("#mypstshowtype").val("package");
 				
+				console.log(datas);
 			},
 			
 			error:function(){
