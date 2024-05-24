@@ -93,6 +93,7 @@
                 </div>
                 <div class="listwrap">
                     <div class="plist">
+						<div class="listok">
                         <div th:if="${list != null and list.size() > 0}" th:each="board:${list}" class="package">
                             <a th:href="@{/package/pget(packagenum=${board.packagenum})}">
                             <div class="thumbnail">
@@ -110,6 +111,7 @@
                         <div th:if="${list == null or list.size() == 0}" class="row no-list">
                             <p>등록된 게시글이 없습니다.</p>
                         </div>
+						</div>
 						<table class="pagination">
 							<tbody>
 								<tr>
