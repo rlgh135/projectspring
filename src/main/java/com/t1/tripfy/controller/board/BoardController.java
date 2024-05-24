@@ -65,8 +65,11 @@ public class BoardController {
 		}
 		System.out.println(cri);
 		System.out.println("sort: " + method);
+		
+		model.addAttribute("sort", method);
 		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
+		System.out.println("pageMaker:" + new PageDTO(service.getTotal(cri), cri));
 	}
 	
 	@GetMapping("sort")

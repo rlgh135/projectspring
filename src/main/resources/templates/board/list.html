@@ -13,20 +13,6 @@
 	a:visited, a:active, a:link {color: #000;}
 	a:hover {color: #000; cursor: pointer;}
 	
-	.menu {
-	    width:20%; height: 80px;
-	    display: flex;
-	    justify-content: space-between;
-	    margin-left: 10%;
-		padding-top: 28px;
-	}
-	
-	.menu a {
-	    text-decoration: none;
-	    font-size: 20px;
-	    color:black;
-	}
-	
     .wrap {
         width: 1400px;
         margin: 0 auto;
@@ -193,6 +179,7 @@
 	        position: relative;
 	        text-align: right;
 	        float: right;
+			cursor: pointer;
 	}
 		
 	.nation_select {
@@ -247,6 +234,7 @@
 	    padding: 8px;
 	    border: none;
 	    background-color: #fff;
+		cursor: pointer;
 	}
 	
 	.nation_select .nation > div > button > p, .nation_select .region > div > button > p {
@@ -404,19 +392,19 @@
         border-radius: 5px;
         line-height: 28px;
     }
+	
+	.b_pagenation a:first-of-type {
+	     background: url("/images/boardimg/prev.png") no-repeat center/20px 20px;
+	 }
+	
+	 .b_pagenation a:last-of-type {
+	     background: url("/images/boardimg/next.png") no-repeat center/20px 20px;
+	     margin-right: 0;
+	 }
 
-    .b_pagenation a:last-of-type {
-        margin-right: 0;
-    }
 
 </style>
 <body>
-	<div class="menu">
-		<div id="menu1"><a href="">해외투어</a></div>
-		<div id="menu2"><a th:href="@{/package/pmain}">국내투어</a></div>
-		<div id="menu3"><a th:href="@{/board/list}">게시판</a></div>
-	</div>
-	
     <div class="wrap">
 		
         <div class="b_banner">
@@ -505,11 +493,12 @@
 
         <!-- 페이지 네이션 -->
         <div class="b_pagenation">
-            <a class="changePage" th:href="${pageMaker.startPage - 1}"><img src="/images/boardimg/prev.png" alt="" class="b_prevbtn"></a>
+            <a class="changePage b_prevbtn" th:id="${pageMaker.cri.pagenum - 1}" th:href="${pageMaker.cri.pagenum - 1}"></a>
+			<!--<a class="changePage b_prevbtn" th:id="${pageMaker.startPage - 1}" th:href="${pageMaker.startPage - 1}"></a>-->
             
 			<th:block th:each="i : ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
-				<a th:if="${pageMaker.cri.pagenum == i}">[[${i}]]</a>
-				<a class="changePage" th:href="${i}" th:unless="${pageMaker.cri.pagenum == i}">[[${i}]]</a>
+				<a class="page" th:id="${i}" th:if="${pageMaker.cri.pagenum == i}">[[${i}]]</a>
+				<a class="changePage page" th:id="${i}" th:href="${i}" th:unless="${pageMaker.cri.pagenum == i}">[[${i}]]</a>
 			</th:block>
 			<!--
 			<a>1</a>
@@ -518,9 +507,16 @@
             <a>4</a>
             <a>5</a>
 			-->
-            <a class="changePage" th:href="${pageMaker.endPage + 1}"><img src="/images/boardimg/next.png" alt="" class="b_nextbtn"></a>
+            <a class="changePage b_nextbtn" th:id="${pageMaker.cri.pagenum + 1}" th:href="${pageMaker.cri.pagenum + 1}"></a>
         </div>
-
+		
+		<input type="hidden" id="startPage" th:value="${pageMaker.startPage}">
+		<input type="hidden" id="realEndPage" th:value="${pageMaker.realEnd}">
+		<input type="hidden" id="pagenum" th:value="${pageMaker.cri.pagenum}">
+		<input type="hidden" id="keyword" th:value="${pageMaker.cri.keyword}">
+		<input type="hidden" id="countrycode" th:value="${pageMaker.cri.countrycode}">
+		<input type="hidden" id="regionname" th:value="${pageMaker.cri.regionname}">
+		<input type="hidden" id="method" th:value="${sort}">
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -534,10 +530,119 @@
 	const country_select = document.querySelector(".country_select");  // 국내, 해외
 	const area_select = document.querySelector(".area_select");  // 서울, 경기도 등 지역
 	
-	
-	
 	console.log(country_select)
 	console.log(area_select)
+	
+	
+	const startPage = document.getElementById("startPage").value;
+	let realEndPage = document.getElementById("realEndPage").value;
+	const page = document.getElementById("pagenum").value;
+	const keyword = document.getElementById("keyword").value;
+	const countrycode = document.getElementById("countrycode").value;
+	const regionname = document.getElementById("regionname").value;
+	const method = document.getElementById("method").value;
+	
+	console.log("startPage: " + startPage)
+	console.log("realEndPage: " + realEndPage)
+	console.log("page: " + page)
+	console.log("keyword: " + keyword)
+	console.log("countrycode: " + countrycode)
+	console.log("regionname: " + regionname)
+	console.log("method: " + method)
+	
+	
+	
+	if(keyword != "") {
+		b_search.value = keyword;
+		search_cancel.style.visibility = "visible";
+	}
+	
+	if(countrycode != "") {
+		const countrybtn = document.getElementsByClassName("countrybtn");
+		
+		if(countrycode == "kr") {
+			countrybtn[0].style.backgroundColor = "#f0f0f0";
+			countrybtn[0].classList.add("country_select");
+		}
+		
+		else if(countrycode == "fr") {
+			countrybtn[1].style.backgroundColor = "#f0f0f0";
+			countrybtn[1].classList.add("country_select");
+		}
+	}
+	
+	if(regionname != "") {
+		const area = document.getElementsByClassName("area");
+		
+		if(regionname == "서울") {
+			area[0].style.backgroundColor = "#f0f0f0";
+			area[0].classList.add("area_select");
+		}
+		
+		else if(regionname = "제주도") {
+			area[1].style.backgroundColor = "#f0f0f0";
+			area[1].classList.add("area_select");
+		}
+		
+		else if(regionname = "경기도") {
+			area[2].style.backgroundColor = "#f0f0f0";
+			area[2].classList.add("area_select");	
+		}
+		
+		else if(regionname = "강원도") {
+			area[3].style.backgroundColor = "#f0f0f0";
+			area[3].classList.add("area_select");	
+		}
+		
+		else if(regionname = "충청도") {
+			area[4].style.backgroundColor = "#f0f0f0";
+			area[4].classList.add("area_select");
+		}
+		
+		else if(regionname = "경상도") {
+			area[5].style.backgroundColor = "#f0f0f0";
+			area[5].classList.add("area_select");	
+		}
+		
+		else if(regionname = "전라도") {
+			area[6].style.backgroundColor = "#f0f0f0";
+			area[6].classList.add("area_select");
+		}
+		
+		else if(regionname = "인천광역시") {
+			area[7].style.backgroundColor = "#f0f0f0";
+			area[7].classList.add("area_select");
+		}
+	}
+	
+	if(method != "") {
+		for(let i = 0; i < sort.length; i++) {
+			sort[i].classList.remove("selected");  // selected 클래스 모두 제거
+			sort[i].style.backgroundColor = "#F5F5F5";
+			sort[i].style.color = "#4e4c4c";
+		}
+		
+		if(method == "recent") {
+			sort[0].style.backgroundColor = "#000";
+			sort[0].style.color = "#fff";
+			sort[0].classList.add("selected");
+		}
+		
+		else if(method == "popular") {
+			sort[1].style.backgroundColor = "#000";
+			sort[1].style.color = "#fff";
+			sort[1].classList.add("selected");
+		}
+		
+		else if(method == "like") {
+			sort[2].style.backgroundColor = "#000";
+			sort[2].style.color = "#fff";
+			sort[2].classList.add("selected");
+		}
+	}
+	
+	
+	
 	
 		
 	// 검색창 focus 되었을 때
@@ -687,20 +792,19 @@
 						
 						// 페이지 네이션
 						// 이전 버튼
-						let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
-						let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
-						b_prevbtn.append(b_prevbtnImg);
+						let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
 						$(".b_pagenation").append(b_prevbtn);
 						
 						// 페이지
-						let currentPage = $("<a>").text(1);
+						let currentPage = $("<a>").text(1).addClass("page").attr("id", 1);
 						$(".b_pagenation").append(currentPage);
 						
 						// 다음 버튼
-						let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
-						let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
-						b_nextbtn.append(b_nextbtnImg);							
+						let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);							
 						$(".b_pagenation").append(b_nextbtn);
+						
+						realEndPage = data.pageMaker.realEnd;
+						console.log("realEndPageTest: " + realEndPage)
 					}
 				}
 				
@@ -736,29 +840,35 @@
 					
 					// 페이지 네이션
 					// 이전 버튼
-					let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
-					let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
-					b_prevbtn.append(b_prevbtnImg);
+					let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
 					$(".b_pagenation").append(b_prevbtn);
 					
 					// 페이지
 					for(let i = data.pageMaker.startPage; i <= data.pageMaker.endPage; i++) {							
 						if(data.pageMaker.cri.pagenum == i) {
-							let currentPage = $("<a>").text(i);
+							let currentPage = $("<a>").text(i).addClass("page").attr("id", i);
 							$(".b_pagenation").append(currentPage);
 						}
 						else {								
-							let changePage = $("<a>").attr("href", i).addClass("changePage").text(i);
+							let changePage = $("<a>").attr("href", i).addClass("changePage page").text(i).attr("id", i);
 							$(".b_pagenation").append(changePage);
 						}
 					}
 					
 					// 다음 버튼
-					let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
-					let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
-					b_nextbtn.append(b_nextbtnImg);							
+					let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);		
 					$(".b_pagenation").append(b_nextbtn);
+					
+					realEndPage = data.pageMaker.realEnd;
+					console.log("realEndPageTest: " + realEndPage)
 				}
+				
+				$(".page").each(function() {
+				    if ($(this).text().trim() == "1") {
+				        $(this).css("color", '#2196F3');
+				        $(this).css("border-color", '#2196F3');
+				    }
+				});
 				
 			},
 			
@@ -845,20 +955,19 @@
 						
 						// 페이지 네이션
 						// 이전 버튼
-						let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
-						let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
-						b_prevbtn.append(b_prevbtnImg);
+						let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
 						$(".b_pagenation").append(b_prevbtn);
 						
 						// 페이지
-						let currentPage = $("<a>").text(1);
+						let currentPage = $("<a>").text(1).addClass("page").attr("id", 1);
 						$(".b_pagenation").append(currentPage);
 						
 						// 다음 버튼
-						let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
-						let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
-						b_nextbtn.append(b_nextbtnImg);							
+						let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);		
 						$(".b_pagenation").append(b_nextbtn);
+						
+						realEndPage = data.pageMaker.realEnd;
+						console.log("realEndPageTest: " + realEndPage)
 					}
 				}
 				
@@ -896,29 +1005,35 @@
 					
 					// 페이지 네이션
 					// 이전 버튼
-					let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
-					let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
-					b_prevbtn.append(b_prevbtnImg);
+					let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
 					$(".b_pagenation").append(b_prevbtn);
 					
 					// 페이지
 					for(let i = data.pageMaker.startPage; i <= data.pageMaker.endPage; i++) {							
 						if(data.pageMaker.cri.pagenum == i) {
-							let currentPage = $("<a>").text(i);
+							let currentPage = $("<a>").text(i).addClass("page").attr("id", i);
 							$(".b_pagenation").append(currentPage);
 						}
 						else {								
-							let changePage = $("<a>").attr("href", i).addClass("changePage").text(i);
+							let changePage = $("<a>").attr("href", i).addClass("changePage page").text(i).attr("id", i);
 							$(".b_pagenation").append(changePage);
 						}
 					}
 					
 					// 다음 버튼
-					let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
-					let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
-					b_nextbtn.append(b_nextbtnImg);							
+					let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);		
 					$(".b_pagenation").append(b_nextbtn);
+					
+					realEndPage = data.pageMaker.realEnd;
+					console.log("realEndPageTest: " + realEndPage)	
 				}
+				
+				$(".page").each(function() {
+				    if ($(this).text().trim() == "1") {
+				        $(this).css("color", '#2196F3');
+				        $(this).css("border-color", '#2196F3');
+				    }
+				});
 			},
 			
 			error:function(data) {
@@ -1031,7 +1146,6 @@
 		
 		// 국내, 해외 선택
 		else {
-			// reset();
 			nation_select.style.display = "none";
 			flag = false;
 			
@@ -1090,20 +1204,19 @@
 							
 							// 페이지 네이션
 							// 이전 버튼
-							let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
-							let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
-							b_prevbtn.append(b_prevbtnImg);
+							let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
 							$(".b_pagenation").append(b_prevbtn);
 							
 							// 페이지
-							let currentPage = $("<a>").text(1);
+							let currentPage = $("<a>").text(1).addClass("page").attr("id", 1);
 							$(".b_pagenation").append(currentPage);
 							
 							// 다음 버튼
-							let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
-							let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
-							b_nextbtn.append(b_nextbtnImg);							
+							let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);		
 							$(".b_pagenation").append(b_nextbtn);
+							
+							realEndPage = data.pageMaker.realEnd;
+							console.log("realEndPageTest: " + realEndPage)
 						}
 					}
 					
@@ -1141,30 +1254,36 @@
 						
 						// 페이지 네이션
 						// 이전 버튼
-						let b_prevbtn = $("<a>").attr("href", data.pageMaker.startPage - 1 + "").addClass("changePage");
-						let	b_prevbtnImg = $("<img>").attr("src", "/images/boardimg/prev.png");
-						b_prevbtn.append(b_prevbtnImg);
+						let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
 						$(".b_pagenation").append(b_prevbtn);
 						
 						// 페이지
 						for(let i = data.pageMaker.startPage; i <= data.pageMaker.endPage; i++) {							
 							if(data.pageMaker.cri.pagenum == i) {
-								let currentPage = $("<a>").text(i);
+								let currentPage = $("<a>").text(i).addClass("page").attr("id", i);
 								$(".b_pagenation").append(currentPage);
 							}
 							else {								
-								let changePage = $("<a>").attr("href", i).addClass("changePage").text(i);
+								let changePage = $("<a>").attr("href", i).addClass("changePage page").text(i).attr("id", i);
 								$(".b_pagenation").append(changePage);
 							}
 						}
 						
 						// 다음 버튼
-						let b_nextbtn = $("<a>").attr("href", data.pageMaker.endPage + 1 + "").addClass("changePage");
-						let	b_nextbtnImg = $("<img>").attr("src", "/images/boardimg/next.png");
-						b_nextbtn.append(b_nextbtnImg);							
+						let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);		
 						$(".b_pagenation").append(b_nextbtn);
 						
+						realEndPage = data.pageMaker.realEnd;
+						console.log("realEndPageTest: " + realEndPage)
+						
 					}
+					
+					$(".page").each(function() {
+					    if ($(this).text().trim() == "1") {
+					        $(this).css("color", '#2196F3');
+					        $(this).css("border-color", '#2196F3');
+					    }
+					});
 				},
 				
 				error:function(data) {
@@ -1210,77 +1329,176 @@
 			pageChange(e);
 	    });
 		
-		$(document).on('click', '.b_nextbtn', function(e) {
-		    e.preventDefault(); // 이벤트 막음
-			this.parentElement.click();  // 부모 요소(button 태그 클릭)
-		});
-		
-		$(document).on('click', '.b_prevbtn', function(e) {
-		    e.preventDefault(); // 이벤트 막음
-			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		$(".page").each(function() {
+			if($(this).text().trim() == page) {
+				$(this).css("color", '#2196F3');
+				$(this).css("border-color", '#2196F3');
+			}
 		});
 	});
 	
 	function pageChange(e) {
 		console.log(e.target)
-		console.log(e.target.textContent)
+		console.log(e.target.id)
+		// e.currentTarget
 		
 		// 이동할 페이지 번호
-		let pagenum = e.target.textContent;
+		let pagenum = e.target.id;
+		// b_prev <= 0 || b_next > realEndPage
+		console.log("realEnd: " + realEndPage)
 		
+		const prev = document.querySelector(".b_prevbtn");
+		const next =document.querySelector(".b_nextbtn");
 		
-		// 정렬 방법
-		let sort = document.querySelector(".selected").value;
-		console.log(sort);
-		
-		let str = "";
-		if(sort == "최신 순") {
-			str = "recent";
-		}
-		
-		else if(sort == "인기 순") {
-			str = "popular";
-		}
-		
-		else {
-			str = "like";
-		}
-		console.log(str);
-		
-		// 키워드
-		let keyword = document.querySelector(".b_search").value;
-		console.log(keyword);
-		
-		// 국가 코드 및 지역 이름
-		const country_select = document.querySelector(".country_select");
-		const area_select = document.querySelector(".area_select");
-		console.log(country_select)
-		console.log(area_select)
-				
-		let countryName = "";
-		let regionName = "";
-		if(country_select != null) {
-			countryName = country_select.name;
-			console.log("countryName: " + countryName)
-		}
-		
-		if(area_select != null) {
-			regionName = area_select.name;
-			console.log("regionName: " + regionName)
-		}
-		
-		location.replace("/board/list?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName + "&pagenum=" + pagenum);
-		/*
-		else {
-			if(e.target.text == 0) {
-				alert("이동할 수 있는 이전 페이지가 없습니다.")
+		if(e.target.classList.contains('b_prevbtn')) {
+			if(pagenum <= 0) {
+				alert("첫번째 페이지입니다.")
 			}
 			
 			else {
-				alert("이동할 수 있는 다음 페이지가 없습니다.")
+				// 정렬 방법
+				let sort = document.querySelector(".selected").value;
+				console.log(sort);
+				
+				let str = "";
+				if(sort == "최신 순") {
+					str = "recent";
+				}
+				
+				else if(sort == "인기 순") {
+					str = "popular";
+				}
+				
+				else {
+					str = "like";
+				}
+				console.log(str);
+				
+				// 키워드
+				let keyword = document.querySelector(".b_search").value;
+				console.log(keyword);
+				
+				// 국가 코드 및 지역 이름
+				const country_select = document.querySelector(".country_select");
+				const area_select = document.querySelector(".area_select");
+				console.log(country_select)
+				console.log(area_select)
+						
+				let countryName = "";
+				let regionName = "";
+				if(country_select != null) {
+					countryName = country_select.name;
+					console.log("countryName: " + countryName)
+				}
+				
+				if(area_select != null) {
+					regionName = area_select.name;
+					console.log("regionName: " + regionName)
+				}
+				
+				
+				
+				location.replace("/board/list?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName + "&pagenum=" + pagenum);
 			}
 		}
-		*/
+		
+		else if(e.target.classList.contains('b_nextbtn')) {
+			if(parseInt(pagenum) > parseInt(realEndPage)) {
+				alert("마지막 페이지입니다.")
+			}
+			
+			else {
+				// 정렬 방법
+				let sort = document.querySelector(".selected").value;
+				console.log(sort);
+				
+				let str = "";
+				if(sort == "최신 순") {
+					str = "recent";
+				}
+				
+				else if(sort == "인기 순") {
+					str = "popular";
+				}
+				
+				else {
+					str = "like";
+				}
+				console.log(str);
+				
+				// 키워드
+				let keyword = document.querySelector(".b_search").value;
+				console.log(keyword);
+				
+				// 국가 코드 및 지역 이름
+				const country_select = document.querySelector(".country_select");
+				const area_select = document.querySelector(".area_select");
+				console.log(country_select)
+				console.log(area_select)
+						
+				let countryName = "";
+				let regionName = "";
+				if(country_select != null) {
+					countryName = country_select.name;
+					console.log("countryName: " + countryName)
+				}
+				
+				if(area_select != null) {
+					regionName = area_select.name;
+					console.log("regionName: " + regionName)
+				}
+				
+				
+				
+				location.replace("/board/list?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName + "&pagenum=" + pagenum);
+			}
+		}
+
+		else {			
+			// 정렬 방법
+			let sort = document.querySelector(".selected").value;
+			console.log(sort);
+			
+			let str = "";
+			if(sort == "최신 순") {
+				str = "recent";
+			}
+			
+			else if(sort == "인기 순") {
+				str = "popular";
+			}
+			
+			else {
+				str = "like";
+			}
+			console.log(str);
+			
+			// 키워드
+			let keyword = document.querySelector(".b_search").value;
+			console.log(keyword);
+			
+			// 국가 코드 및 지역 이름
+			const country_select = document.querySelector(".country_select");
+			const area_select = document.querySelector(".area_select");
+			console.log(country_select)
+			console.log(area_select)
+					
+			let countryName = "";
+			let regionName = "";
+			if(country_select != null) {
+				countryName = country_select.name;
+				console.log("countryName: " + countryName)
+			}
+			
+			if(area_select != null) {
+				regionName = area_select.name;
+				console.log("regionName: " + regionName)
+			}
+			
+			
+			
+			location.replace("/board/list?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName + "&pagenum=" + pagenum);
+		}
 		
 	}
 
