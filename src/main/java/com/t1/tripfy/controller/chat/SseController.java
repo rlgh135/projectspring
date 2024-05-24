@@ -1,6 +1,7 @@
 package com.t1.tripfy.controller.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.t1.tripfy.service.chat.SseEmitterService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,11 +23,28 @@ public class SseController {
 	@Autowired
 	private SseEmitterService sseSv;
 	
+	/* 서블릿의 HttpSession을 더 편하게 쓰게 해주는 스프링의 @SessionAttribute
+	 * https://velog.io/@woply/spring-%EC%84%9C%EB%B8%94%EB%A6%BF%EC%9D%B4-%EC%A0%9C%EA%B3%B5%ED%95%98%EB%8A%94-HttpSession-%EC%8A%A4%ED%94%84%EB%A7%81%EC%9D%B4-%EC%A0%9C%EA%B3%B5%ED%95%98%EB%8A%94-SessionAttribute
+	 * */
+	
 	//클라이언트 SSE subscribe 요청 처리
 	@GetMapping(path="/subscribe", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
 	public ResponseEntity<SseEmitter> subscribe(
 			@RequestHeader(value="Last-Event-ID", required=false, defaultValue="") String lastEventID,
-			@RequestParam String clientid) {
+			@RequestParam String clientid,
+			@SessionAttribute(name="loginUser", required=false) String userid) {
+		
+		//SSE 연결 전에 우선 유효성 체크를 해야 함
+		if(userid == null) {
+			//비로그인 유저의 요청
+			// 400 Bad Request
+			return ResponseEntity.badRequest().body(null);
+		}
+		if(!userid.equals(clientid)) {
+			//로그인계정과 요청 파라미터의 userid가 다른 경우
+			// 403 Forbidden
+			return ResponseEntity.status(HttpStatusCode.valueOf(403)).body(null);
+		}
 		
 		log.debug("lastEventID={}", lastEventID);
 		

@@ -26,6 +26,7 @@ public class ChatRestController {
 	public ResponseEntity<List<ChatListPayloadDTO>> getChatList(@RequestParam(required=true) String userid) {
 	//유효성
 		/*나중에 나중에 진짜 나중에 - 240523*/
+		//대충 파라미터로 온 userid == session.getAttribute(userid) 체크
 		
 	//서비스
 		//일단 받기

@@ -235,28 +235,31 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	// 또한 ping/pong 시에도 임마를 순회하면서 쏴준다
 	private static final HashMap<String, WebSocketSession> WEBSOCKET_SESSIONS = new HashMap<>();
 
+	/* !!중요 240524
+	 * https://velog.io/@typo/sharing-websocket-connections-betwwen-tabs-and-windows
+	 * 웹소켓도 SSE처럼 웹페이지별임
+	 * 그리고 공유 워커? 얘기도 있음
+	 * https://developer.mozilla.org/ko/docs/Web/API/Web_Workers_API
+	 * https://developer.mozilla.org/ko/docs/Web/API/SharedWorker
+	 * 
+	 * 공유 워커에서 웹소켓 쓰기
+	 * https://stackoverflow.com/questions/68081220/how-to-use-html5-websockets-within-sharedworkers
+	 * 
+	 * 웹워커/공유워커 간단 정리
+	 * https://pks2974.medium.com/web-worker-%EA%B0%84%EB%8B%A8-%EC%A0%95%EB%A6%AC%ED%95%98%EA%B8%B0-4ec90055aa4d
+	 * */
+	
 	// 웹소켓 연결시
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-	//1. 요청 uri에서 userid 뽑기
-		String splitUri[] = session.getUri().toString().split("/");
-		String userid = splitUri[splitUri.length - 1];
+	//1. WebSocketSession에서 HttpSesson 추출, 거서 loginUser를 다시 추출
+		String userid = (String) session.getAttributes().get("loginUser");
 		
-	//2. 유효성 검사
-		//요청링크 유효성 검사
-		// {userid}가 비어있으면 연결을 끊고 메서드 종료
-		if(userid == null || userid.isBlank()) {
-			session.close(CloseStatus.PROTOCOL_ERROR);
-			return;
-		}
-		//요청 userid가 로그인 한 유저의 userid인지 확인
-		// 요청 userid가 HttpSession에 없으면(비로그인 클라이언트의 연결 시도) 연결을 끊고 메서드 종료
-		// 요청 userid가 해당 클라이언트 HttpSession의 loginUser값과 다르면(로그인 클라이언트가 남의 userid로 연결 시도) 연결을 끊고 메서드 종료
-		//로그인한 유저가 자신의 userid로 요청했는지 확인하는 구간
-		if(session.getAttributes().get("loginUser") == null || !session.getAttributes().get("loginUser").equals(userid)) {
-			session.close(CloseStatus.PROTOCOL_ERROR);
+	//2. loginUser 검증
+		if(userid == null) {
+			session.close(CloseStatus.POLICY_VIOLATION);
 			if(log.isDebugEnabled()) {
-				log.debug("disconnect, wrong request, WebSocket, userid={}", userid);
+				log.debug("disconnect, unauthorized access(session.loginUser=null), WebSocket");
 			}
 			return;
 		}
