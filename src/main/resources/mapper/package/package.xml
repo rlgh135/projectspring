@@ -65,15 +65,27 @@
 		GROUP BY p.guidenum
 		ORDER BY g.guidenum
 	</select>-->
-	
+	<select id="getAbroadRecentList">
+		SELECT * 
+    	FROM package 
+    	where countrycode != "kr"
+    	ORDER BY packagenum DESC 
+    	LIMIT 4
+	</select>
+	<select id="getAbroadPopList">
+		select * from package where countrycode != "kr"
+		ORDER BY viewcnt desc limit 4
+	</select>
+	<select id="getAbroadCheapList">
+		select * from package
+		where countrycode != "kr"
+		ORDER BY adult_price desc limit 4
+	</select>
 	
 	<select id="getDetailRegionList">
     <![CDATA[
     select * from package
     where
-    ]]>
-    <include refid="cri"/>
-    <![CDATA[
     startdate <= #{enddate}
     and enddate >= #{startdate}
     and maxcnt >= #{maxcnt}
@@ -82,13 +94,25 @@
     and (
         startdate >= #{startdate} and enddate <= #{enddate}
     )
+    limit #{startrow}, #{amount}
     ]]>
 	</select>
 	
 	<select id="getTotal">
-		select count(*) from package where
-		<include refid="cri"></include>
-		boardnum > 0
+	<![CDATA[
+    select count(*) from package
+    where
+    startdate <= #{enddate}
+    and enddate >= #{startdate}
+    and maxcnt >= #{maxcnt}
+    and regionname = #{regionname}
+    and visibility = 'O'
+    and (
+        startdate >= #{startdate} and enddate <= #{enddate}
+    )
+	and packagenum > 0
+    ]]>
+		
 	</select>
 	
 	<select id="getLastNum">

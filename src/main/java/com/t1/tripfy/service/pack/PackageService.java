@@ -20,6 +20,10 @@ public interface PackageService {
 	List<PackageDTO> getCheapList(Criteria cri);
 	List<PackageDTO> getPopularGuideList(Criteria cri);
 	List<PackageDTO> getDetailRegionList(Criteria cri);
+	//해
+	List<PackageDTO> getAbroadRecentList(Criteria cri);
+	List<PackageDTO> getAbroadPopList(Criteria cri);
+	List<PackageDTO> getAbroadCheapList(Criteria cri);
 	long getTotal(Criteria cri);
 	long getLastNum(long guidenum);
 	

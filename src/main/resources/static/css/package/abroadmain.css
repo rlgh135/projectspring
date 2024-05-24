@@ -1,0 +1,403 @@
+*{
+    box-sizing: border-box;
+}
+#wrap{
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 120px;
+    position: relative;
+}
+body{
+    background-color:white;
+}
+button{
+    cursor:pointer;
+}
+#body_container{
+    margin-top: 50px;
+}
+.menu{
+    width:20%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10%;
+}
+.menu a{
+    text-decoration: none;
+    font-size: 20px;
+    color:black;
+}
+.banner{
+    margin-top: 30px;
+    width: 100%;
+    height: 300px;
+    overflow-y: hidden;
+}
+.banner a{
+    width: 100%;
+    height: 300px;
+}
+.banner a img{
+    width: 100%; 
+}
+.packagesearch{
+    width:1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    height: 150px;
+    border: 1px solid black;
+    border-radius: 50px;
+    align-items: center;
+    margin-top: 40px;
+    
+}
+
+.packagesearch  button{
+    background-color: transparent;
+    border: none;
+    font-size: 30px;
+    color:gray;
+    height: 70px;
+    
+}
+.packagesearch > #searchForm button{
+    background-color: black;
+    border: none;
+    font-size: 30px;
+    color:white;
+    height: 70px;
+    width: 150px;
+    border-radius: 20px;
+    
+}
+
+.destination{
+    display:flex;
+    border-right: 1px solid lightgray;
+    width: 250px;
+}
+
+.period{
+    display: flex;
+    
+}
+.period input{
+    border: none;
+    height: 100%;
+    width: 180px;
+    font-size: 30px;
+}
+.period input:focus{
+	outline: none;
+} 
+#endDateInput{
+	color:gray;
+}
+.person{
+    display: flex;
+    border-left: 1px solid lightgray;
+    width: 200px;
+    justify-content: center;
+}
+.flatpickr-input{
+    color: gray;
+}
+
+.p_wrap{
+    width: 1400px;
+    margin: 0 auto;
+}
+
+.rp_header{
+    width:100%;
+    text-align: center;
+    margin-top: 60px;
+}
+.rp_list{
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+}
+.rp_list a{
+    text-decoration: none;
+    color:black;
+    width: 330px;
+    height: 350px;
+}
+.rpackage{
+    width: 330px;
+    height: 350px;
+    border: 1px solid black;
+    border-radius: 5%;
+    margin: 10px 10px;
+    flex-grow: 0;
+    
+}
+.rp_img{
+    width:100%;
+    height: 150px;
+}
+.rp_img img{
+    width: 100%;
+    border-radius: 8% 8% 0 0;
+}
+.rp_info{
+    width: 80%;
+    margin: 0 auto;
+    height: 90px;
+    margin-top: 45px;
+}
+
+.rprice{
+    width: 80%;
+    margin: 0 auto;
+}
+.pp_header{
+    width:100%;
+    text-align: center;
+    margin-top: 60px;
+}
+.pp_list{
+    flex-wrap: wrap;
+    width: 100%;
+    
+    margin-top: 40px;
+    display: flex;
+}
+.pp_list a{
+    text-decoration: none;
+    color:black;
+}
+.ppackage{
+    width: 330px;
+    height: 350px;
+    border: 1px solid black;
+    border-radius: 5%;
+    margin: 10px 10px;
+    flex-grow: 0;
+    
+}
+.pp_img{
+    width:100%;
+    height: 150px;
+}
+.pp_img img{
+    width: 100%;
+    border-radius: 8% 8% 0 0;
+}
+.pp_info{
+    width: 80%;
+    margin: 0 auto;
+    height: 90px;
+    margin-top: 45px;
+}
+
+.pprice{
+    width: 80%;
+    margin: 0 auto;
+}
+.cp_header{
+    width:100%;
+    text-align: center;
+    margin-top: 60px;
+}
+
+.cp_list{
+    flex-wrap: wrap;
+    width: 100%;
+    
+    margin-top: 40px;
+    display: flex;
+}
+.cp_list a{
+    text-decoration: none;
+    color:black;
+}
+.cpackage{
+    width: 330px;
+    height: 350px;
+    border: 1px solid black;
+    border-radius: 5%;
+    margin: 10px 10px;
+    flex-grow: 0;
+    
+}
+.cp_img{
+    width:100%;
+    height: 150px;
+}
+.cp_img img{
+    width: 100%;
+    border-radius: 8% 8% 0 0;
+}
+.cp_info{
+    width: 80%;
+    margin: 0 auto;
+    height: 90px;
+    margin-top: 45px;
+}
+
+.cprice{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.hide{
+    display:none;
+}
+#deslist{
+    border: 1px solid lightgray;
+    border-radius: 5%;
+    background-color: white;
+    position: absolute;
+    z-index: 2;
+    width: 400px;
+    height: 410px;
+    margin: 0 auto;
+  
+}
+#deslist > .list {
+   width: 90%;
+   margin: 0 auto;
+    height: 380px;
+    
+}
+.dl_header{
+    width: 350px;
+    height: 50px;
+    margin: 0 auto;
+}
+.dl_header span{
+    font-size: 30px;
+    cursor: pointer;
+    height: 50px;
+    width: 350px;
+    margin: 0 auto;
+    color: gray;
+}    
+
+
+.dl_choice {
+    display: flex;
+
+}
+.choiceTableLeft {
+    width: 40%;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid gray;
+    
+}
+.choiceTableLeft li{
+    background-color: #f0f0f0; 
+    border-right: 1px solid gray;
+}
+.choiceTableLeft button{
+    color:black;
+    height: 50px;
+    font-size: 15px;
+    
+}
+.choiceTableRight button{
+   
+    height: 50px;
+    font-size: 15px;
+
+}
+
+.choiceTableRight {
+    width: 55%;
+     height: 310px;
+    background-color: #ffffff; /* 흰색 */
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+    display: none; 
+    border-top: 1px solid gray;
+    overflow-y: scroll;
+}
+.choiceTableRight.active {
+    display: block; /* 활성화된 목록 표시 */
+}
+.choiceTableLeft li,
+.choiceTableRight li{
+    border-bottom: 1px solid gray;
+}
+
+.choiceTableLeft button,
+.choiceTableRight button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    
+    background-color: inherit;
+    
+}
+.choiceTableLeft button:hover{
+    background-color: white;
+    color:dodgerblue;
+}
+.choiceTableRight button:hover {
+    background-color: #f0f0f0; 
+}
+  .choiceTableLeft button.active {
+            background-color: white;
+            color: dodgerblue;
+        }
+#perlist{
+    border: 1px solid lightgray;
+    border-radius: 5%;
+    background-color: white;
+    position: absolute;
+    z-index: 2;
+    width: 400px;
+    height: 550px;
+}
+#perlist > .pr_header{
+    width: 350px;
+    height: 50px;
+    margin: 0 auto;
+}
+.pr_header span{
+    font-size: 30px;
+    cursor: pointer;
+    height: 50px;
+    width: 350px;
+    margin: 0 auto;
+    color: gray;
+}
+#perlist > .pr_header button{
+    border: none;
+}
+#perlist > .pr_choice{
+    border-top: 1px solid gray;
+    display:flex;
+    overflow: scroll;
+    width: 350px;
+    margin:0 auto;
+}
+.pr_choice > .pr_list{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.pr_list button{
+    width : 170px;
+    height: 50px;
+    font-size: 20px;
+    background-color: dodgerblue;
+    border-radius: 10px;
+    margin-top: 10px;
+    color: white;
+    
+}
+
+
+
+
+

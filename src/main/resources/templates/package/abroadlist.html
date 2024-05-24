@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/css/package/plist.css">
+    <link rel="stylesheet" href="/css/package/abroadlist.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 </head>
 <body>
@@ -18,24 +18,70 @@
                             <span id="desChoice">어디로 여행하세요?</span>
                         </button>
                         <input type="hidden" name="regionname" id="destinationInput">
-                        <div id="deslist" class="hide">
-                            <div class="list">
-                                <div class="dl_header">
-                                    <span onclick="opendes()">x</span>
-                                </div>
-                                <hr>
-                                <div class="dl_choice">
-                                    <button type="button" class="dl"><span>서울</span></button>
-                                    <button type="button" class="dl"><span>제주도</span></button>
-                                    <button type="button" class="dl"><span>경기도</span></button>
-                                    <button type="button" class="dl"><span>강원도</span></button>
-                                    <button type="button" class="dl"><span>충청도</span></button>
-                                    <button type="button" class="dl"><span>경상도</span></button>
-                                    <button type="button" class="dl"><span>전라도</span></button>
-                                    <button type="button" class="dl"><span>인천</span></button>
-                                </div>
-                            </div>
-                        </div>
+						<div id="deslist" class="hide">
+							<div class="list">
+							    <div class="dl_header">
+							        <span onclick="opendes()">x</span>
+							    </div>
+							    <hr>
+							    <div class="dl_choice">
+							        <ul class="choiceTableLeft">
+							            <li><button type="button" class="leftDepth1">동남아</button></li>
+							            <li><button type="button" class="leftDepth1">괌/ 사이판/ <br>호주/ 뉴질랜드</button></li>
+							            <li><button type="button" class="leftDepth1">일본</button></li>
+							            <li><button type="button" class="leftDepth1">중국</button></li>
+							            <li><button type="button" class="leftDepth1">유럽</button></li>
+							            <li><button type="button" class="leftDepth1">하와이/ 미국/ 중남미</button></li>
+							        </ul>
+							        <ul class="choiceTableRight">
+							            <li><button type="button" class="RightDepth1">태국</button></li>
+							            <li><button type="button" class="RightDepth1">베트남</button></li>
+							            <li><button type="button" class="RightDepth1">필리핀</button></li>
+							            <li><button type="button" class="RightDepth1">싱가폴</button></li>
+							            <li><button type="button" class="RightDepth1">말레이시아</button></li>
+							            <li><button type="button" class="RightDepth1">캄보디아</button></li>
+							        </ul>
+							        <ul class="choiceTableRight">
+							            <li><button type="button" class="RightDepth1">괌</button></li>
+							            <li><button type="button" class="RightDepth1">사이판</button></li>
+							            <li><button type="button" class="RightDepth1">호주</button></li>
+							            <li><button type="button" class="RightDepth1">뉴질랜드</button></li>
+							        </ul>
+							        <ul class="choiceTableRight">
+							            <li><button type="button" class="RightDepth1">오사카</button></li>
+							            <li><button type="button" class="RightDepth1">후쿠오카</button></li>
+							            <li><button type="button" class="RightDepth1">도쿄</button></li>
+							            <li><button type="button" class="RightDepth1">교토</button></li>
+							            <li><button type="button" class="RightDepth1">삿포로</button></li>
+							        </ul>
+							        <ul class="choiceTableRight">
+							            <li><button type="button" class="RightDepth1">하이난</button></li>
+							            <li><button type="button" class="RightDepth1">청도</button></li>
+							            <li><button type="button" class="RightDepth1">베이징</button></li>
+							            <li><button type="button" class="RightDepth1">장가계</button></li>
+							        </ul>
+							        <ul class="choiceTableRight">
+							            <li><button type="button" class="RightDepth1">프랑스</button></li>
+							            <li><button type="button" class="RightDepth1">영국</button></li>
+							            <li><button type="button" class="RightDepth1">이탈리아</button></li>
+							            <li><button type="button" class="RightDepth1">스페인</button></li>
+							            <li><button type="button" class="RightDepth1">독일</button></li>
+							            <li><button type="button" class="RightDepth1">스위스</button></li>
+							            <li><button type="button" class="RightDepth1">핀란드</button></li>
+							            <li><button type="button" class="RightDepth1">노르웨이</button></li>
+							            <li><button type="button" class="RightDepth1">그리스</button></li>
+							            <li><button type="button" class="RightDepth1">포르투갈</button></li>
+							        </ul>
+							        <ul class="choiceTableRight">
+							            <li><button type="button" class="RightDepth1">하와이</button></li>
+							            <li><button type="button" class="RightDepth1">미 동부</button></li>
+							            <li><button type="button" class="RightDepth1">미 서부</button></li>
+							            <li><button type="button" class="RightDepth1">캐나다</button></li>
+							            <li><button type="button" class="RightDepth1">중남미</button></li>
+							        </ul>
+							    </div>
+							</div>
+						</div>
                     </div>
                     <div class="period">
                         <input type="text" name="startdate" placeholder="출발일/도착일" id="startDateInput" readonly />
@@ -66,7 +112,7 @@
                             </div>
                         </div>
                     </div>
-                    <form id="searchForm" action="/package/plist" onsubmit="return validateForm()" method="GET" >
+                    <form id="searchForm" action="/package/abroadlist" onsubmit="return validateForm()" method="GET" >
 						<input type="hidden" name="regionname" id="destinationInputForm">
 						<input type="hidden" name="startdate" id="startDateInputForm">
 						<input type="hidden" name="enddate" id="endDateInputForm">
@@ -206,18 +252,17 @@
             });
         });
 
-        const dlButtons = document.querySelectorAll(".dl");
-        dlButtons.forEach(function(button) {
-            button.addEventListener("click", function() {
-                const destination = this.textContent.trim();
-                const desChoiceSpan = document.getElementById("desChoice");
-                desChoiceSpan.textContent = destination;
-                document.getElementById("destinationInput").value = destination;
-                document.getElementById("destinationInputForm").value = destination;
-                console.log("Destination Set:", destination); // 디버그 메시지
-                opendes();
-            });
-        });
+		const dlButtons = document.querySelectorAll(".RightDepth1");
+			dlButtons.forEach(function(button) {
+			    button.addEventListener("click", function() {
+			        const destination = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+			        const desChoiceSpan = document.getElementById("desChoice");
+			        desChoiceSpan.textContent = destination; // 목적지 텍스트 업데이트
+			        document.getElementById("destinationInput").value = destination; // 폼에 목적지 업데이트
+			        document.getElementById("destinationInputForm").value = destination; // 검색 폼에 목적지 업데이트
+			        opendes(); // deslist 닫기
+			    });
+		});
 
         // 검색 버튼 클릭 시 검색 조건을 세션 스토리지에 저장하는 함수 추가
         document.querySelector("#searchForm").addEventListener("submit", function(event) {
@@ -262,30 +307,44 @@
 
         return true; // 폼 제출을 허용
     }
+	document.querySelectorAll('.leftDepth1').forEach((button, index) => {
+	    button.addEventListener('click', () => {
+	        document.querySelectorAll('.leftDepth1').forEach(btn => {
+	            btn.classList.remove('active');
+	        });
+	        button.classList.add('active');
+	
+	        document.querySelectorAll('.choiceTableRight').forEach((ul, ulIndex) => {
+	            ul.classList.toggle('active', ulIndex === index);
+	        });
+	    });
+	});
 	document.querySelectorAll('.changePage').forEach(link => {
-		    link.addEventListener('click', function(event) {
-		        event.preventDefault(); // 링크 기본 동작 방지
-		
-		        // 링크의 href 속성에서 URL 가져오기
-		        const url = this.getAttribute('href');
-		
-		        // 페이지 번호만 추출
-		        const page = parseInt(url.split('/').pop());
-		
-		        // 쿼리스트링에서 기존 페이지 번호 추출
-		        const queryString = window.location.search;
-		        const urlParams = new URLSearchParams(queryString);
-		        const regionname = urlParams.get('regionname');
-		        const startDate = urlParams.get('startdate');
-		        const endDate = urlParams.get('enddate');
-		        const maxcnt = urlParams.get('maxcnt');
-		
-		        // 새로운 페이지 번호를 쿼리스트링에 반영하여 새 URL 생성
-		        const newUrl = `/package/abroadlist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&pagenum=${page}`;
-		
-		        // 현재 페이지를 새로운 URL로 변경
-		        window.location.href = newUrl;
-		    });
-		});
+	    link.addEventListener('click', function(event) {
+	        event.preventDefault(); // 링크 기본 동작 방지
+	
+	        // 링크의 href 속성에서 URL 가져오기
+	        const url = this.getAttribute('href');
+	
+	        // 페이지 번호만 추출
+	        const page = parseInt(url.split('/').pop());
+	
+	        // 쿼리스트링에서 기존 페이지 번호 추출
+	        const queryString = window.location.search;
+	        const urlParams = new URLSearchParams(queryString);
+	        const regionname = urlParams.get('regionname');
+	        const startDate = urlParams.get('startdate');
+	        const endDate = urlParams.get('enddate');
+	        const maxcnt = urlParams.get('maxcnt');
+	
+	        // 새로운 페이지 번호를 쿼리스트링에 반영하여 새 URL 생성
+	        const newUrl = `/package/abroadlist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&pagenum=${page}`;
+	
+	        // 현재 페이지를 새로운 URL로 변경
+	        window.location.href = newUrl;
+	    });
+	});
+
+
 </script>
 </html>

@@ -42,13 +42,28 @@ public class PackController {
 		model.addAttribute("pop",pop);
 //		model.addAttribute("popguide",popguide);
 	}
+	@GetMapping("abroadmain")
+	public void abroadmain(Criteria cri,Model model) {
+		List<PackageDTO> recent = service.getAbroadRecentList(cri);
+		System.out.println(recent);
+		List<PackageDTO> cheap = service.getAbroadCheapList(cri);
+		System.out.println(cheap);
+		List<PackageDTO> pop = service.getAbroadPopList(cri);
+		System.out.println(pop);
+//		List<PackageDTO> popguide = service.getPopularGuideList(cri);
+		model.addAttribute("recent", recent);
+		model.addAttribute("cheap", cheap);
+		model.addAttribute("pop",pop);
+//		model.addAttribute("popguide",popguide);
+	}
 	
-	@GetMapping("plist")
+	
+	@GetMapping(value={"plist","abroadlist"})
 	public void list(Criteria cri, Model model) {
-		System.out.println(cri);
-		List<PackageDTO> list = service.getDetailRegionList(cri);
-		model.addAttribute("list",list);
-		model.addAttribute("pageMaker",new PageDTO(service.getTotal(cri),cri));
+	    System.out.println(cri);
+	    List<PackageDTO> list = service.getDetailRegionList(cri);
+	    model.addAttribute("list", list);
+	    model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
 	}
 	
 	@GetMapping("pget")

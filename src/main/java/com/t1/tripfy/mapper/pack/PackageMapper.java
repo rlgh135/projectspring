@@ -28,4 +28,9 @@ public interface PackageMapper {
 	int deletePack(long packagenum);	
 	
 	void saveReservation(ReservationDTO reservation);
+	
+	//해외
+	List<PackageDTO> getAbroadCheapList(Criteria cri);
+	List<PackageDTO> getAbroadPopList(Criteria cri);
+	List<PackageDTO> getAbroadRecentList(Criteria cri);
 }

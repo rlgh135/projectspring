@@ -121,6 +121,21 @@ public class PackageServiceImpl implements PackageService{
 		// TODO Auto-generated method stub
 		return pmapper.getPopularGuideList(cri);
 	}
+	@Override
+	public List<PackageDTO> getAbroadCheapList(Criteria cri) {
+		// TODO Auto-generated method stub
+		return pmapper.getAbroadCheapList(cri);
+	}
+	@Override
+	public List<PackageDTO> getAbroadPopList(Criteria cri) {
+		// TODO Auto-generated method stub
+		return pmapper.getAbroadPopList(cri);
+	}
+	@Override
+	public List<PackageDTO> getAbroadRecentList(Criteria cri) {
+		// TODO Auto-generated method stub
+		return pmapper.getAbroadRecentList(cri);
+	}
 	
 	@Override
 	public PackageDTO getDetail(long packagenum) {
@@ -133,8 +148,7 @@ public class PackageServiceImpl implements PackageService{
 
 	@Override
 	public long getTotal(Criteria cri) {
-		// TODO Auto-generated method stub
-		return 0;
+		return pmapper.getTotal(cri);
 	}
 	@Override
 	public boolean modify(PackageDTO pack, MultipartFile[] files) throws Exception {
