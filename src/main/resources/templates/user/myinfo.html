@@ -126,8 +126,7 @@
 					</div>
 					<div id="mypagesarea" class="b_pagenation">
 						<a class="" href="javascript:movepage(-1)">이전</a>
-						<span id="myinfocurpagespan">1</span>
-						<a class="" href="javascript:movepge(1)">다음</a>
+						<a class="" href="javascript:movepage(1)">다음</a>
 					</div>
 				</div>
 			</div>
@@ -135,42 +134,7 @@
 		<div id="backbtnarea">
 			<input type="button" value="돌아가기">
 		</div>
-		<!--mmmmmmmmmmmmmmmmmmmmmmmmmmmmm-->
 	</section>
-	<div id="guidemodal">
-		<div id="guidewarp">
-			<div id="profmclosebtn">닫기버튼</div>
-			<div id="guidecontentswrap">
-				<div id="guidepfarea">
-					<div>
-						<img src="/images/userimg/defaultbadge.png" alt="">
-					</div>
-					<div>
-						<ul class="actcntlist">
-							<li>
-								<p>내 패키지</p>
-								<p>10 개</p>
-							</li>
-							<li>
-								<p>후기</p>
-								<p>23 개</p>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div id="guideworkarea">
-					<ul id="choicebtns">
-						<li id="myboard" onclick="showMyPacks('loginUser')">내 패키지</li>
-						<li id="joinpackage" onclick="showPackReviews('loginUser')">패키지 후기</li>
-					</ul>
-					<div id="guideinfosarea">
-						
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
 </body>
 
 
@@ -209,16 +173,7 @@
 		pfmdform.style.display = 'none';
 	});
 	
-	const guidemodal = document.querySelector('#guidemodal');
-	const profmopenbtn = document.querySelector('.profmopenbtn');
-	const profmclosebtn = document.querySelector('#profmclosebtn');
 	
-	profmopenbtn.addEventListener('click', function () {
-		guidemodal.style.display = 'block';
-	});
-	profmclosebtn.addEventListener('click', function () {
-		guidemodal.style.display = 'none';
-	});
 	
     const myboard = document.getElementById("myboard");
 	const joinpackage = document.getElementById("joinpackage");
@@ -231,7 +186,7 @@
 			return;
 		}
 		
-		const postsection = document.getElementById("mainmypost");
+		let postsection = document.getElementById("mainmypost");
 		
 		$.ajax({
 			url: "/user/myboard",
@@ -242,6 +197,7 @@
 				joinpackage.classList.toggle("mypstselected-btn");
 				mypostsection.classList.toggle("mypstselected-body");
 				$("#mypstshowtype").val("board");
+				curpage=1;
 				
 				console.log(datas);
 				
@@ -252,89 +208,7 @@
 					emptysignnode.className = 'centered-mpimg';
 				} else {
 					postsection.innerHTML = "";
-					for(let i in datas){
-						const board = datas[i];
-						
-						// <a> 요소 생성
-						const a = document.createElement('a');
-						a.href = '/board/get?boardnum='+board.boardnum;
-						
-						// <div class="mypost"> 요소 생성
-						const mypostDiv = document.createElement('div');
-						mypostDiv.className = 'mypost';
-						
-						// <div class="p_img"> 요소 생성 및 이미지 추가
-						const pImgDiv = document.createElement('div');
-						pImgDiv.className = 'p_img';
-						const img1 = document.createElement('img');
-						img1.src = '/images/boardimg/2.jpg';
-						img1.alt = '';
-						pImgDiv.appendChild(img1);
-						
-						// <div class="post_write"> 요소 생성
-						const postWriteDiv = document.createElement('div');
-						postWriteDiv.className = 'post_write';
-						
-						// <div class="pstguide"> 요소 생성 및 내용 추가
-						const pstGuideDiv = document.createElement('div');
-						pstGuideDiv.className = 'pstguide';
-						const img2 = document.createElement('img');
-						img2.src = userdir;
-						img2.alt = '';
-						const span1 = document.createElement('span');
-						span1.textContent = board.userid;
-						pstGuideDiv.appendChild(img2);
-						pstGuideDiv.appendChild(span1);
-						
-						// <div class="line"> 요소 생성
-						const lineDiv = document.createElement('div');
-						lineDiv.className = 'line';
-						
-						// <div class="post_title"> 요소 생성 및 내용 추가
-						const postTitleDiv = document.createElement('div');
-						postTitleDiv.className = 'post_title';
-						postTitleDiv.textContent = board.title;
-						
-						// <div class="post_preview"> 요소 생성
-						const postPreviewDiv = document.createElement('div');
-						postPreviewDiv.className = 'post_preview';
-						
-						// <ul class="showboardspecs"> 요소 생성 및 내용 추가
-						const ul = document.createElement('ul');
-						ul.className = 'showboardspecs';
-						
-						const createLi = (imgSrc, textContent) => {
-						    const li = document.createElement('li');
-						    const img = document.createElement('img');
-						    img.src = imgSrc;
-						    const span = document.createElement('span');
-						    span.textContent = textContent;
-						    li.appendChild(img);
-						    li.appendChild(span);
-						    return li;
-						};
-						
-						ul.appendChild(createLi('/images/boardimg/location.png', board.viewcnt));
-						ul.appendChild(createLi('/images/boardimg/location.png', board.likecnt));
-						ul.appendChild(createLi('/images/boardimg/location.png', board.replycnt));
-						
-						postPreviewDiv.appendChild(ul);
-						
-						// 요소들을 조립
-						postWriteDiv.appendChild(pstGuideDiv);
-						postWriteDiv.appendChild(lineDiv);
-						postWriteDiv.appendChild(postTitleDiv);
-						postWriteDiv.appendChild(postPreviewDiv);
-						
-						mypostDiv.appendChild(pImgDiv);
-						mypostDiv.appendChild(postWriteDiv);
-						
-						a.appendChild(mypostDiv);
-						
-						// 부모 div에 최종 요소 추가
-						postsection.appendChild(a);
-					}
-					
+					makeDOM("board", datas);
 				}
 			},
 			
@@ -361,9 +235,11 @@
 				joinpackage.classList.toggle("mypstselected-btn");
 				mypostsection.classList.toggle("mypstselected-body");
 				$("#mypstshowtype").val("package");
+				curpage=1;
+				
 				console.log(datas);
 				
-				if(datas.joinpackage==null){
+				if(datas.joinpackage==null||datas.joinpackage.length===0){
 					postsection.innerHTML = "";
 					let emptysignnode = document.createElement('img');
 					emptysignnode.src = '/images/layoutimg/indeximg01.png';
@@ -371,7 +247,8 @@
 					
 					postsection.appendChild(emptysignnode);
 				} else {
-					
+					postsection.innerHTML = "";
+					makeDOM("package", datas);
 				}
 			},
 			
@@ -402,26 +279,39 @@
 		ptform.submit();
 	}
 	
-	const curpage = 1;
+	let curpage = 1;
 	
 	function movepage(diff){
 		var movepage = curpage+diff;
+		var loadtype = $("#mypstshowtype").val()
 		
-		if(movepage==0){
+		if(movepage===0){
 			alert("현재 1페이지 입니다.");
 			return;
 		}
 		
+		const postsection = document.getElementById("mainmypost");
+		
 		$.ajax({
-			url:"/user/movepage?targetpage="+movepage,
+			url:"/user/movepage?targetpage="+movepage+"&loadtype="+loadtype,
 			method: "GET",
 			
-			success:function(data) {
-				console.log(data);
+			success:function(datas) {
+				console.log(datas);
 				curpage = movepage;
 				console.log("현재 페이지:"+curpage);
 				
-				
+				if(datas.length===0 || datas.nodata!=null){
+					postsection.innerHTML = "";
+					let emptysignnode = document.createElement('img');
+					emptysignnode.src = '/images/layoutimg/indeximg01.png';
+					emptysignnode.className = 'centered-mpimg';
+					
+					postsection.appendChild(emptysignnode);
+				} else {
+					postsection.innerHTML = "";
+					makeDOM(loadtype, datas);
+				}
 			},
 			
 			error:function(){
@@ -429,6 +319,211 @@
 				alert("통신 실패");
 			}
 		});
+	}
+	
+	function makeDOM(type, datas){
+		var postsection = document.getElementById("mainmypost");
+		if(type == 'board'){
+			for(let i in datas){
+				const board = datas[i];
+				
+				// <a> 요소 생성
+				const a = document.createElement('a');
+				a.href = '/board/get?boardnum='+board.boardnum;
+				
+				// <div class="mypost"> 요소 생성
+				const mypostDiv = document.createElement('div');
+				mypostDiv.className = 'mypost';
+				
+				// <div class="p_img"> 요소 생성 및 이미지 추가
+				const pImgDiv = document.createElement('div');
+				pImgDiv.className = 'p_img';
+				const img1 = document.createElement('img');
+				img1.src = '/images/boardimg/2.jpg';
+				img1.alt = '';
+				pImgDiv.appendChild(img1);
+				
+				// <div class="post_write"> 요소 생성
+				const postWriteDiv = document.createElement('div');
+				postWriteDiv.className = 'post_write';
+				
+				// <div class="pstguide"> 요소 생성 및 내용 추가
+				const pstGuideDiv = document.createElement('div');
+				pstGuideDiv.className = 'pstguide';
+				const img2 = document.createElement('img');
+				img2.src = userdir;
+				img2.alt = '';
+				const span1 = document.createElement('span');
+				span1.textContent = board.userid;
+				pstGuideDiv.appendChild(img2);
+				pstGuideDiv.appendChild(span1);
+				
+				// <div class="line"> 요소 생성
+				const lineDiv = document.createElement('div');
+				lineDiv.className = 'line';
+				
+				// <div class="post_title"> 요소 생성 및 내용 추가
+				const postTitleDiv = document.createElement('div');
+				postTitleDiv.className = 'post_title';
+				postTitleDiv.textContent = board.title;
+				
+				// <div class="post_preview"> 요소 생성
+				const postPreviewDiv = document.createElement('div');
+				postPreviewDiv.className = 'post_preview';
+				
+				// <ul class="showboardspecs"> 요소 생성 및 내용 추가
+				const ul = document.createElement('ul');
+				ul.className = 'showboardspecs';
+				
+				const createLi = (imgSrc, textContent) => {
+				    const li = document.createElement('li');
+				    const img = document.createElement('img');
+				    img.src = imgSrc;
+				    const span = document.createElement('span');
+				    span.textContent = textContent;
+				    li.appendChild(img);
+				    li.appendChild(span);
+				    return li;
+				};
+				
+				ul.appendChild(createLi('/images/boardimg/location.png', board.viewcnt));
+				ul.appendChild(createLi('/images/boardimg/location.png', board.likecnt));
+				ul.appendChild(createLi('/images/boardimg/location.png', board.replycnt));
+				
+				postPreviewDiv.appendChild(ul);
+				
+				// 요소들을 조립
+				postWriteDiv.appendChild(pstGuideDiv);
+				postWriteDiv.appendChild(lineDiv);
+				postWriteDiv.appendChild(postTitleDiv);
+				postWriteDiv.appendChild(postPreviewDiv);
+				
+				mypostDiv.appendChild(pImgDiv);
+				mypostDiv.appendChild(postWriteDiv);
+				
+				a.appendChild(mypostDiv);
+				
+				// 부모 div에 최종 요소 추가
+				postsection.appendChild(a);
+			}
+		} else if(type=="package"){
+			for(let i in datas.joinpackage){
+				// 최상위 div 요소 생성
+				const packmyaDiv = document.createElement('div');
+				packmyaDiv.className = 'packmya';
+				
+				// package link wrap div 생성
+				const packagelinkwrapDiv = document.createElement('div');
+				packagelinkwrapDiv.className = 'packagelinkwrap';
+				packagelinkwrapDiv.setAttribute('onclick', "location.href='/package/pget?packagenum="+datas.joinpackage[i].packagenum+"'");
+				
+				// my package thu div 생성
+				const mypackagethuDiv = document.createElement('div');
+				mypackagethuDiv.className = 'mypackagethu';
+				
+				// 이미지 생성
+				const img = document.createElement('img');
+				img.src = '/images/packageimg/384878.jpg';
+				img.alt = '';
+				img.className = 'packstampimgwidth';
+				
+				// 이미지 div에 추가
+				mypackagethuDiv.appendChild(img);
+				
+				// my package content div 생성
+				const mypackagecontDiv = document.createElement('div');
+				mypackagecontDiv.className = 'mypackagecont';
+				
+				// package title div 생성
+				const mypacktitDiv = document.createElement('div');
+				mypacktitDiv.className = 'mypacktit';
+				
+				// 패키지 이름 p 요소 생성
+				const pTitle = document.createElement('p');
+				pTitle.textContent = datas.joinpackage[i].packageTitle;
+				
+				// span 요소 생성
+				const span = document.createElement('span');
+				span.id = 'ischiso';
+				if(datas.myreservation[i].isDelete == 1){
+					span.innerHTML = '&nbsp;&nbsp;취소진행중';
+				} else{
+					span.innerHTML = '&nbsp;&nbsp;취소진행중';
+					span.className = 'chisojungtoggle';
+				}
+				
+				// p 요소에 span 추가
+				pTitle.appendChild(span);
+				
+				// 링크 요소 생성
+				const aLink = document.createElement('a');
+				aLink.href = '/user/receipt?packagenum='+datas.joinpackage[i].packagenum;
+				aLink.textContent = '내역확인';
+				
+				// title div에 p와 링크 추가
+				mypacktitDiv.appendChild(pTitle);
+				mypacktitDiv.appendChild(aLink);
+				
+				// package information div 생성
+				const mypackinformationDiv = document.createElement('div');
+				mypackinformationDiv.className = 'mypackinformation';
+				
+				// 성인, 어린이 정보 p 요소 생성
+				const pInfo1 = document.createElement('p');
+				pInfo1.innerHTML = '성인: '+datas.myreservation[i].adultCnt+'명, 어린이: '+datas.myreservation[i].childCnt+'명 <span style="font-weight: bold;">￦'+datas	.myreservation[i].price+'</span>';
+				
+				// 날짜 정보 p 요소 생성
+				const pInfo2 = document.createElement('p');
+				pInfo2.textContent = datas.joinpackage[i].startdate+" ~ "+datas.joinpackage[i].enddate;
+				
+				// 정보 div에 p 요소 추가
+				mypackinformationDiv.appendChild(pInfo1);
+				mypackinformationDiv.appendChild(pInfo2);
+				
+				// content div에 title div와 information div 추가
+				mypackagecontDiv.appendChild(mypacktitDiv);
+				mypackagecontDiv.appendChild(mypackinformationDiv);
+				
+				// my package stamp div 생성
+				const mypackagestampDiv = document.createElement('div');
+				mypackagestampDiv.className = 'mypackagestamp';
+				
+				var today = new Date();
+				var startdate = new Date(datas.joinpackage[i].startdate);
+				var enddate = new Date(datas.joinpackage[i].enddate);
+				// 스탬프 이미지 생성
+				const stampImg = document.createElement('img');
+				stampImg.className = 'packstampimg';
+				if(datas.myreservation[i].isDelete == 2){
+					stampImg.src = '/images/userimg/packagecansle.png';					
+				} else if(datas.myreservation[i].isDelete == 1){
+					stampImg.src = '/images/userimg/packagecansleing.png'
+				} else {
+					if(today>=enddate){
+						stampImg.src = '/images/userimg/packagewan.png';						
+					} else {
+						stampImg.src = '/images/userimg/packageready.png';						
+					}
+				}
+				
+				// 스탬프 div에 이미지 추가
+				mypackagestampDiv.appendChild(stampImg);
+				
+				// link wrap div에 thu, content, stamp div 추가
+				packagelinkwrapDiv.appendChild(mypackagethuDiv);
+				packagelinkwrapDiv.appendChild(mypackagecontDiv);
+				packagelinkwrapDiv.appendChild(mypackagestampDiv);
+				
+				// 최상위 div에 link wrap div 추가
+				packmyaDiv.appendChild(packagelinkwrapDiv);
+				
+				// 포스트섹션에 추가
+				postsection.appendChild(packmyaDiv);
+			}
+		} else {
+			console.log("잘못된 타입입니다.");
+			return;
+		}
 	}	
 </script>
 </html>

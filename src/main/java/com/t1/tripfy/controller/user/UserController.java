@@ -1,5 +1,6 @@
 package com.t1.tripfy.controller.user;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -91,7 +93,6 @@ public class UserController {
 		//내가 쓴 게시글 추가하기
 		cri = new Criteria(1, 6);
 		List<BoardDTO> mylist = service.getMyBoardList(cri, loginUser);
-		System.out.println("마이인포: "+mylist.size());
 		model.addAttribute("list",mylist);
 		model.addAttribute("pageMaker",new PageDTO(service.getMyTotal(cri), cri));
 		//내가 쓴 패키지 추가하기
@@ -111,19 +112,18 @@ public class UserController {
 	public List<BoardDTO> getMyBoard(Criteria cri,HttpServletRequest req){
 		cri = new Criteria(1, 6);
 		String loginuser = (String)req.getSession().getAttribute("loginUser");
-		System.out.println("마이보드: "+service.getMyBoardList(cri, loginuser).size());
 		return service.getMyBoardList(cri, loginuser);
 	}
 	
 	@GetMapping("mypackage")
 	@ResponseBody
 	public Map<String, Object> getMyPackage(Criteria cri, HttpServletRequest req){
-		cri = new Criteria(1, 6);
-		String userid = (String)req.getAttribute("loginUser");
+		cri = new Criteria(1, 4);
+		String userid = (String)req.getSession().getAttribute("loginUser");
 
 		List<ReservationDTO> myreservation = service.getMyReservation(cri, userid);
 		
-		List<PackageDTO> joinpackage = null;
+		List<PackageDTO> joinpackage = new ArrayList<PackageDTO>();
 		Map<String, Object> datas = new HashMap<>();
 
 		if(myreservation.size()>0) {
@@ -140,6 +140,43 @@ public class UserController {
 
 		return datas;
 
+	}
+	
+	@GetMapping("movepage")
+	@ResponseBody
+	public Object movePage(Criteria cri, HttpServletRequest req) {
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		String type = req.getParameter("loadtype");
+		int targetpage = Integer.parseInt(req.getParameter("targetpage"));
+		
+		System.out.println("무브페이지 타입: "+type);
+		System.out.println("무브페이지 타겟 페이지: "+targetpage);
+		
+		if(type.equals("board")) {
+			cri = new Criteria(targetpage, 6);
+			return service.getMyBoardList(cri, userid);
+			
+		} else if(type.equals("package")) {
+			cri = new Criteria(targetpage, 4);
+			List<ReservationDTO> myreservation = service.getMyReservation(cri, userid);
+			
+			List<PackageDTO> joinpackage = new ArrayList<PackageDTO>();
+			Map<String, Object> datas = new HashMap<>();
+
+			if(myreservation.size()>0) {
+				for (ReservationDTO reservation : myreservation) {
+					joinpackage.add(service.getJoinPackage(reservation.getPackagenum()));
+				}			
+				datas.put("myreservation", myreservation);
+				datas.put("joinpackage", joinpackage);
+			} else {
+				datas.put("joinpackage", joinpackage);
+				datas.put("nodata", "참여한 패키지가 없어요");
+			}
+			return datas;
+		}
+		
+		return "잘못된 요청입니다";
 	}
 	
 	@GetMapping("/user/sogae")

@@ -146,6 +146,11 @@ CREATE TABLE `timeline_file` (
   `tf_orgname` VARCHAR(300)
 );
 
+/*
+isdelete: 0 기본
+isdelete: 1 유저가 취소 신청
+isdelete: 2 가이드도 확인 후 최종 취소
+*/
 CREATE TABLE `reservation` (
   `reservationnum` bigint PRIMARY KEY AUTO_INCREMENT,
   `packagenum` bigint,

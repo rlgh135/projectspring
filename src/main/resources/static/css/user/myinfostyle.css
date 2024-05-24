@@ -269,7 +269,6 @@ input[type="button"] {
 #mypostsection{
 	width: 960px;
 	margin: 0 auto;
-	padding: 0 10px;
 	background-color: #ffffff;
 	border-top-left-radius: 25px;
 	border-top-right-radius: 25px;
@@ -293,13 +292,13 @@ input[type="button"] {
 }
 #mainmypost{
 	width: 960px;
-	height: 520px;
+	height: 620px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
 	padding: 0 10px;
 }
-#mainmypost a {
+#mainmypost > a {
 	display: block;
 	width: 420px;
 	height: 160px;
@@ -307,7 +306,7 @@ input[type="button"] {
 	padding-bottom: 10px;
 	
 }
-#mainmypost a:nth-child(even){
+#mainmypost > a:nth-child(even){
 	width: 440px;
 }
 .centered-mpimg {
@@ -440,7 +439,7 @@ input[type="button"] {
 	margin-top: 5px;
 	font-family: CustomFont;
 }
-#openSogeEdit{
+#openSogeEdit {
 	width: 20px;
 	height: 20px;
 	background-image: url('/images/layoutimg/writebtn.png');
@@ -448,54 +447,94 @@ input[type="button"] {
 	margin-top: 11px;
 	margin-bottom: 10px;
 }
-.sogehide{
+
+.sogehide {
 	display: none;
 }
 
-/*guide*/
-#guidemodal {
-/*팝업 배경*/
-    /* 평소에는 보이지 않도록 */
-	display: none; 
-    position: absolute;
-    top:0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
+/*package*/
+.packmya {
+	cursor: pointer;
+	display: block;
+	width: fit-content;
 }
-#guidewarp {
-/*팝업*/
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.609);
-    z-index: 1000;
-}
-
-#guidewarp {
-	width: 1280px;
-	margin: 0 auto;
-}
-
-#guidecontentswrap {
+.packagelinkwrap {
+	width: 940px;
+	display: block;
+	padding: 5px 30px 5px 30px;
+	border-top: 1px solid rgba(0, 0, 0, 0.05);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	justify-content: center;
 	display: flex;
 }
-
-#profmclosebtn {
-	width: 40px;
-	height: 40px;
-	margin-left: auto;
-	cursor: pointer;
+.packagelinkwrap:first-child{
+	border-top: none;
+}
+.packagelinkwrap:hover {
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
-#guidepfarea div img {
-	width: 280px;
-	height: 280px;
+.packagelinkwrap>div {
+	height: 140px;
+}
+
+.mypackagethu {
+	width: 200px;
+}
+
+.mypackagecont {
+	width: 500px;
+	padding: 5px 10px 5px 10px;
+}
+
+.mypacktit {
+	display: flex;
+	width: 480px;
+}
+
+.mypacktit>p {
+	height: 40px;
+	line-height: 40px;
+	font-weight: bold;
+}
+
+.mypacktit>a {
+	height: 40px;
+	line-height: 44px;
+	margin-left: auto;
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.55);
+}
+
+.mypacktit>a:hover {
+	color: #2196f3;
+}
+
+.mypackinformation {
+	margin-top: 20px;
+	height: 70px;
+}
+
+.mypackinformation>p:last-child {
+	margin-top: 5px;
+	color: #2196f3;
+}
+
+.packstampimgwidth {
+	width: 100%;
+	height: 100%;
+}
+
+.packstampimg {
+	height: 100%;
+	width: auto;
+}
+
+#ischiso {
+	color: red;
+	font-size: 12px;
+}
+
+.chisojungtoggle {
+	display: none;
 }
