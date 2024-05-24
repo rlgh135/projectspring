@@ -42,16 +42,20 @@
 		SELECT * 
     	FROM package 
     	where countrycode = "kr"
+    	and visibility ='O'
     	ORDER BY packagenum DESC 
     	LIMIT 4
 	</select>
 	<select id="getPopList">
-		select * from package where countrycode = "kr"
+		select * from package 
+		where countrycode = "kr"
+		and visibility ='O'
 		ORDER BY viewcnt desc limit 4
 	</select>
 	<select id="getCheapList">
 		select * from package
 		where countrycode = "kr"
+		and visibility ='O'
 		ORDER BY adult_price desc limit 4
 	</select>
 	<!-- <select id="getPopularGuideList">
@@ -69,16 +73,20 @@
 		SELECT * 
     	FROM package 
     	where countrycode != "kr"
+    	and visibility ='O'
     	ORDER BY packagenum DESC 
     	LIMIT 4
 	</select>
 	<select id="getAbroadPopList">
-		select * from package where countrycode != "kr"
+		select * from package
+		where countrycode != "kr"
+		and visibility ='O'
 		ORDER BY viewcnt desc limit 4
 	</select>
 	<select id="getAbroadCheapList">
 		select * from package
 		where countrycode != "kr"
+		and visibility ='O'
 		ORDER BY adult_price desc limit 4
 	</select>
 	
@@ -114,6 +122,7 @@
     ]]>
 		
 	</select>
+	
 	
 	<select id="getLastNum">
 		select max(packagenum) from package where guidenum=#{guidenum}
