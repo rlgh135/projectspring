@@ -40,6 +40,7 @@ button{
 .banner a img{
     width: 100%; 
 }
+
 .packagesearch{
     width:1300px;
     margin: 0 auto;
@@ -56,7 +57,7 @@ button{
 .packagesearch  button{
     background-color: transparent;
     border: none;
-    font-size: 30px;
+    font-size: 25px;
     color:gray;
     height: 70px;
     
@@ -64,7 +65,7 @@ button{
 .packagesearch > #searchForm button{
     background-color: black;
     border: none;
-    font-size: 30px;
+    font-size: 25px;
     color:white;
     height: 70px;
     width: 150px;
@@ -73,9 +74,15 @@ button{
 }
 
 .destination{
-    display:flex;
+    display: flex;
     border-right: 1px solid lightgray;
     width: 250px;
+    font-size: 25px;
+    justify-content: center;
+}
+.desChoice{
+	width: 150px;
+	font-size: 25px;
 }
 
 
@@ -88,12 +95,26 @@ button{
     height: 100%;
     width: 180px;
     font-size: 30px;
+    color: gray;
 }
 .period input:focus{
 	outline: none;
 } 
+
+#startDateInput{
+	font-size: 25px;
+	color:gray;
+}
+
 #endDateInput{
 	color:gray;
+	font-size: 25px;
+}
+#startDateInput:focus{
+	border:none;
+}
+#endDateInput:focus{
+	border:none;
 }
 .person{
     display: flex;
@@ -101,8 +122,12 @@ button{
     width: 200px;
     justify-content: center;
 }
+.flatpickr-input[readonly] {
+    cursor: pointer;
+    color: gray !important;
+}
 .flatpickr-input{
-    color: gray;
+    color: gray ;
 }
 
 .p_wrap{
@@ -122,8 +147,8 @@ button{
     display: flex;
 }
 .rp_list a{
-    text-decoration: none;
-    color:black;
+    text-decoration: none !important;
+    color:black !important;
     width: 330px;
     height: 350px;
 }
@@ -168,8 +193,8 @@ button{
     display: flex;
 }
 .pp_list a{
-    text-decoration: none;
-    color:black;
+    text-decoration: none !important;
+    color:black !important;
 }
 .ppackage{
     width: 330px;
@@ -213,8 +238,8 @@ button{
     display: flex;
 }
 .cp_list a{
-    text-decoration: none;
-    color:black;
+    text-decoration: none !important;
+    color:black !important;
 }
 .cpackage{
     width: 330px;
@@ -254,19 +279,19 @@ button{
     background-color: white;
     position: absolute;
     z-index: 2;
-    width: 400px;
-    height: 350px;
+    width: 300px;
+    height: 330px;
     margin: 0 auto;
     overflow-y: scroll;
 }
 #deslist > .list {
-    width:400px;
+    width:300px;
     height: 100%;
 
 }
 .dl_header{
-    width: 350px;
-    height: 50px;
+    width: 280px;
+    height: 30px;
     margin: 0 auto;
 }
 .dl_header span{
@@ -285,7 +310,7 @@ button{
     justify-content: space-around;
 }
 .dl_choice button{
-    width : 170px;
+    width : 130px;
     height: 50px;
     font-size: 20px;
     background-color: dodgerblue;
@@ -300,11 +325,11 @@ button{
     background-color: white;
     position: absolute;
     z-index: 2;
-    width: 400px;
-    height: 550px;
+    width: 300px;
+    height: 360px;
 }
 #perlist > .pr_header{
-    width: 350px;
+    width: 280px;
     height: 50px;
     margin: 0 auto;
 }
@@ -312,7 +337,7 @@ button{
     font-size: 30px;
     cursor: pointer;
     height: 50px;
-    width: 350px;
+    width: 280px;
     margin: 0 auto;
     color: gray;
 }
@@ -323,7 +348,7 @@ button{
     border-top: 1px solid gray;
     display:flex;
     overflow: scroll;
-    width: 350px;
+    width: 300px;
     margin:0 auto;
 }
 .pr_choice > .pr_list{
@@ -333,7 +358,7 @@ button{
     justify-content: space-around;
 }
 .pr_list button{
-    width : 110px;
+    width : 130px;
     height: 50px;
     font-size: 20px;
     background-color: dodgerblue;
@@ -342,8 +367,11 @@ button{
     color: white;
     
 }
-
-
+.flatpickr-input.active {
+    background: none;
+    background-color: transparent; 
+    border:none;
+}
 
 
 

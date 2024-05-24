@@ -85,7 +85,7 @@ body{
     
 }
 .dl_header{
-    width: 250px;
+    width: 220px;
     height: 50px;
     margin: 0 auto;
 }
@@ -104,7 +104,7 @@ body{
 
 }
 .choiceTableLeft {
-    width: 40%;
+    width: 45%;
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -116,22 +116,24 @@ body{
     border-right: 1px solid gray;
 }
 .choiceTableLeft button{
+	display: flex;
     color:black;
     height: 50px;
-    font-size: 15px;
-    border-radius: 0;
+    font-size: 13px;
+	align-items: center;
+	justify-content: center;
 }
 .choiceTableRight button{
-    border-radius: 0;
+   
     height: 50px;
     font-size: 15px;
-
+	
 }
 
 .choiceTableRight {
-    width: 55%;
+    width: 50%;
      height: 310px;
-    background-color: #ffffff; /* 흰색 */
+    background-color: #ffffff !important; /* 흰색 */
     list-style-type: none;
     padding: 0;
     margin: 0 auto;
@@ -139,8 +141,13 @@ body{
     border-top: 1px solid gray;
     overflow-y: scroll;
 }
+.choiceTableRight button{
+	background-color: white !important;
+}
 .choiceTableRight.active {
     display: block; /* 활성화된 목록 표시 */
+    border-radius: 0;
+    background-image: none !important;
 }
 .choiceTableLeft li,
 .choiceTableRight li{
@@ -153,21 +160,52 @@ body{
     padding: 10px;
     border: none;
     cursor: pointer;
-    
     background-color: inherit;
-    
 }
+
 .choiceTableLeft button:hover{
     background-color: white;
     color:dodgerblue;
+    border-radius: 0 !important;
 }
 .choiceTableRight button:hover {
     background-color: #f0f0f0; 
 }
-  .choiceTableLeft button.active {
-            background-color: white;
-            color: dodgerblue;
-        }
+.choiceTableLeft button.active {
+	background-color: white !important;
+	color: dodgerblue !important;
+	border-radius: 0 !important;
+	background-image: none !important;
+}
+.flatpickr-input.active {
+    background: none;
+    background-color: transparent; 
+    border:none;
+}
+.flatpickr-input[readonly] {
+    cursor: pointer;
+    color: gray !important;
+}
+.flatpickr-input{
+    color: gray ;
+}
+#startDateInput{
+	font-size: 20px;
+	color:gray;
+}
+
+#endDateInput{
+	margin-top:20px;
+	color:gray;
+	font-size: 20px;
+}
+#startDateInput:focus{
+	border: 1px solid lightgray;
+}
+#endDateInput:focus{
+	border:none;
+}
+
 .period{
     width: 250px;
     height: 100px;
@@ -266,17 +304,22 @@ body{
 	overflow-y: scroll;
 }
 .package{
+	display: flex;
+	align-items: center;
     width: 100%;
     height: 130px;
-    
     margin-top: 20px;
     border-bottom: 1px solid lightgray;
+    border-radius: 20px;
+}
+.package:hover{
+	background-color: rgb(238, 241, 243);
 }
 .package a{
-    text-decoration: none;
-    color:black;
+    text-decoration: none !important;
+    color:black !important;
     display: flex;
-}
+} 
 .thumbnail{
     width: 200px;
 }
@@ -354,6 +397,7 @@ body{
     margin-top: 20px;
     text-align: center;
     vertical-align: middle;
+    justify-content: center;
 }
 
 .pagination tr{
@@ -374,6 +418,7 @@ body{
 }
 
 .pagination a {
+	
     padding: 5px;
     width: 30px;
     height: 30px;

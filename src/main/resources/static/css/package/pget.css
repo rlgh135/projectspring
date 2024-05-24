@@ -98,30 +98,33 @@ body{
 }
 .mapcon{
     width: 350px;
-    height: 500px;
+    height: 470px;
     border: 1px solid lightgray;
     border-radius: 20px;
 }
 .maphead{
-    height: 100px;
+    height: 60px;
     align-items: center;
     padding-top: 15px;
     margin-left: 20px;
 }
 .map{
     width: 350px;
-    height: 330px;
+    height: 300px;
     margin: 0 auto;
 }
 .mapfoot{
     width: 350px;
-    height: 50px;
+    height: 30px;
 }
 .mapfoot a{
     text-decoration: none;
-    float:right;
     color:black;
+	display: flex;
+    height:100%;
+    justify-content: right;
     margin-right: 10px;
+
 }
 .mapfoot a:hover{
     color: blue;
@@ -137,9 +140,15 @@ body{
     width: 310px;
     margin: 0 auto;
 }
-.ac_head{
-    margin-top: 20px;
-    height: 50px;
+.ac_head{ 
+	margin-top: 10px;
+	display: flex;
+    height: 40px;
+    align-items: center;
+   
+}
+.ac_head h3{
+	font-size:30px !important;	
 }
 .ac_con{
     height: 250px;
@@ -170,6 +179,7 @@ body{
     font-size: 20px;
     background-color: white;
     cursor: pointer;
+    padding:0 !important;
     
 }
 .child{
@@ -197,7 +207,7 @@ body{
     font-size: 20px;
     background-color: white;
     cursor: pointer;
-    
+    padding:0 !important;
 }
 .paybutton{
     height: 100px;

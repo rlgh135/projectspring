@@ -56,7 +56,7 @@ button{
 .packagesearch  button{
     background-color: transparent;
     border: none;
-    font-size: 30px;
+    font-size: 25px;
     color:gray;
     height: 70px;
     
@@ -73,9 +73,11 @@ button{
 }
 
 .destination{
-    display:flex;
+    display: flex;
     border-right: 1px solid lightgray;
     width: 250px;
+    font-size: 25px;
+    justify-content: center;
 }
 
 .period{
@@ -86,7 +88,7 @@ button{
     border: none;
     height: 100%;
     width: 180px;
-    font-size: 30px;
+    font-size: 25px;
 }
 .period input:focus{
 	outline: none;
@@ -121,8 +123,8 @@ button{
     display: flex;
 }
 .rp_list a{
-    text-decoration: none;
-    color:black;
+    text-decoration: none !important;
+    color:black !important;
     width: 330px;
     height: 350px;
 }
@@ -167,8 +169,8 @@ button{
     display: flex;
 }
 .pp_list a{
-    text-decoration: none;
-    color:black;
+    text-decoration: none !important;
+    color:black !important;
 }
 .ppackage{
     width: 330px;
@@ -212,8 +214,8 @@ button{
     display: flex;
 }
 .cp_list a{
-    text-decoration: none;
-    color:black;
+    text-decoration: none !important;
+    color:black !important;
 }
 .cpackage{
     width: 330px;
@@ -253,7 +255,7 @@ button{
     background-color: white;
     position: absolute;
     z-index: 2;
-    width: 400px;
+    width: 300px;
     height: 410px;
     margin: 0 auto;
   
@@ -296,22 +298,24 @@ button{
     border-right: 1px solid gray;
 }
 .choiceTableLeft button{
+	display: flex;
     color:black;
     height: 50px;
     font-size: 15px;
-    
+	align-items: center;
+	justify-content: center;
 }
 .choiceTableRight button{
    
     height: 50px;
     font-size: 15px;
-
+	
 }
 
 .choiceTableRight {
     width: 55%;
      height: 310px;
-    background-color: #ffffff; /* 흰색 */
+    background-color: #ffffff !important; /* 흰색 */
     list-style-type: none;
     padding: 0;
     margin: 0 auto;
@@ -319,8 +323,13 @@ button{
     border-top: 1px solid gray;
     overflow-y: scroll;
 }
+.choiceTableRight button{
+	background-color: white !important;
+}
 .choiceTableRight.active {
     display: block; /* 활성화된 목록 표시 */
+    border-radius: 0;
+    background-image: none !important;
 }
 .choiceTableLeft li,
 .choiceTableRight li{
@@ -333,9 +342,7 @@ button{
     padding: 10px;
     border: none;
     cursor: pointer;
-    
     background-color: inherit;
-    
 }
 .choiceTableLeft button:hover{
     background-color: white;
@@ -344,21 +351,51 @@ button{
 .choiceTableRight button:hover {
     background-color: #f0f0f0; 
 }
-  .choiceTableLeft button.active {
-            background-color: white;
-            color: dodgerblue;
-        }
+.choiceTableLeft button.active {
+	background-color: white !important;
+	color: dodgerblue !important;
+	border-radius: 0 !important;
+	background-image: none !important;
+}
+.flatpickr-input.active {
+    background: none;
+    background-color: transparent; 
+    border:none;
+}
+.flatpickr-input[readonly] {
+    cursor: pointer;
+    color: gray !important;
+}
+.flatpickr-input{
+    color: gray ;
+}
+#startDateInput{
+	font-size: 25px;
+	color:gray;
+}
+
+#endDateInput{
+	color:gray;
+	font-size: 25px;
+}
+#startDateInput:focus{
+	border:none;
+}
+#endDateInput:focus{
+	border:none;
+}
+
 #perlist{
     border: 1px solid lightgray;
     border-radius: 5%;
     background-color: white;
     position: absolute;
     z-index: 2;
-    width: 400px;
-    height: 550px;
+    width: 300px;
+    height: 380px;
 }
 #perlist > .pr_header{
-    width: 350px;
+    width: 250px;
     height: 50px;
     margin: 0 auto;
 }
@@ -366,7 +403,7 @@ button{
     font-size: 30px;
     cursor: pointer;
     height: 50px;
-    width: 350px;
+    width: 250px;
     margin: 0 auto;
     color: gray;
 }
@@ -377,7 +414,7 @@ button{
     border-top: 1px solid gray;
     display:flex;
     overflow: scroll;
-    width: 350px;
+    width: 250px;
     margin:0 auto;
 }
 .pr_choice > .pr_list{
@@ -387,7 +424,7 @@ button{
     justify-content: space-around;
 }
 .pr_list button{
-    width : 170px;
+    width : 110px;
     height: 50px;
     font-size: 20px;
     background-color: dodgerblue;
