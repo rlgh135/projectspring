@@ -3,17 +3,22 @@ package com.t1.tripfy.controller.pack;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.demo.domain.dto.ReplyDTO;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.pack.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.mapper.user.UserMapper;
 import com.t1.tripfy.service.pack.PackageService;
@@ -109,18 +114,42 @@ public class PackController {
 		System.out.println(packageFile);
 		System.out.println(pack.getCountrycode());
 		System.out.println(pack.getRegionname());
-		if(service.regist(pack, packageFile)) {
-			long packagenum = service.getLastNum(pack.getGuidenum());
-			return "redirect:/package/tlwrite?packagenum="+packagenum;
+		if(service.regist(pack, packageFile)) {	
+				long packagenum = service.getLastNum(pack.getGuidenum());
+				return "redirect:/package/tlwrite?packagenum="+packagenum;
 		}
+		//실패처리
 		else {
 			return "redirect:/index";
 		}
 	}
 	
 	@GetMapping("tlwrite")
-	public String getMethodName(@RequestParam String packagenum, Model model) {
+	public String getMethodName(@RequestParam long packagenum, Model model) {
+		//가이드num 세션에 있다고 가정
+		long guidenum = 1;
 		model.addAttribute("packagenum", packagenum);
-		return "/package/ptimeline";
+		PackageDTO pac =  service.getDetail(packagenum);
+		//유효성검사 해야함
+		if(guidenum != pac.getGuidenum()) {
+			//옳은 경로로 가라고 경고페이지 띄워줘야함
+			return "redirect:/index";
+		}
+		model.addAttribute("pac",pac);
+		String[] dayMMdd = service.getDayMMdd(pac.getStartdate(),pac.getEnddate());
+		model.addAttribute("dayMMdd",dayMMdd);
+		return "/package/timelineWrite";
+	}
+	
+	@PostMapping(value="regist", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<TimelineDTO> regist(@RequestBody TimelineDTO tl){
+		TimelineDTO result = service.regist(tl);
+		System.out.println(result);
+		if(result == null) {
+			return new ResponseEntity<ReplyDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		else {
+			return new ResponseEntity<ReplyDTO>(result,HttpStatus.OK);
+		}
 	}
 }

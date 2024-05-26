@@ -130,6 +130,7 @@ CREATE TABLE `timeline` (
   `timelinenum` bigint PRIMARY KEY AUTO_INCREMENT,
   `packagenum` bigint,
   `day` int,
+  `detail_num` int,
   `title` text,
   `contents` text
 );

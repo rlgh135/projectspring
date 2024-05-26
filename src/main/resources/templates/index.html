@@ -10,6 +10,8 @@
 	</style>
 </head>
 <body>
+	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+	<th:block th:include="~{layout/packageModal::packageModal}"></th:block>
 	<header id="index_top_wrap">
 		<nav class="gnb">
 			<div class="logo_box">

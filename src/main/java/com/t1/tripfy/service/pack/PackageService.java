@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
@@ -33,6 +32,5 @@ public interface PackageService {
 
 	void saveReservation(ReservationDTO reservationDTO);
 
-
-	
+	String[] getDayMMdd(String startdate, String enddate);
 }

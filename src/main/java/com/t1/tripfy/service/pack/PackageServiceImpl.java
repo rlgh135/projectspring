@@ -1,10 +1,13 @@
 package com.t1.tripfy.service.pack;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -162,13 +165,35 @@ public class PackageServiceImpl implements PackageService{
 	}
 	@Override
 	public long getLastNum(long guidenum) {
-		// TODO Auto-generated method stub
-		return 0;
+		return pmapper.getLastNum(guidenum);
 	}
 	@Override
 	public void saveReservation(ReservationDTO reservationDTO) {
         pmapper.saveReservation(reservationDTO);
     }
-	
-	
+	@Override
+	public String[] getDayMMdd(String startdate, String enddate) {
+        List<String> dayList = new ArrayList<>();
+
+        try {
+            SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdfOutput = new SimpleDateFormat("MM.dd");
+
+            Calendar start = Calendar.getInstance();
+            start.setTime(sdfInput.parse(startdate));
+
+            Calendar end = Calendar.getInstance();
+            end.setTime(sdfInput.parse(enddate));
+
+            while (!start.after(end)) {
+                dayList.add(sdfOutput.format(start.getTime()));
+                start.add(Calendar.DATE, 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // 예외 처리 필요
+        }
+
+        return dayList.toArray(new String[0]);
+    }
+
 }

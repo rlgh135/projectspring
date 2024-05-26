@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타라2</title>
+    <link rel="stylesheet" href="/css/summernote/summernote.css">
+    <link rel="stylesheet" href="/css/package/timelineWrite.css">
+</head>
+
+<body>
+    <div id="wrap">
+        <div class="body">
+            <div class="content_box">
+                <div class="body_map" id="body_map"></div>
+                <div class="timeline">
+                    <header class="tiemline_header">
+                        <div class="header_title_box">
+                            <div class="back_home_btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    style="transform: rotate(0deg); cursor: pointer;">
+                                    <path d="M16 3L7 12L16 21" stroke="#252525" stroke-width="1.5"></path>
+                                </svg>
+                                <svg width="24" height="24" viewBox="0 0 25 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
+                                    <mask id="path-1-inside-1_22_884" fill="white">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M21.4319 10.9895C21.4319 10.7087 21.3139 10.4409 21.1067 10.2514L13.3567 3.16571C12.9746 2.81642 12.3892 2.81642 12.0071 3.16571L4.25712 10.2514C4.04991 10.4409 3.93188 10.7087 3.93188 10.9895V19.5488C3.93188 20.1011 4.3796 20.5488 4.93188 20.5488H20.4319C20.9842 20.5488 21.4319 20.1011 21.4319 19.5488V10.9895Z">
+                                        </path>
+                                    </mask>
+                                    <path
+                                        d="M4.25712 10.2514L5.26927 11.3585L4.25712 10.2514ZM21.1067 10.2514L20.0945 11.3585L21.1067 10.2514ZM13.3567 3.16571L12.3445 4.27275L13.3567 3.16571ZM12.3445 4.27275L20.0945 11.3585L22.1188 9.14438L14.3688 2.05867L12.3445 4.27275ZM5.26927 11.3585L13.0193 4.27275L10.995 2.05867L3.24496 9.14438L5.26927 11.3585ZM5.43188 19.5488V10.9895H2.43188V19.5488H5.43188ZM20.4319 19.0488H4.93188V22.0488H20.4319V19.0488ZM19.9319 10.9895V19.5488H22.9319V10.9895H19.9319ZM20.4319 22.0488C21.8126 22.0488 22.9319 20.9295 22.9319 19.5488H19.9319C19.9319 19.2726 20.1557 19.0488 20.4319 19.0488V22.0488ZM2.43188 19.5488C2.43188 20.9295 3.55117 22.0488 4.93188 22.0488V19.0488C5.20803 19.0488 5.43188 19.2726 5.43188 19.5488H2.43188ZM3.24496 9.14438C2.72694 9.618 2.43188 10.2876 2.43188 10.9895H5.43188C5.43188 11.1298 5.37287 11.2637 5.26927 11.3585L3.24496 9.14438ZM20.0945 11.3585C19.9909 11.2637 19.9319 11.1298 19.9319 10.9895H22.9319C22.9319 10.2876 22.6368 9.618 22.1188 9.14438L20.0945 11.3585ZM14.3688 2.05867C13.4137 1.18543 11.9501 1.18543 10.995 2.05867L13.0193 4.27275C12.8282 4.4474 12.5355 4.4474 12.3445 4.27275L14.3688 2.05867Z"
+                                        fill="#252525" mask="url(#path-1-inside-1_22_884)"></path>
+                                    <path
+                                        d="M11.9319 13.75C11.9319 13.3358 12.2677 13 12.6819 13C13.0961 13 13.4319 13.3358 13.4319 13.75V18H11.9319V13.75Z"
+                                        fill="#252525"></path>
+                                </svg>
+                            </div>
+                            <div class="header_title">[[${pac.packageTitle}]]([[${pac.tourdays}]]일)</div>
+                            <svg width="20" height="20" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 5.08325C4.39543 5.08325 3.5 5.97868 3.5 7.08325V13.9166C3.5 15.0212 4.39543 15.9166 5.5 15.9166H11.5C12.6046 15.9166 13.5 15.0212 13.5 13.9166V7.08325C13.5 5.97868 12.6046 5.08325 11.5 5.08325H5.5ZM6 7.61108C5.65482 7.61108 5.375 7.89091 5.375 8.23608V12.7639C5.375 13.109 5.65482 13.3889 6 13.3889C6.34518 13.3889 6.625 13.109 6.625 12.7639V8.23608C6.625 7.89091 6.34518 7.61108 6 7.61108ZM7.875 8.23608C7.875 7.89091 8.15482 7.61108 8.5 7.61108C8.84518 7.61108 9.125 7.89091 9.125 8.23608V12.7639C9.125 13.109 8.84518 13.3889 8.5 13.3889C8.15482 13.3889 7.875 13.109 7.875 12.7639V8.23608ZM11 7.61108C10.6548 7.61108 10.375 7.89091 10.375 8.23608V12.7639C10.375 13.109 10.6548 13.3889 11 13.3889C11.3452 13.3889 11.625 13.109 11.625 12.7639V8.23608C11.625 7.89091 11.3452 7.61108 11 7.61108Z" fill="#FC7070"></path><rect x="3.5" y="2.5" width="10" height="1.5" rx="0.75" fill="#FC7070"></rect><rect x="6.5" y="1.5" width="4" height="2" rx="1" fill="#FC7070"></rect></svg>
+                    </header>
+                    <div class="date_area">
+                        <div class="date_box">
+                            <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.943 2.28296H12.094C12.6093 2.28296 13.1035 2.48767 13.4679 2.85205C13.8323 3.21643 14.037 3.71064 14.037 4.22596V5.92596H1V4.22596C1 3.71064 1.20471 3.21643 1.56909 2.85205C1.93347 2.48767 2.42768 2.28296 2.943 2.28296V2.28296Z" stroke="#64B5F6" stroke-width="1.8" stroke-miterlimit="10"></path><path d="M12.0099 15.2219L3.04688 15.2219C2.50663 15.2219 1.98851 15.0073 1.6065 14.6253C1.22449 14.2433 1.00988 13.7252 1.00988 13.1849L1.00988 5.91492L14.0469 5.91492L14.0469 13.1849C14.0469 13.7252 13.8323 14.2433 13.4503 14.6253C13.0682 15.0073 12.5501 15.2219 12.0099 15.2219V15.2219Z" stroke="#64B5F6" stroke-width="1.8" stroke-miterlimit="10"></path><path d="M3.97461 1V2.143" stroke="#00CE7C" stroke-width="1.8" stroke-miterlimit="10" stroke-linecap="round"></path><path d="M11.0625 1V2.143" stroke="#64B5F6" stroke-width="1.8" stroke-miterlimit="10" stroke-linecap="round"></path><path d="M9.78755 9.12402L6.89855 12.013L5.26855 10.383" stroke="#64B5F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            <span class="date">
+                                <span class="start_date">[[${pac.startdate}]]</span>
+                                <span class="start_end_between"></span>
+                                <span class="end_date">[[${pac.enddate}]]</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="timeline_contents_area">
+                        <div class="timeline_contents_box">
+                            <div class="timeline_contents">
+                                <div class="timeline_region">
+                                    <div class="region_icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.9387 10.7632C19.9387 15.0508 12.4693 21.8536 12.4693 21.8536C12.4693 21.8536 5 15.0508 5 10.7632C5 6.47572 8.34413 3 12.4693 3C16.5945 3 19.9387 6.47572 19.9387 10.7632Z" fill="#00A3FF"></path><circle cx="12.4699" cy="9.91282" r="3.37327" fill="white"></circle></svg></div>
+                                    <div class="region_name"><span>[[${pac.regionname}]]</span></div>
+                                </div>
+								<div th:if="${pac.tourdays != null}" th:each="index : ${#numbers.sequence(1, pac.tourdays)}">
+								    <div th:class="'timeline_detail day' + ${index}">
+								        <div class="day_icon_date">
+								            <div class="day_icon">
+								                <div class="sc-e2da28cc-2 day_icon">
+								                    <span class="sc-e2da28cc-3 jQkaAe">
+								                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#fff" size="15">
+								                            <path fill-rule="evenodd" clip-rule="evenodd" d="M21.5143 12.7857C22.1619 12.462 22.1619 11.538 21.5143 11.2143L3.2715 2.09388C2.68733 1.80182 2 2.22657 2 2.87962L2 9.63235C2 10.1346 2.3726 10.559 2.87068 10.624L13.4216 12L2.87068 13.376C2.3726 13.441 2 13.8654 2 14.3676L2 21.1204C2 21.7734 2.68733 22.1982 3.2715 21.9061L21.5143 12.7857Z" fill="#fff"></path>
+								                        </svg>
+								                    </span>
+								                    <span class="sc-e2da28cc-4 coqSbM">Day<span th:text="${index}"></span></span>
+								                </div>
+								            </div>
+								             <div class="date_mm_dd"><span th:text="${dayMMdd[__${index-1}__]}"></span></div>
+								        </div>
+								    </div>
+								    <div class="place_note_box" th:id="'day' + ${index}">
+								        <button class="place_btn" th:id="'openModalBtn' + ${index}">장소 추가</button>
+								    </div>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="regist_btn_area">
+                <button id="package_regist">패키지 등록하기</button>
+            </div>
+        </div>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="modal_title">지도 검색하기</p>
+                <input id="pac-input" class="controls" type="text" placeholder="장소 검색">
+                <div id="map"></div>
+                <p id="description"></p>
+                <div class="btn_area">
+                    <button class="place_select_btn">선택하기</button>
+                </div>
+            </div>
+        </div>
+        <div id="contentModal">
+            <div class="contentModal-content">
+                <div class="head_area">
+                    <h2>일정 메모하기</h2>
+                </div>         
+                <div class="text_area">
+                    <div class="this_day">
+                        <span class="sc-e2da28cc-3 jQkaAe"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#fff" size="15"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.5143 12.7857C22.1619 12.462 22.1619 11.538 21.5143 11.2143L3.2715 2.09388C2.68733 1.80182 2 2.22657 2 2.87962L2 9.63235C2 10.1346 2.3726 10.559 2.87068 10.624L13.4216 12L2.87068 13.376C2.3726 13.441 2 13.8654 2 14.3676L2 21.1204C2 21.7734 2.68733 22.1982 3.2715 21.9061L21.5143 12.7857Z" fill="#fff"></path></svg></span>
+                        <span class="sc-e2da28cc-4 coqSbM">Day1</span>
+                    </div>
+                    <div class="McDetail_num"><p><span>2</span>번째 일정</p></div>
+                    <div class="McDetail_place"><p>역삼역입니다</p></div>
+                </div>
+                <div class="body_area">
+                    <div class="content_area">
+                        <div id="summernote"></div>
+                    </div>
+                    <div class="McBtn_area">
+                        <div>
+                            <button class="cencel_btn" id="cancelButton">작성취소</button>    
+                            <button class="nxt_btn" id="submitButton">작성하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
+<script src="/js/package/markerimg.js"></script>
+<script src="/js/summernote/summernote-lite.min.js"></script>
+<script src="/js/summernote/summernote-ko-KR.js"></script>
+<script src="/js/package/timelineWrite.js"></script>
+</html>
