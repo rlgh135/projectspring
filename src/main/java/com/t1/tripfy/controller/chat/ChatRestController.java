@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
 import com.t1.tripfy.service.chat.ChatService;
@@ -23,14 +24,14 @@ public class ChatRestController {
 	
 	//채팅방 리스트 요청
 	@GetMapping
-	public ResponseEntity<List<ChatListPayloadDTO>> getChatList(@RequestParam(required=true) String userid) {
+	public ResponseEntity<List<ChatListPayloadDTO>> getChatList(@SessionAttribute(name="loginUser", required=false) String loginUserId) {
 	//유효성
 		/*나중에 나중에 진짜 나중에 - 240523*/
 		//대충 파라미터로 온 userid == session.getAttribute(userid) 체크
 		
 	//서비스
 		//일단 받기
-		List<ChatListPayloadDTO> chatList = chatSV.selectChatList(userid);
+		List<ChatListPayloadDTO> chatList = chatSV.selectChatList(loginUserId);
 	
 	//결과 체크
 		//DB접근 실패 체크

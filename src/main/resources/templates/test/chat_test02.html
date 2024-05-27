@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CHAT TEST 02</title>
+	<style>	
+		*{
+	    	margin: 0; padding: 0;
+	    	box-sizing: border-box;
+		}
+		
+		#chat-wrapper {
+			position: fixed;
+			bottom: 80px;
+			right: 100px;
+		}
+		#chat-window-btn {
+			height: 80px;
+			width: 80px;
+			
+			border-radius: 100%;
+			
+			box-shadow: 5px 5px 5px lightgray, -2px -2px 5px lightgray, 5px -2px 5px lightgray, -2px 5px 5px lightgray;
+			
+			/*background-color: lightblue;*/
+		}
+		#chat-window {
+			position: absolute;
+			bottom: 100px;
+			right: 0px;
+			
+			height: 600px;
+			width: 400px;
+			
+			border-radius: 20px/20px;
+			
+			box-shadow: 5px 5px 30px lightgrey, -2px -2px 30px lightgrey, 5px -2px 30px lightgrey, -2px 5px 30px lightgrey;
+			
+			/*background-color: lightcoral;*/
+		}
+		#chat-list-empty {		
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			
+			height: 100%;
+		}
+		#cc-logo-empty {
+			display: block;
+			
+			height: 150px;
+			width: 150px;
+			
+			margin-bottom: 20px;
+			
+			object-fit: cover;
+		}
+		#chat-list-cont {
+			height: 100%;
+			width: 100%;
+
+			padding-top: 10px;
+		}
+
+		.cc-list-element {
+			height: 100px;
+			width: 380px;
+
+			margin: 0 auto;
+			margin-bottom: 10px;
+
+			border-radius: 15px/15px;
+
+			background-color: lightsalmon;
+
+			/* overflow: hidden; */
+			/*
+				inline-block 자식 못난놈들 여백 없애기
+				https://rgy0409.tistory.com/4678 참조
+				자식요소에서 글씨 쓰려면 아래 속성들을 초기화해줘야 함
+				특히 fz
+			*/
+			font-size: 0;
+			letter-spacing: 0;
+			word-spacing: 0;
+		}
+		.cc-list-element>div:first-child {
+			display: inline-block;
+			height: 100%;
+			width: 100px;
+			margin-right: 10px;
+
+			font-size: 16px;
+
+			padding-top: 10px;
+			padding-left: 10px;
+		}
+		.cc-list-element>div:last-child {
+			display: inline-block;
+			height: 100%;
+			width: 270px;
+
+			font-size: 16px;
+		}
+		.cc-list-element>div:first-child>img {
+			display: block;
+			height: 80px;
+			width: 80px;
+
+			border-radius: 10px/10px;
+
+			object-fit: cover;
+		}
+		
+		.cc-hidden {
+			display: none!important;
+		}
+	</style>
+</head>
+<body>
+	<div id="chat-wrapper">
+		<div id="chat-window-btn">채팅<br>이미지 여기에</div>
+		<div id="chat-window">
+			<div id="chat-list-empty" class="cc-hidden">
+				<!-- 이미지 바꿔라 -->
+				<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
+				<p>현재 입장해있는 채팅방이 없습니다</p>
+			</div>
+			<div id="chat-list-cont">
+				<div id="chat-list-ele-001" class="cc-list-element">
+					<div>
+						<img src="../../static/images/layoutimg/logo.png" alt="img001">
+					</div>
+					<div>
+						sadf
+					</div>
+				</div>
+				<div id="chat-list-ele-002" class="cc-list-element">
+
+				</div>
+			</div>
+			<div id="chat-body-cont" class="cc-hidden"></div>
+		</div>
+	</div>
+</body>
+<script>
+	/*================================================================================*/
+	/*고정요소 객체 초기화*/
+	//채팅창 버튼
+	const chat_window_btn = document.getElementById("chat-window-btn");
+	//채팅창
+	const chat_window = document.getElementById("chat-window");
+	//채팅방 목록 empty 시 출력 요소
+	const chat_list_empty = document.getElementById("chat-list-empty");
+	//채팅방 목록창
+	const chat_list_cont = document.getElementById("chat-list-cont");
+	
+	/*================================================================================*/
+	/*단순 모달 컨트롤*/
+	//채팅창 열고 닫기
+	// 나중에는 열 때 Ajax로 챗 리스트 끌고와서 적용해줘야 함
+	// 열고 닫을때 애니메이션도 있으면 좋고
+	// 그리고 열고 닫을 때 버튼 이미지도 바꿔줘야 함
+	chat_window_btn.addEventListener("click", (e) => {
+		if(chat_window.classList.contains("cc-hidden")) {
+			chat_window.classList.remove("cc-hidden");
+		} else {
+			chat_window.classList.add("cc-hidden");
+		}
+	});
+
+	/*================================================================================*/
+	/*동적 페이지 조작*/
+	//채팅 리스트 구현
+	// 이거 로딩 실패시의 경우도 처리해줘야함
+	function dynamicChatListAdjust(data) {
+		if(data.length < 1) {
+			//채팅 리스트가 없는 경우
+			chat_list_empty.classList.remove("cc-hidden");
+			chat_list_cont.classList.add("cc-hidden");
+			return;
+		}
+		//그외
+
+	}
+
+	/*================================================================================*/
+	/*동적 요소 생성*/
+	//채팅 리스트 요소 생성
+	// 이새끼 클릭이벤트도 달아줘야 함
+	function createChatList(dataElement) {
+
+	}
+	
+	/*================================================================================*/
+	/*AJAX*/
+	/*
+		대충 get 사용법
+		ajaxGet("localhost:8080", "/chat", {
+			//쿼리스트링에 넣을 키-값을 js 객체 형태로 삽입
+			// 넣을 쿼리스트링이 없으면 생략 가능함
+			"userid1": USER_ID,
+			"userid2": "qwerty1234",
+			"userid3": document.getElementById("simpleexampleelementid").value,
+			...
+		})
+		.then((data) => {
+			//대충 받은 데이터 사용하는 로직
+		})
+		.catch((error) => {
+			//에러 발생시 로직
+		});
+
+		post 사용법
+		ajaxPost("localhost:8080", "/chat", {
+			//body에 넣을 키-값 value
+			// js 객체 형태로 삽입
+		}, {
+			//header에 넣을 키-값 value
+			// js 객체 형태로 삽입
+			// 없으면 생략
+		})
+		.then((data) => {
+			//받은 데이터 사용하는 로직
+		})
+		.catch((error) => {
+			//에러 처리 로직
+		});
+
+		queryStrings, body, header는 js 객체 형태로 삽입
+		반환되는 데이터는 무조건 JSON으로 수신 -> JS 객체화
+	*/
+	//GET
+	async function ajaxGet(host, path, queryStrings={}) {
+		let qs = "";
+		if(Object.keys(queryStrings).length > 0) {
+			qs += "?";
+			for(let key in queryStrings) {
+				qs += key + "=" + queryStrings[key] + "&";
+			}
+			qs = qs.replace(/\&$/, "");
+		}
+
+		const url = "http://" + host + path + qs;
+
+		const res = await fetch(url);
+		const data = await res.json();
+
+		if(res.ok) {
+			return data;
+		} else {
+			throw Error(res);
+		}
+	}
+	//POST
+	async function ajaxPost(host, path, body, header={}) {
+		const url = "http://" + host + path;
+		const options = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				...headers,
+			},
+			body: JSON.stringify(body)
+		};
+
+		const res = await fetch(url, options);
+		const data = await res.json();
+
+		if(res.ok) {
+			return data;
+		} else {
+			throw Error(res);
+		}
+	}
+</script>
+</html>

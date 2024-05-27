@@ -27,4 +27,8 @@ public class ChatTestController {
 		
 		return "/test/chat_test.html";
 	}
+	@GetMapping("chat_test_02")
+	public String chat_test_02() {
+		return "/test/chat_test02.html";
+	}
 }

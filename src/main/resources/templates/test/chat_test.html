@@ -157,9 +157,7 @@
 	*/
 	// ajax로 채팅방 리스트 로딩 요청
 	SUBMIT_LOAD_CHAT.addEventListener("click", (e) => {
-		ajaxGet("localhost:8080", "chat", {
-			"userid": USER_ID
-		})
+		ajaxGet("localhost:8080", "chat")
 		.then((data) => {
 			// 채팅방 DOM 수정 로직
 			VIEW_CHAT_LIST.textContent = "";
