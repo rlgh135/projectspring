@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>가이드 신청</title>
+	<style>
+		*{
+			box-sizing: border-box;
+		}
+		@font-face {
+		    font-family: CustomFont; /* 폰트의 이름을 지정합니다. */
+		    src: url('/font/MCKLSH__.ttf') format('truetype'); /* .ttf 파일의 경로를 지정합니다. */
+		}
+		#jointit{
+			width: 700px;
+			margin: 0 auto;
+			height: 70px;
+			line-height: 20px;
+			text-align: center;
+			font-family: CustomFont;
+			font-size: 50px;
+			color: #4d90fe;
+		    margin-top: 120px;
+		}
+		#wrap{
+		    width:1000px;
+		    margin: 0 auto;
+		    position: relative;
+		    border: 1px solid rgba(0, 0, 0, 0.2);
+		    /*box-shadow: 0 0 20px;*/
+		}
+		
+		body{
+		    background-color:#fff;
+		    background-image: url("/images/layoutimg/joinbg.png");
+		    background-size: cover;
+		}
+		input{
+		    cursor:pointer;
+		}
+		ul, ol, li{ list-style: none; }
+		
+		a{
+			text-decoration: none;
+			background-color: transparent;
+			color: #424242;
+		}
+		#wrap{
+			background-color: rgba(255, 255, 255, 0.85);
+			
+		}
+		form{
+			width: fit-content;
+			margin: 0 auto;
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+		.yakgwan > div:first-child {
+			padding: 10px;
+			width: fit-content;
+			margin: 0 auto;
+			font-size: 40px;
+		}
+		#outerdivwrap{
+			margin-top: 30px;
+			display: flex;
+			justify-content: center;
+			margin-bottom: 30px;
+		}
+		#outerdivwrap > a{
+			font-size: 20px;
+			background-color: #4d90fe;
+			width: 100px;
+			height: 40px;
+			text-align: center;
+			line-height: 40px;
+			color: white;
+		}
+		#outerdivwrap > a:last-child{
+			margin-left: 30px;
+		}
+	</style>
+</head>
+<body>
+    <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+	<div id="jointit">
+		<p>가이드 신청</p>
+	</div>
+	<div id="wrap" class="join">
+		<form action="/user/joinguide" method="post" name="joinGuideForm">
+			<div class="yakgwan">
+				<div>
+					약관
+				</div>
+				<div>
+					<th:block th:replace="~{layout/Tou::tou}"></th:block>
+				</div>
+			</div>
+			<div class="realyagree">
+				<div class="check1">
+					<input type="checkbox" class="input-check" id="allAgree" name="agree" value="yes">
+					<label for="allAgree">위 약관을 다 읽고 동의합니다.</label>
+					<span id="agreealert"></span>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div id="outerdivwrap">
+			<a href="javascript:wantToGuide()">신청하기</a>
+			<a href="/user/myinfo" class="guide-to-back-btn">돌아가기</a>
+	</div>
+</body>
+<script>
+	const agreement = document.getElementById('allAgree');
+	const agreealert = document.getElementById('agreealert');
+	
+    function wantToGuide() {
+        const joinGuideForm = document.joinGuideForm;
+        //유효성검사
+		if(agreement.checked == false) {
+		    alert("약관에 동의해주세요.")
+		    return;
+		}
+		
+		alert("신청이 완료되었습니다. 승인까지는 최대 3일이 소요됩니다.");
+		   
+		joinGuideForm.submit();
+    }
+	
+	agreement.addEventListener("click", function(){
+		if(agreement.checked == false) {
+		    agreealert.innerHTML = "<span style='color:red;'>약관에 동의해주세요<span>"
+		} else {
+		    agreealert.innerHTML = "<span style='color:rgb(0,255,0);'>동의완료<span>"			
+		}   
+		
+	});
+		
+</script>
+</html>

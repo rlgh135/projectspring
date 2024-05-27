@@ -1,7 +1,11 @@
 package com.t1.tripfy.mapper.user;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
+import com.t1.tripfy.domain.dto.Criteria;
+import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
@@ -16,6 +20,8 @@ public interface UserMapper {
 	UserDTO getUserById(String userid);
 	String getUserProfileName(String userid);
 	GuideUserDTO getGuideNum(String userid);
+	int getTotalReviewCnt(long guidenum);
+	List<ReviewDTO> getReviews(long packagenum);
 	
 	//U
 	int updateUser(UserDTO user);

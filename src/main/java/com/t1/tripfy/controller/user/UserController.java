@@ -1,5 +1,7 @@
 package com.t1.tripfy.controller.user;
 
+import java.net.http.HttpRequest;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.ReservationDTO;
+import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
@@ -136,10 +139,8 @@ public class UserController {
 			datas.put("joinpackage", joinpackage);
 			datas.put("nodata", "참여한 패키지가 없어요");
 		}
-		
 
 		return datas;
-
 	}
 	
 	@GetMapping("movepage")
@@ -191,6 +192,68 @@ public class UserController {
 		}
 	}
 	
+	@GetMapping("joinguide")
+	public void joinGuide() {}
+	
+	@GetMapping("guide")
+	public String showGuideMenu(Criteria cri, Model model, HttpServletRequest req) {
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		String thumbnail = service.getProfileImgName(userid);
+		long guidenum =  (long)req.getSession().getAttribute("guideNum");
+		
+		model.addAttribute("userthumbnail", thumbnail);
+		
+		LocalDate currentDate = LocalDate.now();
+		model.addAttribute("currentdate", currentDate);
+		
+		UserDTO user = service.getUser(userid);
+		model.addAttribute("user", user);
+		
+		int packtotal = service.getTotalPackageCnt(guidenum);
+		model.addAttribute("packtoal", packtotal);
+		
+		int reviewtotal = service.getTotalReview(guidenum);
+		model.addAttribute("reviewtotal", reviewtotal);
+		
+		ArrayList<Long> packagenums = new ArrayList<Long>();
+		cri = new Criteria(1,6);
+		
+		List<PackageDTO> inglist = service.getMyIngPackages(guidenum, cri);
+		
+		model.addAttribute("inglist", inglist);
+		
+		List<PackageDTO> packagelist = service.getMyPackages(guidenum, cri);
+		if(packagelist.size()> 0) {
+			for (PackageDTO pack : packagelist) {
+				packagenums.add(pack.getPackagenum());
+			}
+		}
+		
+		model.addAttribute("packagelist", packagelist);
+		
+		return "/user/guide";
+	}
+	
+	@GetMapping("hugi")
+	@ResponseBody
+	public Map<String, Object> getReplyByPackagenum(HttpServletRequest req){
+		Map<String, Object> datas = new HashMap<>();
+		long packagenum = Long.parseLong(req.getParameter("packagenum"));
+		
+		List<ReviewDTO> reviewlist = service.getReviewByPackagenum(packagenum);
+		datas.put("reviewlist", reviewlist);
+		
+		ArrayList<String> thumbnaillist = new ArrayList<String>();
+		if(reviewlist.size()>0) {
+			for (ReviewDTO review : reviewlist) {
+				thumbnaillist.add(service.getProfileImgName(review.getUserid()));
+			}
+		}
+		
+		datas.put("thumbnaillist", thumbnaillist);
+		
+		return datas;
+	}
 	
 	//post
 	@PostMapping("join")

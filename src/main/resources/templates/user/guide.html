@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 패키지 관리</title>
+    <link rel="stylesheet" href="/css/user/guidestyle.css">
+    <script>
+        function compareDates(currentdate, targetDate) {
+            return new Date(currentDate) > new Date(targetDate);
+        }
+    </script>
+</head>
+<body>
+    <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+    <div id="wrap">
+        <container id="guide-own-cont">
+            <section class="left-side-section guideinfo">
+                <div class="badgeimgarea">
+                    <img th:src="${'/user/thumbnail?sysname='+userthumbnail}" alt="">
+                </div>
+                <div class="guideidarea">[[${session.loginUser}]]<span><img src="/images/userimg/guidebadge.png" alt=""></span></div>
+                <div class="showguidenumberarea">
+                    <ul>
+                        <li>
+                            <p>패키지: [[${packtoal}]]</p>
+                        </li>
+                        <li>
+                            <p>후기: [[${reviewtotal}]]</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="guidesogaearea">
+					<div>
+						<p>자기소개</p>
+						<input type="button" name="open" id="openSogeEdit" class="hiddens sogaetriger">
+						<input type="button" id="sogeWan" class="hiddens sogehide" onclick="sogesubmit()" value="">
+						<input type="button" id="sogeCansle" class="hiddens sogehide sogaetriger" value="취소">
+					</div>
+					<form action="/user/sogae" method="get" name="sogaeform">
+						<input type="hidden" name="_method" value="PUT"/>
+						<textarea name="introduce" id="userintroduce" readonly>[[${user.introduce}]]</textarea>
+					</form>  
+                </div>
+            </section>
+            <section class="right-side-section guideposts">
+                <ul id="choicezone">
+                    <li id="showpackagelist" class="guide-selected">내 패키지</li>
+                    <li id="showapplylist">신청 현황<span id="redalert"></span></li>
+                </ul>
+                <div id="mypackagelist" class="guide-selected">
+                    <div id="jacsunging">
+                        <p class="subtitles">작성중인 패키지</p>
+                        <ul class="gmlists">
+                            <th:block th:if="${inglist != null and inglist.size > 0}">
+                                <li th:each="ing:${inglist}" th:onclick="'rewrite(+'${ing.packagenum}+')'">
+                                    <div class="outerpckgs">
+										<div class="ingthumb">
+											<img src="/images/packageimg/384878.jpg">
+										</div>
+                                        <div class="mypckgs">[[${ing.packageTitle}]]</div>
+                                        <div class="stamparea"></div>
+                                    </div>
+                                </li>
+                            </th:block>
+                            <th:block th:unless="${inglist != null and inglist.size > 0}">
+                                <li>
+                                    <div class="outerpckgs">
+                                        <div>작성중인 패키지가 없습니다.</div>
+                                    </div>
+                                </li>
+                            </th:block>
+                        </ul>
+                    </div>
+                    <div id="mypacklists">
+                        <p class="subtitles">내 패키지</p>
+                        <ul class="gmlists">
+                            <th:block th:if="${packagelist != null and packagelist.size > 0}">
+                                <li th:each="package:${packagelist}">
+                                    <div class="outerpckgs">
+										<div class="ingthumb">
+											<img src="/images/packageimg/384878.jpg">
+										</div>
+                                        <div class="mypckgs">
+											<div>[[${package.packageTitle}]]</div>
+											<div>[[${package.startdate}]] ~ [[${package.enddate}]]([[${package.tourdays}]]일)</div>
+										</div>
+                                        <div class="showhugis" th:onclick="'showhugis('+${package.packagenum}+', 0)'">
+											후기<input type="hidden" th:id="'hupage'+${package.packagenum}" value="1"><span></span>
+										</div>
+                                        <div class="stamparea">
+											<!--
+                                            <img th:if="${#temporals.createNow().isBefore(#temporals.localDate(package.startdate))}" src="/images/userimg/packready.png">
+                                            <img th:if="${#temporals.createNow().isAfter(#temporals.localDate(package.startdate))} && ${#temporals.createNow().isBefore(#temporals.localDate(package.enddate))}" src="/images/userimg/packing.png">
+                                            <img th:if="${#temporals.createNow().isAfter(#temporals.localDate(package.enddate))}" src="/images/userimg/packwan.png">
+											-->
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <ul th:id="'addhugis'+${package.packagenum}" class="hidden">
+										<!--
+                                            <li>
+                                                <div class="upperhugi">
+                                                    <div>
+                                                        <img src="" alt="">
+                                                    </div>
+                                                    <div>id</div>
+                                                    <div>stars</div>
+                                                </div>
+                                                <div class="lowerhugi">
+                                                    ${reply.contents}
+                                                </div>
+                                            </li>
+											-->
+                                        </ul>
+                                    </div>
+                                    
+                                </li>
+                            </th:block>
+                            <th:block th:unless="${packagelist != null and packagelist.size > 0}">
+                                <li>
+                                    <div>
+                                        등록된 패키지가 없습니다.
+                                    </div>
+                                </li>
+                            </th:block>
+                        </ul>
+                    </div>
+                </div>
+                <div id="applyuserlist" class="hidden">
+                    <p class="subtitles">패키지 신청인원</p>
+                    <ul class="gmlists">
+                        <th:block th:if="${packagelist != null and packagelist.size > 0}">
+                            <li th:each="ply:${packagelist}">
+                                <div class="outerpckgs">
+									<div class="ingthumb">
+										<img src="/images/packageimg/384878.jpg">
+									</div>
+                                    <div class="mypckgs">[[${ply.packageTitle}]]</div>
+                                    <div class="showapplyusers" th:onclick="'showapply('+${ply.packagenum}+')'"></div>
+                                </div>
+                                <div th:id="${'myapplies'+ply.packagenum}">
+                                    <ul>
+                                        <!--
+                                        <li>
+                                            <div class="upperhugi">
+                                                <div>
+                                                    <img src="" alt="">
+                                                </div>
+                                                <div>id</div>
+                                                <div>stars</div>
+                                            </div>
+                                            <ul class="myapplyuserlist">
+                                                <li th:id="'appai'+${i}">
+                                                    <div>
+                                                        <div>이름, 회원여부</div>
+                                                        <div>인원, 전화번호, 결제수단</div>
+                                                    </div>
+                                                    <div>
+                                                        <input type="button" value="수락" th:onclick="'applycheck('+${reservationnum}+', accept)'">
+                                                        <input type="button" value="거절" th:onclick="'applycheck('+${reservationnum}+', reject)'">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        -->
+                                    </ul>
+                                    
+                                </div>
+                            </li>
+                        </th:block>
+                        <th:block th:unless="${packagelist != null and packagelist.size > 0}">
+                            <li>
+                                <div>
+                                    등록한 패키지가 없습니다.
+                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+            </section>
+        </container>
+    </div>
+</body>
+<script>
+    $("#showpackagelist").click(function (){
+        if($(this).hasClass("guide-selected")){
+            return;
+        }
+        
+		$("#showpackagelist").toggleClass("guide-selected");
+		$("#showapplylist").toggleClass("guide-selected");
+		$("#mypackagelist").toggleClass("guide-selected");
+		$("#mypackagelist").toggleClass("hidden");
+		$("#applyuserlist").toggleClass("guide-selected");
+		$("#applyuserlist").toggleClass("hidden");
+	})
+    
+    $("#showapplylist").click(function (){
+        if($(this).hasClass("guide-selected")){
+            return;
+        }
+        
+        $("#showpackagelist").toggleClass("guide-selected");
+        $("#showapplylist").toggleClass("guide-selected");
+        $("#mypackagelist").toggleClass("guide-selected");
+        $("#mypackagelist").toggleClass("hidden");
+        $("#applyuserlist").toggleClass("guide-selected");
+        $("#applyuserlist").toggleClass("hidden");		
+	})
+
+    let orgval = $('textarea[name="introduce"]').val();
+	$(".sogaetriger").click(function (){
+		$(".hiddens").toggleClass("sogehide");
+		$('textarea[name="introduce"]').prop('readonly',!$('textarea[name="introduce"]').prop('readonly'));
+		$('textarea[name="introduce"]').toggleClass("writing");
+		
+		if($(this).val()=="취소"){
+			$('textarea[name="introduce"]').val(orgval);
+		}
+	})
+	
+	function sogesubmit(){
+		const sogaeform = document.sogaeform;
+		sogaeform.submit();
+	}
+
+    //재작성 이동
+    function rewrite(packagenum) {
+        location.href = "";
+    }
+
+    //후기 보여주기
+    function showhugis(packagenum, diff) {
+        let hugilabel = document.getElementById("addhugis"+packagenum);
+		let curpage = hugilabel.value;
+		let tarpage = curpage+diff;
+		const parentnode = document.getElementById("addhugis"+packagenum);
+		
+		if(tarpage==0){
+			alert("첫 페이지입니다.");
+			return;
+		}
+		
+		$.ajax({
+			url: "/user/hugi?packagenum="+packagenum,
+			method: "GET",
+			
+			success:function(datas){
+				if(datas.length==0||datas==null){
+					alert("후기가 없어요");
+				} else{
+					parentnode.classList.toggle("hidden");
+					console.log(datas);
+					makeDOM(datas, 'hugi', parentnode);
+				}
+			},
+			
+			error:function(){
+				console.log("통신에러");
+			}
+		})
+    }
+
+    //신청리스트
+    function showapply(packagenum) {
+        
+    }
+
+    //승인, 거절
+    function applycheck(reservationnum) {
+        
+    }
+	
+	function makeDOM(datas, type, parentnode){
+		if(type=='hugi'){
+			for(let i in datas.reviewlist){
+				// 새로운 li 요소 생성
+				const newLi = document.createElement('li');
+				
+				// 새로운 div.upperhugi 요소 생성
+				const newUpperDiv = document.createElement('div');
+				newUpperDiv.classList.add('upperhugi');
+				
+				// 새로운 div 내부에 이미지 추가
+				const newImage = document.createElement('img');
+				newImage.src = "/user/thumbnail?sysname="+datas.thumbnaillist[i];
+				newUpperDiv.appendChild(newImage);
+				
+				// 새로운 id 요소 추가
+				const newIdDiv = document.createElement('div');
+				newIdDiv.textContent = datas.reviewlist[i].userid;
+				newUpperDiv.appendChild(newIdDiv);
+				
+				// 새로운 stars 요소 추가
+				const newStarsDiv = document.createElement('div');
+				newStarsDiv.textContent = '';
+				newUpperDiv.appendChild(newStarsDiv);
+				
+				// newLi에 newUpperDiv 추가
+				newLi.appendChild(newUpperDiv);
+				
+				// 새로운 div.lowerhugi 요소 생성
+				const newLowerDiv = document.createElement('div');
+				newLowerDiv.classList.add('lowerhugi');
+				newLowerDiv.textContent = datas.reviewlist[i].contents;
+				
+				// newLi에 newLowerDiv 추가
+				newLi.appendChild(newLowerDiv);
+				
+				parentnode.appendChild(newLi);
+			}
+			
+		} else if(type=='apply'){
+			
+		} else{
+			console.log("유효한 타입이 아닙니다");
+		}
+	}
+</script>
+</html>

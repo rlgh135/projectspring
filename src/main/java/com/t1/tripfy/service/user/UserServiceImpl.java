@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
+import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
@@ -159,5 +160,30 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean changeSogae(String userid, String introduce) {
 		return umapper.updateSogae(userid, introduce)==1;
+	}
+	
+	@Override
+	public List<PackageDTO> getMyPackages(long guidenum, Criteria cri) {
+		return pmapper.getMyPackages(guidenum, cri);
+	}
+	
+	@Override
+	public List<PackageDTO> getMyIngPackages(long guidenum, Criteria cri) {
+		return pmapper.getMyIngPackages(guidenum, cri);
+	}
+	
+	@Override
+	public int getTotalPackageCnt(long guidenum) {
+		return pmapper.getMyPackageCnt(guidenum);
+	}
+	
+	@Override
+	public int getTotalReview(long guidenum) {
+		return umapper.getTotalReviewCnt(guidenum);
+	}
+	
+	@Override
+	public List<ReviewDTO> getReviewByPackagenum(long packagenum) {
+		return umapper.getReviews(packagenum);
 	}
 }

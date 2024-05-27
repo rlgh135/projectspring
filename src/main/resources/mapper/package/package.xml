@@ -150,4 +150,21 @@
 	     INSERT INTO reservation (packagenum, adult_cnt, child_cnt, userid, phone, email, keycode, price, pay_method, isDelete)
 	     VALUES (#{packagenum}, #{adultCnt}, #{childCnt}, #{userid}, #{phone}, #{email}, #{keycode}, #{price}, #{payMethod}, #{isDelete})
 	 </insert>
+	 
+	 
+	 <select id="getMyPackages">
+		select * from package where
+		(guidenum=#{guidenum} and Visibility='O')
+		order by packagenum desc limit #{cri.startrow}, #{cri.amount}
+	 </select>
+	 
+	 <select id="getMyIngPackages">
+		select * from package where
+		(guidenum=#{guidenum} and Visibility = 'x')
+		order by packagenum desc limit #{cri.startrow}, #{cri.amount}
+	 </select>
+	 
+	 <select id="getMyPackageCnt">
+		select count(*) from package where guidenum=#{guidenum}
+	 </select>
 </mapper>

@@ -34,4 +34,11 @@
 	<delete id="deleteProfileimg">
 		delete from user_img where userid=#{userid}
 	</delete>
+	<select id="getTotalReviewCnt">
+		select count(*) from review where guidenum=#{guidenum}
+	</select>
+	<select id="getReviews">
+		select * from review where packagenum=#{packagenum}
+	</select>
+	
 </mapper>

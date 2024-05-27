@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
+import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
@@ -28,4 +29,9 @@ public interface UserService {
 	List<ReservationDTO> getMyReservation(Criteria cri, String userid);
 	PackageDTO getJoinPackage(long packagenum);
 	boolean changeSogae(String userid, String introduce);
+	List<PackageDTO> getMyPackages(long guidenum, Criteria cri);
+	List<PackageDTO> getMyIngPackages(long guidenum, Criteria cri);
+	int getTotalPackageCnt(long guidenum);
+	int getTotalReview(long guidenum);
+	List<ReviewDTO> getReviewByPackagenum(long packagenum);
 }

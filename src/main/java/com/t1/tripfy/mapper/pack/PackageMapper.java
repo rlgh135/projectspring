@@ -34,4 +34,9 @@ public interface PackageMapper {
 	List<PackageDTO> getAbroadCheapList(Criteria cri);
 	List<PackageDTO> getAbroadPopList(Criteria cri);
 	List<PackageDTO> getAbroadRecentList(Criteria cri);
+	
+	//가이드가 불러올 자신 패키지
+	List<PackageDTO> getMyPackages(long guidenum, Criteria cri);
+	List<PackageDTO> getMyIngPackages(long guidenum, Criteria cri);
+	int getMyPackageCnt(long guidenum);
 }
