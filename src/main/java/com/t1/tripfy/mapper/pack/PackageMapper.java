@@ -8,6 +8,7 @@ import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 
+
 @Mapper
 public interface PackageMapper {
 	int insertPack(PackageDTO pack);

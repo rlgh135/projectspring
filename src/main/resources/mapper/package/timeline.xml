@@ -3,8 +3,42 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.t1.tripfy.mapper.pack.TimelineMapper">
-	<insert id="insertFile">
+	<insert id="insertTimeline">
 		insert into timeline(packagenum,day,detail_num,title) 
 		values(#{packagenum},#{day},#{detailNum},#{title})
 	</insert>
+	<select id="getTlDayList">
+		select * from timeline
+		where packagenum = #{packagenum} and `day` = #{day}
+	</select>
+	
+	<select id="getLastDetailNum">
+		SELECT *
+		FROM timeline
+		WHERE packagenum = #{packagenum}
+		  AND `day` = #{day}
+		  AND detail_num = (
+		    SELECT MAX(detail_num)
+		    FROM timeline
+		    WHERE packagenum = #{packagenum}
+		    AND `day` = #{day}
+		  );
+	</select>
+	<select id="getTimeLineContent">
+		select contents
+		from timeline
+		where packagenum = #{packagenum} and `day` = #{day} and detail_num = #{detailNum}
+	</select>
+	
+	<update id="updateTimelineDetailNum">
+		UPDATE timeline
+		SET detail_num = detail_num - 1
+		WHERE packagenum = #{packagenum} AND `day` = #{day} AND detail_num > #{detailNum};
+	</update>
+	
+	<delete id="deleteTimelineByDayAndDetailNum">
+		delete from timeline
+		where packagenum = #{packagenum} and `day` = #{day} and detail_num = #{detailNum}
+	</delete>
+	
 </mapper>

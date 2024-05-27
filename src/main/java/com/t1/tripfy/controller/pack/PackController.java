@@ -219,9 +219,8 @@ public class PackController {
 	}
 	
 	@PostMapping(value="timelineRegist", consumes = "application/json", produces = "application/json;charset=utf-8")
-	public ResponseEntity<TimelineDTO> tlregist(@RequestBody TimelineDTO tl){
+	public ResponseEntity<TimelineDTO> tlRegist(@RequestBody TimelineDTO tl){
 		boolean result = service.tlregist(tl);
-		System.out.println(result);
 		if(result) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
@@ -229,15 +228,42 @@ public class PackController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	@PostMapping(value="timelineList", consumes = "application/json", produces = "application/json;charset=utf-8")
-	public ResponseEntity<TimelineDTO> regist(@RequestBody TimelineDTO tl){
-		boolean result = service.tlregist(tl);
-		System.out.println(result);
-		if(result) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
-		else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	
+	@GetMapping(value="timelineList", produces = "application/json;charset=utf-8")
+	public ResponseEntity<ArrayList<TimelineDTO>> timeLineDayList(@RequestParam long packagenum, @RequestParam int day){
+	    ArrayList<TimelineDTO> result = service.tlDayList(packagenum, day);
+	    if(result != null) {
+	        return new ResponseEntity<ArrayList<TimelineDTO>>(result, HttpStatus.OK);
+	    }
+	    else {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+	@GetMapping(value="getTimelineContent", produces = "application/json;charset=utf-8")
+	public ResponseEntity<String> getTimelineContent(@RequestParam long packagenum, @RequestParam int day, @RequestParam int detailNum) {
+		TimelineDTO tl = new TimelineDTO();
+		tl.setPackagenum(packagenum);
+		tl.setDay(day);
+		tl.setDetailNum(detailNum);
+	    String result = service.getTimelineContent(tl);
+	    System.out.println("컨트롤러에서 찍는 컨텐츠 = "+result);
+	    if(result.equals("")) {
+	        return new ResponseEntity<>(result, HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+
+	
+	@PostMapping(value="timelineDelete", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<TimelineDTO> deleteTimeline(@RequestBody TimelineDTO tl) {
+		System.out.println(tl);
+	    boolean deleted = service.deleteTimeline(tl);
+	    if (deleted) {
+	        return new ResponseEntity<>(HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
 }

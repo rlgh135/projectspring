@@ -114,7 +114,7 @@ CREATE TABLE `package` (
   `maxcnt` int,
   `adult_price` int,
   `child_price` int,
-  `startdate` DATE,
+  `startdate` VARCHAR(300),
   `enddate` VARCHAR(300),
   `tourdays` int,
   `viewcnt` bigint,

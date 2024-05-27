@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>타라2</title>
-    <link rel="stylesheet" href="/css/summernote/summernote.css">
+    <link rel="stylesheet" href="/css/summernote/summernote-lite.min.css">
     <link rel="stylesheet" href="/css/package/timelineWrite.css">
 </head>
 
@@ -74,6 +74,7 @@
 								             <div class="date_mm_dd"><span th:text="${dayMMdd[__${index-1}__]}"></span></div>
 								        </div>
 								    </div>
+									<div th:id="'day'+${index}+'-list'"></div>
 								    <div class="place_note_box" th:id="'day' + ${index}">
 								        <button class="place_btn" th:id="'openModalBtn' + ${index}">장소 추가</button>
 								    </div>
@@ -127,10 +128,14 @@
         </div>
     </div>
 </body>
+<script th:inline="javascript">
+	const packagenum = /*[[${packagenum}]]*/'';
+	const days = /*[[${pac.tourdays}]]*/'';
+</script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
 <script src="/js/package/markerimg.js"></script>
 <script src="/js/summernote/summernote-lite.min.js"></script>
 <script src="/js/summernote/summernote-ko-KR.js"></script>
-<script src="/js/package/timelineWrite.js"></script>
+<script th:src="@{/js/package/timelineWrite.js}"></script>
 </html>

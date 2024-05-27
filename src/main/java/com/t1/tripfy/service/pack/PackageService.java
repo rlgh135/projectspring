@@ -1,5 +1,6 @@
 package com.t1.tripfy.service.pack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -43,4 +44,10 @@ public interface PackageService {
 	String[] getDayMMdd(String startdate, String enddate);
 
 	boolean tlregist(TimelineDTO tl);
+	
+	ArrayList<TimelineDTO> tlDayList(long packagenum, int day);
+	
+	boolean deleteTimeline(TimelineDTO tl);
+
+	String getTimelineContent(TimelineDTO tl);
 }

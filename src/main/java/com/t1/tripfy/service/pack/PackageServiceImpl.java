@@ -233,5 +233,26 @@ public class PackageServiceImpl implements PackageService{
 	public boolean tlregist(TimelineDTO tl) {
 		return tmapper.insertTimeline(tl) == 1;
 	}
-
+	@Override
+	public ArrayList<TimelineDTO> tlDayList(long packagenum, int day) {
+		return tmapper.getTlDayList(packagenum, day);
+	}
+	@Override
+	public boolean deleteTimeline(TimelineDTO tl) {
+		if((tmapper.getLastDetailNum(tl)).getDetailNum() == tl.getDetailNum()) {
+			return tmapper.deleteTimelineByDayAndDetailNum(tl) == 1;
+		}
+		else {
+			if(tmapper.deleteTimelineByDayAndDetailNum(tl) == 1) {				
+				return tmapper.updateTimelineDetailNum(tl);	
+			}else {
+				return false;
+			}
+		}
+	}
+	@Override
+	public String getTimelineContent(TimelineDTO tl) {
+		System.out.println("컨텐츠 찍히나요?"+tmapper.getTimeLineContent(tl));
+		return tmapper.getTimeLineContent(tl);
+	}
 }

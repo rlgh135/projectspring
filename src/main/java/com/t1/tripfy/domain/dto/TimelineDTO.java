@@ -7,7 +7,7 @@ public class TimelineDTO {
 	private long timelinenum;
 	private long packagenum;
 	private int day;
-	private int detail_num;
+	private int detailNum;
 	private String title;
 	private String contents;
 }
