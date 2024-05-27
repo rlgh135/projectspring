@@ -11,6 +11,7 @@
     .wrap {
         width: 1400px;
         margin: 0 auto;
+		margin-top: 80px;
     }
 
 		
@@ -208,6 +209,7 @@
 </style>
 </head>
 <body>
+	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
     <div class="wrap">
 		
         <div class="main_photo">

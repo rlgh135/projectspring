@@ -36,7 +36,16 @@
 		<include refid="cri"></include>
 		<if test="keyword != null">(userid like('%${keyword}%') or title like('%${keyword}%') or content like('%${keyword}%')) and</if>
 		<if test="regionname != null">(regionname = #{regionname}) and</if>
-		<if test="countrycode != null">(countrycode = #{countrycode}) and</if>
+		<if test="countrycode != null">
+			<choose>
+				<when test="countrycode == 'fr'">
+					(countrycode != 'kr') and
+				</when>
+				<otherwise>
+					(countrycode = #{countrycode}) and					
+				</otherwise>
+			</choose>
+		</if>
 		boardnum > 0 order by boardnum desc limit #{startrow}, #{amount}
 	</select>
 	
@@ -53,7 +62,16 @@
 		<include refid="cri"></include>
 		<if test="keyword != null">(userid like('%${keyword}%') or title like('%${keyword}%') or content like('%${keyword}%')) and</if>
 		<if test="regionname != null">(regionname = #{regionname}) and</if>
-		<if test="countrycode != null">(countrycode = #{countrycode}) and</if>
+		<if test="countrycode != null">
+			<choose>
+				<when test="countrycode == 'fr'">
+					(countrycode != 'kr') and
+				</when>
+				<otherwise>
+					(countrycode = #{countrycode}) and					
+				</otherwise>
+			</choose>
+		</if>
 		boardnum > 0 order by likecnt desc limit #{startrow}, #{amount}
 	</select>	
 	
@@ -63,7 +81,16 @@
 		<include refid="cri"></include>
 		<if test="keyword != null">(userid like('%${keyword}%') or title like('%${keyword}%') or content like('%${keyword}%')) and</if>
 		<if test="regionname != null">(regionname = #{regionname}) and</if>
-		<if test="countrycode != null">(countrycode = #{countrycode}) and</if>
+		<if test="countrycode != null">
+			<choose>
+				<when test="countrycode == 'fr'">
+					(countrycode != 'kr') and
+				</when>
+				<otherwise>
+					(countrycode = #{countrycode}) and					
+				</otherwise>
+			</choose>
+		</if>
 		boardnum > 0 order by viewcnt desc limit #{startrow}, #{amount}
 	</select>	
 	
@@ -73,7 +100,16 @@
 		<include refid="cri"></include>
 		<if test="keyword != null">(userid like('%${keyword}%') or title like('%${keyword}%') or content like('%${keyword}%')) and</if>
 		<if test="regionname != null">(regionname = #{regionname}) and</if>
-		<if test="countrycode != null">(countrycode = #{countrycode}) and</if>
+		<if test="countrycode != null">
+			<choose>
+				<when test="countrycode == 'fr'">
+					(countrycode != 'kr') and
+				</when>
+				<otherwise>
+					(countrycode = #{countrycode}) and					
+				</otherwise>
+			</choose>
+		</if>
 		boardnum > 0
 	</select>
 	
