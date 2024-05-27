@@ -14,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kh.demo.domain.dto.ReplyDTO;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
-import com.t1.tripfy.domain.dto.pack.TimelineDTO;
+import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
-import com.t1.tripfy.mapper.user.UserMapper;
 import com.t1.tripfy.service.pack.PackageService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -141,15 +139,26 @@ public class PackController {
 		return "/package/timelineWrite";
 	}
 	
-	@PostMapping(value="regist", consumes = "application/json", produces = "application/json;charset=utf-8")
-	public ResponseEntity<TimelineDTO> regist(@RequestBody TimelineDTO tl){
-		TimelineDTO result = service.regist(tl);
+	@PostMapping(value="timelineRegist", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<TimelineDTO> tlregist(@RequestBody TimelineDTO tl){
+		boolean result = service.tlregist(tl);
 		System.out.println(result);
-		if(result == null) {
-			return new ResponseEntity<ReplyDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+		if(result) {
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		else {
-			return new ResponseEntity<ReplyDTO>(result,HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	@PostMapping(value="timelineList", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<TimelineDTO> regist(@RequestBody TimelineDTO tl){
+		boolean result = service.tlregist(tl);
+		System.out.println(result);
+		if(result) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

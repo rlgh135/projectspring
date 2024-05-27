@@ -346,37 +346,14 @@ $(document).ready(function() {
 		timelineService.insert(
 			{"packagenum":packagenum,"day":clickedDay,"detailNum":last_num2,"title":place_name2},
 			function(result){
-				//DOM
 				console.log(result);
+				geocodeLocationAndAddToDay(clickedDay, place_name2);
 				showDayList(packagenum,clickedDay);
 			}
 		)
         resetMapAndControls();
         modal.hide();
-        add_place_dom = generatePlaceDOM(place_name2, clickDay, last_num);
-
-
-        if(last_num >= 1){
-            let place_name1 = $('#'+clickedDay+'-'+last_num+' .place_name').text();
-            getDistance(place_name1, place_name2, function(distance) {
-                if (distance !== null) {
-                    add_place_between = generatePlaceBetweenDOM(distance.toFixed(2));
-                    add_place_dom = generatePlaceDOM(place_name2, clickedDay, last_num2);
-                    $('#day'+clickedDay).before(add_place_between);
-                    $('#day'+clickedDay).before(add_place_dom);
-                    geocodeLocationAndAddToDay(clickedDay, place_name2);
-                } else {
-                    console.error("잘못된 장소 이름이거나 API 키가 유효하지 않습니다.");
-                }
-            });
-        }
-        else{
-            $('#day'+clickDay).before(add_place_dom);
-            geocodeLocationAndAddToDay(clickDay, place_name2);
-        }
-        add_place_dom = "";
-        clickDay = "";
-        last_num = 0;
+        
         $('.place_select_btn').removeClass('on');
     })
 
@@ -557,9 +534,7 @@ function showDayList(packagenum,day){
 		timelineService.get(
 			{"packagenum":packagenum,"day":day},
 			function(result){
-				//DOM
-				console.log(result);
-				
+								
 			}
 		)
 	}

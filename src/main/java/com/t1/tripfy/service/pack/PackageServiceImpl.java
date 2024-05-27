@@ -20,9 +20,11 @@ import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
+import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.mapper.pack.PackageFileMapper;
 import com.t1.tripfy.mapper.pack.PackageMapper;
+import com.t1.tripfy.mapper.pack.TimelineMapper;
 import com.t1.tripfy.mapper.user.UserMapper;
 
 @Service
@@ -37,6 +39,8 @@ public class PackageServiceImpl implements PackageService{
 	private UserMapper umapper;
 	@Autowired
 	private PackageFileMapper pfmapper;
+	@Autowired
+	private TimelineMapper tmapper;
 	
 	@Override
 	public boolean regist(PackageDTO pack, MultipartFile file) throws Exception {
@@ -195,5 +199,9 @@ public class PackageServiceImpl implements PackageService{
 
         return dayList.toArray(new String[0]);
     }
+	@Override
+	public boolean tlregist(TimelineDTO tl) {
+		return tmapper.insertTimeline(tl) == 1;
+	}
 
 }
