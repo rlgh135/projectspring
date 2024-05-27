@@ -47,11 +47,208 @@ $(document).ready(function() {
             </div>
         </div>
     </div>`;
+    //해외구현할거
+    const modalContentOverseas =`
+    <div id="modalContent">
+        <div class="head_area">
+            <div class="backButton" id="c1"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
+            <div class="head_text">지역 선택<span>(필수)</span></div>
+            <div id="modalCloseButton">
+                <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
+            </div>
+        </div>         
+        <div class="text_area">
+            <h2>어디로<br>가시나요?</h2>
+        </div>
+        <div class="body_area">
+            <div class="dno">
+                <button class="country overseas" data-country="ea">동남아</button>
+                <button class="country overseas" data-country="gu">괌/사이판/호주/뉴질랜드</button>
+                <button class="country overseas" data-country="jp">일본</button>
+                <button class="country overseas" data-country="cn">중국</button>
+                <button class="country overseas" data-country="eu">유럽</button>
+                <button class="country overseas" data-country="us">하와이/미국/중남미</button>
+            </div>
+        </div>
+    </div>`;
+    //해외 지역들 구현해야함
+    const modalContentOverSeaRegion = {
+        "ea": `
+	    <div id="modalContent">
+	        <div class="head_area">
+	            <div class="backButton" id="cor"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
+	            <div class="head_text">지역 선택<span>(필수)</span></div>
+	            <div id="modalCloseButton">
+	                <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
+	            </div>
+	        </div>         
+	        <div class="text_area">
+	            <h2>어디로<br>가시나요?</h2>
+	        </div>
+	        <div class="body_area">
+	            <div class="dno">
+	                <button type="button" class="overregion" data-overregion="태국">태국</button>
+	                <button type="button" class="overregion" data-overregion="베트남">베트남</button>
+	                <button type="button" class="overregion" data-overregion="필리핀">필리핀</button>
+	                <button type="button" class="overregion" data-overregion="싱가폴">싱가폴</button>
+	                <button type="button" class="overregion" data-overregion="말레이시아">말레이시아</button>
+	                <button type="button" class="overregion" data-overregion="캄보디아">캄보디아</button>
+	         	</div>
+	        </div>
+	    </div>`,
+        "gu": `
+        <div id="modalContent">
+	        <div class="head_area">
+	            <div class="backButton" id="cor"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
+	            <div class="head_text">지역 선택<span>(필수)</span></div>
+	            <div id="modalCloseButton">
+	                <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
+	            </div>
+	        </div>         
+	        <div class="text_area">
+	            <h2>어디로<br>가시나요?</h2>
+	        </div>
+	        <div class="body_area">
+	            <div class="dno">
+	                <button type="button" class="overregion" data-overregion="괌">괌</button>
+	                <button type="button" class="overregion" data-overregion="사이판">사이판</button>
+	                <button type="button" class="overregion" data-overregion="호주">호주</button>
+	                <button type="button" class="overregion" data-overregion="뉴질랜드">뉴질랜드</button>
+	            </div>
+	        </div>
+    	</div>`,
+        "jp": `
+        <div id="modalContent">
+	        <div class="head_area">
+	            <div class="backButton" id="cor"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
+	            <div class="head_text">지역 선택<span>(필수)</span></div>
+	            <div id="modalCloseButton">
+	                <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
+	            </div>
+	        </div>         
+	        <div class="text_area">
+	            <h2>어디로<br>가시나요?</h2>
+	        </div>
+	        <div class="body_area">
+	            <div class="dno">
+	                <button type="button" class="overregion" data-overregion="오사카">오사카</button>
+	                <button type="button" class="overregion" data-overregion="캄보디아">후쿠오카</button>
+	                <button type="button" class="overregion" data-overregion="도쿄">도쿄</button>
+	                <button type="button" class="overregion" data-overregion="교토">교토</button>
+	                <button type="button" class="overregion" data-overregion="삿포로">삿포로</button>
+	            </div>
+	        </div>
+    	</div>`,
+        "cn": `
+        <div id="modalContent">
+	        <div class="head_area">
+	            <div class="backButton" id="cor"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
+	            <div class="head_text">지역 선택<span>(필수)</span></div>
+	            <div id="modalCloseButton">
+	                <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
+	            </div>
+	        </div>         
+	        <div class="text_area">
+	            <h2>어디로<br>가시나요?</h2>
+	        </div>
+	        <div class="body_area">
+	        	<div class="dno">
+	                <button type="button" class="overregion" data-overregion="하이난">하이난</button>
+	                <button type="button" class="overregion" data-overregion="청도">청도</button>
+	                <button type="button" class="overregion" data-overregion="베이징">베이징</button>
+	                <button type="button" class="overregion" data-overregion="장가계">장가계</button>
+	            </div>
+	        </div>
+    	</div>`,
+        "eu": `
+		<div id="modalContent">
+	        <div class="head_area">
+	            <div class="backButton" id="cor"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
+	            <div class="head_text">지역 선택<span>(필수)</span></div>
+	            <div id="modalCloseButton">
+	                <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
+	            </div>
+	        </div>         
+	        <div class="text_area">
+	            <h2>어디로<br>가시나요?</h2>
+	        </div>
+	        <div class="body_area">
+	        	<div class="dno">
+	                <button type="button" class="overregion" data-overregion="프랑스">프랑스</button>
+	                <button type="button" class="overregion" data-overregion="영국">영국</button>
+	                <button type="button" class="overregion" data-overregion="이탈리아">이탈리아</button>
+	                <button type="button" class="overregion" data-overregion="스페인">스페인</button>
+	                <button type="button" class="overregion" data-overregion="독일">독일</button>
+	                <button type="button" class="overregion" data-overregion="스위스">스위스</button>
+	                <button type="button" class="overregion" data-overregion="핀란드">핀란드</button>
+	                <button type="button" class="overregion" data-overregion="노르웨이">노르웨이</button>
+	                <button type="button" class="overregion" data-overregion="그리스">그리스</button>
+	                <button type="button" class="overregion" data-overregion="포르투갈">포르투갈</button>
+	            </div>
+	        </div>
+    	</div>`,
+        "us": `
+		<div id="modalContent">
+	        <div class="head_area">
+	            <div class="backButton" id="cor"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
+	            <div class="head_text">지역 선택<span>(필수)</span></div>
+	            <div id="modalCloseButton">
+	                <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
+	            </div>
+	        </div>         
+	        <div class="text_area">
+	            <h2>어디로<br>가시나요?</h2>
+	        </div>
+	        <div class="body_area">
+	        	<div class="dno">
+	                <button type="button" class="overregion" data-overregion="하와이">하와이</button>
+	                <button type="button" class="overregion" data-overregion="미동부">미 동부</button>
+	                <button type="button" class="overregion" data-overregion="미서부">미 서부</button>
+	                <button type="button" class="overregion" data-overregion="캐나다">캐나다</button>
+	                <button type="button" class="overregion" data-overregion="중남미">중남미</button>
+	            </div>
+	        </div>
+    	</div>`
+    };
     //달력 돔
     const modalContent3 =`
     <div id="modalContent">
         <div class="head_area">
             <div class="backButton" id="c2"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
+            <div class="head_text">날짜 선택<span>(필수)</span></div>
+            <div id="modalCloseButton">
+                <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
+            </div>
+        </div>         
+        <div class="text_area">
+            <h2>언제<br>가시나요?</h2>
+        </div>
+        <div class="body_area" style="margin-top:50px;">
+            <form autocomplete="off">
+                <div class="flex-row d-flex justify-content-center">
+                    <div class="col-lg-6 col-11 px-1">
+                        <div class="input-group input-daterange">
+                            <input type="text" id="start" class="form-control text-left mr-2">
+                            <label class="ml-3 form-control-placeholder" id="start-p" for="start">시작</label>
+                            <span class="fa fa-calendar" id="fa-1"></span>
+                            <input type="text" id="end" class="form-control text-left ml-2">
+                            <label class="ml-3 form-control-placeholder" id="end-p" for="end">종료</label>
+                            <span class="fa fa-calendar" id="fa-2"></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="nxt_btn_area">
+              <p class="notice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#1976D2"></circle><path d="M11.2485 14.0939H12.7336L13.0422 7.88978L13.1194 6.05957H10.8821L10.9399 7.88978L11.2485 14.0939ZM11.9814 17.9404C12.8301 17.9404 13.4858 17.4286 13.4858 16.6996C13.4858 15.9706 12.8301 15.4278 11.9814 15.4278C11.1521 15.4278 10.5156 15.9706 10.5156 16.6996C10.5156 17.4286 11.1521 17.9404 11.9814 17.9404Z" fill="white"></path></svg>시작일은 현재일 기준 8일 이후부터 가능합니다</p>
+              <button class="nxt_btn" id="nextButton">다음</button>
+            </div>
+        </div>
+    </div>`;
+    //해달력 돔
+    const modalContentovercal =`
+    <div id="modalContent">
+        <div class="head_area">
+            <div class="backButton" id="covercal"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(0deg); cursor: pointer;"><path d="M16 3L7 12L16 21" stroke="#000" stroke-width="1.5"></path></svg></div>
             <div class="head_text">날짜 선택<span>(필수)</span></div>
             <div id="modalCloseButton">
                 <svg width="24" height="24" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.00098L12 12.001" stroke="#000"></path><path d="M12 1.00098L1 12.001" stroke="#000"></path></svg>
@@ -204,18 +401,49 @@ $(document).ready(function() {
             $('#countrycode').val('kr');
             modal.html(modalContent2);
         } else if ($(this).hasClass("overseas")) {
-            modal.html("<h2>해외로 이동합니다.</h2>");
+            modal.html(modalContentOverseas);
         }
     });
+
+    
+    modal.on('click', '.overseas', function() {
+	    const region = $(this).data('country');
+	    console.log(region);
+	    selectedRegion = region; // 선택된 지역 정보를 전역 변수에 저장
+	    $('#countrycode').val(region);
+    	modal.html(modalContentOverSeaRegion[region]);	
+    
+	});
+
+   
+    modal.on('click', '.region', function() {
+        // 다음 단계 모달 콘텐츠로 변경 (날짜 선택 등)
+        modal.html(modalContent3);
+    });
+    modal.on('click', '.overregion', function() {
+        const region = $(this).data('overregion');
+	    console.log(region);
+	    $('#regionname').val(region);
+        modal.html(modalContentovercal);
+        datepicker();
+    });
+	let selectedRegion;
     //돌아가기 나누기
     modal.on('click', '.backButton', function(){
         const btnId = $(this).attr('id');
+        
         if(btnId === 'c1'){
             $('#countrycode').val('');
             modal.html(modalContent1);
         }else if(btnId === 'c2'){
             $('#regionname').val('');
             modal.html(modalContent2);
+        }else if(btnId === 'cor'){
+			 $('#countrycode').val('');
+            modal.html(modalContentOverseas);    
+        } else if(btnId === 'covercal'){		
+        	$('#countrycode').val('');
+        	modal.html(modalContentOverSeaRegion[selectedRegion]); 
         }else if(btnId === 'c3'){
             $('#startdate').val('');
             $('#enddate').val('');

@@ -322,9 +322,12 @@ body{
 } 
 .thumbnail{
     width: 200px;
+    height: 100px;
+    overflow: hidden;
 }
 .thumbnail img{
     width: 100%;
+    height: 100%;
     border-radius: 20px;
 }
 .info { 
@@ -332,7 +335,13 @@ body{
     margin-left: 30px;
 }
 .price{
-    margin-left: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+     
+}
+.price h3{
+	font-size: 25px;
 }
 
 .hide{

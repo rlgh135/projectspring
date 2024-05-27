@@ -96,9 +96,9 @@
 						<div class="listok">
                         <div th:if="${list != null and list.size() > 0}" th:each="board:${list}" class="package">
                             <a th:href="@{/package/pget(packagenum=${board.packagenum})}">
-                            <div class="thumbnail">
-                                <img src="/images/packageimg/384878.jpg" alt="">
-                            </div>
+								<div class="thumbnail" th:each="file : ${file}" th:if="${file.packagenum == board.packagenum}">
+									<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
+								</div>
                             <div class="info">
                                 <h3>[[${board.packageTitle}]]</h3>
                                 <p>[[${board.packageContent}]]</p>
@@ -133,7 +133,7 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <script>
     flatpickr("#startDateInput", {
         mode: "range",

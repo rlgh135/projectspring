@@ -1,6 +1,9 @@
 package com.t1.tripfy.service.pack;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +16,11 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -175,6 +183,28 @@ public class PackageServiceImpl implements PackageService{
 	public void saveReservation(ReservationDTO reservationDTO) {
         pmapper.saveReservation(reservationDTO);
     }
+	//새로 추가
+		@Override
+		public List<PackageFileDTO> getFiles(long packagenum) {
+			return pfmapper.getFiles(packagenum);
+		}
+		
+		@Override
+		public ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception {
+			//경로에 관련된 객체(자원으로 가지고 와야 하는 파일에 대한 경로)
+			Path path = Paths.get(saveFolder+systemname);
+			System.out.println(path);
+			//경로에 있는 파일의 MIME 타입을 조사해서 그대로 담기
+			String contentType = Files.probeContentType(path);
+			//응답 헤더 생성
+			HttpHeaders headers = new HttpHeaders();
+			headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+			
+			//해당 경로(path)에 있는 파일로부터 뻗어나오는 InputStream*Files.newInputStream(path)을
+			//통해 자원화*new InputStreamResource()
+			Resource resource = new InputStreamResource(Files.newInputStream(path));
+			return new ResponseEntity<>(resource,headers,HttpStatus.OK);
+		}
 	@Override
 	public String[] getDayMMdd(String startdate, String enddate) {
         List<String> dayList = new ArrayList<>();

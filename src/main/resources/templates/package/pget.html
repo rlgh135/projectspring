@@ -11,9 +11,9 @@
     <div id="wrap" class="get">
         <div class="body_container">
             <div class="packageinfo">
-                <div class="pthumbnail">
-                    <img src="/images/packageimg/KakaoTalk_Photo_2024-02-08-10-18-29 001.jpeg" alt="">
-                </div>
+				<div class="pthumbnail" th:each="file : ${files}">
+				    <img th:src="${'/package/thumbnail?systemname=' + file.pfSysname}" alt="">
+				</div>
                 <div class="pinfo">
                     <div class="p_info">
                         <div class="p_title">

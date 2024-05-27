@@ -142,9 +142,9 @@
 						<div class="listok">
                         <div th:if="${list != null and list.size() > 0}" th:each="board:${list}" class="package">
                             <a th:href="@{/package/pget(packagenum=${board.packagenum})}">
-                            <div class="thumbnail">
-                                <img src="/images/packageimg/384878.jpg" alt="">
-                            </div>
+								<div class="thumbnail" th:each="file : ${file}" th:if="${file.packagenum == board.packagenum}">
+									<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
+								</div>
                             <div class="info">
                                 <h3>[[${board.packageTitle}]]</h3>
                                 <p>[[${board.packageContent}]]</p>
@@ -257,7 +257,7 @@
 		const dlButtons = document.querySelectorAll(".RightDepth1");
 			dlButtons.forEach(function(button) {
 			    button.addEventListener("click", function() {
-			        const destination = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+					const destination = this.textContent.replace(/\s+/g, ''); // 버튼의 텍스트를 가져옴
 			        const desChoiceSpan = document.getElementById("desChoice");
 			        desChoiceSpan.textContent = destination; // 목적지 텍스트 업데이트
 			        document.getElementById("destinationInput").value = destination; // 폼에 목적지 업데이트

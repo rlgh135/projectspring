@@ -2,11 +2,14 @@ package com.t1.tripfy.service.pack;
 
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 
@@ -33,6 +36,10 @@ public interface PackageService {
 
 	void saveReservation(ReservationDTO reservationDTO);
 
+	//추가
+	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;
+	List<PackageFileDTO>getFiles(long packagenum);
+	
 	String[] getDayMMdd(String startdate, String enddate);
 
 	boolean tlregist(TimelineDTO tl);

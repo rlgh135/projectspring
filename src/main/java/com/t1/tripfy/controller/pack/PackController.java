@@ -1,5 +1,6 @@
 package com.t1.tripfy.controller.pack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.service.pack.PackageService;
@@ -32,39 +34,107 @@ public class PackController {
 	private PackageService service;
 	
 	@GetMapping("pmain")
-	public void main(Criteria cri,Model model) {
-		List<PackageDTO> recent = service.getRecentList(cri);
-		System.out.println(recent);
-		List<PackageDTO> cheap = service.getCheapList(cri);
-		System.out.println(cheap);
-		List<PackageDTO> pop = service.getPopList(cri);
-		System.out.println(pop);
-//		List<PackageDTO> popguide = service.getPopularGuideList(cri);
-		model.addAttribute("recent", recent);
-		model.addAttribute("cheap", cheap);
-		model.addAttribute("pop",pop);
-//		model.addAttribute("popguide",popguide);
+	public void main(Criteria cri, Model model,HttpServletRequest req) {
+		List<PackageFileDTO> allRfiles = new ArrayList<>();
+		List<PackageFileDTO> allCfiles = new ArrayList<>();
+		List<PackageFileDTO> allPfiles = new ArrayList<>();
+		
+	    List<PackageDTO> recent = service.getRecentList(cri);
+
+	    for (PackageDTO pack : recent) {
+	        long rpackagenum = pack.getPackagenum();
+	        System.out.println("최신 :" + rpackagenum);
+	        List<PackageFileDTO> rfile = service.getFiles(rpackagenum);
+	        System.out.println(rfile);
+	        allRfiles.addAll(rfile);
+	    }
+
+	    List<PackageDTO> cheap = service.getCheapList(cri);
+	    for (PackageDTO pack : cheap) {
+	        long cpackagenum = pack.getPackagenum();
+	        System.out.println("최신 :" + cpackagenum);
+	        List<PackageFileDTO> cfile = service.getFiles(cpackagenum);
+	        System.out.println(cfile);
+	        allCfiles.addAll(cfile);
+	    }
+	    List<PackageDTO> pop = service.getPopList(cri);
+	    for (PackageDTO pack : pop) {
+	        long ppackagenum = pack.getPackagenum();
+	        System.out.println("최신 :" + ppackagenum);
+	        List<PackageFileDTO> pfile = service.getFiles(ppackagenum);
+	        System.out.println(pfile);
+	        allPfiles.addAll(pfile);
+	    }
+
+	    model.addAttribute("recent", recent);
+	    model.addAttribute("cheap", cheap);
+	    model.addAttribute("pop", pop);
+	    model.addAttribute("rfile", allRfiles);
+	    model.addAttribute("cfile", allCfiles);
+	    model.addAttribute("pfile", allPfiles);
 	}
+
 	@GetMapping("abroadmain")
 	public void abroadmain(Criteria cri,Model model) {
+		
+		List<PackageFileDTO> allRfiles = new ArrayList<>();
+		List<PackageFileDTO> allCfiles = new ArrayList<>();
+		List<PackageFileDTO> allPfiles = new ArrayList<>();
+		
 		List<PackageDTO> recent = service.getAbroadRecentList(cri);
 		System.out.println(recent);
+		  for (PackageDTO pack : recent) {
+		        long rpackagenum = pack.getPackagenum();
+		        System.out.println("최신 :" + rpackagenum);
+		        List<PackageFileDTO> rfile = service.getFiles(rpackagenum);
+		        System.out.println(rfile);
+		        allRfiles.addAll(rfile);
+		    }
 		List<PackageDTO> cheap = service.getAbroadCheapList(cri);
 		System.out.println(cheap);
+		for (PackageDTO pack : cheap) {
+	        long cpackagenum = pack.getPackagenum();
+	        System.out.println("최신 :" + cpackagenum);
+	        List<PackageFileDTO> cfile = service.getFiles(cpackagenum);
+	        System.out.println(cfile);
+	        allCfiles.addAll(cfile);
+	    }
+		
 		List<PackageDTO> pop = service.getAbroadPopList(cri);
 		System.out.println(pop);
+		
+		for (PackageDTO pack : pop) {
+		    long ppackagenum = pack.getPackagenum();
+		    System.out.println("최신 :" + ppackagenum);
+		    List<PackageFileDTO> pfile = service.getFiles(ppackagenum);
+		    System.out.println(pfile);
+		    allPfiles.addAll(pfile);
+		}
+	
 //		List<PackageDTO> popguide = service.getPopularGuideList(cri);
 		model.addAttribute("recent", recent);
 		model.addAttribute("cheap", cheap);
 		model.addAttribute("pop",pop);
 //		model.addAttribute("popguide",popguide);
+	    model.addAttribute("rfile", allRfiles);
+	    model.addAttribute("cfile", allCfiles);
+	    model.addAttribute("pfile", allPfiles);
 	}
 	
 	
 	@GetMapping(value={"plist","abroadlist"})
 	public void list(Criteria cri, Model model) {
 	    System.out.println(cri);
+	    List<PackageFileDTO> allfiles = new ArrayList<>();
 	    List<PackageDTO> list = service.getDetailRegionList(cri);
+	    for (PackageDTO pack : list) {
+		    long ppackagenum = pack.getPackagenum();
+		    System.out.println("최신 :" + ppackagenum);
+		    List<PackageFileDTO> lfile = service.getFiles(ppackagenum);
+		    System.out.println(lfile);
+		    allfiles.addAll(lfile);
+		}
+	    model.addAttribute("file", allfiles);
 	    model.addAttribute("list", list);
 	    model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
 	}
@@ -78,7 +148,9 @@ public class PackController {
 		PackageDTO pack = service.getDetail(packagenum);
 		System.out.println(pack+"안뜨나?");
 		model.addAttribute("package",pack);
-		//model.addAttribute("files",service.getFiles(boardnum));
+		
+		
+		model.addAttribute("files",service.getFiles(packagenum));
 		String loginUser = (String)session.getAttribute("loginUser");
 		
 		if(requestURI.contains("modify")) {

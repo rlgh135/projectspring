@@ -139,17 +139,31 @@ button{
 }
 .rp_img{
     width:100%;
-    height: 150px;
+    height: 170px;
 }
-.rp_img img{
+.imgbox{
+	width: 100%;
+	height: 170px;
+	overflow: hidden;
+}
+.imgbox img{
     width: 100%;
-    border-radius: 8% 8% 0 0;
+   
+
+    border-radius: 5% 5% 0 0;  
 }
 .rp_info{
     width: 80%;
     margin: 0 auto;
     height: 90px;
     margin-top: 45px;
+    overflow: hidden;
+}
+.rp_title h3{
+	font-size: 25px;
+}
+.rprice h3{
+	font-size: 20px;
 }
 
 .rprice{
@@ -183,19 +197,22 @@ button{
 }
 .pp_img{
     width:100%;
-    height: 150px;
+    height: 170px;
 }
-.pp_img img{
-    width: 100%;
-    border-radius: 8% 8% 0 0;
-}
+
 .pp_info{
     width: 80%;
     margin: 0 auto;
     height: 90px;
     margin-top: 45px;
+    overflow: hidden;
 }
-
+.pp_title h3{
+	font-size: 25px;
+}
+.pprice h3{
+	font-size: 20px;
+}
 .pprice{
     width: 80%;
     margin: 0 auto;
@@ -228,19 +245,22 @@ button{
 }
 .cp_img{
     width:100%;
-    height: 150px;
+    height: 170px;
 }
-.cp_img img{
-    width: 100%;
-    border-radius: 8% 8% 0 0;
-}
+
 .cp_info{
     width: 80%;
     margin: 0 auto;
     height: 90px;
     margin-top: 45px;
+    overflow: hidden;
 }
-
+.cp_title h3{
+	font-size: 25px;
+}
+.cprice h3{
+	font-size: 20px;
+}
 .cprice{
     width: 80%;
     margin: 0 auto;
