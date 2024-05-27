@@ -49,5 +49,7 @@ public interface PackageService {
 	
 	boolean deleteTimeline(TimelineDTO tl);
 
-	String getTimelineContent(TimelineDTO tl);
+	TimelineDTO getTimelineContent(TimelineDTO tl);
+
+	boolean tlUpdateContents(TimelineDTO tl);
 }

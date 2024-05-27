@@ -25,7 +25,7 @@
 		  );
 	</select>
 	<select id="getTimeLineContent">
-		select contents
+		select *
 		from timeline
 		where packagenum = #{packagenum} and `day` = #{day} and detail_num = #{detailNum}
 	</select>
@@ -34,6 +34,11 @@
 		UPDATE timeline
 		SET detail_num = detail_num - 1
 		WHERE packagenum = #{packagenum} AND `day` = #{day} AND detail_num > #{detailNum};
+	</update>
+	<update id="tlUpdateContents">
+		UPDATE timeline
+		SET contents = #{contents}
+		WHERE packagenum = #{packagenum} and `day` = #{day} and detail_num = #{detailNum}
 	</update>
 	
 	<delete id="deleteTimelineByDayAndDetailNum">

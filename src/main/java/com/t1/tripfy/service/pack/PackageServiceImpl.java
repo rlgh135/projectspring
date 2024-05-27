@@ -251,8 +251,11 @@ public class PackageServiceImpl implements PackageService{
 		}
 	}
 	@Override
-	public String getTimelineContent(TimelineDTO tl) {
-		System.out.println("컨텐츠 찍히나요?"+tmapper.getTimeLineContent(tl));
+	public TimelineDTO getTimelineContent(TimelineDTO tl) {
 		return tmapper.getTimeLineContent(tl);
+	}
+	@Override
+	public boolean tlUpdateContents(TimelineDTO tl) {
+		return tmapper.tlUpdateContents(tl) == 1;
 	}
 }

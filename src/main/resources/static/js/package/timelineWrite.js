@@ -31,8 +31,7 @@ $(document).ready(function() {
         timelineService.getContent(
 			{"packagenum":packagenum,"day":thisDay,"detailNum":thisDetailNum},
 			function(result){
-				console.log(result);
-				$('#summernote').html(result);
+				$("#summernote").summernote("code",result.contents);
 			}
 		)
     })
@@ -40,13 +39,21 @@ $(document).ready(function() {
     //썸머노트 취소버튼클릭
     $(document).on("click", "#cancelButton", function(){
         contentModal.hide();
-        // $('#summernote').summernote('code',"");
     })
     
     //썸머노트 작성버튼 클릭시
-    $(document).on("click", "#cancelButton", function(){
+    $(document).on("click", "#submitButton", function(){
+	    let thisDay = ($(".this_day .coqSbM").text()).substring(3);
+	    let thisDetailNum = $(".McDetail_num p span").text();
+	    let contents = $("#summernote").summernote("code");
+	    console.log(thisDay+thisDetailNum+contents)
+        timelineService.updateContents(
+			{"packagenum":packagenum,"day":thisDay,"detailNum":thisDetailNum,"contents":contents},
+			function(result){
+				console.log(result);
+			}
+		)
         contentModal.hide();
-        // $('#summernote').summernote('code',"");
     })
 
     //썸머노트 설정값
@@ -566,10 +573,10 @@ const timelineService = {
 				}
 			})
 		},
-		update:function(data, callback){
+		updateContents:function(data, callback){
 			$.ajax({
 				type:"PUT",
-				url:"/package/timelineUpdate",
+				url:"/package/timelineContentsUpdate",
 				data:JSON.stringify(data),
 				contentType:"application/json;charset=utf-8",
 				success:function(result){

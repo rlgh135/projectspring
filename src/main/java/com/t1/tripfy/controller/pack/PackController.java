@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -241,15 +242,14 @@ public class PackController {
 	}
 	
 	@GetMapping(value="getTimelineContent", produces = "application/json;charset=utf-8")
-	public ResponseEntity<String> getTimelineContent(@RequestParam long packagenum, @RequestParam int day, @RequestParam int detailNum) {
+	public ResponseEntity<TimelineDTO> getTimelineContent(@RequestParam long packagenum, @RequestParam int day, @RequestParam int detailNum) {
 		TimelineDTO tl = new TimelineDTO();
 		tl.setPackagenum(packagenum);
 		tl.setDay(day);
 		tl.setDetailNum(detailNum);
-	    String result = service.getTimelineContent(tl);
-	    System.out.println("컨트롤러에서 찍는 컨텐츠 = "+result);
-	    if(result.equals("")) {
-	        return new ResponseEntity<>(result, HttpStatus.OK);
+	    TimelineDTO result = service.getTimelineContent(tl);
+	    if(result != null) {
+	        return new ResponseEntity<TimelineDTO>(result, HttpStatus.OK);
 	    } else {
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
@@ -264,6 +264,16 @@ public class PackController {
 	        return new ResponseEntity<>(HttpStatus.OK);
 	    } else {
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+	@PutMapping(value="timelineContentsUpdate", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<Void> tlUpdateContents(@RequestBody TimelineDTO tl) {
+	    boolean result = service.tlUpdateContents(tl);
+	    if (result) {
+	        return ResponseEntity.ok().build(); // 200 OK 상태 코드 반환
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 내부 서버 오류 상태 코드 반환
 	    }
 	}
 }

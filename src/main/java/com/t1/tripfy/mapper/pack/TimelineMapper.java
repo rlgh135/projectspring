@@ -14,7 +14,8 @@ public interface TimelineMapper {
 	int deleteTimelineByDayAndDetailNum(TimelineDTO tl);
 	boolean updateTimelineDetailNum(TimelineDTO tl);
 	TimelineDTO getLastDetailNum(TimelineDTO tl);
-	String getTimeLineContent(TimelineDTO tl);
+	TimelineDTO getTimeLineContent(TimelineDTO tl);
+	int tlUpdateContents(TimelineDTO tl);
 }
 
 
