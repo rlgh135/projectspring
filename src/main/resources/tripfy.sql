@@ -115,7 +115,7 @@ CREATE TABLE `package` (
   `startdate` VARCHAR(300),
   `enddate` VARCHAR(300),
   `tourdays` int,
-  `viewcnt` bigint,
+  `viewcnt` bigint default 0,
   `deadline` date NOT NULL,
   `isdelete` int DEFAULT 0,
   `regionname` varchar(300),
