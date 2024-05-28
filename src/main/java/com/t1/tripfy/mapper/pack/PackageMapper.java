@@ -28,7 +28,7 @@ public interface PackageMapper {
 	
 	int updatePack(PackageDTO pack);
 	int deletePack(long packagenum);	
-	int updateReadCount(@Param("packagenum")long packagenum,@Param("viewcnt") long readcount);
+	int updateReadCount(@Param("packagenum")long packagenum,@Param("viewcnt") long viewcnt);
 	
 	void saveReservation(ReservationDTO reservation);
 	
