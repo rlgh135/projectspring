@@ -206,7 +206,6 @@ body{
 	margin-top: 15px;
 }
 .gmlists > li{
-	height: 80px;
 	margin-top: 5px;
 	cursor: pointer;
 }
@@ -236,8 +235,24 @@ body{
 }
 
 /*리뷰*/
+.upperhugi {
+	display: flex;
+	gap: 10px;
+}
 .upperhugi > img{
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
 }
+.upperhugi > div{
+	line-height: 50px;	
+}
+.gmlists > li >div:last-child > ul {
+	width: 860px;
+	display: flex;
+	gap: 20px;
+	flex-wrap: wrap;
+}
+.gmlists > li >div > ul > li{
+	width: 400px;
+} 

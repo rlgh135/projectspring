@@ -186,4 +186,14 @@ public class UserServiceImpl implements UserService{
 	public List<ReviewDTO> getReviewByPackagenum(long packagenum) {
 		return umapper.getReviews(packagenum);
 	}
+	
+	@Override
+	public List<ReservationDTO> getApplyByPackagenum(long packagenum) {
+		return resmapper.getApply(packagenum);
+	}
+	
+	@Override
+	public boolean changeApplyCansle(long reservationnum, int isdelete) {
+		return resmapper.changeIsdelete(reservationnum, isdelete)==1;
+	}
 }

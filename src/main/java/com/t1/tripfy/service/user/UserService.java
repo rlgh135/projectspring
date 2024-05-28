@@ -34,4 +34,6 @@ public interface UserService {
 	int getTotalPackageCnt(long guidenum);
 	int getTotalReview(long guidenum);
 	List<ReviewDTO> getReviewByPackagenum(long packagenum);
+	List<ReservationDTO> getApplyByPackagenum(long packagenum);
+	boolean changeApplyCansle(long reservationnum, int tf);
 }

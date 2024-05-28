@@ -34,6 +34,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @Controller
@@ -255,6 +258,19 @@ public class UserController {
 		return datas;
 	}
 	
+	@GetMapping("apply")
+	@ResponseBody
+	public Map<String, Object> getApplyByPackagenum(HttpServletRequest req){
+		Map<String, Object> datas = new HashMap<>();
+		long packagenum = Long.parseLong(req.getParameter("packagenum"));
+		
+		List<ReservationDTO> applylist = service.getApplyByPackagenum(packagenum);
+		
+		datas.put("applylist", applylist);
+		
+		return datas;
+	}
+	
 	//post
 	@PostMapping("join")
 	public String join(UserDTO user, HttpServletResponse resp) {
@@ -317,5 +333,27 @@ public class UserController {
 	}
 
 	
-	
+	//put
+	@PutMapping("cansleapply")
+	@ResponseBody
+	public String putMethodName(HttpServletRequest req) {
+		String entity="X";
+		
+		long reservationnum = Long.parseLong(req.getParameter("reservationnum"));
+		int tf = Integer.parseInt(req.getParameter("tf"));
+		
+		if(tf==1) {
+			if(service.changeApplyCansle(reservationnum, 2)) {
+				return "O";
+			}
+		} else if (tf==0) {
+			if(service.changeApplyCansle(reservationnum, 0)) {
+				return "O";
+			}
+		} else {
+			return "wrong_tf";
+		}
+		
+		return entity;
+	}
 }

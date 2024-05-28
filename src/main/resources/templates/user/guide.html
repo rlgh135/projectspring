@@ -78,10 +78,10 @@
                             <th:block th:if="${packagelist != null and packagelist.size > 0}">
                                 <li th:each="package:${packagelist}">
                                     <div class="outerpckgs">
-										<div class="ingthumb">
+										<div class="ingthumb" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
 											<img src="/images/packageimg/384878.jpg">
 										</div>
-                                        <div class="mypckgs">
+                                        <div class="mypckgs" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
 											<div>[[${package.packageTitle}]]</div>
 											<div>[[${package.startdate}]] ~ [[${package.enddate}]]([[${package.tourdays}]]일)</div>
 										</div>
@@ -96,26 +96,9 @@
 											-->
                                         </div>
                                     </div>
-                                    
                                     <div>
-                                        <ul th:id="'addhugis'+${package.packagenum}" class="hidden">
-										<!--
-                                            <li>
-                                                <div class="upperhugi">
-                                                    <div>
-                                                        <img src="" alt="">
-                                                    </div>
-                                                    <div>id</div>
-                                                    <div>stars</div>
-                                                </div>
-                                                <div class="lowerhugi">
-                                                    ${reply.contents}
-                                                </div>
-                                            </li>
-											-->
-                                        </ul>
+                                        <ul th:id="'addhugis'+${package.packagenum}" class="hidden"></ul>
                                     </div>
-                                    
                                 </li>
                             </th:block>
                             <th:block th:unless="${packagelist != null and packagelist.size > 0}">
@@ -133,15 +116,20 @@
                     <ul class="gmlists">
                         <th:block th:if="${packagelist != null and packagelist.size > 0}">
                             <li th:each="ply:${packagelist}">
-                                <div class="outerpckgs">
-									<div class="ingthumb">
+                                <div class="outerpckgs" >
+									<div class="ingthumb" th:onclick="|location.href='/package/pget?packagenum=${ply.packagenum}'|">
 										<img src="/images/packageimg/384878.jpg">
 									</div>
-                                    <div class="mypckgs">[[${ply.packageTitle}]]</div>
-                                    <div class="showapplyusers" th:onclick="'showapply('+${ply.packagenum}+')'"></div>
+                                    <div class="mypckgs" th:onclick="|location.href='/package/pget?packagenum=${ply.packagenum}'|">
+										<div>[[${ply.packageTitle}]]</div>
+										<div>[[${ply.startdate}]] ~ [[${ply.enddate}]]([[${ply.tourdays}]]일)</div>
+									</div>
+                                    <div class="showapplyusers" th:onclick="'showapply('+${ply.packagenum}+')'">
+										신청현황확인
+									</div>
                                 </div>
-                                <div th:id="${'myapplies'+ply.packagenum}">
-                                    <ul>
+                                <div>
+                                    <ul th:id="${'myapplies'+ply.packagenum}" class="myapplyuserlist hidden">
                                         <!--
                                         <li>
                                             <div class="upperhugi">
@@ -154,12 +142,12 @@
                                             <ul class="myapplyuserlist">
                                                 <li th:id="'appai'+${i}">
                                                     <div>
-                                                        <div>이름, 회원여부</div>
+                                                        <div>이름, 회원여부 상태: <span class="rednotice">취소요청</span></div>
                                                         <div>인원, 전화번호, 결제수단</div>
                                                     </div>
-                                                    <div>
-                                                        <input type="button" value="수락" th:onclick="'applycheck('+${reservationnum}+', accept)'">
-                                                        <input type="button" value="거절" th:onclick="'applycheck('+${reservationnum}+', reject)'">
+                                                    <div class="canslewrap">
+                                                        <input type="button" value="취소승인" class="acceptmgbtn" onclick="cansleApply(packagenum, true)">
+                                                        <input type="button" value="취소거절" class="rejectmgbtn" onclick="cansleApply(packagenum, false)">
                                                     </div>
                                                 </li>
                                             </ul>
@@ -265,12 +253,72 @@
 
     //신청리스트
     function showapply(packagenum) {
-        
+		const parentnode = document.getElementById("myapplies"+packagenum);
+		
+		$.ajax({
+			url: "/user/apply?packagenum="+packagenum,
+			method: "GET",
+			
+			success:function(datas){
+				console.log(datas);
+				if(datas.length==0||datas==null){
+					alert("신청이 없어요");
+				} else {
+					parentnode.classList.toggle("hidden");
+					makeDOM(datas, 'apply', parentnode);
+				}
+			},
+			
+			error:function(){
+				console.log("통신에러");
+			}
+		})
     }
 
     //승인, 거절
-    function applycheck(reservationnum) {
-        
+    function cansleApply(reservationnum, tf) {
+        if(tf==1){
+			//취소승인
+			$.ajax({
+				url: "/user/cansleapply?reservationnum="+reservationnum+"&tf="+tf,
+				method: "PUT",
+				
+				success:function(){
+					alert("예약을 취소합니다.");
+					let target = document.getElementById("appai"+reservationnum);
+					let upul = target.parentNode;
+					upul.removeChild(target);
+				},
+				
+				error:function(){
+					console.log("통신에러");
+				}
+			})
+			
+		} else if(tf==0){
+			//취소거부
+			$.ajax({
+				url: "/user/cansleapply?reservationnum="+reservationnum+"&tf="+tf,
+				method: "PUT",
+				
+				success:function(){
+					alert("고객의 취소요청을 거부합니다.");
+					let target = document.getElementById("appai"+reservationnum);
+					let maspan = document.getElementById("maspan"+reservationnum);
+					maspan.className="greennotice";
+					maspan.innerHTML="결제완료";
+					
+					let macaid = document.getElementById("macaid"+reservationnum);
+					target.removeChild(macaid);
+				},
+				
+				error:function(){
+					console.log("통신에러");
+				}
+			})
+		} else {
+			alert("잘못된 타입입니다");
+		}
     }
 	
 	function makeDOM(datas, type, parentnode){
@@ -313,7 +361,55 @@
 			}
 			
 		} else if(type=='apply'){
-			
+			for(let i in datas.applylist){
+				var applyUserLi = document.createElement('li');
+				applyUserLi.id = 'appai'+datas.applylist[i].reservationnum; // Change 1 to the appropriate dynamic value
+				
+				var userDiv = document.createElement('div');
+				
+				var userStatusDiv = document.createElement('div');
+				if(datas.applylist[i].isDelete==1){
+					userStatusDiv.innerHTML = '이름, 회원여부 상태: <span class="rednotice" id="maspan'+datas.applylist[i].reservationnum+'">취소요청</span>';					
+				} else {
+					userStatusDiv.innerHTML = '이름, 회원여부 상태: <span class="greennotice" id="maspan'+datas.applylist[i].reservationnum+'">결제완료</span>';										
+				}
+				
+				var userDetailsDiv = document.createElement('div');
+				userDetailsDiv.textContent = '인원:'+(datas.applylist[i].adultCnt+datas.applylist[i].childCnt)+' , 전화번호: '+datas.applylist[i].phone+', 결제수단: '+datas.applylist[i].payMethod;
+				
+				// Append userStatusDiv and userDetailsDiv to userDiv
+				userDiv.appendChild(userStatusDiv);
+				userDiv.appendChild(userDetailsDiv);
+				
+				// Append userDiv and cancelWrapDiv to applyUserLi
+				applyUserLi.appendChild(userDiv);
+				
+				if(datas.applylist[i].isDelete==1){
+					var cancelWrapDiv = document.createElement('div');
+					cancelWrapDiv.className = 'canslewrap';
+					cancelWrapDiv.id = 'macaid'+datas.applylist[i].reservationnum;
+					
+					var acceptButton = document.createElement('input');
+					acceptButton.type = 'button';
+					acceptButton.value = '취소승인';
+					acceptButton.className = 'acceptmgbtn';
+					acceptButton.setAttribute('onclick', 'cansleApply('+datas.applylist[i].reservationnum+', 1)');
+					
+					var rejectButton = document.createElement('input');
+					rejectButton.type = 'button';
+					rejectButton.value = '취소거절';
+					rejectButton.className = 'rejectmgbtn';
+					rejectButton.setAttribute('onclick', 'cansleApply('+datas.applylist[i].reservationnum+', 0)');
+					
+					// Append acceptButton and rejectButton to cancelWrapDiv
+					cancelWrapDiv.appendChild(acceptButton);
+					cancelWrapDiv.appendChild(rejectButton);
+					
+					applyUserLi.appendChild(cancelWrapDiv);
+				}
+				
+				parentnode.appendChild(applyUserLi);
+			}
 		} else{
 			console.log("유효한 타입이 아닙니다");
 		}

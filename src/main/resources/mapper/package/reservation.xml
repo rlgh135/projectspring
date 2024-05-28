@@ -31,5 +31,10 @@
 		(userid = '${userid}' and
 		reservationnum > 0) order by reservationnum desc limit #{cri.startrow}, #{cri.amount}
 	</select>
-
+	<select id="getApply">
+		select * from reservation where packagenum=#{packagenum}
+	</select>
+	<update id="changeIsdelete">
+		update reservation set isdelete=#{isdelete} where reservationnum = #{reservationnum}
+	</update>
 </mapper>

@@ -13,6 +13,9 @@ public interface ReservationMapper {
 	//R
 	//회원 예약리스트
 	List<ReservationDTO> getMyReservation(Criteria cri, String userid);
+	List<ReservationDTO> getApply(long packagenum);
 	//U
+	int changeIsdelete(long reservationnum, int isdelete);
 	//D
+
 }
