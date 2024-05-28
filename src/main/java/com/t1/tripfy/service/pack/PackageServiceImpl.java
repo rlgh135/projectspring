@@ -167,14 +167,101 @@ public class PackageServiceImpl implements PackageService{
 	}
 	@Override
 	public boolean modify(PackageDTO pack, MultipartFile[] files) throws Exception {
-		// TODO Auto-generated method stub
+	   
+	    if (pmapper.updatePack(pack) != 1) {
+	        return false; // 업데이트에 실패하면 false를 반환합니다.
+	    }
+
+	    // 기존 파일 목록을 가져옵니다.
+	    List<PackageFileDTO> orgFileList = pfmapper.getFiles(pack.getPackagenum());
+	    System.out.println("이건뭐지" + orgFileList);
+
+	    // 새로운 업로드 파일의 시스템 이름 목록을 저장할 리스트를 초기화합니다.
+	    ArrayList<String> newSysnames = new ArrayList<>(); 
+
+	    // 새로운 파일 업로드 로직
+	    boolean flag = false; 
+	    if (files != null && files.length > 0) { 
+	        for (int i = 0; i < files.length; i++) {
+	            MultipartFile file = files[i];
+	            String orgname = file.getOriginalFilename();
+
+	            if (orgname == null || orgname.equals("")) {
+	                continue;
+	            }
+
+	            int lastIdx = orgname.lastIndexOf(".");
+	            String extension = orgname.substring(lastIdx);
+	            LocalDateTime now = LocalDateTime.now();
+	            String time = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+	            String systemname = time + UUID.randomUUID().toString() + extension;
+
+	            String path = saveFolder + systemname;
+
+	            PackageFileDTO pfdto = new PackageFileDTO();
+	            pfdto.setPackagenum(pack.getPackagenum());
+	            pfdto.setPfOrgname(orgname);
+	            pfdto.setPfSysname(systemname);
+
+	            flag = pfmapper.insertFile(pfdto) == 1;
+
+	            file.transferTo(new File(path));
+	            newSysnames.add(systemname);
+
+	            if (!flag) {
+	                break;
+	            }
+	        }
+	    }
+
+	    // 기존 파일 삭제 로직
+	    if (flag) { // 파일 업로드가 성공했을 경우에만 기존 파일 삭제를 진행합니다.
+	        for (PackageFileDTO orgFile : orgFileList) {
+	            String systemname = orgFile.getPfSysname();
+	            // 새로운 업로드 파일의 시스템 이름 목록에 포함되지 않는 파일만 삭제합니다.
+	            if (!newSysnames.contains(systemname)) {
+	                File file = new File(saveFolder, systemname);
+	                if (file.exists()) {
+	                    file.delete(); // 디스크에서 기존 파일을 삭제합니다.
+	                }
+	                pfmapper.deleteFileBySystemname(systemname); 
+	            }
+	        }   
+	    } else {
+	        // 업로드 실패 시 새로 업로드된 파일 삭제
+	        for (String systemname : newSysnames) {
+	            File file = new File(saveFolder, systemname);
+	            if (file.exists()) {
+	                file.delete(); 
+	            }
+	            pfmapper.deleteFileBySystemname(systemname); 
+	        }
+	    }
+
+	    return flag; // 업로드 성공 여부를 반환합니다.
+	}
+
+	@Override
+	public boolean remove(long packagenum) {
+		if(pmapper.deletePack(packagenum) == 1) {
+			List<PackageFileDTO> files = pfmapper.getFiles(packagenum);
+			for(PackageFileDTO pfdto : files) {
+				File file = new File(saveFolder,pfdto.getPfSysname());
+				if(file.exists()) {
+					file.delete();
+					pfmapper.deleteFileBySystemname(pfdto.getPfSysname());
+				}
+			}
+			return true;
+		}
 		return false;
 	}
 	@Override
-	public boolean remove(long packagenum) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean increaseReadCount(long packagenum) {
+		PackageDTO pack = pmapper.getPackageByPackageNum(packagenum);
+		return pmapper.updateReadCount(packagenum,pack.getViewcnt()+1) == 1;
 	}
+	
 	@Override
 	public long getLastNum(long guidenum) {
 		return pmapper.getLastNum(guidenum);

@@ -649,7 +649,7 @@ $(document).ready(function() {
         e.stopPropagation();
         package_file.click();
     })
-    $('[type=file]').change(function(e){
+    $('#package_file').change(function(e){
         const fileTag = e.target;
         const file = fileTag.files[0];
         console.log(file);

@@ -290,18 +290,22 @@ body{
     height: 700px;
     margin-top:20px;
 }
+.listok{
+	height: 600px;
+	overflow-y: scroll;
+	width: 100%;
+}
 .plist{
     width: 100%;
   	height: 700px;
 }
 .no-list{
+	width: 100%;
+	display: flex;
+	
 	font-size: 35px;
-	text-align: center;
+	justify-content: center;
 	margin-top: 50px;
-}
-.listok{
-	height: 600px;
-	overflow-y: scroll;
 }
 .package{
 	display: flex;

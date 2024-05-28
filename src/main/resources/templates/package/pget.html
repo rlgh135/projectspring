@@ -7,21 +7,68 @@
     <link rel="stylesheet" href="/css/package/pget.css">
 </head>
 <body>
-	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+    <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
     <div id="wrap" class="get">
         <div class="body_container">
             <div class="packageinfo">
-				<div class="pthumbnail" th:each="file : ${files}">
-				    <img th:src="${'/package/thumbnail?systemname=' + file.pfSysname}" alt="">
-				</div>
+                <div class="pthumbnail">
+                    <th:block th:each="file : ${files}">
+                        <img th:src="${'/package/thumbnail?systemname=' + file.pfSysname}" alt="">
+                    </th:block>
+                </div>
                 <div class="pinfo">
                     <div class="p_info">
-                        <div class="p_title">
-                            <h3>[[${package.packageTitle}]]</h3>
+                        <div class="p_header">
+                            <div class="p_title">
+                                <h3>[[${package.packageTitle}]]</h3>
+                            </div>
+                            <div class="modidelete">
+                                <button><a th:href="@{/package/pmodify(packagenum=${package.packagenum})}">수정</a></button>
+                                <button><a th:href="@{/package/remove(packagenum=${package.packagenum})}">삭제</a></button>
+                            </div>
                         </div>
                         <hr>
                         <div class="p_con">
-                            [[${package.packageContent}]]
+                            <div class="paydetail">
+                                <div class="adultchild">
+                                    <div class="ac_head">
+                                        <h3>인원선택 (필수)</h3>
+                                    </div>
+                                    <hr>
+                                    <div class="ac_con">
+                                        <div class="adult">
+                                            <div class="adult_info">
+                                                <h3>성인</h3>
+                                                <p>[[${package.adultPrice}]] 원</p>
+                                            </div>
+                                            <div class="adult_cnt">
+                                                <input type='button' onclick='count("minus")' value='-'/>
+                                                <div id='result'>0</div>
+                                                <input type='button' onclick='count("plus")' value='+'/>
+                                            </div>
+                                        </div>
+                                        <div class="child">
+                                            <div class="child_info">
+                                                <h3>아이</h3>
+                                                <p>[[${package.childPrice}]] 원</p>
+                                            </div>
+                                            <div class="child_cnt">
+                                                <input type='button' onclick='count_child("minus")' value='-'/>
+                                                <div id='result_child'>0</div>
+                                                <input type='button' onclick='count_child("plus")' value='+'/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="paybutton">
+                                        <form id="paymentForm" action="pay" method="get">
+                                            <input type="hidden" name="packagenum" id="packagenum" value=""> 
+                                            <input type="hidden" name="adultCount" id="adultCount" value="0">
+                                            <input type="hidden" name="childCount" id="childCount" value="0">
+                                            <button type="button" onclick="submitPaymentForm()">결제하기</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div> 
@@ -32,13 +79,21 @@
             <div class="mi_container">
                 <div class="mi_header">
                     <div class="mi_menu">
-                        <div class="menu1"><a href="">여행소개</a></div> 
-                        <div class="menu2"><a href="">유의사항</a></div>
-                        <div class="menu3"><a href="">가이드리뷰</a></div>
+                        <div class="menu1">여행소개</div> 
+                        <div class="menu2">유의사항</div>
+                        <div class="menu3">가이드리뷰</div>
                     </div>
                 </div>
-                <div class="mi_container">
-                    
+                <div class="mi_con">
+                    <div class="menu1get">
+                        [[${package.packageContent}]]
+                    </div>
+                    <div class="menu2get">
+                        <!-- 유의사항 내용 추가 -->
+                    </div>
+                    <div class="menu3get">
+                        <!-- 가이드리뷰 내용 추가 -->
+                    </div>
                 </div>
             </div>
             <div class="pay_container">
@@ -48,55 +103,12 @@
                     </div>
                     <hr>
                     <div class="map">
-
+                        <!-- 지도 내용 추가 -->
                     </div>
                     <hr>
                     <div class="mapfoot">
                         <a href="">상세보기 ></a>
                     </div>
-                </div>
-                <div class="paydetail">
-                  <div class="adultchild">
-                    <div class="ac_head">
-                        <h3>인원선택 (필수)</h3>
-                    </div>
-                    <hr>
-                    <div class="ac_con">
-                        <div class="adult">
-                            <div class="adult_info">
-                                <h3>성인</h3>
-                                <p>[[${package.adultPrice}]] 원</p>
-                            </div>
-                            <div class="adult_cnt">
-                                <input type='button' onclick='count("minus")' value='-'/>
-                                <div id='result'>0</div>
-                                <input type='button' onclick='count("plus")' value='+'/>
-                            </div>
-                        </div>
-                        <div class="child">
-                            <div class="child_info">
-                                <h3>아이</h3>
-                                <p>[[${package.childPrice}]] 원</p>
-                            </div>
-                            <div class="child_cnt">
-                                <input type='button' onclick='count_child("minus")' value='-'/>
-                                <div id='result_child'>0</div>
-                                <input type='button' onclick='count_child("plus")' value='+'/>
-                            </div>
-                        </div>
-                        <div class="amount">
-                            <p>총 금액 : </p>
-                        </div>
-                    </div>
-                    <div class="paybutton">
-                        <form id="paymentForm" action="pay" method="get">
-                            <input type="hidden" name="packagenum" id="packagenum" value=""> 
-                            <input type="hidden" name="adultCount" id="adultCount" value="0">
-                            <input type="hidden" name="childCount" id="childCount" value="0">
-                            <button type="button" onclick="submitPaymentForm()">결제하기</button>
-                        </form>
-                    </div>
-                  </div>
                 </div>
             </div>
         </div>

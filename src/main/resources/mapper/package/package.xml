@@ -133,17 +133,19 @@
 		select * from package where packagenum = #{packagenum}
 	</select>
 	
-	<update id="updatePackage">
+	<update id="updatePack">
 		update package
-		set package_title = {#package_title}, package_content = #{package_content}, 
-		maxcnt = #{maxcnt}, adult_price =  #{adult_price}, child_price = #{child_price},
-		startdate =  #{startdate}, enddate = #{enddate}, tourdays = #{tourdays},
-		deadline =  #{deadline})	
-		where visibility ='O'
+		set package_title = #{packageTitle},
+		package_content = #{packageContent}, 
+		adult_price = #{adultPrice},
+		child_price = #{childPrice}
+		where
+		packagenum = #{packagenum}
 	</update>
 	
-	<delete id="deletePackage">
-		delect from package where packagenum = #{packagenum} 
+	
+	<delete id="deletePack">
+		delete from package where packagenum = #{packagenum} 
 	</delete>
 	
 	 <insert id="saveReservation">

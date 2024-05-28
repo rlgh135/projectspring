@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/package/pmodify.css">
+    <script src="your_script.js" defer></script>
+</head>
+<body>
+    <!-- 헤더를 포함한 레이아웃 시작 -->
+    <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+    <div id="wrap" class="get">
+        <div class="body_container">
+            <div class="packageinfo">
+                <!-- 패키지 썸네일 및 파일 업로드 관련 div -->
+                <div class="pthumbnail" th:each="file : ${files}">
+                    <img id="thumbnail" th:src="${'/package/thumbnail?systemname=' + file.pfSysname}" alt="image" class="thumnail_img" onclick="openFileInput()">
+                    <div class="cancelFile" onclick="deleteFile(this)">
+                        <svg width="11" height="11" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1.00098L12 12.001" stroke="rgba(154, 154, 154, 1)"></path>
+                            <path d="M12 1.00098L1 12.001" stroke="rgba(154, 154, 154, 1)"></path>
+                        </svg>
+                    </div>
+                    <div class="thumnail" onclick="openFileInput()">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 15C22 20 20 22 15 22H9C4 22 2 20 2 15V9C2 4 4 2 9 2H15C20 2 22 4 22 9V15ZM22 15L18.7699 13.1858C18.0373 12.7743 17.1257 12.8646 16.488 13.4118L13.3899 16.0705C12.6099 16.7405 11.3499 16.7405 10.5699 16.0705L10.2399 15.7805C9.52992 15.1705 8.38992 15.1105 7.59992 15.6405L2.66992 18.9505M11 8C11 9.10457 10.1046 10 9 10C7.89543 10 7 9.10457 7 8C7 6.89543 7.89543 6 9 6C10.1046 6 11 6.89543 11 8Z" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <p class="add_img_txt">사진을 선택하세요!</p>         
+                    </div>
+                    <input type="file" id="fileInput" name="files" accept="image/*" style="display: none;" multiple onchange="previewImage(event)">
+                </div>
+                <!-- 패키지 정보 입력 폼 -->
+                <div class="pinfo">
+                    <div class="p_info">
+                        <div class="p_header">
+                            <div class="p_title">
+                                <input type="text" id="packageTitle" th:value="${package.packageTitle}">
+                            </div>
+                            <div class="modidelete">
+                                <form id="updateForm" th:action="@{/package/pmodify}" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="packageTitle" id="hiddenPackageTitle">
+                                    <input type="hidden" name="adultPrice" id="hiddenAdultPrice">
+                                    <input type="hidden" name="childPrice" id="hiddenChildPrice">
+                                    <input type="hidden" name="packageContent" id="hiddenPackageContent">
+                                    <input type="hidden" name="packagenum" th:value="${package.packagenum}">
+                                    <!-- 삭제된 파일 정보를 전송할 hidden input -->
+                                    <input type="hidden" id="deletedFiles" name="deletedFiles">
+                                    <input type="file" name="files" id="hiddenFileInput" accept="image/*" style="display: none;">
+                                    <input type="hidden" name="someString" id="hiddenSomeString" value="someValue">
+                                    <button type="button" onclick="submitForm()">수정완료</button>
+                                    <button><a th:href="@{/package/pget(packagenum=${package.packagenum})}">수정취소</a></button>
+                                </form>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="p_con">
+                            <div class="paydetail">
+                                <div class="adultchild">
+                                    <div class="ac_head">
+                                        <h3>인원선택 (필수)</h3>
+                                    </div>
+                                    <hr>
+                                    <div class="ac_con">
+                                        <div class="adult">
+                                            <div class="adult_info">
+                                                <h3>성인</h3>
+                                                <input type="text" id="adultPrice" th:value="${package.adultPrice}">
+                                            </div>
+                                        </div>
+                                        <div class="child">
+                                            <div class="child_info">
+                                                <h3>아이</h3>
+                                                <input type="text" id="childPrice" th:value="${package.childPrice}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="moreinfo">
+            <!-- 기타 정보 입력 폼 -->
+            <div class="mi_container">
+                <div class="mi_header">
+                    <div class="mi_menu">
+                        <div class="menu1">여행소개</div>
+                    </div>
+                </div>
+                <div class="mi_con">
+                    <div class="menu1get">
+                        <textarea id="packageContent" th:text="${package.packageContent}"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="pay_container">
+                <div class="mapcon">
+                    <div class="maphead">
+                        <h3>[[${package.regionname}]]</h>
+                    </div>
+                    <hr>
+                    <div class="map"></div>
+                    <hr>
+                    <div class="mapfoot">
+                        <a href="">타임라인 수정하기 ></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function submitForm() {
+        document.getElementById('hiddenPackageTitle').value = document.getElementById('packageTitle').value;
+        document.getElementById('hiddenAdultPrice').value = document.getElementById('adultPrice').value;
+        document.getElementById('hiddenChildPrice').value = document.getElementById('childPrice').value;
+        document.getElementById('hiddenPackageContent').value = document.getElementById('packageContent').value;
+
+        // 파일을 업로드하지 않은 경우 hidden input의 files 속성을 초기화합니다.
+        const fileInput = document.getElementById('fileInput');
+        const hiddenFileInput = document.getElementById('hiddenFileInput');
+        if (fileInput.files.length === 0) {
+            hiddenFileInput.value = ''; // 파일이 없으면 hidden input의 값 초기화
+        } else {
+            hiddenFileInput.files = fileInput.files;
+        }
+
+       
+
+        // 폼을 서버에 제출합니다.
+        document.getElementById('updateForm').submit();
+    }
+
+    function openFileInput() {
+        const fileInput = document.getElementById('fileInput');
+        fileInput.click();
+        fileInput.value = ''; // 파일 선택을 초기화합니다.
+    }
+
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('thumbnail');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+</script>
+
+</html>
+

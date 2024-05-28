@@ -25,6 +25,7 @@ import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.service.pack.PackageService;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -141,25 +142,51 @@ public class PackController {
 	    model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
 	}
 	
-	@GetMapping("pget")
+	@GetMapping(value={"pget", "pmodify"})
 	public String get(Criteria cri, long packagenum, HttpServletRequest req, HttpServletResponse resp, Model model) {
-		System.out.println("packagenum: " + packagenum);
-		String requestURI = req.getRequestURI();
-		model.addAttribute("cri",cri);
-		HttpSession session = req.getSession();
-		PackageDTO pack = service.getDetail(packagenum);
-		System.out.println(pack+"안뜨나?");
-		model.addAttribute("package",pack);
-		
-		
-		model.addAttribute("files",service.getFiles(packagenum));
-		String loginUser = (String)session.getAttribute("loginUser");
-		
-		if(requestURI.contains("modify")) {
-			return "board/modify";
-		}
-		return "package/pget";
+	    System.out.println("packagenum: " + packagenum);
+	    String requestURI = req.getRequestURI();
+	    model.addAttribute("cri", cri);
+	    HttpSession session = req.getSession();
+	    PackageDTO pack = service.getDetail(packagenum);
+	    System.out.println(pack + "안뜨나?");
+	    model.addAttribute("package", pack);
+	    model.addAttribute("files", service.getFiles(packagenum));
+	    
+	    String loginUser = (String) session.getAttribute("loginUser");
+	    
+	    if (requestURI.contains("pmodify")) {
+	        return "package/pmodify";
+	    }
+	    
+	    Long guidenum = (Long) session.getAttribute("guidenum");
+	    
+	    if (guidenum == null) {
+	        throw new IllegalStateException("guidenum is not set in session");
+	    }
+	    
+	    if(!(pack.getGuidenum()==((Long)session.getAttribute("guidenum")))){
+	        Cookie[] cookies = req.getCookies();
+	        Cookie read_pack = null;
+	        if (cookies != null) {
+	            for (Cookie cookie : cookies) {
+	                if (cookie.getName().equals("read_pack" + packagenum)) {
+	                    read_pack = cookie;
+	                    break;
+	                }
+	            }
+	        }
+	        if (read_pack == null) {
+	            service.increaseReadCount(packagenum);
+	            Cookie cookie = new Cookie("read_pack" + packagenum, "r");
+	            cookie.setMaxAge(1800);
+	            resp.addCookie(cookie);
+	        }
+	    }
+	    
+	    return "package/pget";
 	}
+
 	
 	
 	@GetMapping("pay")
@@ -177,12 +204,7 @@ public class PackController {
 		
 		return "package/pay";
 	}
-	//추가
-		@GetMapping("thumbnail")
-		public ResponseEntity<Resource> thumbnail(String systemname) throws Exception {
-			System.out.println(systemname);
-			return service.getThumbnailResource(systemname);
-		}
+
 	
 	@PostMapping("write")
 	public String write(PackageDTO pack, MultipartFile packageFile,HttpServletRequest req) throws Exception {
@@ -275,5 +297,33 @@ public class PackController {
 	    } else {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 내부 서버 오류 상태 코드 반환
 	    }
+	}
+	@GetMapping("thumbnail")
+	public ResponseEntity<Resource> thumbnail(String systemname) throws Exception {
+		System.out.println(systemname);
+		return service.getThumbnailResource(systemname);
+	}
+	
+	@PostMapping("pmodify")
+	public String modify(PackageDTO pack, MultipartFile[] files,Criteria cri, Model model) throws Exception {
+
+		if(service.modify(pack, files)) {
+			return "redirect:/package/pget"+cri.getListLink()+"&packagenum="+pack.getPackagenum();
+		}
+		else {
+			return "redirect:/package/pget"+cri.getListLink()+"&&packagenum="+pack.getPackagenum();
+		}
+	}
+	@GetMapping("remove")
+	public String remove(Criteria cri, long packagenum,HttpServletRequest req) {
+		String loginUser = (String)req.getSession().getAttribute("loginUser");
+		PackageDTO pack = service.getDetail(packagenum);
+		
+			if(service.remove(packagenum)) {
+				return "redirect:/package/pmain"+cri.getListLink();
+			}
+		
+		return "redirect:/package/pmain"+cri.getListLink()+"&packagenum="+packagenum;
+		
 	}
 }

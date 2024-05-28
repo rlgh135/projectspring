@@ -40,6 +40,7 @@ public interface PackageService {
 	//추가
 	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;
 	List<PackageFileDTO>getFiles(long packagenum);
+	boolean increaseReadCount(long packagenum);
 	
 	String[] getDayMMdd(String startdate, String enddate);
 

@@ -32,9 +32,10 @@ body{
 .pthumbnail{
     width: 700px;
 }
+
 .pthumbnail img{
-    width: 100%;
-    height: 100%;
+    width: 700px;
+    height: 400px;
     overflow: hidden;
 }
 .pinfo{
@@ -53,26 +54,38 @@ body{
     font-size: 30px;
     color: rgb(0, 42, 211);
 }
+.p_title input{
+	width: 300px;
+	height: 50px;
+}
 .modidelete{
-	width: 130px;
+	width: 200px;
 	display: flex;
 	justify-content: space-between;
 }
 .modidelete button{
-	width: 60px;
-	height: 20px;
+	width: 70px;
+	height: 40px;
 	background-color: white;
 	border: none;
 	font-size: 20px;
+	margin-right: 20px;
+}
+.modidelete button:hover{
+	color: white;
+	background-color: dodgerblue;
+	border-radius: 10px;
 }
 .modidelete button a{
-	width: 60px;
+	width: 70px;
 	height: 20px;
 	text-decoration: none;
 	color:black;
 }
 .modidelete button a:hover{
-	color: blue;
+	color: white;
+	background-color: dodgerblue;
+	border-radius: 10px;
 }
 .p_con{
     height: 200px;
@@ -147,7 +160,7 @@ body{
 	font-size:30px !important;	
 }
 .ac_con{
-    height: 140px;
+    height: 200px;
     width: 80%;
     margin: 0 auto;
     margin-top: 30px;
@@ -159,30 +172,14 @@ body{
 }
 .adult_info{
 	display: flex;
-    width: 200px;
+    width: 500px;
    	justify-content: space-between;
 }
-.adult_cnt{
-    height: 50px;
-    width: 100px;
-    border-radius: 10px;
-    font-size: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+.adult_info input{
+	width: 300px;
+	height: 50px;
+}
 
-}
-.adult_cnt input{
-    width: 30px;
-    height: 30px;
-    border: 1px solid lightgray;
-    border-radius: 50%;
-    font-size: 20px;
-    background-color: white;
-    cursor: pointer;
-    padding:0 !important;
-    
-}
 .child{
 	margin-top: 30px;
     display: flex;
@@ -191,44 +188,15 @@ body{
 }
 .child_info{
 	display: flex;
-    width: 200px;
+    width: 500px;
    	justify-content: space-between;
 }
-.child_cnt{
-    height: 50px;
-    width: 100px;
-    border-radius: 10px;
-    font-size: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+.child_info input{
+	width: 300px;
+	height: 50px;
 }
-.child_cnt input{
-    width: 30px;
-    height: 30px;
-    border: 1px solid lightgray;
-    border-radius: 50%;
-    font-size: 20px;
-    background-color: white;
-    cursor: pointer;
-    padding:0 !important;
-}
-.paybutton{
-    height: 70px;
-    width: 50%;
-    margin: 0 auto;
-}
-.paybutton button{
-    width: 100%;
-    
-    height: 50px;
-    background-color: rgb(0, 95, 248);
-    border: none;
-    border-radius: 20px;
-    color:white;
-    font-size: 25px;
-    cursor:pointer;
-}
+
+
 .moreinfo{
     margin-top: 40px;
     display: flex;
@@ -259,19 +227,19 @@ body{
 .menu1get{
 	font-size: 25px;
 }
+.menu1get textarea{
+	width: 800px;
+	height: 400px;
+}
 
-.mi_menu > .menu1, .mi_menu > .menu2,  .mi_menu > .menu3{
+.mi_menu > .menu1{
     width:100%;
     font-size: 20px;
     text-align: center;
     border-left: 1px solid lightgray;
-	cursor: pointer;
+	
 }
-.mi_menu > .menu1:hover, .mi_menu > .menu2:hover,  .mi_menu > .menu3:hover{
-	background-color:rgb(146, 217, 255);
-	color:white;
-	border-radius: 5px;
-}
+
 .mi_menu > .menu1{
 	border:none;
 }
