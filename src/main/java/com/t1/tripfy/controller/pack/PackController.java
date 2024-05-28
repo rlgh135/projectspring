@@ -207,16 +207,7 @@ public class PackController {
 		
 		return "package/pay";
 	}
-<<<<<<< HEAD
 
-=======
-	//추가
-	@GetMapping("thumbnail")
-	public ResponseEntity<Resource> thumbnail(String systemname) throws Exception {
-		System.out.println(systemname);
-		return service.getThumbnailResource(systemname);
-	}
->>>>>>> 53d23ed98b245fe0af50904cf9e601965ffc7762
 	
 	@PostMapping("write")
 	public String write(PackageDTO pack, MultipartFile packageFile,HttpServletRequest req) throws Exception {
@@ -322,7 +313,7 @@ public class PackController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 내부 서버 오류 상태 코드 반환
 	    }
 	}
-<<<<<<< HEAD
+
 	@GetMapping("thumbnail")
 	public ResponseEntity<Resource> thumbnail(String systemname) throws Exception {
 		System.out.println(systemname);
@@ -351,7 +342,7 @@ public class PackController {
 		return "redirect:/package/pmain"+cri.getListLink()+"&packagenum="+packagenum;
 		
 	}
-=======
+
 	
 	@PostMapping("SummerNoteImageFile")
 	public @ResponseBody String SummerNoteImageFile(@RequestParam("file") MultipartFile file) throws Exception {
@@ -378,5 +369,5 @@ public class PackController {
 			return "redirect:/package/tlwrite?packagenum="+packagenum;
 		}
 	}
->>>>>>> 53d23ed98b245fe0af50904cf9e601965ffc7762
+
 }
