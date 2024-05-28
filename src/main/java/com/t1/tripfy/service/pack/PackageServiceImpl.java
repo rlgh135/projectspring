@@ -1,6 +1,7 @@
 package com.t1.tripfy.service.pack;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +41,8 @@ public class PackageServiceImpl implements PackageService{
 	
 	@Value("${file.dir}")
 	private String saveFolder;
+	@Value("${tempFile.dir}")
+	private String tempFileFolder;
 	
 	@Autowired
 	private PackageMapper pmapper;
@@ -77,6 +80,7 @@ public class PackageServiceImpl implements PackageService{
         if(pmapper.insertPack(pack) != 1) {
 			return false;
 		}
+        
         if(file == null) {
         	System.out.println("파일 널 체크 안됨요");
 			return true;
@@ -345,4 +349,48 @@ public class PackageServiceImpl implements PackageService{
 	public boolean tlUpdateContents(TimelineDTO tl) {
 		return tmapper.tlUpdateContents(tl) == 1;
 	}
+	@Override
+	public String SummerNoteImageFile(MultipartFile file) throws Exception{		
+	    if (file.isEmpty()) {
+	    	String error = "파일이 없습니다";
+	        return error;
+	    }
+	    System.out.println("컨트롤러에서 찍는 파일"+file);
+	    
+		String originalFileName = file.getOriginalFilename();
+		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+		
+		LocalDateTime now = LocalDateTime.now();
+		String time = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+		
+		String systemFileName = time + UUID.randomUUID()+extension;
+		
+		String path = tempFileFolder + systemFileName;
+		file.transferTo(new File(path));
+		String thumnailpath = "/tilelineThumnail/"+systemFileName;
+		System.out.println(thumnailpath);
+		//경로에 있는 파일의 MIME 타입을 조사해서 그대로 담기
+		return thumnailpath;
+	}
+	
+	@Override
+	public boolean deleteSummernoteImageFile(String fileUrl) {
+		boolean flag = false;
+		String systemFileName = fileUrl.replace("/tilelineThumnail/", "");
+		File file = new File(tempFileFolder,systemFileName);
+		if(file.exists()) {
+			file.delete();
+			flag = true;
+		}
+		return flag;
+	}
+	@Override
+	public boolean packageVisibility(long packagenum) {
+		if(pmapper.insertPackContent(packagenum) == 1) {
+			return true;
+		}else {
+			return false;			
+		}
+	}
+
 }

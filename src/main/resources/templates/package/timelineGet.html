@@ -39,7 +39,9 @@
                                 </svg>
                             </div>
                             <div class="header_title">[[${pac.packageTitle}]]([[${pac.tourdays}]]일)</div>
-                            <svg width="20" height="20" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 5.08325C4.39543 5.08325 3.5 5.97868 3.5 7.08325V13.9166C3.5 15.0212 4.39543 15.9166 5.5 15.9166H11.5C12.6046 15.9166 13.5 15.0212 13.5 13.9166V7.08325C13.5 5.97868 12.6046 5.08325 11.5 5.08325H5.5ZM6 7.61108C5.65482 7.61108 5.375 7.89091 5.375 8.23608V12.7639C5.375 13.109 5.65482 13.3889 6 13.3889C6.34518 13.3889 6.625 13.109 6.625 12.7639V8.23608C6.625 7.89091 6.34518 7.61108 6 7.61108ZM7.875 8.23608C7.875 7.89091 8.15482 7.61108 8.5 7.61108C8.84518 7.61108 9.125 7.89091 9.125 8.23608V12.7639C9.125 13.109 8.84518 13.3889 8.5 13.3889C8.15482 13.3889 7.875 13.109 7.875 12.7639V8.23608ZM11 7.61108C10.6548 7.61108 10.375 7.89091 10.375 8.23608V12.7639C10.375 13.109 10.6548 13.3889 11 13.3889C11.3452 13.3889 11.625 13.109 11.625 12.7639V8.23608C11.625 7.89091 11.3452 7.61108 11 7.61108Z" fill="#FC7070"></path><rect x="3.5" y="2.5" width="10" height="1.5" rx="0.75" fill="#FC7070"></rect><rect x="6.5" y="1.5" width="4" height="2" rx="1" fill="#FC7070"></rect></svg>
+							<svg style="cursor: pointer;" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M10.9998 21.0005C13.5998 21.0005 15.9598 20.0105 17.7398 18.3805C17.6398 17.4405 17.0398 16.5205 15.9698 15.8005C13.2498 13.9805 8.76977 13.9805 6.02977 15.8005C4.95977 16.5205 4.35977 17.4405 4.25977 18.3805C6.03977 20.0105 8.39977 21.0005 10.9998 21.0005ZM10.9998 21.0005C16.5226 21.0005 21 16.5228 21 11C21 5.47715 16.5228 1 11 1C5.47715 1 1 5.47715 1 11C1 16.5228 5.47692 21.0005 10.9998 21.0005ZM11.1197 11.7805C11.0497 11.7705 10.9597 11.7705 10.8797 11.7805C9.11973 11.7205 7.71973 10.2805 7.71973 8.51047C7.71973 6.70047 9.17973 5.23047 10.9997 5.23047C12.8097 5.23047 14.2797 6.70047 14.2797 8.51047C14.2697 10.2805 12.8797 11.7205 11.1197 11.7805Z" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
                     </header>
                     <div class="date_area">
                         <div class="date_box">
@@ -75,61 +77,45 @@
 								        </div>
 								    </div>
 									<div th:id="'day'+${index}+'-list'"></div>
-								    <div class="place_note_box" th:id="'day' + ${index}">
-								        <button class="place_btn" th:id="'openModalBtn' + ${index}">장소 추가</button>
-								    </div>
 								</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-			<div class="regist_btn_area" th:if="${pac.Visibility == 'x'}">
-			        <button id="package_regist">패키지 등록하기</button>
+			<div class="regist_btn_area"><!--가이드 세션 걸어서 가이드만 열리게끔 수정해야함-->
+			        <button id="package_modify">패키지 수정하기</button>
 			</div>
         </div>
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p class="modal_title">지도 검색하기</p>
-                <input id="pac-input" class="controls" type="text" placeholder="장소 검색">
-                <div id="map"></div>
-                <p id="description"></p>
-                <div class="btn_area">
-                    <button class="place_select_btn">선택하기</button>
-                </div>
-            </div>
-        </div>
-        <div id="contentModal">
-            <div class="contentModal-content">
-                <div class="head_area">
-                    <h2>일정 메모하기</h2>
-                </div>         
-                <div class="text_area">
-                    <div class="this_day">
-                        <span class="sc-e2da28cc-3 jQkaAe"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#fff" size="15"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.5143 12.7857C22.1619 12.462 22.1619 11.538 21.5143 11.2143L3.2715 2.09388C2.68733 1.80182 2 2.22657 2 2.87962L2 9.63235C2 10.1346 2.3726 10.559 2.87068 10.624L13.4216 12L2.87068 13.376C2.3726 13.441 2 13.8654 2 14.3676L2 21.1204C2 21.7734 2.68733 22.1982 3.2715 21.9061L21.5143 12.7857Z" fill="#fff"></path></svg></span>
-                        <span class="sc-e2da28cc-4 coqSbM">Day1</span>
-                    </div>
-                    <div class="McDetail_num"><p><span>2</span>번째 일정</p></div>
-                    <div class="McDetail_place"><p>역삼역입니다</p></div>
-                </div>
-                <div class="body_area">
-                    <div class="content_area">
-                        <div id="summernote"></div>
-                    </div>
-                    <div class="McBtn_area">
-                        <div>
-                            <button class="cencel_btn" id="cancelButton">작성취소</button>    
-                            <button class="nxt_btn" id="submitButton">작성하기</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div id="contentModal">
+	           <div class="contentModal-content">
+	               <div class="head_area">
+	                   <h2>일정 상세설명</h2>
+	               </div>         
+	               <div class="text_area">
+	                   <div class="this_day">
+	                       <span class="sc-e2da28cc-3 jQkaAe"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#fff" size="15"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.5143 12.7857C22.1619 12.462 22.1619 11.538 21.5143 11.2143L3.2715 2.09388C2.68733 1.80182 2 2.22657 2 2.87962L2 9.63235C2 10.1346 2.3726 10.559 2.87068 10.624L13.4216 12L2.87068 13.376C2.3726 13.441 2 13.8654 2 14.3676L2 21.1204C2 21.7734 2.68733 22.1982 3.2715 21.9061L21.5143 12.7857Z" fill="#fff"></path></svg></span>
+	                       <span class="sc-e2da28cc-4 coqSbM">Day1</span>
+	                   </div>
+	                   <div class="McDetail_num"><p><span>2</span>번째 일정</p></div>
+	                   <div class="McDetail_place"><p>역삼역입니다</p></div>
+	               </div>
+	               <div class="body_area">
+	                   <div class="content_area">
+	                       <div id="timeline_contents"></div>
+	                   </div>
+	                   <div class="McBtn_area">
+	                       <div>
+	                           <button class="cencel_btn" id="cancelButton">뒤로가기</button>    
+	                       </div>
+	                   </div>
+	               </div>
+	           </div>
+	       </div>
     </div>
 </body>
 <script th:inline="javascript">
-	const packagenum = /*[[${packagenum}]]*/'';
+	const packagenum = /*[[${pac.packagenum}]]*/'';
 	const days = /*[[${pac.tourdays}]]*/'';
 </script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -137,5 +123,5 @@
 <script src="/js/package/markerimg.js"></script>
 <script src="/js/summernote/summernote-lite.min.js"></script>
 <script src="/js/summernote/summernote-ko-KR.js"></script>
-<script th:src="@{/js/package/timelineWrite.js}"></script>
+<script th:src="@{/js/package/timelineGet.js}"></script>
 </html>

@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.JsonObject;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
@@ -204,7 +207,16 @@ public class PackController {
 		
 		return "package/pay";
 	}
+<<<<<<< HEAD
 
+=======
+	//추가
+	@GetMapping("thumbnail")
+	public ResponseEntity<Resource> thumbnail(String systemname) throws Exception {
+		System.out.println(systemname);
+		return service.getThumbnailResource(systemname);
+	}
+>>>>>>> 53d23ed98b245fe0af50904cf9e601965ffc7762
 	
 	@PostMapping("write")
 	public String write(PackageDTO pack, MultipartFile packageFile,HttpServletRequest req) throws Exception {
@@ -225,7 +237,7 @@ public class PackController {
 	}
 	
 	@GetMapping("tlwrite")
-	public String getMethodName(@RequestParam long packagenum, Model model) {
+	public String tlwrite(@RequestParam long packagenum, Model model) {
 		//가이드num 세션에 있다고 가정
 		long guidenum = 1;
 		model.addAttribute("packagenum", packagenum);
@@ -239,6 +251,18 @@ public class PackController {
 		String[] dayMMdd = service.getDayMMdd(pac.getStartdate(),pac.getEnddate());
 		model.addAttribute("dayMMdd",dayMMdd);
 		return "/package/timelineWrite";
+	}
+	
+	@GetMapping("tlget")
+	public String tlget(@RequestParam long packagenum, Model model) {
+		//가이드num 세션에 있다고 가정
+		long guidenum = 1;
+		PackageDTO pac =  service.getDetail(packagenum);
+		//유효성검사 해야함
+		model.addAttribute("pac",pac);
+		String[] dayMMdd = service.getDayMMdd(pac.getStartdate(),pac.getEnddate());
+		model.addAttribute("dayMMdd",dayMMdd);
+		return "/package/timelineGet";
 	}
 	
 	@PostMapping(value="timelineRegist", consumes = "application/json", produces = "application/json;charset=utf-8")
@@ -298,6 +322,7 @@ public class PackController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 내부 서버 오류 상태 코드 반환
 	    }
 	}
+<<<<<<< HEAD
 	@GetMapping("thumbnail")
 	public ResponseEntity<Resource> thumbnail(String systemname) throws Exception {
 		System.out.println(systemname);
@@ -326,4 +351,32 @@ public class PackController {
 		return "redirect:/package/pmain"+cri.getListLink()+"&packagenum="+packagenum;
 		
 	}
+=======
+	
+	@PostMapping("SummerNoteImageFile")
+	public @ResponseBody String SummerNoteImageFile(@RequestParam("file") MultipartFile file) throws Exception {
+	    String path = service.SummerNoteImageFile(file);
+	    return path;
+	}
+	
+	@PostMapping("deleteSummernoteImageFile")
+	public @ResponseBody String deleteSummernoteImageFile(@RequestParam("file") String fileUrl) {
+		String result = "";
+	    if(service.deleteSummernoteImageFile(fileUrl)) {
+	    	result = "성공";
+	    }else {
+	    	result = "실패";
+	    }
+	    return result;
+	}
+	
+	@GetMapping("packageVisibility")
+	public String packageVisibility(@RequestParam("packagenum") long packagenum) {
+		if(service.packageVisibility(packagenum)) {
+			return "redirect:/package/pget?packagenum="+packagenum;
+		}else {
+			return "redirect:/package/tlwrite?packagenum="+packagenum;
+		}
+	}
+>>>>>>> 53d23ed98b245fe0af50904cf9e601965ffc7762
 }
