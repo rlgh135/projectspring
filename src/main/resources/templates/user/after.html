@@ -5,43 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>여행 후기 작성</title>
 </head>
+<style>
+    .hidden{
+        display: none;
+    }
+    .himo{
+            position:absolute;  
+            
+            justify-content: center;
+            top:0;
+            left:0;
+
+            width:100%;
+            height:100%;
+
+            
+
+            background-color: rgba(0,0,0,0.4);
+    }
+
+    .himo_body{
+            position:absolute;
+            top:50%; 
+        
+
+            width:400px; 
+            height:600px; 
+
+            padding:40px;  
+
+            text-align: center;
+
+            background-color: rgb(255,255,255); 
+            border-radius:10px; 
+            box-shadow:0 2px 3px 0 rgba(34,36,38,0.15); 
+
+            transform:translateY(-50%); 
+    }
+</style>
 <body>
     <div id="hgwrap">
-        <div id="hugimodal">
-	        <div id="gprofile">
-	            <div id="gprofile">
-	                <img id="gprofileimg" src="">
-	            </div>
-	            <div id="likezone">
-	                <div id="hg-gid">가이드아이디</div>
-	                <input type="hidden" value="yes" id="chuchu">
-	                <div id="hg-glike">이 가이드를 추천했어요 <span><img src="redheart" alt=""></span></div>
-	            </div>
-	        </div>
-            <form method="post" action="/user/hugi">
-                <input type="hidden" name="guidenum" val="" id="hugignum">
-                <input type="hidden" name="packagenum" val="" id="hugipnum">
-                <div>가이드님과의 여행은 어땠는지 후기를 작성해보세요</div>
-                <textarea name="contents" id="hugicont"></textarea>    
-            </form>
-            <div class="btns">
-                <button class="yetda" onclick="yeogihugi()">작성완료</button>
-                <button class="yetda" onclick="canslehugi()">취소</button>
+        <div id="hugimodal" class="hidden himo">
+            <div class="himo_body">
+                <div id="gprofile">
+                    <div id="gprofile">
+                        <img id="gprofileimg" src="">
+                    </div>
+                    <div id="likezone">
+                        <div id="hg-gid">가이드아이디</div>
+                        <input type="hidden" value="yes" id="chuchu">
+                        <div id="hg-glike">이 가이드를 추천했어요 <span id="likeClk"><img id="likeHeart" src="redheart" alt="" onclick=""></span></div>
+                    </div>
+                </div>
+                <form method="post" action="/user/hugi">
+                    <input type="hidden" name="guidenum" val="" id="hugignum">
+                    <input type="hidden" name="packagenum" val="" id="hugipnum">
+                    <div>가이드님과의 여행은 어땠는지 후기를 작성해보세요</div>
+                    <textarea name="contents" id="hugicont"></textarea>    
+                </form>
+                <div class="btns">
+                    <button class="yetda" onclick="yeogihugi()">작성완료</button>
+                    <button class="yetda" onclick="canslehugi()">취소</button>
+                </div>
             </div>
         </div>
         <h2>여행 후기를 작성해보세요</h2>
         <div>
             <th:block th:if="${packagelist != null and packagelist.size > 0}">
                 <ul>
-                    <li th:each="package, iterStat : ${packagelist}" th:onclick="hugit(${package.packagenum}, ${package.guidenum}, '${guideimg[package.guidenum]}')">
+                    <li th:each="package, iterStat : ${packagelist}" th:onclick="hugit([[${package.packagenum}]], [[${package.guidenum}]], [[${guideimg[package.guidenum]}]])">
                         <div class="hgthumbox">
                             <img class="hugitumb">
                         </div>
                         <div>
                             <div>[[${package.packageTitle}]]</div>
-                            <div>여행종료일: [[${package.enddate}]]  가이드: [[${guideids[package.guidenum]}]]<span class="ddabong"><img></span> </div>
+                            <div>여행종료일: [[${package.enddate}]]  <span th:id="${'guideid'+package.guidenum}">가이드: [[${guideids[package.guidenum]}]]</span><span class="ddabong"><img></span> </div>
                         </div>
                         <div class="stampzone">
+                            <input th:if="#{reviewlist[iterStat.index]!=null}" type="hidden" th:id="${'hugitxt'+package.guidenum}" th:value="[[${reviewlist[iterStat.index].contents}]]">
+                            <input th:unless="#{reviewlist[iterStat.index]!=null}" type="hidden" th:id="${'hugitxt'+package.guidenum}" th:value="">
                             <img th:if="${reviewlist[iterStat.index]!=null}" th:src="stamp" class="hgstamp">
                         </div>
                     </li>
@@ -51,6 +93,21 @@
                 <img src="" alt="teong">
             </th>
         </div>
+        <div><a href="/user/myinfo">돌아가기</a></div>
     </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    function hugit(packagenum, guidenum, guidethumbnail) {
+        const modal = document.getElementById("hugimodal");
+        modal.classList.toggle("hidden");
+
+        $("#gprofileimg").attr('src', '/user/thumbnail?='+guidethumbnail);
+        $("#hg-gid").text($("#guideid"+guidenum).text());
+
+    }
+    function canslehugi() {
+        
+    }
+</script>
 </html>
