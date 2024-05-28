@@ -169,4 +169,9 @@
 	 <select id="getMyPackageCnt">
 		select count(*) from package where guidenum=#{guidenum}
 	 </select>
+	 <update id="updateReadCount">
+        UPDATE package
+        SET viewcnt = viewcnt + 1
+        WHERE packagenum = #{packagenum}
+    </update>
 </mapper>

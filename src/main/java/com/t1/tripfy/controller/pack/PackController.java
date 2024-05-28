@@ -157,18 +157,22 @@ public class PackController {
 	    model.addAttribute("files", service.getFiles(packagenum));
 	    
 	    String loginUser = (String) session.getAttribute("loginUser");
-	    
+
 	    if (requestURI.contains("pmodify")) {
 	        return "package/pmodify";
 	    }
-	    
-	    Long guidenum = (Long) session.getAttribute("guidNum");
-	    
-	    if (guidenum == null) {
-	        throw new IllegalStateException("guidenum is not set in session");
+
+	    // 세션에서 guidenum 가져오기 (Integer 또는 Long 타입 모두 처리)
+	    Object guidenumObj = session.getAttribute("guideNum");
+	    Long guidenum = null;
+	    if (guidenumObj instanceof Integer) {
+	        guidenum = ((Integer) guidenumObj).longValue();
+	    } else if (guidenumObj instanceof Long) {
+	        guidenum = (Long) guidenumObj;
 	    }
-	    
-	    if(!(pack.getGuidenum()==((Long)session.getAttribute("guideNum")))){
+
+	    // guidenum이 세션에 없거나, guidenum이 pack의 guidenum과 다를 경우 조회수 증가
+	    if (guidenum == null || !(pack.getGuidenum() ==(guidenum))) {
 	        Cookie[] cookies = req.getCookies();
 	        Cookie read_pack = null;
 	        if (cookies != null) {
@@ -181,12 +185,13 @@ public class PackController {
 	        }
 	        if (read_pack == null) {
 	            service.increaseReadCount(packagenum);
+	            System.out.println("왜 안올라?");
 	            Cookie cookie = new Cookie("read_pack" + packagenum, "r");
 	            cookie.setMaxAge(1800);
 	            resp.addCookie(cookie);
 	        }
 	    }
-	    
+
 	    return "package/pget";
 	}
 
