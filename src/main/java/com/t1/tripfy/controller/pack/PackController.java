@@ -162,13 +162,13 @@ public class PackController {
 	        return "package/pmodify";
 	    }
 	    
-	    Long guidenum = (Long) session.getAttribute("guidenum");
+	    Long guidenum = (Long) session.getAttribute("guidNum");
 	    
 	    if (guidenum == null) {
 	        throw new IllegalStateException("guidenum is not set in session");
 	    }
 	    
-	    if(!(pack.getGuidenum()==((Long)session.getAttribute("guidenum")))){
+	    if(!(pack.getGuidenum()==((Long)session.getAttribute("guideNum")))){
 	        Cookie[] cookies = req.getCookies();
 	        Cookie read_pack = null;
 	        if (cookies != null) {
