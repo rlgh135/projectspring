@@ -621,3 +621,8 @@ p{
     border: 2px solid #ffffff;
     box-shadow: 0 0 0 2px #1976D2;
 }
+#timeline_contents{
+	width:100%;
+	height: 600px;
+	overflow: auto;
+}

@@ -1,5 +1,4 @@
 package com.t1.tripfy.service.pack;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,4 +51,10 @@ public interface PackageService {
 	TimelineDTO getTimelineContent(TimelineDTO tl);
 
 	boolean tlUpdateContents(TimelineDTO tl);
+
+	String SummerNoteImageFile(MultipartFile file) throws Exception;
+
+	boolean deleteSummernoteImageFile(String fileUrl);
+
+	boolean packageVisibility(long packagenum);
 }

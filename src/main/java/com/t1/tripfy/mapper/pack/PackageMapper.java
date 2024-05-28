@@ -12,7 +12,7 @@ import com.t1.tripfy.domain.dto.pack.PackageDTO;
 @Mapper
 public interface PackageMapper {
 	int insertPack(PackageDTO pack);
-	int insertPackContent(PackageDTO pack);
+	int insertPackContent(long packagenum);
 	
 	List<PackageDTO>getRecentList(Criteria cri);
 	List<PackageDTO> getPopList(Criteria cri);
