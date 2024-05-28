@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>write</title>
+	<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+</head>
+<style>
+    /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    
+    .wrap {
+        width: 1400px;
+        margin: 0 auto;
+        /* border: 1px solid red; */
+		margin-top: 130px;
+		position: relative;
+    }
+
+    [type=text] {
+        padding: 8px;
+        border: 1px solid #e0e0e0;
+        width: 220px;
+        outline: none;
+    }
+
+    .date [type=text] {
+        width: 100px;
+    }
+
+    .title [type=text] {
+        width: 780px;
+    }
+
+    .boardwrite {
+        margin: 0 auto;
+        padding: 30px;
+        /* border: 2px solid #42A5F5; */
+        border-collapse: collapse;
+    }
+    
+	.boardwrite caption {
+        font-weight: bold;
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
+
+	.boardwrite th {
+        width: 220px; padding: 13px;
+        background-color: #fafafa;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+	.boardwrite th:first-of-type {
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .boardwrite td {
+        width: 800px;
+        padding: 10px;
+        border-bottom: 1px dashed #e0e0e0;
+    }
+
+	.boardwrite td:first-of-type {
+        border-top: 1px dashed #e0e0e0;
+    }
+
+	.boardwrite textarea {
+        width: 780px; height: 400px;
+        resize: none;
+        border: 1px solid #e0e0e0;
+        outline: none;
+        padding: 10px;
+    }
+
+	.boardwrite th h4 {
+        font-size: 14px;
+        font-weight: bold;
+    }
+	
+	.place > td {
+		position: relative;
+	}
+	
+	.boardwrite th h4::after {
+	    content: " *";
+		color: red;
+	}
+
+	.startdate, .enddate, .startdate::placeholder, .enddate::placeholder {
+        text-align: center;
+    }
+	
+	.yesno td [type="radio"] + label {
+	    margin-right: 10px; 
+	}
+
+    .buttons {
+        margin: 0 auto;
+        width: 218px;
+        margin-top: 30px;
+        /* border: 1px solid red; */
+    }
+
+    .writeOk, .writeCancel {
+        width: 100px; height: 40px;
+        border: 1px solid #2196F3;
+        border-radius: 8px;
+        background-color: #2196F3;
+        color: #fff;
+        font-weight: bold;
+		font-size: 15px;
+    }
+
+    .writeOk {margin-right: 10px;}
+	
+	.nation_select {
+	    position: absolute;
+	    width: 350px; height: 340px;
+	    background-color: #fff;
+	    border: 1px solid rgb(233, 233, 233);
+	    border-radius: 10px;
+	    bottom: 160px; left: 430px;
+	    z-index: 1;
+	    box-shadow: 0px 0px 3px rgba(30, 30, 30, 0.15);
+	}
+	
+	.nation_select .category {
+	    position: absolute;
+	    width: 100%; height: 280px;
+	    display: flex;
+	    padding: 5px;
+	    flex-wrap: nowrap;
+	    justify-content: space-between;
+	    /* display: none; */
+	}
+	
+	.nation_select .category > * {
+	    width: 33.3%;
+	    height: 280px;
+	}
+	
+	.nation_select .category .nation {
+	    border-radius: 10px 0 0 10px / 10px 0 0 10px;
+	    border: 1px solid rgb(233, 233, 233);
+	    padding: 3px;
+	}
+
+	.nation_select .category .region {
+	    border-top: 1px solid rgb(233, 233, 233);
+	    border-bottom: 1px solid rgb(233, 233, 233);
+		padding: 3px;
+		    position: relative;
+	}
+	
+	.nation_select .category .region_detail {
+	    border-radius: 0 10px 10px 0 / 0 10px 10px 0;
+	    border: 1px solid rgb(233, 233, 233);
+		    padding: 3px;
+		    position: relative;
+	}
+	
+	.nation_select .category .nation > div, .region > div, .region_detail > div {
+		width: 95%;
+		height: 280px;
+		overflow-y: auto;
+	}
+	
+	.nation_select .category .nation > div {
+		width: 100%;
+	}
+		
+	.region > div, .region_detail > div {
+	    /* border: 1px solid red; */
+	    position: absolute;
+	}
+	
+	.nation_select .category .nation > div > button, .region > div > button, .region_detail > div > button {
+	    display: block;
+	    width: 100%;
+	    padding: 8px;
+	    border: none;
+	    background-color: #fff;
+	}
+	
+	.nation_select .category .nation > div > button > p, 
+	.nation_select .category .region > div > button > p, 
+	.nation_select .category .region_detail > div > button > p {
+	    width: 100%;
+	    text-align: left;
+	    white-space: nowrap;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	}
+	
+	.nation_select .n_btns {
+	   position: absolute;
+	   bottom: 9px; left: 24px;
+	}
+	
+	.n_btns button {
+	    background-color: #fff;
+	    border: 1px solid red;
+	    border-radius: 5px;
+	    height: 35px;
+	    font-size: 12px;
+	    font-weight: bold;
+	}
+	
+	.n_btns button:nth-child(1) {
+	    width: 90px;
+	    margin-right: 5px;
+	    color: #2196F3;
+	    background-color: #F5F5F5;
+	    border: 1px solid #F5F5F5;
+	}
+	
+	.n_btns button:nth-child(1) img {
+	    width: 18px;
+	    height: 18px;
+	    position: absolute;
+	    left: 16px;
+	}
+	
+	.n_btns button:nth-child(1) span {
+	    margin-left: 18px;
+	}
+	
+	.n_btns button:nth-child(2) {
+	    width: 200px;
+	    color: #fff;
+	    background-color: #2196F3;
+	    border: 1px solid #2196F3;
+	}
+	
+	.x img {
+		width: 20px; height: 20px;
+		position: absolute;
+		top: 17px; left: 203px;
+	}
+    
+
+</style>
+<body>
+	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+	
+    <div class="wrap">
+        <form action="/board/write" method="post" name="writeForm" id="writeForm">
+            <table class="boardwrite">
+                <caption>게시글 작성</caption>
+                <tr class="title">
+                    <th><h4>제목</h4></th>
+                    <td><input type="text" placeholder="제목" class="b_title"></td>
+                </tr>
+
+                <tr class="writer">
+                    <th><h4>작성자</h4></th>
+                    <td><input type="text" placeholder="작성자" class="b_writer" th:value="${session.loginUser}" readonly></td>
+                </tr>
+				
+				<tr class="yesno">
+				    <th><h4>여행 후기 글 작성 여부</h4></th>
+				    <td>
+				        <input type="radio" name="yesno" id="yes" onclick="date_placeY();"><label for="yes"> yes</label>
+				        <input type="radio" name="yesno" id="no" onclick="date_placeN();"><label for="no"> no</label>
+				    </td>
+				</tr>
+
+                <tr class="date" style="display: none;">
+                    <th><h4>여행 기간</h4></th>
+                    <td>
+                        <input type="text" placeholder="출발일" class="startdate" id="startdate" readonly>
+                        ~
+                        <input type="text" placeholder="도착일" class="enddate" id="enddate" readonly>
+                    </td>
+                </tr>
+
+                <tr class="place" style="display: none;">
+                    <th><h4>여행 장소</h4></th>
+                    <td>
+						<input type="text" placeholder="나라/지역" class="b_place" readonly>
+						
+						<div class="x">
+						    <img src="/images/boardimg/cross.png" alt="">
+						</div>
+					</td>
+                </tr>
+
+                <tr class="place">
+                    <th><h4>내용</h4></th>
+                    <td><textarea placeholder="내용" class="b_content"></textarea></td>
+                </tr>
+            </table>
+            <div class="buttons">
+                <input type="button" value="글 작성" class="writeOk" onclick="writeOk();">
+                <input type="button" value="취소" class="writeCancel">
+            </div>
+        </form>
+
+		<div class="nation_select" style="display: none;">
+			<div class="category">
+				<div class="nation">
+					<div>
+						<button class="countrybtn" name="kr"><p class="countrystr">국내</p></button>
+						<button class="countrybtn" name="fr"><p class="countrystr">해외</p></button>
+					</div>
+				</div>
+		
+				<div class="region">
+					<div style="visibility: hidden;" id="kr">
+						<button class="area" name="서울"><p class="areastr">서울</p></button>
+						<button class="area" name="제주도"><p class="areastr">제주도</p></button>
+						<button class="area" name="경기도"><p class="areastr">경기도</p></button>
+						<button class="area" name="강원도"><p	class="areastr">강원도</p></button>
+						<button	class="area" name="충청도"><p class="areastr">충청도</p></button>
+						<button	class="area" name="경상도"><p class="areastr">경상도</p></button>
+						<button class="area" name="전라도"><p class="areastr">전라도</p></button>
+						<button class="area" name="인천광역시"><p class="areastr">인천광역시</p></button>	
+					</div>
+					
+					<div style="visibility: hidden;" id="fr">
+						<button class="area" name="동남아시아"><p class="areastr">동남아시아</p></button>
+						<button class="area" name="괌/사이판/호주/뉴질랜드"><p class="areastr">괌/사이판/호주/뉴질랜드</p></button>
+						<button class="area" name="일본"><p class="areastr">일본</p></button>
+						<button class="area" name="중국"><p class="areastr">중국</p></button>
+						<button class="area" name="유럽"><p class="areastr">유럽</p></button>
+						<button class="area" name="미국"><p class="areastr">하와이/미국/중남미</p></button>
+					</div>
+				</div>
+				<div class="region_detail">
+					<div style="visibility: hidden;" id="ea">
+						 <button class="area_detail" name="태국"><p class="area_detailstr">태국</p></button>
+						 <button class="area_detail" name="베트남"><p class="area_detailstr">베트남</p></button>
+						 <button class="area_detail" name="필리핀"><p class="area_detailstr">필리핀</p></button>
+						 <button class="area_detail" name="싱가포르"><p class="area_detailstr">싱가포르</p></button>
+						 <button class="area_detail" name="말레이시아"><p class="area_detailstr">말레이시아</p></button>
+						 <button class="area_detail" name="캄보디아"><p class="area_detailstr">캄보디아</p></button>
+					 </div>
+					
+					 <div style="visibility: hidden;" id="jp">
+						 <button class="area_detail" name="오사카"><p class="area_detailstr">오사카</p></button>
+						 <button class="area_detail" name="후쿠오카"><p class="area_detailstr">후쿠오카</p></button>
+						 <button class="area_detail" name="도쿄"><p class="area_detailstr">도쿄</p></button>
+						 <button class="area_detail" name="교토"><p class="area_detailstr">교토</p></button>
+						 <button class="area_detail" name="삿포로"><p class="area_detailstr">삿포로</p></button>
+					 </div>
+					
+					 <div style="visibility: hidden;" id="cn">
+						 <button class="area_detail" name="하이난"><p class="area_detailstr">하이난</p></button>
+						 <button class="area_detail" name="청도"><p class="area_detailstr">청도</p></button>
+						 <button class="area_detail" name="베이징"><p	class="area_detailstr">베이징</p></button>
+						 <button class="area_detail" name="장가계"><p class="area_detailstr">장가계</p></button>
+					 </div>
+					
+					 <div style="visibility: hidden;" id="eu">
+						 <button class="area_detail" name="프랑스"><p class="area_detailstr">프랑스</p></button>
+						 <button class="area_detail" name="영국"><p class="area_detailstr">영국</p></button>
+						 <button class="area_detail" name="이탈리아"><p class="area_detailstr">이탈리아</p></button>
+						 <button class="area_detail" name="스페인"><p class="area_detailstr">스페인</p></button>
+						 <button class="area_detail" name="독일"><p class="area_detailstr">독일</p></button>
+						 <button class="area_detail" name="스위스"><p class="area_detailstr">스위스</p></button>
+						 <button class="area_detail" name="핀란드"><p class="area_detailstr">핀란드</p></button>
+						 <button class="area_detail" name="노르웨이"><p class="area_detailstr">노르웨이</p></button>
+						 <button class="area_detail" name="그리스"><p class="area_detailstr">그리스</p></button>
+						 <button class="area_detail" name="포르투갈"><p class="area_detailstr">포르투갈</p></button>
+					 </div>
+					 
+					 <div style="visibility: hidden;" id="us">
+						 <button class="area_detail" name="하와이"><p class="area_detailstr">하와이</p></button>
+						 <button class="area_detail" name="미국(동부)"><p class="area_detailstr">미국(동부)</p></button>
+						 <button class="area_detail" name="미국(서부)"><p class="area_detailstr">미국(서부)</p></button>
+						 <button class="area_detail" name="캐나다"><p class="area_detailstr">캐나다</p></button>
+						 <button class="area_detail" name="중남미"><p class="area_detailstr">중남미</p></button>
+					 </div>
+				</div>
+			</div>
+		
+			<div class="n_btns">
+				<button onclick="reset();"><img src="/images/boardimg/reset.png" alt=""><span>초기화</span></button>
+				<button onclick="regionApply();">적용</button>
+			</div>
+		</div>
+
+
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+	// 나라 및 지역 선택 창
+	const nation_select = document.querySelector(".nation_select");
+	
+	const countrybtn = document.getElementsByClassName("countrybtn");
+	const countrystr = document.getElementsByClassName("countrystr");
+	
+	const area = document.getElementsByClassName("area");
+	const areastr = document.getElementsByClassName("areastr");
+	
+	const area_detail = document.getElementsByClassName("area_detail");
+	const area_detailstr = document.getElementsByClassName("area_detailstr");
+	
+	const region_div_kr = document.querySelector(".region > div#kr");
+	const region_div_fr = document.querySelector(".region > div#fr");
+	const region_detail_div = document.querySelectorAll(".region_detail div");
+	
+	let country_select = document.querySelector(".country_select");
+	let area_select = document.querySelector(".area_select");
+	let area_detail_select = document.querySelector(".area_detail_select");
+		
+	// 라디오 버튼 yes
+	function date_placeY() {
+		document.querySelector(".date").style.display = "";
+		document.querySelector(".place").style.display = "";
+	}
+	
+	// 라디오 버튼 no
+	function date_placeN() {
+		document.querySelector(".date").style.display = "none";
+		document.querySelector(".place").style.display = "none";
+		
+		document.querySelector(".startdate").value = "";
+		document.querySelector(".enddate").value = "";
+		document.querySelector(".b_place").value = "";
+		
+		nation_select.style.display = "none";
+		
+		let country_select = document.querySelector(".country_select");
+		let area_select = document.querySelector(".area_select");
+		let area_detail_select = document.querySelector(".area_detail_select");
+		
+		if(country_select != null) {
+			country_select.classList.remove("country_select");
+			country_select.style.backgroundColor = "#fff";
+		}
+		
+		if(area_select != null) {
+			area_select.classList.remove("area_select");
+			area_select.style.backgroundColor = "#fff";
+		}
+		
+		if(area_detail_select != null) {
+			area_detail_select.classList.remove("area_detail_select");
+			area_detail_select.style.backgroundColor = "#fff";
+		}
+	}
+	
+	const b_place = document.querySelector(".b_place");
+	
+	b_place.addEventListener("click", function() {
+		if(b_place.value == "" || b_place.focus()) {
+			nation_select.style.display = "";
+		}
+	})
+	
+	// 국내, 해외 버튼
+	for(let i = 0; i < countrystr.length; i++) {
+		countrystr[i].addEventListener("click", function(e) {
+			// p태그 클릭 시 이벤트 막고 그 부모 요소가 클릭되도록
+			e.stopPropagation();  // 이벤트 막음
+			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		})
+	}
+	
+	for(let i = 0; i < countrybtn.length; i++) {
+		countrybtn[i].addEventListener("click", countryClick);
+	}
+	
+	// 서울, 동남아시아 등 버튼
+	for(let i = 0; i < areastr.length; i++) {
+		areastr[i].addEventListener("click", function(e) {
+			// p태그 클릭 시 이벤트 막고 그 부모 요소가 클릭되도록
+			e.stopPropagation();  // 이벤트 막음
+			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		});
+	}
+	
+	// 오사카, 태국 등 버튼
+	for(let i = 0; i < area.length; i++) {
+		area[i].addEventListener("click", areaClick);
+	}
+	
+	for(let i = 0; i < area_detailstr.length; i++) {
+		area_detailstr[i].addEventListener("click", function(e) {
+			// p태그 클릭 시 이벤트 막고 그 부모 요소가 클릭되도록
+			e.stopPropagation();  // 이벤트 막음
+			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		});
+	}
+	
+	for(let i = 0; i < area_detail.length; i++) {
+		area_detail[i].addEventListener("click", areadetailClick);
+	}
+	
+	function countryClick(e) {
+	// 국내, 해외 버튼 색 초기화
+	for(let i = 0; i < countrybtn.length; i++) {
+			countrybtn[i].style.backgroundColor = "#fff";
+			countrybtn[i].classList.remove("country_select");
+		}
+		
+		let obj = e.target;
+		obj.style.backgroundColor = "#f0f0f0";
+		console.log(obj.textContent)  // obj.textContent: obj의 모든 텍스트(자식 요소의 텍스트 포함)
+		
+		if(obj.textContent == "국내") {
+			region_div_kr.style.visibility = "visible";
+			region_div_fr.style.visibility = "hidden";
+			
+			for(let i = 0; i < region_detail_div.length; i++) {
+				region_detail_div[i].style.visibility = "hidden";
+			}
+			
+		}
+		
+		else if(obj.textContent == "해외") {
+			region_div_kr.style.visibility = "hidden";
+			region_div_fr.style.visibility = "visible";
+			
+			if(area_select != null) {			
+				for(let i = 0; i < area_select.length; i++) {
+					area_select[i].classList.remove("area_select");
+				}
+			}
+			
+		}
+		
+		// 지역 버튼 색상 및 클래스 초기화
+		for(let i = 0; i < area.length; i++) {
+			area[i].style.backgroundColor = "#fff";
+			area[i].classList.remove("area_select");
+		}
+		
+		// 상세지역 버튼 색상 및 클래스 초기화
+		for(let i = 0; i < area_detail.length; i++) {
+			area_detail[i].style.backgroundColor = "#fff";
+			area_detail[i].classList.remove("area_detail_select");
+		}
+		
+		obj.classList.add("country_select");
+	}
+	
+	function areaClick(e) {
+		let obj = e.target;
+		console.log("------------------")
+		console.log(e.target.name)
+		
+		// 지역 버튼 색상 초기화
+		for(let i = 0; i < area.length; i++) {
+			area[i].style.backgroundColor = "#fff";
+			area[i].classList.remove("area_select");
+		}
+		
+		obj.style.backgroundColor = "#f0f0f0";
+		obj.classList.add("area_select");
+		
+		const ea = document.getElementById("ea");
+		const jp = document.getElementById("jp");
+		const cn = document.getElementById("cn");
+		const eu = document.getElementById("eu");
+		const us = document.getElementById("us");
+		
+		let txt = e.target.name;
+		
+		if(txt == "동남아시아") {
+			ea.style.visibility = "visible";
+			jp.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "괌/사이판/호주/뉴질랜드") {
+			ea.style.visibility = "hidden";
+			jp.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "일본") {
+			jp.style.visibility = "visible"; 
+			ea.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "중국") { 
+			cn.style.visibility = "visible";
+			ea.style.visibility = "hidden";
+			jp.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "유럽") { 
+			eu.style.visibility = "visible";
+			ea.style.visibility = "hidden";
+			jp.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "미국") { 
+			us.style.visibility = "visible";
+			ea.style.visibility = "hidden";
+			jp.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+		}
+		
+	}
+	
+	function areadetailClick(e) {
+		let obj = e.target;
+		
+		// 지역 버튼 색상 초기화
+		for(let i = 0; i < area.length; i++) {
+			area_detail[i].style.backgroundColor = "#fff";
+			area_detail[i].classList.remove("area_detail_select");
+		}
+		
+		obj.style.backgroundColor = "#f0f0f0";
+		obj.classList.add("area_detail_select");
+	}
+	
+	function reset() {
+		// 국내, 해외 버튼 색 초기화
+		for(let i = 0; i < countrybtn.length; i++) {
+			countrybtn[i].style.backgroundColor = "#fff";
+		}
+		
+		// 지역 버튼 색 초기화
+		for(let i = 0; i < area.length; i++) {
+			area[i].style.backgroundColor = "#fff";
+		}
+		
+		const country_select = document.querySelector(".country_select");
+		const area_select = document.querySelector(".area_select");
+		const area_detail_select = document.querySelector(".area_detail_select");
+		
+		const region_detail_div = document.querySelectorAll(".region_detail div");
+		
+		if(country_select != null) {			
+			country_select.classList.remove("country_select");
+		}
+		
+		if(area_select != null) {			
+			area_select.classList.remove("area_select");
+		}
+		
+		if(area_detail_select != null) {
+			area_detail_select.classList.remove("area_detail_select");
+		}
+		
+		region_div_kr.style.visibility = "hidden";
+		region_div_fr.style.visibility = "hidden";
+		
+		for(let i = 0; i < region_detail_div.length; i++) {
+			region_detail_div[i].style.visibility = "hidden";
+		}
+	}
+	
+	function regionApply() {
+		let country_select = document.querySelector(".country_select");
+		let area_select = document.querySelector(".area_select");
+		let area_detail_select = document.querySelector(".area_detail_select");
+		
+		//console.log("country_select: " + country_select.name)
+		//console.log("area_select: " + area_select.name)
+		//console.log("area_detail_select: " + area_detail_select.name)
+		
+		if(country_select == null) {
+			alert("국내/해외를 선택해주세요");
+		}	
+		
+		else {
+			if(area_select == null) {
+				alert("지역을 선택해주세요");
+			}
+			
+			else {
+				if(area_select.name == "서울" || area_select.name == "제주도" || area_select.name == "경기도" || area_select.name == "강원도" || area_select.name == "충청도" || area_select.name == "경상도" || area_select.name == "전라도" || area_select.name == "인천광역시" || area_select.name == "괌/사이판/호주/뉴질랜드") {
+					b_place.value = area_select.name;
+				}
+				
+				else {
+					if(area_detail_select == null) {
+						alert("세부 지역을 선택해주세요");
+					}
+					
+					else {
+						b_place.value = area_detail_select.name;
+					}
+				}
+			}
+		}
+		
+		
+		if(b_place.value != "") {		
+			nation_select.style.display = "none";
+			const region_div = document.querySelectorAll(".region > div");
+			const region_detail_div = document.querySelectorAll(".region_detail > div");
+			
+			for(let i = 0; i < region_div.length; i++) {
+				region_div[i].style.visibility = "hidden";
+			}
+			
+			for(let i = 0; i < region_detail_div.length; i++) {
+				region_detail_div[i].style.visibility = "hidden";
+			}
+			
+			document.querySelector(".x").addEventListener("click", function() {
+				b_place.value = "";
+				
+				let country_select = document.querySelector(".country_select");
+				let area_select = document.querySelector(".area_select");
+				let area_detail_select = document.querySelector(".area_detail_select");
+				
+				if(country_select != null) {
+					country_select.classList.remove("country_select");
+					country_select.style.backgroundColor = "#fff";
+				}
+				
+				if(area_select != null) {
+					area_select.classList.remove("area_select");
+					area_select.style.backgroundColor = "#fff";
+				}
+				
+				if(area_detail_select != null) {
+					area_detail_select.classList.remove("area_detail_select");
+					area_detail_select.style.backgroundColor = "#fff";
+				}
+				
+			})
+		}
+	}
+	
+	// 여행 기간 선택하는 달력
+	flatpickr("#startdate", {
+	    mode: "range",
+	    dateFormat: "Y-m-d",
+		minDate: "today",
+	    onClose: function(selectedDates, dateStr, instance) {
+	        if (selectedDates.length === 2) {
+	            const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
+	            const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
+	            document.getElementById("startdate").value = startDate;
+	            document.getElementById("enddate").value = endDate;
+	        }
+	    }
+	});
+	
+	
+	
+	function writeOk() {
+		const b_title = document.querySelector(".b_title");
+		const yes = document.getElementById("yes");
+		const no = document.getElementById("no");
+		const startdate = document.getElementById("startdate");
+		const enddate = document.getElementById("enddate");
+		const b_place = document.querySelector(".b_place");
+		const b_content = document.querySelector(".b_content");
+		
+		if(b_title.value == "") {
+			alert("제목을 입력해주세요");
+			b_title.focus();
+			return;
+		}
+		
+		if(!yes.checked && !no.checked) {
+			alert("여행 후기 글 작성 여부를 체크해주세요");
+			return;
+		}		
+
+		if(yes.checked) {			
+			if(startdate.value == "" || enddate.value == "") {
+				alert("여행 기간을 입력해주세요");
+				return;
+			}
+			
+			if(b_place.value == "") {
+				alert("여행 장소를 입력해주세요");
+				return;
+			}
+		}
+		
+		if(b_content.value == "") {
+			alert("내용을 입력해주세요");
+			return;
+		}
+		
+		document.writeForm.submit();
+	}
+</script>
+</html>

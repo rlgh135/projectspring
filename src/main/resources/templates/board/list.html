@@ -454,6 +454,22 @@
 	     background: url("/images/boardimg/next.png") no-repeat center/20px 20px;
 	     margin-right: 0;
 	 }
+	 
+	.writebtn {
+	     width: 70px; height: 70px;
+	     position: absolute;
+	     bottom: 50px; right: 100px; 
+	     position: fixed;
+	 }
+	
+	 .writebtn > [type="button"] {
+	     width: 70px; height: 70px;
+	     background: url("/images/boardimg/writebtn.png") no-repeat center/50px 50px;
+	     border-radius: 50%;
+		 background-color: #fff;
+	     border: none;
+	     box-shadow: 1px 1px 15px #74747470;
+	 }
 
 
 </style>
@@ -509,7 +525,7 @@
 								
 								<div style="visibility: hidden;" id="fr">
 								    <button class="area" name="동남아시아"><p class="areastr">동남아시아</p></button>
-								    <button class="area" name="괌"><p class="areastr">괌/사이판/호주/뉴질랜드</p></button>
+								    <button class="area" name="괌/사이판/호주/뉴질랜드"><p class="areastr">괌/사이판/호주/뉴질랜드</p></button>
 								    <button class="area" name="일본"><p class="areastr">일본</p></button>
 								    <button class="area" name="중국"><p class="areastr">중국</p></button>
 								    <button class="area" name="유럽"><p class="areastr">유럽</p></button>
@@ -623,6 +639,10 @@
 			-->
             <a class="changePage b_nextbtn" th:id="${pageMaker.cri.pagenum + 1}" th:href="${pageMaker.cri.pagenum + 1}"></a>
         </div>
+		
+		<div class="writebtn">
+		    <input type="button" value="" onclick="boardwrite();">
+		</div>
 		
 		<input type="hidden" id="startPage" th:value="${pageMaker.startPage}">
 		<input type="hidden" id="realEndPage" th:value="${pageMaker.realEnd}">
@@ -968,7 +988,7 @@
 				countryName = "ea";
 			}
 			
-			else if(area_select.name == "괌") {
+			else if(area_select.name == "괌/사이판/호주/뉴질랜드") {
 				countryName = "gu";			
 			}
 			
@@ -1207,7 +1227,7 @@
 				countryName = "ea";
 			}
 			
-			else if(area_select.name == "괌") {
+			else if(area_select.name == "괌/사이판/호주/뉴질랜드") {
 				countryName = "gu";			
 			}
 			
@@ -1508,7 +1528,7 @@
 			us.style.visibility = "hidden";
 		}
 		
-		else if(txt == "괌") {
+		else if(txt == "괌/사이판/호주/뉴질랜드") {
 			ea.style.visibility = "hidden";
 			jp.style.visibility = "hidden";
 			cn.style.visibility = "hidden";
@@ -1613,7 +1633,7 @@
 						countryName = "ea"; 
 					}
 					
-					else if(txt == "괌") {
+					else if(txt == "괌/사이판/호주/뉴질랜드") {
 						countryName = "gu"; 
 					}
 					
@@ -1915,7 +1935,7 @@
 						countryName = "ea";
 					}
 					
-					else if(area_select.name == "괌") {
+					else if(area_select.name == "괌/사이판/호주/뉴질랜드") {
 						countryName = "gu";			
 					}
 					
@@ -1998,7 +2018,7 @@
 						countryName = "ea";
 					}
 					
-					else if(area_select.name == "괌") {
+					else if(area_select.name == "괌/사이판/호주/뉴질랜드") {
 						countryName = "gu";			
 					}
 					
@@ -2077,7 +2097,7 @@
 					countryName = "ea";
 				}
 				
-				else if(area_select.name == "괌") {
+				else if(area_select.name == "괌/사이판/호주/뉴질랜드") {
 					countryName = "gu";			
 				}
 				
@@ -2115,6 +2135,18 @@
 		
 	}
 
+	function boardwrite() {
+		let loginUser = /*[[${session.loginUser}]]*/"";  // 세션에 있는 loginUser
+		console.log(loginUser)
+		
+		if(loginUser == null) {
+			alert("로그인 후 이용해주세요.")
+		}
+		
+		else {
+			location.replace("/board/write")
+		}
+	}
 	
 
 </script>

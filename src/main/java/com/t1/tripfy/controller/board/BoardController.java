@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,8 @@ import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.service.board.BoardService;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 
 @Controller
@@ -136,4 +139,13 @@ public class BoardController {
 		model.addAttribute("board", board);
 		model.addAttribute("replyCnt", replyCnt);
 	}
+	
+	@GetMapping("write")
+	public void boardwrite() {}
+	
+	@PostMapping("write")
+	public void insertBoard() {
+		
+	}
+	
 }
