@@ -84,9 +84,7 @@ CREATE TABLE `board` (
 CREATE TABLE `boardaddr` (
   `boarnum` bigint,
   `placename` varchar(300),
-  `roadaddress` varchar(300),
-  `address` varchar(300),
-  `duedate` date,
+  `startdate` date,
   `enddate` date
 );
 

@@ -32,6 +32,10 @@
     .title [type=text] {
         width: 780px;
     }
+	
+	#writeForm {
+		margin-bottom: 50px;
+	}
 
     .boardwrite {
         margin: 0 auto;
@@ -240,13 +244,47 @@
 		top: 17px; left: 203px;
 	}
     
-
+	.file > td div:first-of-type {
+		float: left;
+	}
+	
+	.file > td div:last-of-type {
+		float: right;
+	}
+	
+	.file span {
+		font-size: 14px;
+		margin-right: 450px;
+	}
+	
+	.file a.btn {
+		display: inline-block;
+		font-size: 14px;
+		width: 100px; height: 30px;
+		background-color: #64B5F6;
+		text-align: center;
+		line-height: 30px;
+		border-radius: 5px;
+		color: #fff;
+		margin-right: 5px;
+	}
+	
+	.file th h4::after {
+		content: "";
+	}
+	
+	img.thumbnail{
+		display: block;
+		width:200px;
+		clear:both;
+	}
+	
 </style>
 <body>
 	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
 	
     <div class="wrap">
-        <form action="/board/write" method="post" name="writeForm" id="writeForm">
+        <form action="/board/write" method="post" name="writeForm" id="writeForm" enctype="multipart/form-data">
             <table class="boardwrite">
                 <caption>게시글 작성</caption>
                 <tr class="title">
@@ -260,7 +298,7 @@
                 </tr>
 				
 				<tr class="yesno">
-				    <th><h4>여행 후기 글 작성 여부</h4></th>
+				    <th><h4>동행 모집 여부</h4></th>
 				    <td>
 				        <input type="radio" name="yesno" id="yes" onclick="date_placeY();"><label for="yes"> yes</label>
 				        <input type="radio" name="yesno" id="no" onclick="date_placeN();"><label for="no"> no</label>
@@ -291,6 +329,21 @@
                     <th><h4>내용</h4></th>
                     <td><textarea placeholder="내용" class="b_content"></textarea></td>
                 </tr>
+				
+				<tr class="r0 file">
+					<th>파일 첨부1</th>
+					<td class="file0_cont">
+						<div>
+							<input type="file" name="files" id="file0" style="display:none">
+							<span id="file0name">선택된 파일 없음</span>
+						</div>
+						<div>
+							<a class="btn" href="javascript:upload(0)">파일 선택</a>
+							<a class="btn" href="javascript:cancelFile(0)">첨부 삭제</a>
+						</div>
+					</td>
+				</tr>
+				
             </table>
             <div class="buttons">
                 <input type="button" value="글 작성" class="writeOk" onclick="writeOk();">
@@ -386,6 +439,7 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 	// 나라 및 지역 선택 창
 	const nation_select = document.querySelector(".nation_select");
@@ -791,6 +845,107 @@
 		}
 		
 		document.writeForm.submit();
+	}
+	
+	
+	//------------------ 파일 ------------------
+	
+	//현재 업로드된 파일의 개수(가장 마지막 행 번호)
+	let i = 0;
+	
+	// input[type=file] 클릭
+	function upload(num){
+		$("#file"+num).click();
+	}
+	
+	//$(선택자).change(함수) : 해당 선택자의 요소에 변화가 일어난다면 넘겨주는 함수 호출
+	$("[type=file]").change(function(e){
+		//e : 파일이 업로드된 상황 자체를 담고있는 이벤트 객체
+		//e.target : 파일이 업로드가 된 input[type=file] 객체(태그객체)
+		const fileTag = e.target;
+		console.log(fileTag);
+		//e.target.files : 파일태그에 업로드가 된 파일들의 배열
+		const file = fileTag.files[0];
+		console.log(file);
+		
+		if(file == undefined){
+			//업로드 창을 띄웠다가 취소한 경우(파일이 업로드 되었다가 없어진 경우)
+			cancelFile(fileTag.id.split("e").pop());
+		}
+		else{
+			//파일을 업로드를 한 경우(없었다가 업로드, 있었는데 다른 파일로 업로드)
+			//#file0name 찾아서 내부 텍스트 변경(파일의 이름으로)
+			$("#"+fileTag.id+"name").text(file.name);
+			//업로드 된 파일의 확장자명			
+			let ext = file.name.split(".").pop();
+			if(ext == "jpeg" || ext == "png" || ext == "jpg" || ext == "webp" || ext == "gif"){
+				//".  file0       _cont"
+				$("."+fileTag.id+"_cont .thumbnail").remove();
+				const reader = new FileReader();
+				reader.onload = function(ie){
+					const img = document.createElement("img");
+					img.setAttribute("src",ie.target.result);
+					img.setAttribute("class","thumbnail");
+					document.querySelector("."+fileTag.id+"_cont").appendChild(img);
+				}
+				reader.readAsDataURL(file);
+			}
+			else{
+				$("."+fileTag.id+"_cont .thumbnail").remove();
+			}
+			
+			//가장 마지막 [파일 선택] 버튼을 눌렀을 때
+			if(fileTag.id == "file"+i){
+				const cloneElement = $(".r"+i).clone(true);
+				i++;
+				cloneElement.attr("class","r"+i).addClass("file");
+				cloneElement.children("th").text("파일 첨부"+(i+1));
+				cloneElement.children("td").attr("class","file"+i+"_cont");
+				
+				cloneElement.find("input[type='file']").attr("name","files");
+				cloneElement.find("input[type='file']").attr("id","file"+i);
+				cloneElement.find("input[type='file']").val("");
+				
+				cloneElement.find("span").attr("id","file"+i+"name");
+				cloneElement.find("span").text("선택된 파일 없음");
+				
+				//								  javascript:upload(  1  )
+				cloneElement.find("a")[0].href = "javascript:upload("+i+")";
+				//								  javascript:cancelFile(  1  )
+				cloneElement.find("a")[1].href = "javascript:cancelFile("+i+")";
+				
+				//jQuery객체.appendTo("부모선택자") : 해당 선택자의 자식으로 jQuery 객체 추가
+				cloneElement.appendTo("#writeForm tbody")
+				
+			}
+		}
+	})
+	
+	function cancelFile(num){
+		//파일 업로드 했다가 취소로 파일을 삭제하는 경우에는 문자열로 넘어온다.
+		num = Number(num);
+		//가장 마지막 [첨부 삭제] 버튼을 누른 경우
+		if(num == i){ return; }
+		//tr 지우기
+		$(".r"+num).remove();
+		//지워진 다음 행 부터 숫자 바꿔주기
+		for(let j=num+1;j<=i;j++){
+			console.log(j);
+			const el = $("#writeForm tbody .r"+j);
+			el.attr("class","r"+(j-1));
+			
+			el.find("th").text("파일 첨부"+j);
+			el.find("td").attr("class","file"+(j-1)+"_cont");
+			
+			el.find("input[type=file]").attr("name","files");
+			el.find("input[type=file]").attr("id","file"+(j-1));
+			
+			el.find("span").attr("id","file"+(j-1)+"name");
+			
+			el.find("a")[0].href = "javascript:upload("+(j-1)+")";
+			el.find("a")[1].href = "javascript:cancelFile("+(j-1)+")";
+		}
+		i--;
 	}
 </script>
 </html>
