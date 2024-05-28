@@ -20,4 +20,58 @@
 		AND
 			userid != #{userid}
 	</select>
+	
+	<!-- 
+		userid로 chat_user 테이블 행 개수 가져오기
+	-->
+	<select id="selectCountOfSpecificChatUserByUserid">
+		SELECT count(*)
+		FROM chat_user
+		WHERE
+			userid = #{userid}
+	</select>
+	
+	
+	<!--
+		userid가 가입된 모든 채팅방 중 최근 수신순 x ~ y 개의 chat_room_idx 가져오기
+		chat_detail과 JOIN함
+	-->
+	<select id="selectSpecificRecentReceivedChatRoomIdx">
+		<!--
+		SELECT
+			cu.chat_room_idx, MAX(cd.regdate) as regdate
+		FROM
+			chat_user AS cu
+		JOIN 
+			chat_detail AS cd
+		ON 
+			cu.chat_room_idx = cd.chat_room_idx 
+		AND 
+			cu.userid = cd.userid
+		WHERE 
+			cu.userid = #{userid}
+		GROUP BY 
+			cu.chat_room_idx
+		ORDER BY 
+			regdate DESC
+		LIMIT 
+			#{start}, #{end};
+		-->
+		SELECT 
+			cu.chat_room_idx, MAX(cd.regdate) as last_message_date
+		FROM 
+			chat_user AS cu
+		LEFT JOIN 
+			chat_detail AS cd
+		ON 
+			cu.chat_room_idx = cd.chat_room_idx AND cu.userid = cd.userid
+		WHERE 
+			cu.userid = #{userid}
+		GROUP BY 
+			cu.chat_room_idx
+		ORDER BY 
+			last_message_date DESC
+		LIMIT 
+			#{start}, #{end};
+	</select>
 </mapper>

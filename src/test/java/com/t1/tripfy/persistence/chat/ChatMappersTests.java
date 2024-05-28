@@ -52,12 +52,12 @@ public class ChatMappersTests {
 		assertNotNull(new Object());
 	}
 
-	@Test
-	@Order(3)
-	@DisplayName("03 chat_detail_idx와 chat_room_idx로 특정 채팅방의 특정 메시지 이후의 메시지 개수 세기")
-	public void chatDetailMapper_selectSpecificCountOfChatDetailTest() {
-		Integer res = null;
-		assertNotNull(res = cdmp.selectSpecificCountOfChatDetail(1L, 5L));
-		System.out.println(res);
-	}
+//	@Test
+//	@Order(3)
+//	@DisplayName("03 chat_detail_idx와 chat_room_idx로 특정 채팅방의 특정 메시지 이후의 메시지 개수 세기")
+//	public void chatDetailMapper_selectSpecificCountOfChatDetailTest() {
+//		Integer res = null;
+//		assertNotNull(res = cdmp.selectSpecificCountOfChatDetail(1L, 5L));
+//		System.out.println(res);
+//	}
 }

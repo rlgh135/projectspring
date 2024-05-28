@@ -31,7 +31,6 @@ public class SseController {
 	@GetMapping(path="/subscribe", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
 	public ResponseEntity<SseEmitter> subscribe(
 			@RequestHeader(value="Last-Event-ID", required=false, defaultValue="") String lastEventID,
-			@RequestParam String clientid,
 			@SessionAttribute(name="loginUser", required=false) String userid) {
 		
 		//SSE 연결 전에 우선 유효성 체크를 해야 함
@@ -40,15 +39,11 @@ public class SseController {
 			// 400 Bad Request
 			return ResponseEntity.badRequest().body(null);
 		}
-		if(!userid.equals(clientid)) {
-			//로그인계정과 요청 파라미터의 userid가 다른 경우
-			// 403 Forbidden
-			return ResponseEntity.status(HttpStatusCode.valueOf(403)).body(null);
-		}
 		
+		log.debug("SSE subscribe from userid={}", userid);
 		log.debug("lastEventID={}", lastEventID);
 		
-		SseEmitter emit = sseSv.subscribe(lastEventID, clientid);
+		SseEmitter emit = sseSv.subscribe(lastEventID, userid);
 		return ResponseEntity.ok(emit);
 	}
 	/* SSE 안 읽은 메시지 알림 관련
