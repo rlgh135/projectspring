@@ -10,8 +10,24 @@
 				</a>
 			</div>
 			<th:block th:if="${#strings.isEmpty(loginUser)}">
+					<ul class="gnb_menu_1">
+						<li>
+							<a th:href="@{/board/list}">게시판</a>
+						</li>
+						<li>
+							<a th:href="@{/package/pmain}">국내 패키지</a>
+						</li>
+						<li>
+							<a th:href="@{/package/abroadmain}">해외 패키지</a>
+						</li>
+					</ul>
 				<div class="user_gnb_wrap">
 					<ul class="user_gnb lonullul">
+						<li class="" style="width: 100px;">
+							<a href="/user/foreign" class="lonull" style="width: 90px; line-height: 80px;">
+								예약조회
+							</a>
+						</li>
 						<li class="lonullli">
 							<a href="javascript:openm()" class="lonull .modal_btn" style="line-height: 80px;">
 								로그인
@@ -25,8 +41,7 @@
 										<h3>Sign up with</h3>
 										<ul id="lologoswrap">
 											<li><img src="/images/layoutimg/btn_kakao.svg"></li>
-											<li><img src="/images/layoutimg/btn_google.svg"></li>
-											<li><img src="/images/layoutimg/btn_naver.svg"></li>
+											<li><img src="/images/layoutimg/btn_google.svg"></li>		<li><img src="/images/layoutimg/btn_naver.svg"></li>
 										</ul>
 									</div>
 									<form action="/user/login" method="post" name="loginForm">
@@ -69,6 +84,7 @@
 			<th:block th:unless="${#strings.isEmpty(loginUser)}">
 				<nav class="gnb_menu">
 					<ul class="gnb_menu_1">
+
 
 						<li>
 							<a th:href="@{/board/list}">게시판</a>

@@ -45,10 +45,12 @@
 						<p th:if="${session.guideNum!=0}" id="isguide"><img src="/images/userimg/guidebadge.png" alt=""></p>
 						<div id="editbtn">
 							<th:block th:if="${session.guideNum!=0}">
+								<input type="button" value="여행후기작성" class="profmopenbtn" onclick="location.href='/user/after'">
 								<div id="redalert"></div>
 								<input type="button" value="가이드메뉴" class="profmopenbtn" onclick="location.href='/user/guide'">
 							</th:block>
 							<th:block th:unless="${session.guideNum!=0}">
+								<input type="button" value="여행후기작성" class="profmopenbtn" onclick="location.href='/user/after'">
 								<input type="button" value="가이드신청" class="profmopenbtn" onclick="location.href='/user/joinguide'">
 							</th:block>
 						</div>

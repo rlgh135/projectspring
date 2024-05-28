@@ -17,7 +17,7 @@
 		select sysname from user_img where userid=#{userid}
 	</select>
 	<select id="getGuideNum">
-		select * from guide_user where userid=#{userid}
+		select * from guide where userid=#{userid}
 	</select>
 	<update id="updateUser">
 		
@@ -40,5 +40,13 @@
 	<select id="getReviews">
 		select * from review where packagenum=#{packagenum}
 	</select>
-	
+	<select id="getMyReview">
+		select * from review where packagenum=#{packagenum} and userid=#{userid}
+	</select>
+	<select id="getLikeGuides">
+		select * from guide_user where userid = #{userid}
+	</select>
+	<select id="getGuideAndImg">
+		select * from user_img where userid=(select userid from guide where (select guidenum from package where packagenum=#{packagenum}));
+	</select>
 </mapper>

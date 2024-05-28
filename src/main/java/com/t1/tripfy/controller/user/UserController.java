@@ -20,8 +20,10 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
+import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.service.user.UserService;
 
 import jakarta.servlet.http.Cookie;
@@ -271,6 +273,40 @@ public class UserController {
 		return datas;
 	}
 	
+	@GetMapping("after")
+	public String afterTravel(HttpServletRequest req, Model model, Criteria cri) {
+		String userid = (String)req.getSession().getAttribute("loginUser");
+
+		model.addAttribute("likelist", service.getLikeGuides(userid));
+		
+		cri = new Criteria(1, 6);
+		List<ReservationDTO> reslist = service.getMyReservation(cri, userid);
+		ArrayList<PackageDTO> rpacklist = new ArrayList<>();
+		ArrayList<ReviewDTO> reviewlist = new ArrayList<>();
+		HashMap<Long, String> guideimgmap = new HashMap<>();
+		HashMap<Long, String> guideids = new HashMap<>();
+		
+		if(reslist.size()>0) {
+			for (ReservationDTO reservation : reslist) {
+				PackageDTO pack = service.getMyPackageTwoWeek(reservation.getPackagenum());
+				if(pack!=null) {
+					reviewlist.add(service.getMyReviewByPackagenum(reservation.getPackagenum(), userid));
+					rpacklist.add(pack);
+					UserImgDTO guideimg = service.getGuideAndImg(reservation.getPackagenum());
+					guideimgmap.put(pack.getGuidenum(), guideimg.getSysname());
+					guideids.put(pack.getGuidenum(), guideimg.getUserid());
+				}
+			}
+		}
+		
+		model.addAttribute("guideimg", guideimgmap);
+		model.addAttribute("guideids", guideids);
+		model.addAttribute("packagelist", rpacklist);
+		model.addAttribute("reviewlist", reviewlist);
+		
+		return "/user/after";
+	}
+	
 	//post
 	@PostMapping("join")
 	public String join(UserDTO user, HttpServletResponse resp) {
@@ -297,7 +333,7 @@ public class UserController {
 			session.setAttribute("loginUser", userid);
 			session.setAttribute("userpfimg", service.getProfileImgName(userid));
 			//가이드인지 확인하고 세션에 세팅
-			GuideUserDTO guide = service.getGuideNum(userid);
+			GuideDTO guide = service.getGuideNum(userid);
 			if(guide!=null) {
 				session.setAttribute("guideNum", guide.getGuidenum());				
 			} else {

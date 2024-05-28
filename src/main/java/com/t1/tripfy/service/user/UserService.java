@@ -1,5 +1,6 @@
 package com.t1.tripfy.service.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -11,8 +12,10 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
+import com.t1.tripfy.domain.dto.user.UserImgDTO;
 
 public interface UserService {
 	boolean join(UserDTO user);
@@ -21,7 +24,7 @@ public interface UserService {
 	boolean updateProfileimg(MultipartFile thumbnail, String userid);
 	boolean checkId(String userid);
 	UserDTO getUser(String userid);
-	GuideUserDTO getGuideNum(String userid);
+	GuideDTO getGuideNum(String userid);
 	String getProfileImgName(String userid);
 	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;
 	long getMyTotal(Criteria cri);
@@ -36,4 +39,8 @@ public interface UserService {
 	List<ReviewDTO> getReviewByPackagenum(long packagenum);
 	List<ReservationDTO> getApplyByPackagenum(long packagenum);
 	boolean changeApplyCansle(long reservationnum, int tf);
+	PackageDTO getMyPackageTwoWeek(long packagenum);
+	ReviewDTO getMyReviewByPackagenum(long packagenum, String userid);
+	List<GuideUserDTO> getLikeGuides(String userid);
+	UserImgDTO getGuideAndImg(long packagenum);
 }

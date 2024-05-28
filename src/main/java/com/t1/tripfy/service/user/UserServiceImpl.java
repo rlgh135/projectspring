@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
@@ -115,7 +117,7 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public GuideUserDTO getGuideNum(String userid) {
+	public GuideDTO getGuideNum(String userid) {
 		return umapper.getGuideNum(userid);
 	}
 	
@@ -195,5 +197,23 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean changeApplyCansle(long reservationnum, int isdelete) {
 		return resmapper.changeIsdelete(reservationnum, isdelete)==1;
+	}
+	@Override
+	public PackageDTO getMyPackageTwoWeek(long packagenum) {
+		return resmapper.getMyPackageTwoWeek(packagenum);
+	}
+	
+	@Override
+	public ReviewDTO getMyReviewByPackagenum(long packagenum, String userid) {
+		return umapper.getMyReview(packagenum, userid);
+	}
+	
+	@Override
+	public List<GuideUserDTO> getLikeGuides(String userid) {
+		return umapper.getLikeGuides(userid);
+	}
+	@Override
+	public UserImgDTO getGuideAndImg(long packagenum) {
+		return umapper.getGuideAndImg(packagenum);
 	}
 }
