@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 
 @Mapper
 public interface BoardMapper {
@@ -47,4 +48,6 @@ public interface BoardMapper {
 	// D
 	int deleteFilesBySystemname(String systemname);
 	int deleteFilesByBoardnum(long boardnum);
+
+	BoardaddrDTO getBoardaddrByBoardnum(long boardnum);
 }

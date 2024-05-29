@@ -131,4 +131,8 @@
 	<update id="reduceReplyCnt">
 		update board set replycnt = replycnt-1 where boardnum=#{boardnum};
 	</update>
+	<select id="getBoardaddrByBoardnum">
+		select * from boardaddr
+		where boardnum = #{boardnum}
+	</select>
 </mapper>

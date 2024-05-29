@@ -82,7 +82,7 @@ CREATE TABLE `board` (
 );
 
 CREATE TABLE `boardaddr` (
-  `boarnum` bigint,
+  `boardnum` bigint,
   `placename` varchar(300),
   `startdate` date,
   `enddate` date

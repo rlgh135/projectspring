@@ -1,8 +1,10 @@
 package com.t1.tripfy.service.board;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
 import com.t1.tripfy.mapper.board.BoardReplyMapper;
 
@@ -126,4 +129,26 @@ public class BoardServiceImpl implements BoardService {
 	public long getLastNum(String userid) {
 		return bmapper.getLastNum(userid);
 	}
+
+	@Override
+	public BoardaddrDTO getBoardAddr(long boardnum) {
+		BoardaddrDTO boardaddr =  bmapper.getBoardaddrByBoardnum(boardnum);
+		if(boardaddr != null) {
+			String startdate = (boardaddr.getStartdate()).replace("-", ".");
+			String enddate = (boardaddr.getEnddate()).replace("-", ".");
+			boardaddr.setStartdate(startdate);
+			boardaddr.setEnddate(enddate);
+		}
+		return boardaddr;
+	}
+
+	@Override
+	public int getDays(String startdate, String enddate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        LocalDate startDate = LocalDate.parse(startdate, formatter);
+        LocalDate endDate = LocalDate.parse(enddate, formatter);
+
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        return (int) daysBetween+1;
+    }
 }

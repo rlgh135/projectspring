@@ -243,9 +243,10 @@
                 </div>
 
                 <div class="trip_schedule">
-                    <h4>여행 일정</h4>
+					
+                    <h4 th:if="${boardaddr}">여행 일정</h4>
                     <div class="schedule_detail">
-                        <p>2024.05.14 - 2024.05.14</p>
+                        <p th:if="${boardaddr}">[[${boardaddr.startdate}]] - [[${boardaddr.enddate}]]([[${days}]]일)</p>
                         <p th:text="${board.countrycode} == 'kr' ? '대한민국, ' + ${board.regionname} : ${board.regionname}"></p>
                     </div>
 
@@ -278,7 +279,7 @@
 
                     <div class="location">
                         <h3>장소</h3>
-						<p>[[${board.regionname}]]</p>
+						<p th:if="${boardaddr}">[[${boardaddr.placename}]]</p>
                         <div class="location_detail">
 							<div id="map"></div>
                         </div>
@@ -294,13 +295,16 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
 <script th:inline="javascript">
 const map = $("#map");
-const defaultLocationName = /*[[${board.regionname}]]*/'';
+const defaultLocationName = /*[[${boardaddr != null && boardaddr.placename != null ? boardaddr.placename : board.regionname}]]*/'';
+const zoomScope = /*[[${boardaddr != null && boardaddr.placename != null ? 11 : 5}]]*/'';
 const geocoder = new google.maps.Geocoder();
 	$(document).ready(function() {
+		console.log(defaultLocationName);
+		console.log(zoomScope);
            geocoder.geocode({ 'address': defaultLocationName }, function(results, status) {
                if (status === 'OK') {
                    const mapOptions = {
-                       zoom: 5,
+                       zoom: zoomScope,
                        center: results[0].geometry.location,
                        mapTypeId: google.maps.MapTypeId.ROADMAP,
 					   disableDefaultUI: true
