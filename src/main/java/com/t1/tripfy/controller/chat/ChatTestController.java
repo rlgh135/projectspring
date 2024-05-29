@@ -31,4 +31,8 @@ public class ChatTestController {
 	public String chat_test_02() {
 		return "/test/chat_test02.html";
 	}
+	@GetMapping("chat_test_03")
+	public String chat_test_03() {
+		return "/test/chat_test03.html";
+	}
 }

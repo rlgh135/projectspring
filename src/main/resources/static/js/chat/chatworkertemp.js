@@ -6,16 +6,6 @@
 */
 
 /*
-	메모 240528
-	웹소켓 열고 닫는거 관련
-	여기다가 채팅창이 열리고 닫힌 브라우저 컨텍스트가 몇개 있는지를
-	기록하는 변수를 만들어야 함
-	지금 상태로는 채팅창 하나가 닫히면 다른 채팅창이 열린 브라우저 컨텍스트가 몇개
-	있던간에 웹소켓이 닫힘
-	이걸 기록하고 컨트롤할 변수와 로직이 필요함
-*/
-
-/*
 	프로토콜? 240529
 	브라우저 컨텍스트 -> 공유 워커
 	{
@@ -31,8 +21,6 @@
 
 //웹소켓 커넥션
 let WEBSOCKET = null;
-//SSE 커넥션
-let EVENTSOURCE = null;
 
 //Web Worker port
 const PORT_LIST = [];
@@ -74,34 +62,18 @@ self.onconnect = function(e) {
                 WEBSOCKET.send(e.data.content);
                 //웹소켓 연결시에만 받게 해야함
                 break;
-            case "upgradeConn":
-				//SSE -> WebSocket
-				//웹소켓 연결이 살아있는지 체크 - 중복 연결을 막는다
-				if(!WEBSOCKET) {
-					//우선 브컨들에게 웹소켓 연결을 알린다
-					broadcastMsg("WebSocket Conn req", {
-						status: "WebSocket Conn reqed"
-					})
-					upgradeConnection(port);
-				}
-				break;
-			case "downgradeConn":
-				//WebSocket -> SSE
-				//SSE 연결이 살아있는지 체크 - 중복 연결을 막는다
-				if(!EVENTSOURCE) {
-					downgradeConnection("socket is closed by connection downgrade");
-				}
-				break;
 			case "logout":
+                PORT_LIST = null;
 				disconnectConnection("socket is closed by connection close");
+                self.close();
 				break;
         }
 	};
 };
 
-//최초연결시 SSE 연결
-if(!EVENTSOURCE && !WEBSOCKET) {
-	connectSSE();
+//최초연결시 웹소켓 연결
+if(!WEBSOCKET) {
+    connectWebSocket();
 }
 
 /*================================================================================*/
@@ -109,77 +81,22 @@ if(!EVENTSOURCE && !WEBSOCKET) {
 function broadcastMsg(by, data) {
 	PORT_LIST.forEach((port) => {
 		port.postMessage(data);
-		console.log("SharedWorker broadcast to=");
-		console.log(port);
-		console.log("data=");
-		console.log(data);
+		console.log("SharedWorker broadcast to=" + port + " data=" + data);
 	});
 }
 
 /*================================================================================*/
 /*연결 관리*/
-//연결 업그레이드 함수
-function upgradeConnection(reqPort) {
-	connectWebSocket().
-	then(() => {
-		if(!!EVENTSOURCE) {
-			EVENTSOURCE.close();
-			EVENTSOURCE = null;
-		}
-
-		//일단 요청 브컨에게 연결 수립을 알린다
-		console.log("upgradeConn postMsg");
-		reqPort.postMessage({
-			actRes: "WebSocketConnDone"
-		});
-	})
-	.catch((err) => {});
-}
-//연결 다운그레이드 함수
-function downgradeConnection(reason) {
-	connectSSE();
-	if(!!WEBSOCKET) {
-		WEBSOCKET.close(1000, reason);
-		WEBSOCKET = null;
-	}
-}
 //연결 종료 함수
 function disconnectConnection(reason) {
-	if(!!EVENTSOURCE) {
-		EVENTSOURCE.close();
-		EVENTSOURCE = null;
-	}
 	if(!!WEBSOCKET) {
 		WEBSOCKET.close(1000, reason);
 		WEBSOCKET = null;
 	}
 }
 
-//SSE 연결 함수
-function connectSSE() {
-	EVENTSOURCE = new EventSource("http://localhost:8080/sse/subscribe");
-	
-	EVENTSOURCE.addEventListener("open", (e) => {
-		console.log("SSE open");
-	});
-	EVENTSOURCE.addEventListener("connected", (e) => {
-		console.log("SSE received msg=connected");
-	});
-	EVENTSOURCE.addEventListener("broadcast", (e) => {
-		console.log("SSE received msg=broadcast");
-		broadcastMsg("SSE", e.data);
-	});
-	EVENTSOURCE.onerror = (err) => {
-		console.log("SSE onerror=" + err);
-		// EVENTSOURCE.close();
-		// 이새끼가 있으면 자동 재연결이 안되는거같음
-	};
-	EVENTSOURCE.onclose = () => {
-		console.log("SSE closed");
-	};
-}
 //웹소켓 연결 함수
-async function connectWebSocket() {
+function connectWebSocket() {
 	WEBSOCKET = new WebSocket("ws://localhost:8080/wschat");
 	
 	WEBSOCKET.onopen = (e) => {
@@ -196,10 +113,4 @@ async function connectWebSocket() {
 	WEBSOCKET.onclose = (e) => {
 		console.log("WebSocket closed");
 	};
-
-	return new Promise((resolve, reject) => {
-		WEBSOCKET.addEventListener("open", (e) => {
-			resolve();
-		});
-	});
 }
