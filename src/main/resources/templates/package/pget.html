@@ -22,10 +22,12 @@
                             <div class="p_title">
                                 <h3>[[${package.packageTitle}]]</h3>
                             </div>
-                            <div class="modidelete">
+							<div th:if="${package.guidenum == session.guideNum}" >
+							<div class="modidelete">
                                 <button><a th:href="@{/package/pmodify(packagenum=${package.packagenum})}">수정</a></button>
                                 <button><a th:href="@{/package/remove(packagenum=${package.packagenum})}">삭제</a></button>
                             </div>
+							</div>
                         </div>
                         <hr>
                         <div class="p_con">
@@ -75,46 +77,82 @@
             </div>
         </div>
        
-        <div class="moreinfo">
-            <div class="mi_container">
-                <div class="mi_header">
-                    <div class="mi_menu">
-                        <div class="menu1">여행소개</div> 
-                        <div class="menu2">유의사항</div>
-                        <div class="menu3">가이드리뷰</div>
-                    </div>
-                </div>
-                <div class="mi_con">
-                    <div class="menu1get">
-                        [[${package.packageContent}]]
-                    </div>
-                    <div class="menu2get">
-                        <!-- 유의사항 내용 추가 -->
-                    </div>
-                    <div class="menu3get">
-                        <!-- 가이드리뷰 내용 추가 -->
-                    </div>
-                </div>
-            </div>
-            <div class="pay_container">
-                <div class="mapcon">
-                    <div class="maphead">
-                        <h3>[[${package.regionname}]]</h3>
-                    </div>
-                    <hr>
-                    <div class="map">
-                        <!-- 지도 내용 추가 -->
-                    </div>
-                    <hr>
-                    <div class="mapfoot">
-                        <a href="">상세보기 ></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div class="moreinfo">
+		    <div class="mi_container">
+		        <div class="mi_header">
+		            <div class="mi_menu">
+		                <div class="menu1" id="menu1">여행소개</div> 
+		                <div class="menu2" id="menu2">유의사항</div>
+		                <div class="menu3" id="menu3">가이드리뷰</div>
+		            </div>
+		        </div>
+		        <div class="mi_con">
+		            <div class="menu1get content" id="menu1get">
+		                [[${package.packageContent}]]
+		            </div>
+		            <div class="menu2get content" id="menu2get" style="display:none;">
+		                <img src="/images/packageimg/warning.png">
+		            </div>
+		            <div class="menu3get content" id="menu3get" style="display:none;">
+		                <div class="review">
+		                    <div class="userprofile">
+		                        <img src="/images/packageimg/tripfy_banner.png">
+		                        <p><strong>유저닉네임</strong></p>
+		                    </div>
+		                    <div class="reviewcontent">안녕하세요</div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		    <div class="pay_container">
+		        <div class="mapcon">
+		            <div class="maphead">
+		                <h3>[[${package.regionname}]]</h3>
+		            </div>
+		            <hr>
+		            <div class="map">
+						<div id="map"></div>
+		            </div>
+		            <hr>
+		            <div class="mapfoot">
+		                <a th:href="@{'/package/tlget?packagenum=' + ${package.packagenum}}">상세보기 ></a>
+		            </div>
+		        </div>
+		    </div>
+		</div>
     </div>
 </body>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
 <script>
+	const mapElement = document.getElementById('map');
+	const defaultLocationName = '[[${package.regionname}]]';
+	const zoomScope = 10;  // Replace with appropriate zoom level
+	
+	const geocoder = new google.maps.Geocoder();
+	
+	document.addEventListener("DOMContentLoaded", function() {
+		console.log(defaultLocationName);
+		console.log(zoomScope);
+	    geocoder.geocode({ 'address': defaultLocationName }, function(results, status) {
+	        if (status === 'OK') {
+	            const mapOptions = {
+	                zoom: zoomScope,
+	                center: results[0].geometry.location,
+	                mapTypeId: google.maps.MapTypeId.ROADMAP,
+	                disableDefaultUI: true
+	            };
+	            
+	            const map = new google.maps.Map(mapElement, mapOptions);
+	            const marker = new google.maps.Marker({
+	                position: results[0].geometry.location,
+	                map: map
+	            });
+	        } else {
+	            alert('Geocode was not successful for the following reason: ' + status);
+	        }
+	    });
+	});
+		
     function count(type) {
         const resultElement = document.getElementById('result');
         let number = resultElement.innerText;
@@ -154,5 +192,52 @@
         // 폼 제출
         document.getElementById('paymentForm').submit();
     }
+	document.addEventListener("DOMContentLoaded", function() {
+	        // 메뉴 아이템을 변수에 저장
+	        const menu1 = document.getElementById('menu1');
+	        const menu2 = document.getElementById('menu2');
+	        const menu3 = document.getElementById('menu3');
+	
+	        // 콘텐츠 아이템을 변수에 저장
+	        const menu1get = document.getElementById('menu1get');
+	        const menu2get = document.getElementById('menu2get');
+	        const menu3get = document.getElementById('menu3get');
+	
+	        // 모든 콘텐츠를 숨기는 함수
+	        function hideAllContents() {
+	            menu1get.style.display = 'none';
+	            menu2get.style.display = 'none';
+	            menu3get.style.display = 'none';
+	        }
+	
+	        // 모든 메뉴에서 active 클래스를 제거하는 함수
+	        function removeActiveClass() {
+	            menu1.classList.remove('menuOn');
+	            menu2.classList.remove('menuOn');
+	            menu3.classList.remove('menuOn');
+	        }
+	
+	        // 각각의 메뉴 클릭 이벤트 리스너 추가
+	        menu1.addEventListener('click', function() {
+	            hideAllContents();
+	            removeActiveClass();
+	            menu1get.style.display = 'block';
+	            menu1.classList.add('menuOn');
+	        });
+	
+	        menu2.addEventListener('click', function() {
+	            hideAllContents();
+	            removeActiveClass();
+	            menu2get.style.display = 'block';
+	            menu2.classList.add('menuOn');
+	        });
+	
+	        menu3.addEventListener('click', function() {
+	            hideAllContents();
+	            removeActiveClass();
+	            menu3get.style.display = 'block';
+	            menu3.classList.add('menuOn');
+	        });
+	    });
 </script>
 </html>

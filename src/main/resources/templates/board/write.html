@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>write</title>
+	<link rel="stylesheet" href="/css/summernote/summernote-lite.min.css">
+	<link rel="stylesheet" href="/css/package/timelineWrite.css">
 	<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
 </head>
 <style>
@@ -40,7 +42,7 @@
 		margin-left: 10px;
 	}
 
-    .date [type=text] {
+    .date1 [type=text] {
         width: 100px;
     }
 
@@ -336,7 +338,7 @@
 				    </td>
 				</tr>
 
-                <tr class="date" style="display: none;">
+                <tr class="date1" style="display: none;">
                     <th><h4>여행 기간</h4></th>
                     <td>
                         <input type="text" placeholder="출발일" class="startdate" id="startdate" name="startdate" readonly>
@@ -353,12 +355,13 @@
 					</td>
 				</tr>
                 
-
                 <tr class="content">
                     <th><h4>내용</h4></th>
-                    <td><textarea placeholder="내용" class="b_content" name="content"></textarea></td>
+                    <td><textarea id="summernote" name="content"></textarea></td>
                 </tr>
-				
+				<tr class="">
+					
+				</tr>
 				<tr class="r0 file">
 					<th>첨부 파일1</th>
 					<td class="file0_cont">
@@ -463,12 +466,12 @@
 				<button onclick="regionApply();">적용</button>
 			</div>
 		</div>
-
-
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/js/summernote/summernote-lite.min.js"></script>
+<script src="/js/summernote/summernote-ko-KR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
 	// 나라 및 지역 선택 창
 	const nation_select = document.querySelector(".nation_select");
@@ -492,13 +495,13 @@
 		
 	// 라디오 버튼 yes
 	function date_placeY() {
-		document.querySelector(".date").style.display = "";
+		document.querySelector(".date1").style.display = "";
 		document.querySelector(".place_detail").style.display = "";
 	}
 	
 	// 라디오 버튼 no
 	function date_placeN() {
-		document.querySelector(".date").style.display = "none";
+		document.querySelector(".date1").style.display = "none";
 		document.querySelector(".place_detail").style.display = "none";
 		
 		document.querySelector(".startdate").value = "";
@@ -843,7 +846,6 @@
 		const startdate = document.getElementById("startdate");
 		const enddate = document.getElementById("enddate");
 		const b_place = document.querySelector(".b_place");
-		const b_content = document.querySelector(".b_content");
 		
 		if(b_title.value == "") {
 			alert("제목을 입력해주세요");
@@ -867,12 +869,7 @@
 				return;
 			}
 		}
-		
-		if(b_content.value == "") {
-			alert("내용을 입력해주세요");
-			return;
-		}
-		
+				
 		if(b_place.value != "") {			
 			const b_countrycode = document.querySelector(".b_countrycode");
 			if(b_place.value == "서울" || b_place.value == "제주도" || b_place.value == "경기도" || b_place.value == "강원도" || b_place.value == "충청도" || b_place.value == "경상도" 	|| b_place.value == "전라도" 	|| b_place.value == "인천광역시") {
@@ -919,7 +916,7 @@
 	}
 	
 	//$(선택자).change(함수) : 해당 선택자의 요소에 변화가 일어난다면 넘겨주는 함수 호출
-	$("[type=file]").change(function(e){
+	$("[id^=file]").change(function(e){
 		//e : 파일이 업로드된 상황 자체를 담고있는 이벤트 객체
 		//e.target : 파일이 업로드가 된 input[type=file] 객체(태그객체)
 		const fileTag = e.target;
@@ -1006,6 +1003,107 @@
 			el.find("a")[1].href = "javascript:cancelFile("+(j-1)+")";
 		}
 		i--;
+	}
+	
+	$(document).ready(function(){
+		//썸머노트 설정값
+		    $('#summernote').summernote({        
+		        codeviewFilter: false, // 코드 보기 필터 비활성화
+		            codeviewIframeFilter: false, // 코드 보기 iframe 필터 비활성화
+		            lang: 'ko-KR',
+		            placeholder: '장소의 사진이나 메모를 작성하세요',
+		            width: 950,
+		            maxWidth: 950,
+		            height: 500,
+		            maxHeight: 1000,
+		            focus : true,
+		            toolbar: [
+		                ['style', ['style']], // 글자 스타일 설정 옵션
+		                ['fontsize', ['fontsize']], // 글꼴 크기 설정 옵션
+		                ['fontname', ['fontname']],
+		                ['font', ['bold', 'underline', 'clear']], // 글자 굵게, 밑줄, 포맷 제거 옵션
+		                ['color', ['color']], // 글자 색상 설정 옵션
+		                ['table', ['table']], // 테이블 삽입 옵션
+		                ['para', ['ul', 'ol', 'paragraph']], // 문단 스타일, 순서 없는 목록, 순서 있는 목록 옵션
+		                ['height', ['height']], // 에디터 높이 조절 옵션
+		                ['insert', ['picture', 'link', 'video']], // 이미지 삽입, 링크 삽입, 동영상 삽입 옵션
+		                ['view', ['codeview', 'fullscreen', 'help']], // 코드 보기, 전체 화면, 도움말 옵션
+		            ],
+		            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체','Nanum Gothic'],
+		            fontSizes: [
+		                '8', '9', '10', '11', '12', '14', '16', '18',
+		                '20', '22', '24', '28', '30', '36', '50', '72',
+		            ], // 글꼴 크기 옵션
+		            styleTags: [
+		                'p',  // 일반 문단 스타일 옵션
+		                {
+		                    title: 'Blockquote',
+		                    tag: 'blockquote',
+		                    className: 'blockquote',
+		                    value: 'blockquote',
+		                },  // 인용구 스타일 옵션
+		                'pre',  // 코드 단락 스타일 옵션
+		                {
+		                    title: 'code_light',
+		                    tag: 'pre',
+		                    className: 'code_light',
+		                    value: 'pre',
+		                },  // 밝은 코드 스타일 옵션
+		                {
+		                    title: 'code_dark',
+		                    tag: 'pre',
+		                    className: 'code_dark',
+		                    value: 'pre',
+		                },  // 어두운 코드 스타일 옵션
+		                'h1', 'h2', 'h3', 'h4', 'h5', 'h6',  // 제목 스타일 옵션
+		            ],
+		         callbacks: {
+		            onImageUpload: function (files) {
+		               uploadSummernoteImageFile(files[0],this);
+		            },
+		            onMediaDelete: function ($target, editor, $editable) {
+		                if (confirm('이미지를 삭제 하시겠습니까?')) {
+		                    var deletedImageUrl = $target
+		                        .attr('src')
+		                        .split('/')
+		                        .pop()
+		                    // ajax 함수 호출
+		                    deleteSummernoteImageFile(deletedImageUrl)
+		                }
+		            },
+		        },
+		    });
+	})
+	
+	function uploadSummernoteImageFile(file, editor) {
+	    let data = new FormData();
+		data.append("file", file);
+		$.ajax({
+			data : data,
+			type : "POST",
+			url : "/board/SummerNoteImageFile",
+			contentType : false,
+			processData : false,
+			success : function(result){
+				$(editor).summernote("insertImage",result);
+			},
+			error: function(){
+				console.log("파일 올리기 오류");
+			}
+		});
+	}
+	
+	function deleteSummernoteImageFile(imageName) {
+	    data = new FormData()
+	    data.append('file', imageName)
+	    $.ajax({
+	        data: data,
+	        type: 'POST',
+	        url: '/board/deleteSummernoteImageFile',
+	        contentType: false,
+	        enctype: 'multipart/form-data',
+	        processData: false,
+	    })
 	}
 </script>
 </html>

@@ -37,4 +37,6 @@ public interface BoardService {
 	BoardaddrDTO getBoardAddr(long boardnum);
 
 	int getDays(String startdate, String enddate);
+
+	String SummerNoteImageFile(MultipartFile file) throws Exception;
 }
