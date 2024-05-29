@@ -26,7 +26,7 @@
         flex-wrap: nowrap;
         justify-content: space-between;
         margin-top: 30px;
-        margin-bottom: 200px;
+        margin-bottom: 50px;
     }
 
     .info > div:nth-child(2) {
@@ -191,7 +191,7 @@
         margin-top: 10px;
         border-radius: 10px;
         border: 1px solid #64B5F6;
-        height: 180px;
+        height: 300px;
     }
 
    .chatting {
@@ -203,9 +203,23 @@
         color: #fff;
         font-weight: bold;
         font-size: 14px;
-        margin-bottom: 30px;
+	    margin-bottom: 30px;
     }
 
+	input[type="button"] {
+	    cursor: pointer;
+	}
+	
+	#map{
+		width:100%;
+		height: 100%;
+		border-radius: 10px;
+	}
+	.location p{
+		margin-top:5px;
+		font-weight: 400;
+		color: #9a9a9a;
+	}
 </style>
 </head>
 <body>
@@ -263,11 +277,10 @@
                     </div>
 
                     <div class="location">
-                        <h4>장소</h4>
+                        <h3>장소</h3>
+						<p>[[${board.regionname}]]</p>
                         <div class="location_detail">
-                            <p>대한민국</p>
-                            <p>서울</p>
-
+							<div id="map"></div>
                         </div>
                     </div>
 
@@ -277,7 +290,33 @@
         </div>
     </div>
 </body>
-<script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
+<script th:inline="javascript">
+const map = $("#map");
+const defaultLocationName = /*[[${board.regionname}]]*/'';
+const geocoder = new google.maps.Geocoder();
+	$(document).ready(function() {
+           geocoder.geocode({ 'address': defaultLocationName }, function(results, status) {
+               if (status === 'OK') {
+                   const mapOptions = {
+                       zoom: 5,
+                       center: results[0].geometry.location,
+                       mapTypeId: google.maps.MapTypeId.ROADMAP,
+					   disableDefaultUI: true
+                   };
+                   
+                   const map = new google.maps.Map(document.getElementById('map'), mapOptions);
+                   const marker = new google.maps.Marker({
+                       position: results[0].geometry.location,
+                       map: map
+                   });				   
+               } else {
+                   alert('Geocode was not successful for the following reason: ' + status);
+               }
+           });
+       });
+	
 	// 댓글
 	function replySubmit() {
 		const replycontent = document.querySelector(".replycontent");
@@ -288,12 +327,7 @@
 		if(replycontent.value == "") {
 			alert("댓글을 입력해주세요.");
 			replycontent.focus();
-		}
-		
-		
-		
-		
+		}		
 	}
-	
 </script>
 </html>
