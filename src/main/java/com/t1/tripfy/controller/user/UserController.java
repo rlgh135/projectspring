@@ -324,6 +324,20 @@ public class UserController {
 		return datas;
 	}
 	
+	@GetMapping("foreign")
+	public String notUserForm(HttpServletRequest req) {
+		if(req.getSession().getAttribute("loginUser") != null) {
+			System.out.println("로그인된 유저입니다");
+			return "/";
+		}
+		return "/user/nuinfo";
+	}
+	
+	@GetMapping("receipt")
+	public String showReceipt(HttpServletRequest req) {
+		if(session.getAttribute("login_id") == null)
+	}
+	
 	//post
 	@PostMapping("join")
 	public String join(UserDTO user, HttpServletResponse resp) {
