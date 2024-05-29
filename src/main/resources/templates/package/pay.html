@@ -65,37 +65,80 @@
                         <label for="agree4">개인정보 제3자 제공 동의</label>
                     </div>
                 </div>
-                <div class="userinfo">
-                    <div class="uihead">
-                        <p>03</p>
-                        <h3>예약자 정보</h3>
-                    </div>
-                    <table >
-                        <tbody>
-                            <tr class="user">
-                                <th>예약자</th>
-                                <td colspan="3" id="userID"th:data-userid="${user.userid}">[[${user.userid}]]</td>
-                            </tr>
-                            <tr>
-                                <th>이메일</th>
-                                <td colspan="3"	id="userEmail" th:data-email="${user.email}">[[${user.email}]]</td>
-                            </tr>
-                            <tr>
-                                <th>휴대폰</th>
-                                <td colspan="3" id="userPhone" th:data-phone="${user.phone}">[[${user.phone}]]</td>
-                            </tr>
-                            <tr>
-                                <th>예약정보</th>
-                                <td colspan="3" id="reservationInfo"> 성인 :  / 아이 : </td>
-                            </tr>
-                            <tr>
-                                <th>결제금액</th>
-                                <td colspan="3" id="totalAmount"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="userinfo" >
+					<!-- 세션에서 loginUser가 null이면 예약자 정보 입력 폼을 보여줍니다. -->
+					<div th:if="${session.loginUser == null}">
+						<div class="uihead">
+						    <p>03</p>
+						    <h3>예약자 정보 입력</h3>
+						</div>
+						<table>
+						    <tbody>
+						        <tr>
+						            <th>이름</th>
+						            <td><input type="text" id="userID" name="userID" placeholder="이름" required></td>
+						        </tr>
+						        <tr>
+						            <th>이메일</th>
+						            <td><input type="email" id="userEmail" name="userEmail" placeholder="이메일" required></td>
+						        </tr>
+						        <tr>
+						            <th>휴대폰</th>
+						            <td><input type="tel" id="userPhone" name="userPhone" placeholder="휴대폰" required></td>
+						        </tr>
+						        <tr>
+						            <th>예약정보</th>
+						            <td colspan="3" id="reservationInfo"> 성인 :  / 아이 : </td>
+								</tr>
+					            <tr>
+					                <th>결제금액</th>
+					                <td colspan="3" id="totalAmount"></td>
+					            </tr>
+					        </tbody>
+					    </table>
+					</div>
+					
+					<!-- 세션에서 loginUser가 null이 아니면 예약자 정보를 보여줍니다. -->
+					<div th:unless="${session.loginUser == null}">
+					    <div class="uihead">
+					        <p>03</p>
+					        <h3>예약자 정보</h3>
+					    </div>
+					    <table>
+					        <tbody>
+					            <tr class="user">
+					                <th>예약자</th>
+					                <td colspan="3" id="userID" th:data-userid="${user.userid}">[[${user.userid}]]</td>
+					            </tr>
+					            <tr>
+					                <th>이메일</th>
+					                <td colspan="3" id="userEmail" th:data-email="${user.email}">[[${user.email}]]</td>
+					            </tr>
+					            <tr>
+					                <th>휴대폰</th>
+					                <td colspan="3" id="userPhone" th:data-phone="${user.phone}">[[${user.phone}]]</td>
+					            </tr>
+					            <tr>
+					                <th>예약정보</th>
+					                <td colspan="3" id="reservationInfo"> 성인 :  / 아이 : </td>
+					            </tr>
+					            <tr>
+					                <th>결제금액</th>
+					                <td colspan="3" id="totalAmount"></td>
+					            </tr>
+					        </tbody>
+					    </table>
+					</div>
                 </div>
-                <div class="pay">
+                <div th:if="${session.loginUser == null}" class="pay">
+                    <div class="pay_btn">
+                        <button type="submit" onclick="notuserpay()">
+                            결제하기
+                        </button>
+                    </div>
+                    <button><a th:href="@{/package/pget(packagenum=${package.packagenum})}">취소</a></button>
+                </div>
+                <div th:unless="${session.loginUser == null}" class="pay">
                     <div class="pay_btn">
                         <button type="submit" onclick="getpay()">
                             결제하기
@@ -108,7 +151,7 @@
     </div>
 </body>
 <script>
-	document.addEventListener("DOMContentLoaded", function() {
+	document.addEventListener("DOMContentLoaded", function() {				
 	    const urlParams = new URLSearchParams(window.location.search);
 	    const adultCount = parseInt(urlParams.get('adultCount')) || 0;
 	    const childCount = parseInt(urlParams.get('childCount')) || 0;
@@ -171,6 +214,70 @@
 	        }
 	    });
 	});
+	function notuserpay(){
+		const checkboxes = document.querySelectorAll('.check2 .input-check');
+		const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+		if (!allChecked) {
+		    alert('동의사항을 모두 체크해주세요.');
+		    return; // 결제 요청 중지
+		}
+		const packageTitleElement = document.getElementById('packageTitle');
+		const packageTitle = packageTitleElement.dataset.title || "패키지 제목없음";
+		const packageNumElement = document.getElementById('packageNum');
+		const packageNum = packageNumElement.dataset.num || "상품 아이디 없음";
+		const totalAmount = document.getElementById('totalAmount').textContent.replace(/[^0-9]/g, '');
+		// 예약자 정보 가져오기
+		const userIDInput = document.getElementById('userID');
+		const userId = userIDInput.value.trim(); // 사용자가 입력한 이름
+		const userEmailInput = document.getElementById('userEmail');
+		const userEmail = userEmailInput.value.trim(); // 사용자가 입력한 이메일
+		const userPhoneInput = document.getElementById('userPhone');
+		const userPhone = userPhoneInput.value.trim(); // 사용자가 입력한 휴대폰 번호
+		
+		Bootpay.requestPayment({
+		    "application_id": "664c50f4da291fb9231e115d",
+		    "price": totalAmount,
+		    "order_name": packageTitle,
+		    "order_id": "TEST_ORDER_ID",
+		    "pg": "나이스페이먼츠",
+		    "method": "",
+		    "tax_free": 0,
+		    "user": {
+		        "id": userId,
+		        "username": "회원이름",
+		        "phone": userPhone,
+		        "email": userEmail
+		    },
+		    "items": [
+		        {
+		            "id": packageNum,
+		            "name": packageTitle,
+		            "qty": 1,
+		            "price": totalAmount
+		        }
+		    ],
+		    "extra": {
+		        "open_type": "iframe",
+		        "card_quota": "0,2,3",
+		        "escrow": false
+		    }
+		}).then(function(response) {
+		    if (response.event === 'done') {
+		        console.log(response);
+		        savePaymentInfo(response, userId, userPhone, userEmail);
+		    }
+		}).catch(function(e) {
+		    console.log(e.message);
+		    switch (e.event) {
+		        case 'cancel':
+		            console.log(e.message);
+		            break;
+		        case 'error':
+		            console.log(e.error_code);
+		            break;
+		    }
+		});
+	}
 	
 	function getpay() {
 	    const checkboxes = document.querySelectorAll('.check2 .input-check');
@@ -185,13 +292,16 @@
 	    const packageNumElement = document.getElementById('packageNum');
 	    const packageNum = packageNumElement.dataset.num || "상품 아이디 없음";
 	    const userIdElement = document.getElementById('userID');
+		console.log(userIdElement);
 	    const userPhoneElement = document.getElementById('userPhone');
+		
 	    const userEmailElement = document.getElementById('userEmail');
-	
 	    const totalAmount = document.getElementById('totalAmount').textContent.replace(/[^0-9]/g, '');
 	    const userId = userIdElement.textContent.trim();  // 여기서 실제 사용자 아이디를 가져옵니다.
+		console.log(userId);
 	    const userPhone = userPhoneElement.textContent.trim();  // 여기서 실제 사용자 전화번호를 가져옵니다.
 	    const userEmail = userEmailElement.textContent.trim();  // 여기서 실제 사용자 이메일을 가져옵니다.
+		
 	
 	    Bootpay.requestPayment({
 	        "application_id": "664c50f4da291fb9231e115d",
@@ -237,6 +347,7 @@
 	        }
 	    });
 	}
+	
 	
 	function savePaymentInfo(paymentResponse, userId, userPhone, userEmail) {
 	    const urlParams = new URLSearchParams(window.location.search);

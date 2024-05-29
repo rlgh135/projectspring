@@ -198,18 +198,25 @@ public class PackController {
 	
 	@GetMapping("pay")
 	public String pay(long packagenum, HttpServletRequest req, HttpServletResponse resp, Model model) {
-		System.out.println("packagenum: " + packagenum);
-		String requestURI = req.getRequestURI();
-		HttpSession session = req.getSession();
-		PackageDTO pack = service.getDetail(packagenum);
-		model.addAttribute("package",pack);
-		String loginUser = (String)session.getAttribute("loginUser");
-		model.addAttribute("loginUser",loginUser);
-		UserDTO user = service.getUser(loginUser);
-		model.addAttribute("user",user);
-		
-		
-		return "package/pay";
+	    System.out.println("packagenum: " + packagenum);
+	    String requestURI = req.getRequestURI();
+	    HttpSession session = req.getSession();
+	    PackageDTO pack = service.getDetail(packagenum);
+	    model.addAttribute("package", pack);
+
+	    String loginUser = (String) session.getAttribute("loginUser");
+	    model.addAttribute("loginUser", loginUser);
+
+	    if (loginUser != null) {
+	        UserDTO user = service.getUser(loginUser);
+	        model.addAttribute("user", user);
+	    } else {
+	        // 로그인하지 않은 사용자 처리: 빈 사용자 정보 추가
+	        UserDTO emptyUser = new UserDTO();
+	        model.addAttribute("user", emptyUser);
+	    }
+
+	    return "package/pay";
 	}
 
 	
