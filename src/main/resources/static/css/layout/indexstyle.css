@@ -62,7 +62,7 @@ input[type]{
     line-height: 50px;
 }
 
-.modal_btn {
+.ptntp {
     border: none;
     cursor: pointer;
     float: left;
@@ -70,7 +70,9 @@ input[type]{
     font-size: 18px;
     height: 50px;
 }
-
+.ptntp:first-child{
+	margin-left: 10px;
+}
 .joinbtn{
     font-size: 18px;
 }
@@ -137,7 +139,7 @@ input[type]{
 .modal_popup input[type=text]:focus, .modal_popup input[type=password]:focus{
 	border-bottom:2px solid #2196f3;
 }
-.modal_btn:hover, .joinbtn:hover{
+.ptntp:hover, .joinbtn:hover{
     color: #2196f3;
     font-weight: bolder;
 }

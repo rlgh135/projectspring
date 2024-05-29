@@ -49,7 +49,8 @@ create table `review` (
 	`guidenum` bigint,
     `userid` varchar(300),
     `contents` text,
-    `packagenum` bigint
+    `packagenum` bigint,
+    `em_sysname` varchar(300)
 );
 
 CREATE TABLE `region` (
