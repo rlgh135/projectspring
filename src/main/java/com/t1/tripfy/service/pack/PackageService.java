@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
+import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
@@ -58,4 +59,6 @@ public interface PackageService {
 	boolean deleteSummernoteImageFile(String fileUrl);
 
 	boolean packageVisibility(long packagenum);
+	
+	List<ReviewDTO> getReviewByGuidenum(long guidenum);
 }

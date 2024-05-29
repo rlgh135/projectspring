@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
+import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 
 
@@ -30,6 +31,7 @@ public interface PackageMapper {
 	int deletePack(long packagenum);	
 	int updateReadCount(@Param("packagenum")long packagenum,@Param("viewcnt") long viewcnt);
 	
+	List<ReviewDTO> getReviewByGuidenum(long guidenum);
 	void saveReservation(ReservationDTO reservation);
 	
 	//해외

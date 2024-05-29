@@ -50,4 +50,5 @@ public interface UserService {
 	List<ReservationDTO> getForeignerReservations(String fname, String phone, Criteria cri);
 	ReservationDTO getForeignerReservation(String keycode);
 	PackageFileDTO getPackThumbnail(long packagenum);
+	List<UserImgDTO> getAllUserImg();
 }

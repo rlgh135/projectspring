@@ -264,4 +264,8 @@ public class UserServiceImpl implements UserService{
 	public PackageFileDTO getPackThumbnail(long packagenum) {
 		return null;
 	}
+	@Override
+	public List<UserImgDTO> getAllUserImg() {
+		return umapper.getAllUserImg();
+	}
 }

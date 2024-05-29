@@ -28,6 +28,8 @@ public interface UserMapper {
 	List<GuideUserDTO> getLikeGuides(String userid);
 	UserImgDTO getGuideAndImg(long packagenum);
 	GuideUserDTO getLikeThisGuide(long guidenum, String userid);
+	List<UserImgDTO> getAllUserImg();
+	
 	
 	//U
 	int updateUser(UserDTO user);

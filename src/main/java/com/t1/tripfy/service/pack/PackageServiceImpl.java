@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
+import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
@@ -391,6 +392,10 @@ public class PackageServiceImpl implements PackageService{
 		}else {
 			return false;			
 		}
+	}
+	@Override
+	public List<ReviewDTO> getReviewByGuidenum(long guidenum) {
+		return pmapper.getReviewByGuidenum(guidenum);
 	}
 	
 }
