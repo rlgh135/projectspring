@@ -214,10 +214,20 @@ public class BoardServiceImpl implements BoardService {
 		
 		String path = BoardSummernotesaveFolder + systemFileName;
 		file.transferTo(new File(path));
-		String thumnailpath = "/tilelineThumnail/"+systemFileName;
-		System.out.println(thumnailpath);
-		//경로에 있는 파일의 MIME 타입을 조사해서 그대로 담기
+		String thumnailpath = "/BoardSummerNoteThumnail/"+systemFileName;
 		return thumnailpath;
+	}
+	
+	@Override
+	public boolean deleteSummernoteImageFile(String fileUrl) {
+		boolean flag = false;
+		String systemFileName = fileUrl.replace("/BoardSummerNoteThumnail/", "");
+		File file = new File(BoardSummernotesaveFolder,systemFileName);
+		if(file.exists()) {
+			file.delete();
+			flag = true;
+		}
+		return flag;
 	}
 	
 }

@@ -39,4 +39,6 @@ public interface BoardService {
 	int getDays(String startdate, String enddate);
 
 	String SummerNoteImageFile(MultipartFile file) throws Exception;
+
+	boolean deleteSummernoteImageFile(String fileUrl);
 }

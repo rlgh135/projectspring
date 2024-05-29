@@ -169,4 +169,15 @@ public class BoardController {
 	    String path = service.SummerNoteImageFile(file);
 	    return path;
 	}
+	
+	@PostMapping("deleteSummernoteImageFile")
+	public @ResponseBody String deleteSummernoteImageFile(@RequestParam("file") String fileUrl) {
+		String result = "";
+	    if(service.deleteSummernoteImageFile(fileUrl)) {
+	    	result = "성공";
+	    }else {
+	    	result = "실패";
+	    }
+	    return result;
+	}
 }
