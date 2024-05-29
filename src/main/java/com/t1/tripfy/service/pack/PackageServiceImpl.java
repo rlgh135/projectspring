@@ -384,6 +384,7 @@ public class PackageServiceImpl implements PackageService{
 		}
 		return flag;
 	}
+	
 	@Override
 	public boolean packageVisibility(long packagenum) {
 		if(pmapper.insertPackContent(packagenum) == 1) {

@@ -135,7 +135,6 @@ public class BoardController {
 		BoardDTO board = service.getDetail(boardnum);
 		int replyCnt = service.getReplyCnt(boardnum);
 		// System.out.println("replyCnt: " + replyCnt);
-		
 		model.addAttribute("board", board);
 		model.addAttribute("replyCnt", replyCnt);
 	}
