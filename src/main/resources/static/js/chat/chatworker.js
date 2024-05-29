@@ -74,6 +74,20 @@ self.onconnect = function(e) {
                 WEBSOCKET.send(e.data.content);
                 //웹소켓 연결시에만 받게 해야함
                 break;
+			case "chkConnState":
+				let state = "";
+				if(!!WEBSOCKET) {
+					state = "WS";
+				} else if(!!EVENTSOURCE) {
+					state = "SSE";
+				} else {
+					state = "NONE";
+				}
+				port.postMessage({
+					actRes: "chkConnStateDone",
+					connState: state
+				});
+				break;
             case "upgradeConn":
 				//SSE -> WebSocket
 				//웹소켓 연결이 살아있는지 체크 - 중복 연결을 막는다

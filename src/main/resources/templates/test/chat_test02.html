@@ -428,15 +428,30 @@
 		2. SharedWorker에게 현재 연결 상태를 요청
 			A. 이미 웹소켓 연결이 된 경우
 			B. SSE 연결인 경우
-			C. 웹소켓 연결이 끊긴 경우
+			이건 뺀다 -> C. 웹소켓 연결이 끊긴 경우
+			웹소켓 연결이 끊긴 경우는 SharedWorker 쪽에서 알림을 보내는거로 처리
 			D. SSE 연결이 끊긴 경우
 		3-A. 채팅방 정보를 *sendReqChatRoom(가칭)*으로 보낸다
 		3-B. 
 	*/
-	function chatListCont_captureEventBubbling(e) {
+	function chatListCont_eventBubblingCapturer(e) {
 		const sepIdArr =  e.target.id.split("-");
 		if(sepIdArr[0] === "cclistele") {
-			//채팅방 요소가 클릭된 경우
+			//채팅방 요소가 클릭된 경우 SharedWorker와 서버 간의 연결 상태를 확인
+			messageSender("chkConnState");
+			promised_ChkConnStateMsg_Receiver()
+			.then((state) => {
+				//웹소켓 연결 상태면 바로 채팅방 진입 요청을 전송,
+				// SSE 상태이면 웹소켓 연결 요청을 먼저 보낸다
+				if(state === "WS") {
+					me
+				} else if(state === "SSE") {
+
+				} else {
+					//연결 x
+				}
+			})
+			.catch((err) => {});
 			upgradeConnection();
 		}
 	}
@@ -528,6 +543,13 @@
 			content: content
 		});
 	}
+	//공용 SharedWorker 메시지 송신 함수
+	function messageSender(action, body={}) {
+		WORKER.port.postMessage({
+			action: action,
+			...body,
+		});
+	}
 	//SharedWorker 비동기 메시지 수신
 	// 이거 어쩌면 실패처리도 해줘야할지도
 	// 대충 let cnt 두고 message 수신 n번째에도 tgtMsgVal이 안 오면 reject를 하거나 하자
@@ -541,6 +563,19 @@
 				if(e.data.actRes === "WebSocketConnDone") {
 					console.log("WebSocketConnDone")
 					resolve();
+					WORKER.port.removeEventListener("message", receiver);
+				}
+			};
+			WORKER.port.addEventListener("message", receiver);
+		});
+	}
+	//SharedWorker action=chkConnState 비동기 메시지 수신 함수
+	async function promised_ChkConnStateMsg_Receiver() {
+		return new Promise((resolve, reject) => {
+			const receiver = function(e) {
+				if(e.data.actRes === "chkConnStateDone") {
+					console.log("workerOnmessageEventReceiver, e.data.actRes=" + e.data.actRes);
+					resolve(e.data.connState);
 					WORKER.port.removeEventListener("message", receiver);
 				}
 			};
