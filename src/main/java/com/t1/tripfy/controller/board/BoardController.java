@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.service.board.BoardService;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -145,8 +146,9 @@ public class BoardController {
 	public void boardwrite() {}
 	
 	@PostMapping("write")
-	public String insertBoard(BoardDTO board, MultipartFile[] files, Criteria cri) throws Exception {
-		if(service.insertBoard(board, files)) {
+	public String insertBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, Criteria cri) throws Exception {
+		if(service.insertBoard(board, boardaddr, files)) {
+			System.out.println("enddate: " + boardaddr.getEnddate());
 			long boardnum = service.getLastNum(board.getUserid());  // 해당 userid로 작성된 마지막 게시글의 번호
 			return "redirect:/board/get?boardnum=" + boardnum;
 		}

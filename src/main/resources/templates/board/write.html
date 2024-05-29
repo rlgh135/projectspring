@@ -24,14 +24,33 @@
         width: 220px;
         outline: none;
     }
+	
+	.place_detail td {
+		display: flex;
+	}
+	
+	.place_detail td div {
+		width: 70px; height: 35px;
+		line-height: 35px;
+		border-radius: 8px;
+		text-align: center;
+		font-size: 14px;
+		background-color: #64B5F6;
+		color: #fff;
+		margin-left: 10px;
+	}
 
     .date [type=text] {
         width: 100px;
     }
 
-    .title [type=text], .place_detail [type=text] {
+    .title [type=text] {
         width: 780px;
     }
+	
+	.place_detail [type=text] {
+		width: 650px;
+	}
 	
 	#writeForm {
 		margin-bottom: 50px;
@@ -320,15 +339,18 @@
                 <tr class="date" style="display: none;">
                     <th><h4>여행 기간</h4></th>
                     <td>
-                        <input type="text" placeholder="출발일" class="startdate" id="startdate" readonly>
+                        <input type="text" placeholder="출발일" class="startdate" id="startdate" name="startdate" readonly>
                         ~
-                        <input type="text" placeholder="도착일" class="enddate" id="enddate" readonly>
+                        <input type="text" placeholder="도착일" class="enddate" id="enddate" name="enddate" readonly>
                     </td>
                 </tr>
 
 				<tr class="place_detail" style="display: none;">
 				    <th><h4>주소</h4></th>
-				    <td><input type="text" placeholder="주소" class="b_place_detail"></td>
+				    <td>
+						<input type="text" placeholder="주소" class="b_place_detail" name="placename">
+						<div>지도</div>
+					</td>
 				</tr>
                 
 

@@ -6,8 +6,6 @@ import lombok.Data;
 public class BoardaddrDTO {
 	private long boardnum;
 	private String placename;
-	private String roadaddress;
-	private String address;
-	private String duedate;
+	private String startdate;
 	private String enddate;
 }

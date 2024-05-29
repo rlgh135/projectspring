@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 
 public interface BoardService {
 	
@@ -28,7 +29,7 @@ public interface BoardService {
 	int getReplyCnt(long boardnum);
 
 	// 게시글 등록
-	boolean insertBoard(BoardDTO board, MultipartFile[] files) throws Exception;
+	boolean insertBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files) throws Exception;
 
 	// 특정 userid로 작성된 게시글 번호 중 마지막 번호
 	long getLastNum(String userid);
