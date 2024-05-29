@@ -12,5 +12,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // /tilelineThumnail/** 경로로 들어오는 요청을 file:///D:/spring_yes/tempFile/ 경로의 리소스와 매핑
         registry.addResourceHandler("/tilelineThumnail/**")
                 .addResourceLocations("file:///D:/spring_yes/tempFile/");
+        
+        registry.addResourceHandler("/BoardThumnail/**")
+        		.addResourceLocations("file:///D:/spring_yes/boardfile/");
     }
 }

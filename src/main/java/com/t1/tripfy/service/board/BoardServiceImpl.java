@@ -32,7 +32,23 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardReplyMapper brmapper;
 	
-	
+	//사진검사
+	public static boolean isImageFile(String extension) {
+        if (extension == null || extension.isEmpty()) {
+            return false;
+        }
+        // 확장자를 소문자로 변환하여 비교
+        extension = extension.toLowerCase();
+        return extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") ||
+               extension.equals("gif") || extension.equals("bmp") || extension.equals("tiff") ||
+               extension.equals("tif") || extension.equals("cr2") || extension.equals("crw") ||
+               extension.equals("nef") || extension.equals("nrw") || extension.equals("arw") ||
+               extension.equals("srf") || extension.equals("sr2") || extension.equals("orf") ||
+               extension.equals("pef") || extension.equals("rw2") || extension.equals("raf") ||
+               extension.equals("srw") || extension.equals("dng") || extension.equals("rwl") ||
+               extension.equals("heif") || extension.equals("heic") || extension.equals("webp") ||
+               extension.equals("psd");
+    }
 	@Override
 	public BoardDTO getDetail(long boardnum) {
 		return bmapper.getBoardByBoardNum(boardnum);
@@ -76,42 +92,55 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		long boardnum = bmapper.getLastNum(board.getUserid());
-		
-		if(boardaddr != null) {
-			boardaddr.setBoardnum(boardnum);
-			System.out.println("Boardnum set to boardaddr: " + boardaddr.getBoardnum()); 
-			if(bmapper.insertBoardAddr(boardaddr) != 1) {
-				// 게시글은 작성되었으므로 삭제
-				return false;
-			}
+		System.out.println("보드 : "+board);
+		System.out.println("보드에이디디알 : "+boardaddr);
+		if (boardaddr.getPlacename() != null && !boardaddr.getPlacename().isEmpty()
+		    && boardaddr.getStartdate() != null && !boardaddr.getStartdate().isEmpty()
+		    && boardaddr.getEnddate() != null && !boardaddr.getEnddate().isEmpty()) {
+		    boardaddr.setBoardnum(boardnum);
+		    System.out.println("Boardnum set to boardaddr: " + boardaddr.getBoardnum()); 
+		    if (bmapper.insertBoardAddr(boardaddr) != 1) {
+		        // 게시글은 작성되었으므로 삭제
+		        return false;
+		    }
 		}
+
 		
 		// 게시글 업로드 했지만 파일은 없음(파일 첨부 안함)
 		if(files == null || files.length == 0) {
+			System.out.println("널입니다");
 			return true;
 		}
 		
 		// 게시글 업로드 O, 파일 업로드 해야함
 		else {
+			System.out.println("널아닙니다");
 			// 방금 등록한 게시글 번호
 			// long boardnum = bmapper.getLastNum(board.getUserid());
-			
+			boolean thumnailFlag = false;
 			boolean flag = false;
 			for(int i = 0; i < files.length - 1; i++) {
 				MultipartFile file = files[i];  // 업로드 된 파일 하나씩 꺼냄(실제 디렉토리에 업로드 되어 있지는 않고 데이터를 꺼낸 것)
-				
+				if(file.getSize() == 0) {
+					continue;
+				}
+				String systemname = "";
 				// apple.png
 				String orgname = file.getOriginalFilename();
 				// 5
 				int lastIdx = orgname.lastIndexOf(".");  // 같은 파일명일 경우 파일명을 바꿔주기 위해
 				// .png
 				String extension = orgname.substring(lastIdx);  // 확장자
-				
 				LocalDateTime now = LocalDateTime.now();
 				String time = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
 				
+				if(!thumnailFlag && isImageFile(extension.replace(".", ""))) {
+					thumnailFlag = true;
+					systemname = "BoardThumnail"+boardnum+extension;
+				}else {
+					systemname = time + UUID.randomUUID().toString() + extension;					
+				}
 				// 20240502162130141랜덤문자열.png
-				String systemname = time + UUID.randomUUID().toString() + extension;
 				
 				// 실제 생성될 파일의 경로
 				String path = saveFolder + systemname;

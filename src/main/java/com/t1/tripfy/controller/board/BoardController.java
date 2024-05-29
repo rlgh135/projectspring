@@ -138,7 +138,6 @@ public class BoardController {
 
 	    BoardaddrDTO boardaddr = service.getBoardAddr(boardnum);
 	    if (boardaddr != null) {
-	    	System.out.println(boardaddr);
 	    	if(boardaddr.getStartdate() != null && boardaddr.getEnddate() != null) {
 	    		int days = service.getDays(boardaddr.getStartdate(),boardaddr.getEnddate());
 	    		model.addAttribute("days",days);
@@ -157,7 +156,6 @@ public class BoardController {
 	@PostMapping("write")
 	public String insertBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, Criteria cri) throws Exception {
 		if(service.insertBoard(board, boardaddr, files)) {
-			System.out.println("enddate: " + boardaddr.getEnddate());
 			long boardnum = service.getLastNum(board.getUserid());  // 해당 userid로 작성된 마지막 게시글의 번호
 			return "redirect:/board/get?boardnum=" + boardnum;
 		}
