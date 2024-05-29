@@ -15,5 +15,5 @@ public interface ChatService {
 	Integer selectCountOfUnreadChatByUserid(String userid);
 	
 	// 채팅방 리스트 + 각 채팅방의 마지막 메시지 + 안 읽은 메시지 개수 가져오기
-	List<ChatListPayloadDTO> selectChatList(String userid);
+	List<ChatListPayloadDTO> selectChatList(Integer start, Integer end, String userid);
 }

@@ -76,17 +76,15 @@ CREATE TABLE `board` (
   `updatecheck` int DEFAULT 0,
   `regionname` varchar(300),
   `countrycode` varchar(300),
-  `likecnt` bigint,
-  `viewcnt` bigint,
+  `likecnt` bigint default 0,
+  `viewcnt` bigint default 0,
   `replycnt` bigint default 0
 );
 
 CREATE TABLE `boardaddr` (
   `boarnum` bigint,
   `placename` varchar(300),
-  `roadaddress` varchar(300),
-  `address` varchar(300),
-  `duedate` date,
+  `startdate` date,
   `enddate` date
 );
 
@@ -117,7 +115,7 @@ CREATE TABLE `package` (
   `startdate` VARCHAR(300),
   `enddate` VARCHAR(300),
   `tourdays` int,
-  `viewcnt` bigint,
+  `viewcnt` bigint default 0,
   `deadline` date NOT NULL,
   `isdelete` int DEFAULT 0,
   `regionname` varchar(300),

@@ -29,9 +29,13 @@
         width: 100px;
     }
 
-    .title [type=text] {
+    .title [type=text], .place_detail [type=text] {
         width: 780px;
     }
+	
+	#writeForm {
+		margin-bottom: 50px;
+	}
 
     .boardwrite {
         margin: 0 auto;
@@ -121,7 +125,7 @@
 	    background-color: #fff;
 	    border: 1px solid rgb(233, 233, 233);
 	    border-radius: 10px;
-	    bottom: 160px; left: 430px;
+	    top: 173px; left: 420px;
 	    z-index: 1;
 	    box-shadow: 0px 0px 3px rgba(30, 30, 30, 0.15);
 	}
@@ -240,27 +244,73 @@
 		top: 17px; left: 203px;
 	}
     
-
+	.file > td div:first-of-type {
+		float: left;
+	}
+	
+	.file > td div:last-of-type {
+		float: right;
+	}
+	
+	.file span {
+		font-size: 14px;
+	}
+	
+	.file a.btn {
+		display: inline-block;
+		font-size: 14px;
+		width: 100px; height: 30px;
+		background-color: #64B5F6;
+		text-align: center;
+		line-height: 30px;
+		border-radius: 5px;
+		color: #fff;
+		margin-right: 5px;
+	}
+	
+	.file th h4::after, .place_detail th h4::after {
+		content: "";
+	}
+	
+	img.thumbnail {
+		display: block;
+		width:200px;
+		clear:both;
+	}
+	
 </style>
 <body>
 	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
 	
     <div class="wrap">
-        <form action="/board/write" method="post" name="writeForm" id="writeForm">
+        <form action="/board/write" method="post" name="writeForm" id="writeForm" enctype="multipart/form-data">
             <table class="boardwrite">
                 <caption>게시글 작성</caption>
                 <tr class="title">
                     <th><h4>제목</h4></th>
-                    <td><input type="text" placeholder="제목" class="b_title"></td>
+                    <td><input type="text" placeholder="제목" class="b_title" name="title"></td>
                 </tr>
+				
+				<tr class="place">
+					    <th><h4>지역</h4></th>
+					    <td>
+						<input type="text" placeholder="나라/지역" class="b_place" readonly name="regionname">
+						
+						<div class="x">
+						    <img src="/images/boardimg/cross.png" alt="">
+						</div>
+					</td>
+				</tr>
 
                 <tr class="writer">
                     <th><h4>작성자</h4></th>
-                    <td><input type="text" placeholder="작성자" class="b_writer" th:value="${session.loginUser}" readonly></td>
+                    <td><input type="text" placeholder="작성자" class="b_writer" th:value="${session.loginUser}" readonly name="userid"></td>
                 </tr>
 				
+				
+				
 				<tr class="yesno">
-				    <th><h4>여행 후기 글 작성 여부</h4></th>
+				    <th><h4>동행 모집 여부</h4></th>
 				    <td>
 				        <input type="radio" name="yesno" id="yes" onclick="date_placeY();"><label for="yes"> yes</label>
 				        <input type="radio" name="yesno" id="no" onclick="date_placeN();"><label for="no"> no</label>
@@ -276,21 +326,31 @@
                     </td>
                 </tr>
 
-                <tr class="place" style="display: none;">
-                    <th><h4>여행 장소</h4></th>
-                    <td>
-						<input type="text" placeholder="나라/지역" class="b_place" readonly>
-						
-						<div class="x">
-						    <img src="/images/boardimg/cross.png" alt="">
+				<tr class="place_detail" style="display: none;">
+				    <th><h4>주소</h4></th>
+				    <td><input type="text" placeholder="주소" class="b_place_detail"></td>
+				</tr>
+                
+
+                <tr class="content">
+                    <th><h4>내용</h4></th>
+                    <td><textarea placeholder="내용" class="b_content" name="content"></textarea></td>
+                </tr>
+				
+				<tr class="r0 file">
+					<th>첨부 파일1</th>
+					<td class="file0_cont">
+						<div>
+							<input type="file" name="files" id="file0" style="display:none">
+							<span id="file0name">선택된 파일 없음</span>
+						</div>
+						<div>
+							<a class="btn" href="javascript:upload(0)">파일 선택</a>
+							<a class="btn" href="javascript:cancelFile(0)">파일 삭제</a>
 						</div>
 					</td>
-                </tr>
-
-                <tr class="place">
-                    <th><h4>내용</h4></th>
-                    <td><textarea placeholder="내용" class="b_content"></textarea></td>
-                </tr>
+				</tr>
+				<input type="hidden" name="countrycode" class="b_countrycode">
             </table>
             <div class="buttons">
                 <input type="button" value="글 작성" class="writeOk" onclick="writeOk();">
@@ -386,6 +446,7 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 	// 나라 및 지역 선택 창
 	const nation_select = document.querySelector(".nation_select");
@@ -410,17 +471,17 @@
 	// 라디오 버튼 yes
 	function date_placeY() {
 		document.querySelector(".date").style.display = "";
-		document.querySelector(".place").style.display = "";
+		document.querySelector(".place_detail").style.display = "";
 	}
 	
 	// 라디오 버튼 no
 	function date_placeN() {
 		document.querySelector(".date").style.display = "none";
-		document.querySelector(".place").style.display = "none";
+		document.querySelector(".place_detail").style.display = "none";
 		
 		document.querySelector(".startdate").value = "";
 		document.querySelector(".enddate").value = "";
-		document.querySelector(".b_place").value = "";
+		document.querySelector(".b_place_detail").value = "";
 		
 		nation_select.style.display = "none";
 		
@@ -769,7 +830,7 @@
 		}
 		
 		if(!yes.checked && !no.checked) {
-			alert("여행 후기 글 작성 여부를 체크해주세요");
+			alert("동행 모집 여부를 체크해주세요");
 			return;
 		}		
 
@@ -780,7 +841,7 @@
 			}
 			
 			if(b_place.value == "") {
-				alert("여행 장소를 입력해주세요");
+				alert("위치를 입력해주세요");
 				return;
 			}
 		}
@@ -790,7 +851,139 @@
 			return;
 		}
 		
+		if(b_place.value != "") {			
+			const b_countrycode = document.querySelector(".b_countrycode");
+			if(b_place.value == "서울" || b_place.value == "제주도" || b_place.value == "경기도" || b_place.value == "강원도" || b_place.value == "충청도" || b_place.value == "경상도" 	|| b_place.value == "전라도" 	|| b_place.value == "인천광역시") {
+				b_countrycode.value = "kr";
+			}
+			
+			else if(b_place.value == "괌/사이판/호주/뉴질랜드") {
+				b_countrycode.value = "gu";
+			}
+			
+			else if(b_place.value == "태국" || b_place.value == "베트남" || b_place.value == "필리핀" || b_place.value == "싱가포르" || b_place.value == "말레이시아" || b_place.value == "캄보디아") {
+				b_countrycode.value = "ea";
+			}
+			
+			else if(b_place.value == "오사카" || b_place.value == "후쿠오카" || b_place.value == "도쿄" || b_place.value == "교토" || b_place.value == "삿포로") {
+				b_countrycode.value = "jp";
+			}
+			
+			else if(b_place.value == "하이난" || b_place.value == "청도" || b_place.value == "베이징" || b_place.value == "장가계") {
+				b_countrycode.value = "cn";
+			}
+			
+			else if(b_place.value == "프랑스" || b_place.value == "영국" || b_place.value == "이탈리아" || b_place.value == "스페인" || b_place.value == "독일" || b_place.value == "스위스" || b_place.value == "핀란드" || b_place.value == "노르웨이" || b_place.value == "그리스" || b_place.value == "포르투갈") {
+				b_countrycode.value = "eu";
+			}
+			
+			else if(b_place.value == "하와이" || b_place.value == "미국(동부)" || b_place.value == "미국(서부)" || b_place.value == "캐나다" || b_place.value == "중남미") {
+				b_countrycode.value = "us";
+			}
+		}
+		
 		document.writeForm.submit();
+	}
+	
+	
+	//------------------ 파일 ------------------
+	
+	//현재 업로드된 파일의 개수(가장 마지막 행 번호)
+	let i = 0;
+	
+	// input[type=file] 클릭
+	function upload(num){
+		$("#file"+num).click();
+	}
+	
+	//$(선택자).change(함수) : 해당 선택자의 요소에 변화가 일어난다면 넘겨주는 함수 호출
+	$("[type=file]").change(function(e){
+		//e : 파일이 업로드된 상황 자체를 담고있는 이벤트 객체
+		//e.target : 파일이 업로드가 된 input[type=file] 객체(태그객체)
+		const fileTag = e.target;
+		console.log(fileTag);
+		//e.target.files : 파일태그에 업로드가 된 파일들의 배열
+		const file = fileTag.files[0];
+		console.log(file);
+		
+		if(file == undefined){
+			//업로드 창을 띄웠다가 취소한 경우(파일이 업로드 되었다가 없어진 경우)
+			cancelFile(fileTag.id.split("e").pop());
+		}
+		else{
+			//파일을 업로드를 한 경우(없었다가 업로드, 있었는데 다른 파일로 업로드)
+			//#file0name 찾아서 내부 텍스트 변경(파일의 이름으로)
+			$("#"+fileTag.id+"name").text(file.name);
+			//업로드 된 파일의 확장자명			
+			let ext = file.name.split(".").pop();
+			if(ext == "jpeg" || ext == "png" || ext == "jpg" || ext == "webp" || ext == "gif"){
+				//".  file0       _cont"
+				$("."+fileTag.id+"_cont .thumbnail").remove();
+				const reader = new FileReader();
+				reader.onload = function(ie){
+					const img = document.createElement("img");
+					img.setAttribute("src",ie.target.result);
+					img.setAttribute("class","thumbnail");
+					document.querySelector("."+fileTag.id+"_cont").appendChild(img);
+				}
+				reader.readAsDataURL(file);
+			}
+			else{
+				$("."+fileTag.id+"_cont .thumbnail").remove();
+			}
+			
+			//가장 마지막 [파일 선택] 버튼을 눌렀을 때
+			if(fileTag.id == "file"+i){
+				const cloneElement = $(".r"+i).clone(true);
+				i++;
+				cloneElement.attr("class","r"+i).addClass("file");
+				cloneElement.children("th").text("첨부 파일"+(i+1));
+				cloneElement.children("td").attr("class","file"+i+"_cont");
+				
+				cloneElement.find("input[type='file']").attr("name","files");
+				cloneElement.find("input[type='file']").attr("id","file"+i);
+				cloneElement.find("input[type='file']").val("");
+				
+				cloneElement.find("span").attr("id","file"+i+"name");
+				cloneElement.find("span").text("선택된 파일 없음");
+				
+				//								  javascript:upload(  1  )
+				cloneElement.find("a")[0].href = "javascript:upload("+i+")";
+				//								  javascript:cancelFile(  1  )
+				cloneElement.find("a")[1].href = "javascript:cancelFile("+i+")";
+				
+				//jQuery객체.appendTo("부모선택자") : 해당 선택자의 자식으로 jQuery 객체 추가
+				cloneElement.appendTo("#writeForm tbody")
+				
+			}
+		}
+	})
+	
+	function cancelFile(num){
+		//파일 업로드 했다가 취소로 파일을 삭제하는 경우에는 문자열로 넘어온다.
+		num = Number(num);
+		//가장 마지막 [첨부 삭제] 버튼을 누른 경우
+		if(num == i){ return; }
+		//tr 지우기
+		$(".r"+num).remove();
+		//지워진 다음 행 부터 숫자 바꿔주기
+		for(let j=num+1;j<=i;j++){
+			console.log(j);
+			const el = $("#writeForm tbody .r"+j);
+			el.attr("class","r"+(j-1)).addClass("file");
+			
+			el.find("th").text("첨부 파일"+j);
+			el.find("td").attr("class","file"+(j-1)+"_cont");
+			
+			el.find("input[type=file]").attr("name","files");
+			el.find("input[type=file]").attr("id","file"+(j-1));
+			
+			el.find("span").attr("id","file"+(j-1)+"name");
+			
+			el.find("a")[0].href = "javascript:upload("+(j-1)+")";
+			el.find("a")[1].href = "javascript:cancelFile("+(j-1)+")";
+		}
+		i--;
 	}
 </script>
 </html>

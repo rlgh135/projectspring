@@ -66,7 +66,7 @@ public class SseEmitterService {
 	private final Map<UUID, SseEmitter> emitterMap = new ConcurrentHashMap<>();
 	
 	//연결 TIMEOUT 설정
-	private static final long TIMEOUT = 10 * 1000;
+	private static final long TIMEOUT = 30 * 1000;
 	//클라이언트 재접속 시도 유예기간
 	private static final long RECONNECTION_AFTER_TIMEOUT = 1 * 1000;
 	

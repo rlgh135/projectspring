@@ -155,20 +155,24 @@ public class PackController {
 	    System.out.println(pack + "안뜨나?");
 	    model.addAttribute("package", pack);
 	    model.addAttribute("files", service.getFiles(packagenum));
-	    
+
 	    String loginUser = (String) session.getAttribute("loginUser");
-	    
+
 	    if (requestURI.contains("pmodify")) {
 	        return "package/pmodify";
 	    }
-	    
-	    Long guidenum = (Long) session.getAttribute("guidenum");
-	    
-	    if (guidenum == null) {
-	        throw new IllegalStateException("guidenum is not set in session");
+
+	    // 세션에서 guidenum 가져오기
+	    Object guidenumObj = session.getAttribute("guideNum");
+	    Long guidenum = null;
+	    if (guidenumObj instanceof Long) {
+	        guidenum = (Long) guidenumObj;
+	    } else if (guidenumObj instanceof Integer) {
+	        guidenum = ((Integer) guidenumObj).longValue();
 	    }
-	    
-	    if(!(pack.getGuidenum()==((Long)session.getAttribute("guidenum")))){
+
+	    // 쿠키를 사용하여 각 packagenum에 대한 조회수 증가
+	    if (guidenum == null || !guidenum.equals(pack.getGuidenum())) {
 	        Cookie[] cookies = req.getCookies();
 	        Cookie read_pack = null;
 	        if (cookies != null) {
@@ -181,15 +185,15 @@ public class PackController {
 	        }
 	        if (read_pack == null) {
 	            service.increaseReadCount(packagenum);
+	            System.out.println("조회수 증가");
 	            Cookie cookie = new Cookie("read_pack" + packagenum, "r");
-	            cookie.setMaxAge(1800);
+	            cookie.setMaxAge(1800); // 30분 동안 유지
 	            resp.addCookie(cookie);
 	        }
 	    }
-	    
+
 	    return "package/pget";
 	}
-
 	
 	
 	@GetMapping("pay")
@@ -207,16 +211,7 @@ public class PackController {
 		
 		return "package/pay";
 	}
-<<<<<<< HEAD
 
-=======
-	//추가
-	@GetMapping("thumbnail")
-	public ResponseEntity<Resource> thumbnail(String systemname) throws Exception {
-		System.out.println(systemname);
-		return service.getThumbnailResource(systemname);
-	}
->>>>>>> 53d23ed98b245fe0af50904cf9e601965ffc7762
 	
 	@PostMapping("write")
 	public String write(PackageDTO pack, MultipartFile packageFile,HttpServletRequest req) throws Exception {
@@ -322,7 +317,7 @@ public class PackController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 내부 서버 오류 상태 코드 반환
 	    }
 	}
-<<<<<<< HEAD
+
 	@GetMapping("thumbnail")
 	public ResponseEntity<Resource> thumbnail(String systemname) throws Exception {
 		System.out.println(systemname);
@@ -351,7 +346,7 @@ public class PackController {
 		return "redirect:/package/pmain"+cri.getListLink()+"&packagenum="+packagenum;
 		
 	}
-=======
+
 	
 	@PostMapping("SummerNoteImageFile")
 	public @ResponseBody String SummerNoteImageFile(@RequestParam("file") MultipartFile file) throws Exception {
@@ -378,5 +373,5 @@ public class PackController {
 			return "redirect:/package/tlwrite?packagenum="+packagenum;
 		}
 	}
->>>>>>> 53d23ed98b245fe0af50904cf9e601965ffc7762
+
 }

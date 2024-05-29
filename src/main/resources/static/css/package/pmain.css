@@ -391,6 +391,14 @@ button{
     background-color: transparent; 
     border:none;
 }
+.no-list{
+	width: 100%;
+	display: flex;
+	font-size: 25px;
+	justify-content: left;
+	margin-top: 50px;
+	height: 100px;
+}
 
 
 

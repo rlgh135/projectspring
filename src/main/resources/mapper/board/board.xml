@@ -113,6 +113,18 @@
 		boardnum > 0
 	</select>
 	
+	<select id="getLastNum">
+		select max(boardnum) from board where userid = #{userid}
+	</select>
+	
+	<insert id="insertBoard">
+		insert into board(userid, title, content, regionname, countrycode) values(#{userid}, #{title}, #{content}, #{regionname}, #{countrycode})
+	</insert>
+	
+	<insert id="insertFile">
+		insert into board_file values(#{boardnum}, #{sysname}, #{orgname}) 
+	</insert>
+		
 	<update id="addReplyCnt">
 		update board set replycnt = replycnt+1 where boardnum=#{boardnum};
 	</update>
