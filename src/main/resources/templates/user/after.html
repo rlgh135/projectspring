@@ -54,7 +54,7 @@
                     <div id="likezone">
                         <div id="hg-gid">가이드아이디</div>
                         <input type="hidden" value="yes" id="chuchu">
-                        <div id="hg-glike">이 가이드를 추천했어요 <span id="likeClk"><img id="likeHeart" src="redheart" alt="" onclick=""></span></div>
+                        <div id="hg-glike"></div>
                     </div>
                 </div>
                 <form method="post" action="/user/hugi">
@@ -82,8 +82,6 @@
                             <div>여행종료일: [[${package.enddate}]]  <span th:id="${'guideid'+package.guidenum}">가이드: [[${guideids[package.guidenum]}]]</span><span class="ddabong"><img></span> </div>
                         </div>
                         <div class="stampzone">
-                            <input th:if="#{reviewlist[iterStat.index]!=null}" type="hidden" th:id="${'hugitxt'+package.guidenum}" th:value="[[${reviewlist[iterStat.index].contents}]]">
-                            <input th:unless="#{reviewlist[iterStat.index]!=null}" type="hidden" th:id="${'hugitxt'+package.guidenum}" th:value="">
                             <img th:if="${reviewlist[iterStat.index]!=null}" th:src="stamp" class="hgstamp">
                         </div>
                     </li>
@@ -99,15 +97,65 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     function hugit(packagenum, guidenum, guidethumbnail) {
-        const modal = document.getElementById("hugimodal");
-        modal.classList.toggle("hidden");
-
-        $("#gprofileimg").attr('src', '/user/thumbnail?='+guidethumbnail);
-        $("#hg-gid").text($("#guideid"+guidenum).text());
-
+		
+		$.ajax({
+			url: "/user/hugidata?packagenum="+packagenum+"&guidenum="+guidenum,
+			method: "GET",
+			
+			success:function(datas){
+				console.log(datas);
+		        let modal = document.getElementById("hugimodal");
+		        modal.classList.toggle("hidden");
+		
+		        $("#gprofileimg").attr('src', '/user/thumbnail?sysname='+guidethumbnail);
+		        $("#hg-gid").text($("#guideid"+guidenum).text());
+				$("hugignum").val(guidenum);
+				$("hugipnum").val(packagenum);
+				
+				if(datas.review!=null){
+					$("#hugicont").val(datas.review.contents);
+					if(datas.islike!=null){
+						$("#hg-glike").html('이 가이드를 추천했어요 <span id="likeClk"><img id="likeHeart" src="/images/layoutimg/redheart.webp" alt="" onclick="presslike('+guidenum+')"></span>');
+					} else {
+						$("#hg-glike").html('이 가이드를 추천하시겠어요? <span id="likeClk"><img id="likeHeart" src="/images/layoutimg/whiteheart.webp" alt="" onclick="presslike('+guidenum+')"></span>');
+					}
+				} else {
+					$("#hugicont").val("");
+				}
+				
+			},
+			
+			error:function(){
+				console.log("통신에러");
+			}
+		});
     }
+	
     function canslehugi() {
-        
+		let modal = document.getElementById("hugimodal");
+		modal.classList.toggle("hidden");
     }
+	function presslike(guidenum){
+		$.ajax({
+			url: "/user/presslike?guidenum="+guidenum,
+			method: "PUT",
+			
+			success:function(datas){
+				console.log(datas);
+				if(datas==null || !datas){
+					$("#hg-glike").html('이 가이드를 추천하시겠어요? <span id="likeClk"><img id="likeHeart" src="/images/layoutimg/whiteheart.webp" alt="" onclick="presslike('+guidenum+')"></span>');
+					alert("좋아요를 취소했어요");
+				} else {
+					$("#hg-glike").html('이 가이드를 추천했어요 <span id="likeClk"><img id="likeHeart" src="/images/layoutimg/redheart.webp" alt="" onclick="presslike('+guidenum+')"></span>');
+					alert("좋아요를 눌렀어요");
+				}
+			},
+			
+			error:function(){
+				console.log("통신에러");
+			}
+			
+		})
+	}
 </script>
 </html>

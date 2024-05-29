@@ -155,8 +155,9 @@ public class BoardController {
 	public void boardwrite() {}
 	
 	@PostMapping("write")
-	public String insertBoard(BoardDTO board, MultipartFile[] files, Criteria cri) throws Exception {
-		if(service.insertBoard(board, files)) {
+	public String insertBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, Criteria cri) throws Exception {
+		if(service.insertBoard(board, boardaddr, files)) {
+			System.out.println("enddate: " + boardaddr.getEnddate());
 			long boardnum = service.getLastNum(board.getUserid());  // 해당 userid로 작성된 마지막 게시글의 번호
 			return "redirect:/board/get?boardnum=" + boardnum;
 		}

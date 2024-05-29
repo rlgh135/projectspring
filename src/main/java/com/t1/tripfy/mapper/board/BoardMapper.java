@@ -50,4 +50,7 @@ public interface BoardMapper {
 	int deleteFilesByBoardnum(long boardnum);
 
 	BoardaddrDTO getBoardaddrByBoardnum(long boardnum);
+	
+	// boardaddr insert
+	int insertBoardAddr(BoardaddrDTO boardaddr);
 }
