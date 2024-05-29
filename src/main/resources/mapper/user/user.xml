@@ -58,4 +58,11 @@
 	<delete id="deleteLike">
 		delete from guide_user where guidenum=#{guidenum} and userid=#{userid}
 	</delete>
+	<delete id="deleteHugi">
+		delete from review where guidenum=#{guidenum} and packagenum=#{packagenum} and userid=#{userid}
+	</delete>
+	<insert id="addHugi">
+		insert into review values(#{guidenum}, #{userid}, #{contents}, #{packagenum}, #{emSysname})
+	</insert>
+	
 </mapper>

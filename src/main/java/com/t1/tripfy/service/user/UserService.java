@@ -45,4 +45,5 @@ public interface UserService {
 	UserImgDTO getGuideAndImg(long packagenum);
 	GuideUserDTO getLikeThisGuide(long guidenum, String userid);
 	boolean presslike(String userid, long guidenum);
+	int uploadHugi(ReviewDTO review);
 }

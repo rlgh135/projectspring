@@ -8,4 +8,5 @@ public class ReviewDTO {
 	private String userid;
 	private String contents;
 	private long packagenum;
+	private String emSysname;
 }

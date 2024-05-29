@@ -238,4 +238,10 @@ public class UserServiceImpl implements UserService{
 		System.out.println("뭔가조짐");
 		return false;
 	}
+	
+	@Override
+	public int uploadHugi(ReviewDTO review) {
+		umapper.deleteHugi(review);
+		return umapper.addHugi(review);
+	}
 }

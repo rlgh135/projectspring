@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
@@ -17,6 +16,7 @@ public interface UserMapper {
 	int insertUser(UserDTO user);
 	int makeDefaultBadge(String userid);
 	int addLike(long guidenum, String userid);
+	int addHugi(ReviewDTO review);
 	
 	//R
 	UserDTO getUserById(String userid);
@@ -38,4 +38,5 @@ public interface UserMapper {
 	int deleteLike(long guidenum, String userid);
 	int deleteUser(String userid);
 	int deleteProfileimg(String userid);
+	int deleteHugi(ReviewDTO review);
 }

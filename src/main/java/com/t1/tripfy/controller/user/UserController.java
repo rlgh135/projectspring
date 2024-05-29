@@ -385,6 +385,18 @@ public class UserController {
 		return "redirect:/";
 	}
 
+	@PostMapping("/user/hugi")
+	public String uploadHugi(ReviewDTO review,HttpServletRequest req) {
+		String backuri=req.getHeader("Referer");
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		review.setUserid(userid);
+	
+		if(service.uploadHugi(review)==1) {
+			return "redirect:"+backuri;
+		}
+		
+		return "error";
+	}
 	
 	//put
 	@PutMapping("cansleapply")

@@ -60,8 +60,8 @@
                         <div id="hg-glike"></div>
                     </div>
                 </div>
-                <form method="post" action="/user/hugi">
-					<input type="hidden" name="sysname" id="stickersysname">
+                <form method="post" action="/user/hugi" name="huhuform">
+					<input type="hidden" name="emSysname" id="stickersysname">
                     <input type="hidden" name="guidenum" val="" id="hugignum">
                     <input type="hidden" name="packagenum" val="" id="hugipnum">
 					<div id="anboim" class="grayback">
@@ -74,10 +74,6 @@
 					<div id="stickerlist" class="hidden">
 						<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
 					</div>    
-					<div>
-						<a>제출</a>
-						<a>취소</a>
-					</div>
                 </form>
                 <div class="btns">
                     <button class="yetda" onclick="yeogihugi()">작성완료</button>
@@ -119,7 +115,7 @@
                 case 'upload':
                     $("#stickersysname").val($(this).data('sysname'));
                     parrentnode.classList.toggle("hidden");
-                    parrentnode.innerHTML='<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="'+$(this).data('sysname')+'">';
+                    parrentnode.innerHTML='<img class="stickers" data-action="upload" src="/images/userimg/'+$(this).data('sysname')+'" data-sysname="'+$(this).data('sysname')+'">';
                     showstickers();
                     break;
 
@@ -145,10 +141,23 @@
 		
 		        $("#gprofileimg").attr('src', '/user/thumbnail?sysname='+guidethumbnail);
 		        $("#hg-gid").text($("#guideid"+guidenum).text());
-				$("hugignum").val(guidenum);
-				$("hugipnum").val(packagenum);
+				$("#hugignum").val(guidenum);
+				$("#hugipnum").val(packagenum);
 				
 				if(datas.review!=null){
+					// 이모티콘 분기
+					let stickdiv = document.getElementById("uploadedsticekrs");
+					if(datas.review.emSysname!=""){
+						$("#stickersysname").val($(this).data(datas.review.emSysname));
+						stickdiv.classList.toggle("hidden");
+						stickdiv.innerHTML='<img class="stickers" data-action="upload" src="/images/userimg/'+datas.review.emSysname+'" data-sysname="'+datas.review.emSysname+'">';
+						
+					} else {
+						$("#stickersysname").val($(this).data(""));
+						stickdiv.innerHTML=""						
+					}
+					
+					//이하 세팅
 					$("#hugicont").val(datas.review.contents);
 					if(datas.islike!=null){
 						$("#hg-glike").html('이 가이드를 추천했어요 <span id="likeClk"><img id="likeHeart" src="/images/layoutimg/redheart.webp" alt="" onclick="presslike('+guidenum+')"></span>');
@@ -197,5 +206,8 @@
     function showstickers() {
         $("#stickerlist").toggleClass("hidden");
     }
+	function yeogihugi(){
+		document.huhuform.submit();
+	}
 </script>
 </html>
