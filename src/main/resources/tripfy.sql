@@ -76,8 +76,8 @@ CREATE TABLE `board` (
   `updatecheck` int DEFAULT 0,
   `regionname` varchar(300),
   `countrycode` varchar(300),
-  `likecnt` bigint,
-  `viewcnt` bigint,
+  `likecnt` bigint default 0,
+  `viewcnt` bigint default 0,
   `replycnt` bigint default 0
 );
 

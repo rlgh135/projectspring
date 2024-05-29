@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
@@ -144,8 +145,15 @@ public class BoardController {
 	public void boardwrite() {}
 	
 	@PostMapping("write")
-	public void insertBoard() {
+	public String insertBoard(BoardDTO board, MultipartFile[] files, Criteria cri) throws Exception {
+		if(service.insertBoard(board, files)) {
+			long boardnum = service.getLastNum(board.getUserid());  // 해당 userid로 작성된 마지막 게시글의 번호
+			return "redirect:/board/get?boardnum=" + boardnum;
+		}
 		
+		else {  // 실패			
+			return "redirect:/board/list";
+		}
 	}
 	
 }
