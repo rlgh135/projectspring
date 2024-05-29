@@ -121,6 +121,10 @@
 		insert into board(userid, title, content, regionname, countrycode) values(#{userid}, #{title}, #{content}, #{regionname}, #{countrycode})
 	</insert>
 	
+	<insert id="insertBoardAddr">
+		insert into boardaddr values(#{boardnum}, #{placename}, #{startdate}, #{enddate})
+	</insert>
+	
 	<insert id="insertFile">
 		insert into board_file values(#{boardnum}, #{sysname}, #{orgname}) 
 	</insert>
@@ -131,4 +135,8 @@
 	<update id="reduceReplyCnt">
 		update board set replycnt = replycnt-1 where boardnum=#{boardnum};
 	</update>
+	<select id="getBoardaddrByBoardnum">
+		select * from boardaddr
+		where boardnum = #{boardnum}
+	</select>
 </mapper>

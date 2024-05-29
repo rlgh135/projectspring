@@ -1,8 +1,10 @@
 package com.t1.tripfy.service.board;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
 import com.t1.tripfy.mapper.board.BoardReplyMapper;
 
@@ -67,9 +70,20 @@ public class BoardServiceImpl implements BoardService {
 
 	// 게시글 등록
 	@Override
-	public boolean insertBoard(BoardDTO board, MultipartFile[] files) throws Exception {
+	public boolean insertBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files) throws Exception {
 		if(bmapper.insertBoard(board) != 1) {  // 게시글 DB 삽입 실패			
 			return false;
+		}
+		
+		long boardnum = bmapper.getLastNum(board.getUserid());
+		
+		if(boardaddr != null) {
+			boardaddr.setBoardnum(boardnum);
+			System.out.println("Boardnum set to boardaddr: " + boardaddr.getBoardnum()); 
+			if(bmapper.insertBoardAddr(boardaddr) != 1) {
+				// 게시글은 작성되었으므로 삭제
+				return false;
+			}
 		}
 		
 		// 게시글 업로드 했지만 파일은 없음(파일 첨부 안함)
@@ -80,7 +94,7 @@ public class BoardServiceImpl implements BoardService {
 		// 게시글 업로드 O, 파일 업로드 해야함
 		else {
 			// 방금 등록한 게시글 번호
-			long boardnum = bmapper.getLastNum(board.getUserid());
+			// long boardnum = bmapper.getLastNum(board.getUserid());
 			
 			boolean flag = false;
 			for(int i = 0; i < files.length - 1; i++) {
@@ -126,4 +140,26 @@ public class BoardServiceImpl implements BoardService {
 	public long getLastNum(String userid) {
 		return bmapper.getLastNum(userid);
 	}
+
+	@Override
+	public BoardaddrDTO getBoardAddr(long boardnum) {
+		BoardaddrDTO boardaddr =  bmapper.getBoardaddrByBoardnum(boardnum);
+		if(boardaddr != null) {
+			String startdate = (boardaddr.getStartdate()).replace("-", ".");
+			String enddate = (boardaddr.getEnddate()).replace("-", ".");
+			boardaddr.setStartdate(startdate);
+			boardaddr.setEnddate(enddate);
+		}
+		return boardaddr;
+	}
+
+	@Override
+	public int getDays(String startdate, String enddate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        LocalDate startDate = LocalDate.parse(startdate, formatter);
+        LocalDate endDate = LocalDate.parse(enddate, formatter);
+
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        return (int) daysBetween+1;
+    }
 }

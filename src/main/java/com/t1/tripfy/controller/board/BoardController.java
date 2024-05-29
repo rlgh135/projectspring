@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.service.board.BoardService;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -131,22 +132,32 @@ public class BoardController {
 	
 	
 	@GetMapping("get")
-	public void boardget(long boardnum, Model model) {  // boardnum, model
-		// System.out.println("boardnum:" + boardnum);
-		BoardDTO board = service.getDetail(boardnum);
-		int replyCnt = service.getReplyCnt(boardnum);
-		// System.out.println("replyCnt: " + replyCnt);
-		
-		model.addAttribute("board", board);
-		model.addAttribute("replyCnt", replyCnt);
+	public void boardget(long boardnum, Model model) {
+	    BoardDTO board = service.getDetail(boardnum);
+	    int replyCnt = service.getReplyCnt(boardnum);
+
+	    BoardaddrDTO boardaddr = service.getBoardAddr(boardnum);
+	    if (boardaddr != null) {
+	    	System.out.println(boardaddr);
+	    	if(boardaddr.getStartdate() != null && boardaddr.getEnddate() != null) {
+	    		int days = service.getDays(boardaddr.getStartdate(),boardaddr.getEnddate());
+	    		model.addAttribute("days",days);
+	    	}
+	        model.addAttribute("boardaddr", boardaddr);
+	    }
+	    
+	    model.addAttribute("board", board);
+	    model.addAttribute("replyCnt", replyCnt);
 	}
+
 	
 	@GetMapping("write")
 	public void boardwrite() {}
 	
 	@PostMapping("write")
-	public String insertBoard(BoardDTO board, MultipartFile[] files, Criteria cri) throws Exception {
-		if(service.insertBoard(board, files)) {
+	public String insertBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, Criteria cri) throws Exception {
+		if(service.insertBoard(board, boardaddr, files)) {
+			System.out.println("enddate: " + boardaddr.getEnddate());
 			long boardnum = service.getLastNum(board.getUserid());  // 해당 userid로 작성된 마지막 게시글의 번호
 			return "redirect:/board/get?boardnum=" + boardnum;
 		}
