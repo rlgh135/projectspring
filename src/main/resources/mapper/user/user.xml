@@ -47,6 +47,15 @@
 		select * from guide_user where userid = #{userid}
 	</select>
 	<select id="getGuideAndImg">
-		select * from user_img where userid=(select userid from guide where (select guidenum from package where packagenum=#{packagenum}));
+		select * from user_img where userid=(select userid from guide where (select guidenum from package where packagenum=#{packagenum}))
 	</select>
+	<select id="getLikeThisGuide">
+		select * from guide_user where userid=#{userid} and guidenum=#{guidenum};
+	</select>
+	<insert id="addLike">
+		insert into guide_user values(#{guidenum}, #{userid})
+	</insert>
+	<delete id="deleteLike">
+		delete from guide_user where guidenum=#{guidenum} and userid=#{userid}
+	</delete>
 </mapper>

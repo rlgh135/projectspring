@@ -307,6 +307,23 @@ public class UserController {
 		return "/user/after";
 	}
 	
+	@GetMapping("hugidata")
+	@ResponseBody
+	public Map<String, Object> getHugiData(HttpServletRequest req){
+		Map<String, Object> datas = new HashMap<>();
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		long pakcagenum = Long.parseLong(req.getParameter("packagenum"));
+		long guidenum = Long.parseLong(req.getParameter("guidenum"));
+		
+		ReviewDTO review = service.getMyReviewByPackagenum(pakcagenum, userid);
+		datas.put("review", review);
+		
+		GuideUserDTO islike = service.getLikeThisGuide(guidenum, userid);
+		datas.put("islike", islike);
+		
+		return datas;
+	}
+	
 	//post
 	@PostMapping("join")
 	public String join(UserDTO user, HttpServletResponse resp) {
@@ -391,5 +408,17 @@ public class UserController {
 		}
 		
 		return entity;
+	}
+	
+	@PutMapping("presslike")
+	@ResponseBody
+	public GuideUserDTO presslike(HttpServletRequest req) {
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		long guidenum = Long.parseLong(req.getParameter("guidenum"));
+		
+		if(service.presslike(userid, guidenum)) {
+			return service.getLikeThisGuide(guidenum, userid);
+		}
+		return service.getLikeThisGuide(guidenum, userid);
 	}
 }

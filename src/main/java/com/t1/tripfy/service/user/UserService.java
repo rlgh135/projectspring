@@ -43,4 +43,6 @@ public interface UserService {
 	ReviewDTO getMyReviewByPackagenum(long packagenum, String userid);
 	List<GuideUserDTO> getLikeGuides(String userid);
 	UserImgDTO getGuideAndImg(long packagenum);
+	GuideUserDTO getLikeThisGuide(long guidenum, String userid);
+	boolean presslike(String userid, long guidenum);
 }

@@ -216,4 +216,26 @@ public class UserServiceImpl implements UserService{
 	public UserImgDTO getGuideAndImg(long packagenum) {
 		return umapper.getGuideAndImg(packagenum);
 	}
+	
+	@Override
+	public GuideUserDTO getLikeThisGuide(long guidenum, String userid) {
+		return umapper.getLikeThisGuide(guidenum, userid);
+	}
+	
+	@Override
+	public boolean presslike(String userid, long guidenum) {
+		if(umapper.getLikeThisGuide(guidenum, userid)!=null) {
+			if(umapper.deleteLike(guidenum, userid)==1) {
+				return true;
+			}
+			System.out.println("deletelike미스");
+		} else {
+			if(umapper.addLike(guidenum, userid)==1) {
+				return true;
+			}
+			System.out.println("addlike미스");
+		}
+		System.out.println("뭔가조짐");
+		return false;
+	}
 }

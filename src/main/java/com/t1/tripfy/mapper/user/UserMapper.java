@@ -16,6 +16,7 @@ public interface UserMapper {
 	//C
 	int insertUser(UserDTO user);
 	int makeDefaultBadge(String userid);
+	int addLike(long guidenum, String userid);
 	
 	//R
 	UserDTO getUserById(String userid);
@@ -26,6 +27,7 @@ public interface UserMapper {
 	ReviewDTO getMyReview(long packagenum, String userid);
 	List<GuideUserDTO> getLikeGuides(String userid);
 	UserImgDTO getGuideAndImg(long packagenum);
+	GuideUserDTO getLikeThisGuide(long guidenum, String userid);
 	
 	//U
 	int updateUser(UserDTO user);
@@ -33,6 +35,7 @@ public interface UserMapper {
 	int updateSogae(String userid, String introduce);
 	
 	//D
+	int deleteLike(long guidenum, String userid);
 	int deleteUser(String userid);
 	int deleteProfileimg(String userid);
 }
