@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>비회원 내역조회</title>
+	<style>
+		#nonuwrap{
+			margin: 0 auto;
+			margin-top:120px;
+		}
+		/*
+		.shmodal{
+			position: absolute;
+		}
+		*/
+	</style>
 </head>
 <body>
     <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
@@ -12,17 +23,6 @@
             <div class="shmodal-content">
                 <div id="shparent-info"><!--OOO님이 제출해주신 정보로 O개의 내역을 찾았습니다--></div>
                 <ul id="shparent">
-                    <li onclick="location.href='user/recipt?packagenum=${packagenum}&keycode=${keycode}'">
-                        <div class="packagethumb">
-                            <img src="" alt="">
-                        </div>
-                        <div class="contarea">
-                            <div class="packagename">이이이</div>
-                            <div class="packagelowinfo">어른 명, 어린이 명 ￦totalprice</div>
-                            <div class="packagestartdate">출발일</div>
-                        </div>
-                        <div class="packagestatus"></div>
-                    </li>
                 </ul>
                 <div class="closediv">닫기</div>
             </div>
@@ -38,7 +38,7 @@
                             <li class="li-tit">키코드로 조회하기</li>
                             <li>
                                 <div>
-                                    <input type="text" value="" name="keycode">
+                                    <input type="text" value="" name="keycode" id="kekk">
                                     <a href="javascript:checkkey()">조회</a>
                                 </div>
                             </li>
@@ -90,19 +90,23 @@
 
                 console.log(datas);
 
-                for (let i in datas) {
+				if(datas.packagelist==null){
+					console.log("패키지없음");
+					return;
+				}
+                for (let i in datas.packagelist) {
                     // li 요소 생성
                     var liElement = document.createElement('li');
                     liElement.onclick = function() {
-                        location.href = 'user/recipt?packagenum=' + packagenum + '&keycode=' + keycode;
+                        location.href = 'user/recipt?packagenum=' + datas.packagelist[i].packagenum + '&keycode=' + datas.reslist[i].keycode;
                     };
 
                     // 첫 번째 div 요소 (packagethumb) 생성
                     var packagethumbDiv = document.createElement('div');
                     packagethumbDiv.className = 'packagethumb';
                     var imgElement = document.createElement('img');
-                    imgElement.src = ''; // 이미지 경로 설정
-                    imgElement.alt = ''; // 이미지 대체 텍스트 설정
+                    imgElement.src = '';
+                    imgElement.alt = '';
                     packagethumbDiv.appendChild(imgElement);
 
                     // 두 번째 div 요소 (contarea) 생성
@@ -110,13 +114,13 @@
                     contareaDiv.className = 'contarea';
                     var packagenameDiv = document.createElement('div');
                     packagenameDiv.className = 'packagename';
-                    packagenameDiv.textContent = '이이이'; // 패키지 이름 설정
+                    packagenameDiv.textContent = datas.packagelist[i].packageTitle; // 패키지 이름 설정
                     var packagelowinfoDiv = document.createElement('div');
                     packagelowinfoDiv.className = 'packagelowinfo';
-                    packagelowinfoDiv.textContent = '어른 ' + adultCount + ' 명, 어린이 ' + childCount + ' 명 ￦' + totalprice;
+                    packagelowinfoDiv.textContent = '어른 ' + datas.reslist[i].adultCount + ' 명, 어린이 ' + datas.reslist[i].childCount + ' 명 ￦' + datas.reslist[i].price;
                     var packagestartdateDiv = document.createElement('div');
                     packagestartdateDiv.className = 'packagestartdate';
-                    packagestartdateDiv.textContent = '출발일'; // 출발일 설정
+                    packagestartdateDiv.textContent = datas.packagelist[i].startdate; // 출발일 설정
                     contareaDiv.appendChild(packagenameDiv);
                     contareaDiv.appendChild(packagelowinfoDiv);
                     contareaDiv.appendChild(packagestartdateDiv);
@@ -131,7 +135,7 @@
                     liElement.appendChild(packagestatusDiv);
 
                     // 생성된 li 요소를 ul 요소에 추가
-                    document.getElementById('package-list').appendChild(liElement);
+                    shparent.appendChild(liElement);
                 }
             },
 
@@ -139,10 +143,68 @@
                 console.log("통신에러");
             }
         })
-        nonuform.submit();
     }
     function checkkey() {
-        
+		var keycode = $("#kekk").val();
+		console.log(keycode);
+		$.ajax({
+		            url: "/user/foreigner?keycode="+keycode,
+		            method: "POST",
+
+		            success:function(datas){
+						console.log(datas)
+						if(datas.reservation==null){
+							console.log("데이터 없음")
+							return;
+						}
+		                $("shparent-info").html(datas.reservation.name+"님이 제출해주신 정보로 1개의 내역을 찾았습니다.");
+		                const shparent = document.getElementById("shparent");
+
+		                // li 요소 생성
+		                var liElement = document.createElement('li');
+						liElement.setAttribute("onclick", `location.href = 'user/recipt?packagenum=${datas.pack.packagenum}&keycode=${datas.reservation.keycode}'`);
+
+		                // 첫 번째 div 요소 (packagethumb) 생성
+		                var packagethumbDiv = document.createElement('div');
+		                packagethumbDiv.className = 'packagethumb';
+		                var imgElement = document.createElement('img');
+		                imgElement.src = '';
+		                imgElement.alt = '';
+		                packagethumbDiv.appendChild(imgElement);
+
+		                // 두 번째 div 요소 (contarea) 생성
+		                var contareaDiv = document.createElement('div');
+		                contareaDiv.className = 'contarea';
+		                var packagenameDiv = document.createElement('div');
+		                packagenameDiv.className = 'packagename';
+		                packagenameDiv.textContent = datas.pack.packageTitle; // 패키지 이름 설정
+		                var packagelowinfoDiv = document.createElement('div');
+		                packagelowinfoDiv.className = 'packagelowinfo';
+		                packagelowinfoDiv.textContent = '어른 ' + datas.reservation.adultCount + ' 명, 어린이 ' + datas.reservation.childCount + ' 명 ￦' + datas.reservation.price;
+		                var packagestartdateDiv = document.createElement('div');
+		                packagestartdateDiv.className = 'packagestartdate';
+		                packagestartdateDiv.textContent = datas.pack.startdate; // 출발일 설정
+		                contareaDiv.appendChild(packagenameDiv);
+		                contareaDiv.appendChild(packagelowinfoDiv);
+		                contareaDiv.appendChild(packagestartdateDiv);
+
+		                // 세 번째 div 요소 (packagestatus) 생성
+		                var packagestatusDiv = document.createElement('div');
+		                packagestatusDiv.className = 'packagestatus';
+
+		                // li 요소에 모든 div 요소 추가
+		                liElement.appendChild(packagethumbDiv);
+		                liElement.appendChild(contareaDiv);
+		                liElement.appendChild(packagestatusDiv);
+
+		                // 생성된 li 요소를 ul 요소에 추가
+		                shparent.appendChild(liElement);
+		            },
+
+		            error:function(){
+		                console.log("통신에러");
+		            }
+		        })
     }
 
     let targetletter = "";

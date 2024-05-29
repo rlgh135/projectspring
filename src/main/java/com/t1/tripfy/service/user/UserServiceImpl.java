@@ -24,11 +24,13 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
+import com.t1.tripfy.mapper.pack.PackageFileMapper;
 import com.t1.tripfy.mapper.pack.PackageMapper;
 import com.t1.tripfy.mapper.pack.ReservationMapper;
 import com.t1.tripfy.mapper.user.UserMapper;
@@ -50,6 +52,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private PackageMapper pmapper;
+	
+	@Autowired
+	private PackageFileMapper pfilemapper;
 	
 	@Override
 	public boolean join(UserDTO user) {
@@ -243,5 +248,20 @@ public class UserServiceImpl implements UserService{
 	public int uploadHugi(ReviewDTO review) {
 		umapper.deleteHugi(review);
 		return umapper.addHugi(review);
+	}
+	
+	@Override
+	public List<ReservationDTO> getForeignerReservations(String fname, String phone, Criteria cri) {
+		return resmapper.getForignerReservations(fname, phone, cri);
+	}
+	
+	@Override
+	public ReservationDTO getForeignerReservation(String keycode) {
+		return resmapper.getForignerReservation(keycode);
+	}
+	
+	@Override
+	public PackageFileDTO getPackThumbnail(long packagenum) {
+		return null;
 	}
 }

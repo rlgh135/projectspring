@@ -16,8 +16,9 @@ public interface ReservationMapper {
 	List<ReservationDTO> getMyReservation(Criteria cri, String userid);
 	List<ReservationDTO> getApply(long packagenum);
 	PackageDTO getMyPackageTwoWeek(long packagenum);
+	ReservationDTO getForignerReservation(String keycode);
+	List<ReservationDTO> getForignerReservations(String fname, String phone, Criteria cri);
 	//U
 	int changeIsdelete(long reservationnum, int isdelete);
 	//D
-
 }
