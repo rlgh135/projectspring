@@ -15,5 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         
         registry.addResourceHandler("/BoardThumnail/**")
         		.addResourceLocations("file:///D:/spring_yes/boardfile/");
+        registry.addResourceHandler("/BoardSummerNoteThumnail/**")
+				.addResourceLocations("file:///D:/spring_yes/boardSummerNotefile/");
     }
 }

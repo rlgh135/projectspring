@@ -164,5 +164,9 @@ public class BoardController {
 			return "redirect:/board/list";
 		}
 	}
-	
+	@PostMapping("SummerNoteImageFile")
+	public @ResponseBody String SummerNoteImageFile(@RequestParam("file") MultipartFile file) throws Exception {
+	    String path = service.SummerNoteImageFile(file);
+	    return path;
+	}
 }
