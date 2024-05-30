@@ -101,7 +101,7 @@ CREATE TABLE `board_reply` (
 
 CREATE TABLE `board_file` (
   `boardnum` bigint,
-  `sysname` varchar(300) PRIMARY KEY,
+  `sysname` varchar(300),
   `orgname` varchar(300)
 );
 
@@ -136,13 +136,13 @@ CREATE TABLE `timeline` (
 
 CREATE TABLE `package_file` (
   `packagenum` bigint,
-  `pf_sysname` VARCHAR(300) PRIMARY KEY,
+  `pf_sysname` VARCHAR(300),
   `pf_orgname` VARCHAR(300)
 );
 
 CREATE TABLE `timeline_file` (
   `timelinenum` bigint,
-  `tf_sysname` VARCHAR(300) PRIMARY KEY,
+  `tf_sysname` VARCHAR(300),
   `tf_orgname` VARCHAR(300)
 );
 
