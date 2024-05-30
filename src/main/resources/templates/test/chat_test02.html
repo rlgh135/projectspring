@@ -350,11 +350,12 @@
 
 		console.log("enter createCCListElement()");
 
-		//리스트 요소 생성, DOM에 추가, id/class 할당
+		//리스트 요소 생성, DOM에 추가, id/class 할당, 이벤트 할당
 		const ccListElement = document.createElement("div");
 		chat_list_cont.appendChild(ccListElement);
 		ccListElement.id = "cclistele-" + data.roomidx;
 		ccListElement.classList.add("cc-list-element");
+		ccListElement.addEventListener("click", chatListEle_handlingClickEvent);
 
 		//이미지 div/img 생성, DOM에 추가, 속성 부여
 		const firDiv = document.createElement("div");
@@ -404,18 +405,18 @@
 	*/
 
 	//임시 채팅방 클릭 이벤트
-	function console_clickChatListElement(roomidx) {
-		upgradeConnection();
+	// function console_clickChatListElement(roomidx) {
+	// 	upgradeConnection();
 		
-		promisedMessageReceiver("actRes", "WebSocketConnDone")
-		.then(() => {
-			console.log("promisedMsgRcv");
-			sendMsg({
-				testMsg: "yeah"
-			});
-		})
-		.catch((err) => {});
-	}
+	// 	promisedMessageReceiver("actRes", "WebSocketConnDone")
+	// 	.then(() => {
+	// 		console.log("promisedMsgRcv");
+	// 		sendMsg({
+	// 			testMsg: "yeah"
+	// 		});
+	// 	})
+	// 	.catch((err) => {});
+	// }
 
 	//임시 chat-list-cont 이벤트 버블링 잡는 함수
 	/*onclick으로 할당해라*/
@@ -433,10 +434,23 @@
 			D. SSE 연결이 끊긴 경우
 		3-A. 채팅방 정보를 *sendReqChatRoom(가칭)*으로 보낸다
 		3-B. 
+
+		!! 240530
+		이거 지금 탭에서 이미 열린 채팅방이 있는 경우 서버에 해당 채팅방이 닫혔다고 알려줘야함
+		근데 그건 뭐... 채팅방을 닫지 않고는 다른 채팅방을 열 수가 없으니 안 해도 됨
+		!!근데 탭 종료/리로드시 채팅방이 열려있던경우 닫아줘야함
+
+		그리고 열린 채팅방을 가진 탭(port) 목록을 SharedWorker에 구현해야하고
+		그거 생각하면 여기 로직도 그쪽으로 최대한 넘기는게 좋겠음
+			넘길때 단순히 upgradeConn만 보내는게 아니라 roomidx도 보내자
+				reqAct: chatRoomEnter는 SharedWorker 쪽에 명시해두기로 하고
+					어짜피 upgradeConn은 무조건 채팅방 열기와 동일하니까
+		여기서는 간단한 명령+promisedReceiver 하나만 두자고
 	*/
 	function chatListCont_eventBubblingCapturer(e) {
 		const sepIdArr =  e.target.id.split("-");
 		if(sepIdArr[0] === "cclistele") {
+			console.log("clicked id=" + e.target.id);
 			//채팅방 요소가 클릭된 경우 SharedWorker와 서버 간의 연결 상태를 확인
 			messageSender("chkConnState");
 			promised_ChkConnStateMsg_Receiver()
@@ -444,9 +458,22 @@
 				//웹소켓 연결 상태면 바로 채팅방 진입 요청을 전송,
 				// SSE 상태이면 웹소켓 연결 요청을 먼저 보낸다
 				if(state === "WS") {
-					me
+					//서버로 메시지 전송
+					messageSender("sendMsg", {
+						reqAct: "chatRoomEnter",
+						roomidx: Number(sepIdArr[1])
+					});
 				} else if(state === "SSE") {
-
+					upgradeConnection();
+					promised_UpgradeConnDoneMsg_Receiver()
+					.then(() => {
+						//웹소켓 연결 확인시 서버로 메시지 전송
+						messageSender("sendMsg", {
+							reqAct: "chatRoomEnter",
+							roomidx: Number(sepIdArr[1])
+						})
+					})
+					.catch(() => {});
 				} else {
 					//연결 x
 				}
@@ -454,6 +481,13 @@
 			.catch((err) => {});
 			upgradeConnection();
 		}
+	}
+	chat_list_cont.addEventListener("click", chatListCont_eventBubblingCapturer);
+
+	//채팅방 요소 이벤트 넘기기
+	/*채팅방 요소(cclistele-*)의 자식 요소가 클릭되었을때 e.target.id를 부모 id로 덮어씌운다*/
+	function chatListEle_handlingClickEvent(e) {
+		e.target.id = this.id;
 	}
 
 	/*================================================================================*/
@@ -544,24 +578,22 @@
 		});
 	}
 	//공용 SharedWorker 메시지 송신 함수
-	function messageSender(action, body={}) {
+	function messageSender(action, payload={}) {
 		WORKER.port.postMessage({
 			action: action,
-			...body,
+			payload: {
+				...payload,
+			}
 		});
 	}
-	//SharedWorker 비동기 메시지 수신
+	//SharedWorker WebSocket 연결 요청 처리결과 비동기 수신 함수
 	// 이거 어쩌면 실패처리도 해줘야할지도
 	// 대충 let cnt 두고 message 수신 n번째에도 tgtMsgVal이 안 오면 reject를 하거나 하자
-	async function promisedMessageReceiver(tgtMsgKey, tgtMsgVal) {
+	async function promised_UpgradeConnDoneMsg_Receiver() {
 		return new Promise((resolve, reject) => {
 			const receiver = function(e) {
-				// if(e.data[tgtMsgKey] === tgtMsgVal) {
-				// 	WORKER.port.removeEventListener("message", receiver);
-				// 	resolve();
-				// }
 				if(e.data.actRes === "WebSocketConnDone") {
-					console.log("WebSocketConnDone")
+					console.log("WebSocketConnDone");
 					resolve();
 					WORKER.port.removeEventListener("message", receiver);
 				}
