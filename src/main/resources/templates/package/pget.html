@@ -97,7 +97,7 @@
 					    <div th:if="${review != null and #lists.size(review) > 0 and review[0].guidenum == package.guidenum}">
 					        <div th:each="review : ${review}" class="review">
 					            <div class="userprofile">
-					                <img src="/images/packageimg/tripfy_banner.png">
+									<img th:src="${'/package/thumbnail?systemname=' + review.userImages[0].sysname}">
 					                <p><strong>[[${review.userid}]]</strong></p>
 					            </div>
 					            <div class="reviewcontent">[[${review.contents}]]</div>
