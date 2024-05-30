@@ -174,4 +174,8 @@
         SET viewcnt = #{viewcnt}
         WHERE packagenum = #{packagenum}
     </update>
+    
+      <select id="getReviewByGuidenum">
+		select * from review where guidenum = #{guidenum};
+	</select>
 </mapper>

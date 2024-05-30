@@ -64,5 +64,7 @@
 	<insert id="addHugi">
 		insert into review values(#{guidenum}, #{userid}, #{contents}, #{packagenum}, #{emSysname})
 	</insert>
-	
+	<select id="getAllUserImg">
+		select * from user_img
+	</select>
 </mapper>

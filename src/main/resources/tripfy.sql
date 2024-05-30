@@ -151,6 +151,12 @@ isdelete: 0 기본
 isdelete: 1 유저가 취소 신청
 isdelete: 2 가이드도 확인 후 최종 취소
 */
+/*
+name 추가 및 비회원 name -> '회원' 쿼리
+set SQL_SAFE_UPDATES = 0;
+ALTER TABLE reservation ADD COLUMN name VARCHAR(300);
+UPDATE reservation SET name = '회원' where keycode <> 'user';
+*/
 CREATE TABLE `reservation` (
   `reservationnum` bigint PRIMARY KEY AUTO_INCREMENT,
   `packagenum` bigint,
@@ -162,7 +168,8 @@ CREATE TABLE `reservation` (
   `keycode` varchar(300),
   `price` varchar(300),
   `pay_method` varchar(300),
-  `isdelete` int DEFAULT 0
+  `isdelete` int DEFAULT 0,
+  `name` varchar(300)
 );
 
 CREATE TABLE `not_user` (

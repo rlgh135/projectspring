@@ -15,6 +15,20 @@
 	이걸 기록하고 컨트롤할 변수와 로직이 필요함
 */
 
+/*
+	프로토콜? 240529
+	브라우저 컨텍스트 -> 공유 워커
+	{
+		action: "...",
+		...
+	}
+	공유 워커 -> 브라우저 컨텍스트
+	{
+		actRes: "...",
+		...
+	}
+*/
+
 //웹소켓 커넥션
 let WEBSOCKET = null;
 //SSE 커넥션
@@ -60,20 +74,29 @@ self.onconnect = function(e) {
                 WEBSOCKET.send(e.data.content);
                 //웹소켓 연결시에만 받게 해야함
                 break;
+			case "chkConnState":
+				let state = "";
+				if(!!WEBSOCKET) {
+					state = "WS";
+				} else if(!!EVENTSOURCE) {
+					state = "SSE";
+				} else {
+					state = "NONE";
+				}
+				port.postMessage({
+					actRes: "chkConnStateDone",
+					connState: state
+				});
+				break;
             case "upgradeConn":
 				//SSE -> WebSocket
 				//웹소켓 연결이 살아있는지 체크 - 중복 연결을 막는다
 				if(!WEBSOCKET) {
-					upgradeConnection()
-					//일단 요청자에게만 연결 완료여부 전송
-					.then(() => {
-						port.postMessage({
-							result: "upgradeDone"
-						});
+					//우선 브컨들에게 웹소켓 연결을 알린다
+					broadcastMsg("WebSocket Conn req", {
+						status: "WebSocket Conn reqed"
 					})
-					.catch((err) => {
-						console.log(err);
-					});
+					upgradeConnection(port);
 				}
 				break;
 			case "downgradeConn":
@@ -100,19 +123,31 @@ if(!EVENTSOURCE && !WEBSOCKET) {
 function broadcastMsg(by, data) {
 	PORT_LIST.forEach((port) => {
 		port.postMessage(data);
-		console.log("SharedWorker broadcast to=" + port + " data=" + data);
+		console.log("SharedWorker broadcast to=");
+		console.log(port);
+		console.log("data=");
+		console.log(data);
 	});
 }
 
 /*================================================================================*/
 /*연결 관리*/
 //연결 업그레이드 함수
-async function upgradeConnection() {
-	connectWebSocket();
-	if(!!EVENTSOURCE) {
-		EVENTSOURCE.close();
-		EVENTSOURCE = null;
-	}
+function upgradeConnection(reqPort) {
+	connectWebSocket().
+	then(() => {
+		if(!!EVENTSOURCE) {
+			EVENTSOURCE.close();
+			EVENTSOURCE = null;
+		}
+
+		//일단 요청 브컨에게 연결 수립을 알린다
+		console.log("upgradeConn postMsg");
+		reqPort.postMessage({
+			actRes: "WebSocketConnDone"
+		});
+	})
+	.catch((err) => {});
 }
 //연결 다운그레이드 함수
 function downgradeConnection(reason) {
@@ -158,7 +193,7 @@ function connectSSE() {
 	};
 }
 //웹소켓 연결 함수
-function connectWebSocket() {
+async function connectWebSocket() {
 	WEBSOCKET = new WebSocket("ws://localhost:8080/wschat");
 	
 	WEBSOCKET.onopen = (e) => {
@@ -175,4 +210,10 @@ function connectWebSocket() {
 	WEBSOCKET.onclose = (e) => {
 		console.log("WebSocket closed");
 	};
+
+	return new Promise((resolve, reject) => {
+		WEBSOCKET.addEventListener("open", (e) => {
+			resolve();
+		});
+	});
 }

@@ -41,6 +41,7 @@ public interface BoardService {
 
 	int getDays(String startdate, String enddate);
 
+
 	// boardnum으로 파일 가져오기
 	List<BoardFileDTO> getFiles(long boardnum);
 
@@ -49,4 +50,9 @@ public interface BoardService {
 
 	// 게시글 삭제
 	boolean remove(long boardnum);
+
+	String SummerNoteImageFile(MultipartFile file) throws Exception;
+
+	boolean deleteSummernoteImageFile(String fileUrl);
+
 }

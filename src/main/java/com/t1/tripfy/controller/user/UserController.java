@@ -20,6 +20,7 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
@@ -324,6 +325,27 @@ public class UserController {
 		return datas;
 	}
 	
+	@GetMapping("foreign")
+	public String notUserForm(HttpServletRequest req) {
+		if(req.getSession().getAttribute("loginUser") != null) {
+			System.out.println("로그인된 유저입니다");
+			return "/";
+		}
+		return "/user/nuinfo";
+	}
+	
+	@GetMapping("receipt")
+	public String showReceipt(Model model, HttpServletRequest req) {
+		if(req.getSession().getAttribute("loginUser") == null) {
+			
+			model.addAttribute("keycode", "");
+		} else {
+			
+			model.addAttribute("keycode", null);
+		}
+		return "/user/receipt";
+	}
+	
 	//post
 	@PostMapping("join")
 	public String join(UserDTO user, HttpServletResponse resp) {
@@ -432,5 +454,41 @@ public class UserController {
 			return service.getLikeThisGuide(guidenum, userid);
 		}
 		return service.getLikeThisGuide(guidenum, userid);
+	}
+	
+	@PostMapping("foreigner")
+	@ResponseBody
+	public Map<String, Object> getForeignerInfo(Criteria cri, HttpServletRequest req){
+		Map<String, Object> datas = new HashMap<>();
+		String fname = req.getParameter("name");
+		if(fname!=null) {
+			String phone = req.getParameter("phone");
+			cri = new Criteria(1,4);
+			List<ReservationDTO> reslist = service.getForeignerReservations(fname, phone, cri);
+			ArrayList<PackageDTO> packagelist = new ArrayList<>();
+			ArrayList<PackageFileDTO> pthumblist = new ArrayList<>();
+			if(packagelist.size()>0) {
+				for (ReservationDTO res : reslist) {
+					packagelist.add(service.getJoinPackage(res.getPackagenum()));
+					/* pthumblist.add(service.getPackThumbnail(res.getPackagenum())); */
+				}
+			}
+			datas.put("reslist", reslist);
+			datas.put("packagelist", packagelist);
+			
+		} else {
+			String keycode = req.getParameter("keycode");
+			System.out.println(keycode);
+			ReservationDTO res = service.getForeignerReservation(keycode);
+			PackageDTO pack = new PackageDTO();
+			if(res!=null) {
+				pack = service.getJoinPackage(res.getPackagenum());				
+			}
+			
+			datas.put("reservation", res);
+			datas.put("pack", pack);
+		}
+		
+		return datas;
 	}
 }

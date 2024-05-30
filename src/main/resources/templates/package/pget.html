@@ -93,15 +93,17 @@
 		            <div class="menu2get content" id="menu2get" style="display:none;">
 		                <img src="/images/packageimg/warning.png">
 		            </div>
-		            <div class="menu3get content" id="menu3get" style="display:none;">
-		                <div class="review">
-		                    <div class="userprofile">
-		                        <img src="/images/packageimg/tripfy_banner.png">
-		                        <p><strong>유저닉네임</strong></p>
-		                    </div>
-		                    <div class="reviewcontent">안녕하세요</div>
-		                </div>
-		            </div>
+					<div class="menu3get content" id="menu3get" style="display:none;">			    
+					    <div th:if="${review != null and #lists.size(review) > 0 and review[0].guidenum == package.guidenum}">
+					        <div th:each="review : ${review}" class="review">
+					            <div class="userprofile">
+					                <img src="/images/packageimg/tripfy_banner.png">
+					                <p><strong>[[${review.userid}]]</strong></p>
+					            </div>
+					            <div class="reviewcontent">[[${review.contents}]]</div>
+					        </div>
+					    </div>
+					</div>
 		        </div>
 		    </div>
 		    <div class="pay_container">
@@ -109,11 +111,11 @@
 		            <div class="maphead">
 		                <h3>[[${package.regionname}]]</h3>
 		            </div>
-		            <hr>
+		        
 		            <div class="map">
 						<div id="map"></div>
 		            </div>
-		            <hr>
+		           
 		            <div class="mapfoot">
 		                <a th:href="@{'/package/tlget?packagenum=' + ${package.packagenum}}">상세보기 ></a>
 		            </div>

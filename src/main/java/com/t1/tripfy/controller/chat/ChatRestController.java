@@ -63,6 +63,8 @@ public class ChatRestController {
 		//chatList가 비어있는지(userid가 가입한 채팅방이 없는 경우)는 체크하지 않음
 		//아마 프론트에서 처리할 수 있을거임
 		
+		System.out.println(chatList);
+		
 		return new ResponseEntity<List<ChatListPayloadDTO>>(chatList, HttpStatus.OK);
 	}
 }

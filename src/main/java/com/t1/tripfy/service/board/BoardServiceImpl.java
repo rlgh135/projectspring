@@ -37,11 +37,15 @@ public class BoardServiceImpl implements BoardService {
 	@Value("${board.dir}")
 	private String saveFolder;
 	
+	@Value("${boardSummerNote.dir}")
+	private String BoardSummernotesaveFolder;
+	
 	@Autowired
 	private BoardMapper bmapper;
 	
 	@Autowired
 	private BoardReplyMapper brmapper;
+	
 	
 	//사진검사
 	public static boolean isImageFile(String extension) {
@@ -203,6 +207,7 @@ public class BoardServiceImpl implements BoardService {
         return (int) daysBetween+1;
     }
 	
+<<<<<<< HEAD
 	// boardnum으로 파일 가져오기
 	@Override
 	public List<BoardFileDTO> getFiles(long boardnum) {
@@ -269,4 +274,40 @@ public class BoardServiceImpl implements BoardService {
 		
 		return true;
 	}
+=======
+	@Override
+	public String SummerNoteImageFile(MultipartFile file) throws Exception{		
+	    if (file.isEmpty()) {
+	    	String error = "파일이 없습니다";
+	        return error;
+	    }
+	    System.out.println("컨트롤러에서 찍는 파일"+file);
+	    
+		String originalFileName = file.getOriginalFilename();
+		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+		
+		LocalDateTime now = LocalDateTime.now();
+		String time = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+		
+		String systemFileName = time + UUID.randomUUID()+extension;
+		
+		String path = BoardSummernotesaveFolder + systemFileName;
+		file.transferTo(new File(path));
+		String thumnailpath = "/BoardSummerNoteThumnail/"+systemFileName;
+		return thumnailpath;
+	}
+	
+	@Override
+	public boolean deleteSummernoteImageFile(String fileUrl) {
+		boolean flag = false;
+		String systemFileName = fileUrl.replace("/BoardSummerNoteThumnail/", "");
+		File file = new File(BoardSummernotesaveFolder,systemFileName);
+		if(file.exists()) {
+			file.delete();
+			flag = true;
+		}
+		return flag;
+	}
+	
+>>>>>>> origin/main
 }

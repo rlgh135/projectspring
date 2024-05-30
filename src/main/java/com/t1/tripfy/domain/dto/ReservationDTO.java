@@ -15,4 +15,5 @@ public class ReservationDTO {
     private String price;
     private String payMethod;
     private int isDelete;
+    private String name;
 }

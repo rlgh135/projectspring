@@ -22,11 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.JsonObject;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
+import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
+import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.service.pack.PackageService;
+import com.t1.tripfy.service.user.UserService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +41,8 @@ import jakarta.servlet.http.HttpSession;
 public class PackController {
 	@Autowired
 	private PackageService service;
+	@Autowired
+	private UserService uservice;
 	
 	@GetMapping("pmain")
 	public void main(Criteria cri, Model model,HttpServletRequest req) {
@@ -155,13 +160,30 @@ public class PackController {
 	    System.out.println(pack + "안뜨나?");
 	    model.addAttribute("package", pack);
 	    model.addAttribute("files", service.getFiles(packagenum));
-
 	    String loginUser = (String) session.getAttribute("loginUser");
+	    
+	    
+	    List<ReviewDTO> reviewlist = new ArrayList<>();
+	    long gunum = pack.getGuidenum();
+	    List<ReviewDTO> review = service.getReviewByGuidenum(gunum);
+	    List<UserImgDTO> thumbnaillist = uservice.getAllUserImg();
+
+	    for (ReviewDTO rdto : review) {
+	        // 각 ReviewDTO에 thumbnailList를 설정
+	        rdto.setUserImages(thumbnaillist);
+	        reviewlist.add(rdto);
+	    }
+
+	    // model에 reviewlist 추가
+	    model.addAttribute("review", reviewlist);
+	    	    
+	    
+
+	    //일단 보류
 
 	    if (requestURI.contains("pmodify")) {
 	        return "package/pmodify";
 	    }
-
 	    // 세션에서 guidenum 가져오기
 	    Object guidenumObj = session.getAttribute("guideNum");
 	    Long guidenum = null;
@@ -170,7 +192,10 @@ public class PackController {
 	    } else if (guidenumObj instanceof Integer) {
 	        guidenum = ((Integer) guidenumObj).longValue();
 	    }
+	    
 
+	    
+	    
 	    // 쿠키를 사용하여 각 packagenum에 대한 조회수 증가
 	    if (guidenum == null || !guidenum.equals(pack.getGuidenum())) {
 	        Cookie[] cookies = req.getCookies();

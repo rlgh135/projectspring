@@ -12,6 +12,7 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
@@ -46,4 +47,8 @@ public interface UserService {
 	GuideUserDTO getLikeThisGuide(long guidenum, String userid);
 	boolean presslike(String userid, long guidenum);
 	int uploadHugi(ReviewDTO review);
+	List<ReservationDTO> getForeignerReservations(String fname, String phone, Criteria cri);
+	ReservationDTO getForeignerReservation(String keycode);
+	PackageFileDTO getPackThumbnail(long packagenum);
+	List<UserImgDTO> getAllUserImg();
 }
