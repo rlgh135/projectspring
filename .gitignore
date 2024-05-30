@@ -33,4 +33,5 @@ build/
 .vscode/
 
 ### AWS S3 ###
-application.properties
+./src/main/resources/application.properties
+./src/main/java/com/t1/tripfy/util/WebMvcConfig.java

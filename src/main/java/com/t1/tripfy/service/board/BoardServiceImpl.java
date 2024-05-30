@@ -207,7 +207,6 @@ public class BoardServiceImpl implements BoardService {
         return (int) daysBetween+1;
     }
 	
-<<<<<<< HEAD
 	// boardnum으로 파일 가져오기
 	@Override
 	public List<BoardFileDTO> getFiles(long boardnum) {
@@ -274,7 +273,7 @@ public class BoardServiceImpl implements BoardService {
 		
 		return true;
 	}
-=======
+
 	@Override
 	public String SummerNoteImageFile(MultipartFile file) throws Exception{		
 	    if (file.isEmpty()) {
@@ -309,5 +308,4 @@ public class BoardServiceImpl implements BoardService {
 		return flag;
 	}
 	
->>>>>>> origin/main
 }

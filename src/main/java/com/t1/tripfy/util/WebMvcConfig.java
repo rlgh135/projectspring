@@ -14,15 +14,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:///D:/spring_yes/tempFile/");
         //보드 파일관리 폴더 매핑
         registry.addResourceHandler("/BoardThumnail/**")
-<<<<<<< HEAD
 //        		.addResourceLocations("file:///D:/spring_yes/boardfile/");
-        		.addResourceLocations("file:///C:/Users/USER/Desktop/spring/file/");
+//        		.addResourceLocations("file:///C:/Users/USER/Desktop/spring/file/");
         
-=======
         		.addResourceLocations("file:///D:/spring_yes/boardfile/");
         //보드 썸머노트 파일관리 폴더 매핑
         registry.addResourceHandler("/BoardSummerNoteThumnail/**")
 				.addResourceLocations("file:///D:/spring_yes/boardSummerNotefile/");
->>>>>>> origin/main
     }
 }
