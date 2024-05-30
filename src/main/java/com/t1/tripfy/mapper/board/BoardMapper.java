@@ -44,6 +44,8 @@ public interface BoardMapper {
 	// R
 	BoardFileDTO getFileBySystemname(String systemname);
 	List<BoardFileDTO> getFiles(long boardnum);
+	//보드넘으로 보드 썸네일 긁어오기
+	BoardFileDTO getBoardThumnail(long boardnum);
 	
 	// D
 	int deleteFilesBySystemname(String systemname);
