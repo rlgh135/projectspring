@@ -35,9 +35,10 @@ public interface PackageService {
 	boolean modify(PackageDTO pack, MultipartFile[] files) throws Exception;
 	boolean remove(long packagenum);
 
-	void saveReservation(ReservationDTO reservationDTO);
-
-	//추가
+	void saveReservationForNonMember(ReservationDTO reservation);
+	void saveReservationForMember(ReservationDTO reservation);
+	
+	
 	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;
 	List<PackageFileDTO>getFiles(long packagenum);
 	boolean increaseReadCount(long packagenum);

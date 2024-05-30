@@ -76,7 +76,7 @@
 						    <tbody>
 						        <tr>
 						            <th>이름</th>
-						            <td><input type="text" id="userID" name="userID" placeholder="이름" required></td>
+						            <td><input type="text" id="userName" name="userName" placeholder="이름" required></td>
 						        </tr>
 						        <tr>
 						            <th>이메일</th>
@@ -227,8 +227,9 @@
 		const packageNum = packageNumElement.dataset.num || "상품 아이디 없음";
 		const totalAmount = document.getElementById('totalAmount').textContent.replace(/[^0-9]/g, '');
 		// 예약자 정보 가져오기
-		const userIDInput = document.getElementById('userID');
-		const userId = userIDInput.value.trim(); // 사용자가 입력한 이름
+		const userNameInput = document.getElementById('userName');
+		const name = userNameInput.value.trim(); // 사용자가 입력한 이름
+		const userId = "비회원";
 		const userEmailInput = document.getElementById('userEmail');
 		const userEmail = userEmailInput.value.trim(); // 사용자가 입력한 이메일
 		const userPhoneInput = document.getElementById('userPhone');
@@ -243,8 +244,8 @@
 		    "method": "",
 		    "tax_free": 0,
 		    "user": {
-		        "id": userId,
-		        "username": "회원이름",
+		        "id": "비회원",
+		        "username": name,
 		        "phone": userPhone,
 		        "email": userEmail
 		    },
@@ -264,7 +265,7 @@
 		}).then(function(response) {
 		    if (response.event === 'done') {
 		        console.log(response);
-		        savePaymentInfo(response, userId, userPhone, userEmail);
+		        savePaymentInfo(response, userId, userPhone, userEmail,name);
 		    }
 		}).catch(function(e) {
 		    console.log(e.message);
@@ -299,6 +300,7 @@
 	    const totalAmount = document.getElementById('totalAmount').textContent.replace(/[^0-9]/g, '');
 	    const userId = userIdElement.textContent.trim();  // 여기서 실제 사용자 아이디를 가져옵니다.
 		console.log(userId);
+		const name ="회원";
 	    const userPhone = userPhoneElement.textContent.trim();  // 여기서 실제 사용자 전화번호를 가져옵니다.
 	    const userEmail = userEmailElement.textContent.trim();  // 여기서 실제 사용자 이메일을 가져옵니다.
 		
@@ -313,7 +315,7 @@
 	        "tax_free": 0,
 	        "user": {
 	            "id": userId,
-	            "username": "회원이름",
+	            "username": "회원",
 	            "phone": userPhone,
 	            "email": userEmail
 	        },
@@ -333,7 +335,7 @@
 	    }).then(function(response) {
 	        if (response.event === 'done') {
 	            console.log(response);
-	            savePaymentInfo(response, userId, userPhone, userEmail);
+	            savePaymentInfo(response, userId, userPhone, userEmail,name);
 	        }
 	    }).catch(function(e) {
 	        console.log(e.message);
@@ -349,13 +351,12 @@
 	}
 	
 	
-	function savePaymentInfo(paymentResponse, userId, userPhone, userEmail) {
+	function savePaymentInfo(paymentResponse, userId, userPhone, userEmail, name) {
 	    const urlParams = new URLSearchParams(window.location.search);
 	    const packageTitleElement = document.getElementById('packageTitle');
 	    const packageTitle = packageTitleElement.dataset.title || "패키지 제목없음";
 	    const packageNumElement = document.getElementById('packageNum');
 	    const packageNum = packageNumElement.dataset.num || "상품 아이디 없음";
-	
 	    const totalAmount = document.getElementById('totalAmount').textContent.replace(/[^0-9]/g, '');
 	
 	    fetch('/api/save_payment', {
@@ -367,13 +368,14 @@
 	            packagenum: packageNum,
 	            adultCnt: parseInt(urlParams.get('adultCount')) || 0,
 	            childCnt: parseInt(urlParams.get('childCount')) || 0,
-				userid: userId.trim(),
-				phone: userPhone.trim(),
-				email: userEmail.trim(),
+	            userid: userId.trim(),
+	            phone: userPhone.trim(),
+	            email: userEmail.trim(),
 	            keycode: paymentResponse.data.receipt_id || null,
 	            price: totalAmount,
 	            payMethod: paymentResponse.data.method || null,
-	            isDelete: 0
+	            isDelete: 0,
+	            name: name // 이름 추가
 	        })
 	    })
 	    .then(response => response.json())

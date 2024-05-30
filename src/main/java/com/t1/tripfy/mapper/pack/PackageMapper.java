@@ -32,7 +32,8 @@ public interface PackageMapper {
 	int updateReadCount(@Param("packagenum")long packagenum,@Param("viewcnt") long viewcnt);
 	
 	List<ReviewDTO> getReviewByGuidenum(long guidenum);
-	void saveReservation(ReservationDTO reservation);
+	void saveReservationForNonMember(ReservationDTO reservation);
+	void saveReservationForMember(ReservationDTO reservation);
 	
 	//해외
 	List<PackageDTO> getAbroadCheapList(Criteria cri);
