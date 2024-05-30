@@ -2,10 +2,13 @@ package com.t1.tripfy.service.board;
 
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardFileDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 
 public interface BoardService {
@@ -37,4 +40,13 @@ public interface BoardService {
 	BoardaddrDTO getBoardAddr(long boardnum);
 
 	int getDays(String startdate, String enddate);
+
+	// boardnum으로 파일 가져오기
+	List<BoardFileDTO> getFiles(long boardnum);
+
+	// 파일 다운로드
+	ResponseEntity<Resource> downloadFile(String systemname, String orgname) throws Exception;
+
+	// 게시글 삭제
+	boolean remove(long boardnum);
 }

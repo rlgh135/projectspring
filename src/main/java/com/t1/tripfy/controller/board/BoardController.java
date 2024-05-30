@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardFileDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.service.board.BoardService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
@@ -145,8 +151,11 @@ public class BoardController {
 	        model.addAttribute("boardaddr", boardaddr);
 	    }
 	    
+	    List<BoardFileDTO> files = service.getFiles(boardnum);
+	    
 	    model.addAttribute("board", board);
 	    model.addAttribute("replyCnt", replyCnt);
+	    model.addAttribute("files", files);
 	}
 
 	
@@ -163,6 +172,31 @@ public class BoardController {
 		else {  // 실패			
 			return "redirect:/board/list";
 		}
+	}
+	
+	@GetMapping("download")
+	public ResponseEntity<Resource> download(String sysname, String orgname) throws Exception {
+		return service.downloadFile(sysname, orgname);
+	}
+	
+	@GetMapping("remove")
+	public String remove(long boardnum, HttpServletRequest req) {
+		// System.out.println("boardnum: " + boardnum);
+		
+		String loginUser = (String)req.getSession().getAttribute("loginUser");
+		BoardDTO board = service.getDetail(boardnum);
+		
+		// System.out.println("board User: " + board.getUserid());
+		
+		if(loginUser.equals(board.getUserid())) {
+			
+			// System.out.println("true or false: " + service.remove(boardnum));
+			
+			if(service.remove(boardnum)) {
+				return "redirect:/board/list";
+			}
+		}
+		return "redirect:/board/get?boardnum="+boardnum;
 	}
 	
 }

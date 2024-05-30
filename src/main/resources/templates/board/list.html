@@ -598,9 +598,9 @@
                             <span>[[${board.userid}]]</span>
 							
 							<div class="cnts">
-							    <span><img src="/images/boardimg/emptyheart.png" alt=""><span>5</span></span>
-							    <span> <img src="/images/boardimg/comments.png" alt=""><span>5</span></span>
-							    <span> <img src="/images/boardimg/viewcnt.png" alt=""><span>5</span></span>
+							    <span><img src="/images/boardimg/emptyheart.png" alt=""><span>[[${board.likecnt}]]</span></span>
+							    <span> <img src="/images/boardimg/comments.png" alt=""><span>[[${board.replycnt}]]</span></span>
+							    <span> <img src="/images/boardimg/viewcnt.png" alt=""><span>[[${board.viewcnt}]]</span></span>
 							</div>
                         </div>
 
@@ -1100,17 +1100,17 @@
 						let divCnts = $("<div>").addClass("cnts");
 						let likecnt = $("<span>");
 						let likecntImg = $("<img>").addClass("likecntImg").attr("src", "/images/boardimg/emptyheart.png");
-						let likecntText = $("<span>").text(5);
+						let likecntText = $("<span>").text(data.sortlist[i].likecnt);
 						likecnt.append(likecntImg, likecntText);
 						
 						let replycnt = $("<span>");
 						let replycntImg = $("<img>").attr("src", "/images/boardimg/comments.png");
-						let replycntText = $("<span>").text(5);
+						let replycntText = $("<span>").text(data.sortlist[i].replycnt);
 						replycnt.append(replycntImg, replycntText);
 						
 						let viewcnt = $("<span>");
 						let viewcntImg = $("<img>").attr("src", "/images/boardimg/viewcnt.png");
-						let viewcntText = $("<span>").text(5);
+						let viewcntText = $("<span>").text(data.sortlist[i].viewcnt);
 						viewcnt.append(viewcntImg, viewcntText);
 						
 						divCnts.append(likecnt, replycnt, viewcnt);
@@ -1318,17 +1318,17 @@
 						let divCnts = $("<div>").addClass("cnts");
 						let likecnt = $("<span>");
 						let likecntImg = $("<img>").addClass("likecntImg").attr("src", "/images/boardimg/emptyheart.png");
-						let likecntText = $("<span>").text(5);
+						let likecntText = $("<span>").text(data.sortlist[i].likecnt);
 						likecnt.append(likecntImg, likecntText);
 						
 						let replycnt = $("<span>");
 						let replycntImg = $("<img>").attr("src", "/images/boardimg/comments.png");
-						let replycntText = $("<span>").text(5);
+						let replycntText = $("<span>").text(data.sortlist[i].replycnt);
 						replycnt.append(replycntImg, replycntText);
 						
 						let viewcnt = $("<span>");
 						let viewcntImg = $("<img>").attr("src", "/images/boardimg/viewcnt.png");
-						let viewcntText = $("<span>").text(5);
+						let viewcntText = $("<span>").text(data.sortlist[i].viewcnt);
 						viewcnt.append(viewcntImg, viewcntText);
 						
 						divCnts.append(likecnt, replycnt, viewcnt);
@@ -1744,17 +1744,17 @@
 							let divCnts = $("<div>").addClass("cnts");
 							let likecnt = $("<span>");
 							let likecntImg = $("<img>").addClass("likecntImg").attr("src", "/images/boardimg/emptyheart.png");
-							let likecntText = $("<span>").text(5);
+							let likecntText = $("<span>").text(data.sortlist[i].likecnt);
 							likecnt.append(likecntImg, likecntText);
 							
 							let replycnt = $("<span>");
 							let replycntImg = $("<img>").attr("src", "/images/boardimg/comments.png");
-							let replycntText = $("<span>").text(5);
+							let replycntText = $("<span>").text(data.sortlist[i].replycnt);
 							replycnt.append(replycntImg, replycntText);
 							
 							let viewcnt = $("<span>");
 							let viewcntImg = $("<img>").attr("src", "/images/boardimg/viewcnt.png");
-							let viewcntText = $("<span>").text(5);
+							let viewcntText = $("<span>").text(data.sortlist[i].viewcnt);
 							viewcnt.append(viewcntImg, viewcntText);
 							
 							divCnts.append(likecnt, replycnt, viewcnt);

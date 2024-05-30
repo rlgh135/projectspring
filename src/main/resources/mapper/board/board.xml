@@ -117,6 +117,10 @@
 		select max(boardnum) from board where userid = #{userid}
 	</select>
 	
+	<select id="getFiles">
+		select * from board_file where boardnum=#{boardnum}
+	</select>	
+	
 	<insert id="insertBoard">
 		insert into board(userid, title, content, regionname, countrycode) values(#{userid}, #{title}, #{content}, #{regionname}, #{countrycode})
 	</insert>
@@ -139,4 +143,17 @@
 		select * from boardaddr
 		where boardnum = #{boardnum}
 	</select>
+	
+	<delete id="deleteBoard">
+		delete from board where boardnum = #{boardnum}
+	</delete>
+	
+	<delete id="deleteBoardaddr">
+		delete from boardaddr where boardnum = #{boardnum}
+	</delete>
+	
+	<delete id="deleteFilesBySystemname">
+		delete from board_file where sysname = #{sysname}
+	</delete>
+	
 </mapper>

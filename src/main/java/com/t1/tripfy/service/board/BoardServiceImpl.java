@@ -1,6 +1,11 @@
 package com.t1.tripfy.service.board;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +15,12 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -191,4 +202,71 @@ public class BoardServiceImpl implements BoardService {
         long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
         return (int) daysBetween+1;
     }
+	
+	// boardnum으로 파일 가져오기
+	@Override
+	public List<BoardFileDTO> getFiles(long boardnum) {
+		return bmapper.getFiles(boardnum);
+	}
+	
+	
+	// 파일 다운로드
+	@Override
+	public ResponseEntity<Resource> downloadFile(String sysname, String orgname) throws Exception {
+		Path path = Paths.get(saveFolder + sysname);
+		Resource resource = new InputStreamResource(Files.newInputStream(path));
+		
+		File file = new File(saveFolder, sysname);
+		
+		HttpHeaders headers = new HttpHeaders();
+		String dwName = "";
+		
+		try {
+			dwName = URLEncoder.encode(orgname,"UTF-8").replaceAll("\\+", "%20");
+		} catch(UnsupportedEncodingException e) {
+			dwName = URLEncoder.encode(file.getName(),"UTF-8").replaceAll("\\+","%20");
+		}
+		
+		headers.setContentDisposition(ContentDisposition.builder("attachment").filename(dwName).build());
+		return new ResponseEntity<>(resource,headers,HttpStatus.OK);
+		
+	}
+	
+	// 게시글 삭제
+	@Override
+	public boolean remove(long boardnum) {
+		System.out.println("bmapper.getBoardaddrByBoardnum(boardnum): " + bmapper.getBoardaddrByBoardnum(boardnum));
+		
+		// boardaddr 있다면 삭제
+		if(bmapper.getBoardaddrByBoardnum(boardnum) != null) {
+			System.out.println("bmapper.deleteBoardaddr(boardnum): " + bmapper.deleteBoardaddr(boardnum));
+			if(bmapper.deleteBoardaddr(boardnum) == 1) {
+				System.out.println("boardaddr 삭제 완료");
+			}
+		}
+		
+		// 파일 있다면 파일 삭제
+		List<BoardFileDTO> files = bmapper.getFiles(boardnum);
+		System.out.println("files.size(): " + files.size());
+		
+		for(BoardFileDTO bfdto : files) {
+			File file = new File(saveFolder, bfdto.getSysname());
+			if(file.exists()) {
+				file.delete();
+				bmapper.deleteFilesBySystemname(bfdto.getSysname());
+			}
+		}
+		
+		if(bmapper.deleteBoard(boardnum) == 1) {
+			System.out.println("게시글 삭제 완료");
+			// 댓글 삭제
+		}
+		
+		else {
+			System.out.println("게시글 삭제 실패");
+			return false;
+		}
+		
+		return true;
+	}
 }

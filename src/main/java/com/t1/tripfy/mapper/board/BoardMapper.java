@@ -53,4 +53,9 @@ public interface BoardMapper {
 	
 	// boardaddr insert
 	int insertBoardAddr(BoardaddrDTO boardaddr);
+
+	// 게시글 삭제
+	int deleteBoard(long boardnum);
+
+	int deleteBoardaddr(long boardnum);
 }

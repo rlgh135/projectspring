@@ -13,14 +13,14 @@
         margin: 0 auto;
 		margin-top: 80px;
     }
-
+	
 		
     .main_photo img {
         width: 100%;
         height: 470px;
-
+	
     }
-
+	
     .info {
         display: flex;
         flex-wrap: nowrap;
@@ -28,184 +28,239 @@
         margin-top: 30px;
         margin-bottom: 50px;
     }
-
+	
     .info > div:nth-child(2) {
         border-left: 1px solid #f0f0f0;
     }
-
+	
     .info > div:first-child {
         width: 970px;
     }
-
+	
     .info > div:last-child {
         width: 370px;
     }
+	
+	.title_info {
+	    display: inline;
+	}
+	
+	.changebtn {
+	    display: inline;
+	    float: right;
+	}
+	
+	.changebtn button {
+		width: 50px; height: 33px;
+		border-radius: 8px;
+		border: none;
+		background-color: #64B5F6;
+		color: #fff;
+		font-size: 14px;
+	}
+	
+	.changebtn button:first-of-type {
+		margin-right: 3px;
+	}
+	
+	.cnt_info {
+	    margin-top: 10px;
+	    position: relative;
+	}
+	
+	.cnt_info span {
+	    font-size: 13px;
+	    margin-right: 10px;
+	    color: #9a9a9a;
+	}
+	
+	.cnt_info span:nth-child(1)::after, .cnt_info span:nth-child(2)::after {
+	    content: "";
+	    position: absolute;
+	    top: 50%;
+	    width: 2px;
+	    height: 2px;
+	    background-color: #9a9a9a;
+	    display: inline-block;
+	    border-radius: 50%;
+	    transform: translateX(300%);
+	}
+	
+	.trip_schedule {
+	    margin-top: 40px;
+	}  
+	
+	.schedule_detail {
+	    margin-top: 10px;
+	    background-color: #90caf99a;
+	    width: 100%;
+	    height: 70px;
+	    border-radius: 8px;
+	    padding: 11px;
+	    padding-left: 38px;
+	}
+	
+	.schedule_detail > p {
+	    position: relative;
+	    font-weight: bold;
+	    color: #333;
+	}
+	
+	.schedule_detail > p:first-child {
+	    margin-bottom: 6px;
+	}
+	
+	.schedule_detail > p.trip_day::before {
+	    position: absolute;
+	    top: 2px;
+	    content: "";
+	    display: inline-block;
+	    background: url("/images/boardimg/schedule.png") no-repeat center/contain;
+	    width: 16px;
+	    height: 16px;
+	    transform: translateX(-150%);
+	}
+	
+	.schedule_detail > p.trip_location::before {
+	    position: absolute;
+	    top: 3px;
+	    content: "";
+	    display: inline-block;
+	    background: url("/images/boardimg/location.png") no-repeat center/contain;
+	    width: 16px;
+	    height: 16px;
+	    transform: translateX(-150%);
+	}
+	
+	.trip_introduction, .file {
+	    margin-top: 60px;
+	}
 
-    .cnt_info {
-        margin-top: 10px;
-        position: relative;
-    }
+	.file {
+		margin-top: 100px;
+	}
+		
+	.trip_introduction > div {
+	    margin-top: 13px;
+	    color: #333;
+	    font-size: 14px;
+	width: 100%;
+	}
 
-    .cnt_info span {
-        font-size: 13px;
-        margin-right: 10px;
-        color: #9a9a9a;
-    }
+	.file table {
+		border: 1px solid #42A5F5;
+		border-collapse: collapse;
+	}
 
-    .cnt_info span:nth-child(1)::after, .cnt_info span:nth-child(2)::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        width: 2px;
-        height: 2px;
-        background-color: #9a9a9a;
-        display: inline-block;
-        border-radius: 50%;
-        transform: translateX(300%);
-    }
-
-    .trip_schedule {
-        margin-top: 40px;
-    }  
-
-    .schedule_detail {
-        margin-top: 10px;
-        background-color: #90caf99a;
-        width: 100%;
-        height: 70px;
-        border-radius: 8px;
-        padding: 11px;
-        padding-left: 38px;
-    }
-
-    .schedule_detail > p {
-        position: relative;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .schedule_detail > p:first-child {
-        margin-bottom: 6px;
-    }
-
-    .schedule_detail > p:first-child::before {
-        position: absolute;
-        top: 2px;
-        content: "";
-        display: inline-block;
-        background: url("/images/boardimg/schedule.png") no-repeat center/contain;
-        width: 16px;
-        height: 16px;
-        transform: translateX(-150%);
-    }
-
-    .schedule_detail > p:nth-child(2)::before {
-        position: absolute;
-        top: 3px;
-        content: "";
-        display: inline-block;
-        background: url("/images/boardimg/location.png") no-repeat center/contain;
-        width: 16px;
-        height: 16px;
-        transform: translateX(-150%);
-    }
-
-    .trip_introduction, .reply_area {
-        margin-top: 60px;
-    }
-
-    .trip_introduction > p {
-        margin-top: 13px;
-        color: #333;
-        font-size: 14px;
-    }
-
-    .reply_area > div {
-        margin-top: 8px;
-        position: relative;
-    }
-
-    .reply_area > div > textarea {
-        overflow: auto;
-        resize: none;
-        width: 91.3%;
-        outline: none;
-        border: 1px solid #2196F3;
-        border-radius: 10px;
-        padding: 11px;
-        font-size: 13px;
-        height: 80px;
-        caret-color: #2196F3;
-    }
-
-    .reply_area > div > textarea::placeholder {
-        font-size: 13px;
-        color: #aaaaaa;
-    }
-
-    .reply_area > div > [type="button"] {
-        position: absolute;
-        top: 26%; right: 1.3%;
-        font-size: 14px;
-        border: none;
-        border-radius: 6px;
-        background-color: #2196F3;
-        width: 60px;
-        height: 35px;
-        color: #fff;
-    }
-
-    .guide_profile {
-        margin-top: 10px;
-        border-radius: 10px;
-        padding: 8px;
-        position: relative;
-        background-color: #f5f5f5;
-        /*padding-bottom: 15px;*/
-    }
-
-    .guide_profile img {
-        width: 35px;
-        height: 35px;
-        margin-right: 9px;
+	.file table th {
+		border: 1px solid #cecece;
+		width: 150px;
+		padding: 10px;
+		font-size: 14px;
+	}
+	
+	.file table td {
+		border: 1px solid #cecece;
+		width: 820px;
+		padding: 10px;
+		font-size: 14px;
+	}
+	
+	.line {
+		margin-top: 45px;
+		border-bottom: 1px solid #f0f0f0;
+	}
+	
+	.reply_area {
+		margin-top: 30px;
+	}
+	
+	.reply_area > div {
+	    margin-top: 8px;
+	    position: relative;
+	}
+	
+	.reply_area > div > textarea {
+	    overflow: auto;
+	    resize: none;
+	    width: 91.3%;
+	    outline: none;
+	    border: 1px solid #2196F3;
+	    border-radius: 10px;
+	    padding: 11px;
+	    font-size: 13px;
+	    height: 80px;
+	    caret-color: #2196F3;
+	}
+	
+	.reply_area > div > textarea::placeholder {
+	    font-size: 13px;
+	    color: #aaaaaa;
+	}
+	
+	.reply_area > div > [type="button"] {
+	 	position: absolute;
+	     top: 26%; right: 1.3%;
+	     font-size: 14px;
+	     border: none;
+	     border-radius: 6px;
+	     background-color: #2196F3;
+	     width: 60px;
+	     height: 35px;
+	     color: #fff;
+	 }
+	
+	 .guide_profile {
+	     margin-top: 10px;
+	     border-radius: 10px;
+	     padding: 8px;
+	     position: relative;
+	     background-color: #f5f5f5;
+	     /*padding-bottom: 15px;*/
+	 }
+	
+	 .guide_profile img {
+	     width: 35px;
+	     height: 35px;
+	     margin-right: 9px;
 		margin-top: 7px;
 		
-    }
-
-    .guide_profile span {
-        position: absolute;
-        top: 16px;
-        font-size: 18px;
-    }
+	 }
+	
+	 .guide_profile span {
+	     position: absolute;
+	     top: 16px;
+	     font-size: 18px;
+	 }
 	/*
-    .guide_profile p {
-        margin-top: 5px;
-        font-size: 13px;
-    }
+	 .guide_profile p {
+	     margin-top: 5px;
+	     font-size: 13px;
+	 }
 	*/
-    .location {
-        margin-top: 60px;
-    }
-
-    .location_detail {
-        margin-top: 10px;
-        border-radius: 10px;
-        border: 1px solid #64B5F6;
-        height: 300px;
-    }
-
-   .chatting {
-        margin-top: 60px;
-        text-align: center;
-        background-color: #2196F3;
-        padding: 15px;
-        border-radius: 10px;
-        color: #fff;
-        font-weight: bold;
-        font-size: 14px;
-	    margin-bottom: 30px;
-    }
-
+	 .location {
+	     margin-top: 60px;
+	 }
+	
+	.location_detail {
+	    margin-top: 10px;
+	    border-radius: 10px;
+	    border: 1px solid #64B5F6;
+	    height: 300px;
+	}
+	
+	.chatting {
+	    margin-top: 60px;
+	    text-align: center;
+	    background-color: #2196F3;
+	    padding: 15px;
+	    border-radius: 10px;
+	    color: #fff;
+	    font-weight: bold;
+	    font-size: 14px;
+    margin-bottom: 30px;
+	}
+	
 	input[type="button"] {
 	    cursor: pointer;
 	}
@@ -235,6 +290,11 @@
                 <h2 class="title_info">
                     [[${board.title}]]
                 </h2>
+				
+				<div th:if="${board.userid eq session.loginUser}" class="changebtn">
+				    <button onclick="modifyBoard();">수정</button>
+				    <button th:onclick="deleteBoard([[${board.boardnum}]]);">삭제</button>
+				</div>
 
                 <div class="cnt_info">
                     <span>조회수 [[${board.viewcnt}]]</span>
@@ -246,14 +306,27 @@
 					
                     <h4 th:if="${boardaddr}">여행 일정</h4>
                     <div class="schedule_detail">
-                        <p th:if="${boardaddr}">[[${boardaddr.startdate}]] - [[${boardaddr.enddate}]]([[${days}]]일)</p>
-                        <p th:text="${board.countrycode} == 'kr' ? '대한민국, ' + ${board.regionname} : ${board.regionname}"></p>
+                        <p th:if="${boardaddr}" class="trip_day">[[${boardaddr.startdate}]] - [[${boardaddr.enddate}]]([[${days}]]일)</p>
+                        <p th:text="${board.countrycode} == 'kr' ? '대한민국, ' + ${board.regionname} : ${board.regionname}" class="trip_location"></p>
                     </div>
 
-                    <div class="trip_introduction">
-                        <h4>후기</h4>
-                        <p>[[${board.content}]]</p>
-                    </div>
+					<div class="trip_introduction">
+					    <h4>내용</h4>
+					    <div></div>
+					</div>
+					
+					<div class="file" th:if="${files != null and files.size() > 0}">
+					    <table>
+							<tr>
+								<th><h4>첨부 파일</h4></th>
+								<td th:each="file:${files}">
+									<a th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}">[[${file.orgname}]]</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+					
+					<div class="line"></div>
 
                     <div class="reply_area">
                         <h4>댓글</h4>
@@ -297,8 +370,10 @@
 const map = $("#map");
 const defaultLocationName = /*[[${boardaddr != null && boardaddr.placename != null ? boardaddr.placename : board.regionname}]]*/'';
 const zoomScope = /*[[${boardaddr != null && boardaddr.placename != null ? 11 : 5}]]*/'';
+const content = /*[[${board.content}]]*/'';
 const geocoder = new google.maps.Geocoder();
 	$(document).ready(function() {
+		$(".trip_introduction div").html(content);
            geocoder.geocode({ 'address': defaultLocationName }, function(results, status) {
                if (status === 'OK') {
                    const mapOptions = {
@@ -330,6 +405,12 @@ const geocoder = new google.maps.Geocoder();
 			alert("댓글을 입력해주세요.");
 			replycontent.focus();
 		}		
+	}
+	
+	function deleteBoard(boardnum) {
+		console.log("삭제 클릭: " + boardnum)
+
+		location.replace("/board/remove?boardnum=" + boardnum);
 	}
 </script>
 </html>
