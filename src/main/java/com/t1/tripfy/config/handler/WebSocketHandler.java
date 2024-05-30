@@ -123,7 +123,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		MessageDTO<?> receivedMsg = objectMapper.readValue(message.getPayload(), 
 				objectMapper.getTypeFactory()
 						.constructParametricType(MessageDTO.class, MessagePayload.class));
-		
+
 		//발송자를 파악해 receivedMsg에 삽입
 		receivedMsg.setSenderId((String) session.getAttributes().get("loginUser"));
 
@@ -137,6 +137,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			//채팅방 진입 요청
 			log.debug("와시발 여기까지 왔다, act={}", receivedMsg.getAct());
 			log.debug("receivedMsg={}", receivedMsg);
+			log.debug("serialized={}", objectMapper.writeValueAsString(receivedMsg));
 			break;
 		default:
 			//오류 처리 등?

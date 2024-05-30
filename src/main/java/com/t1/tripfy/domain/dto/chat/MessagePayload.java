@@ -1,9 +1,5 @@
 package com.t1.tripfy.domain.dto.chat;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.t1.tripfy.domain.dto.chat.payload.ChatRoomEnterMessagePayload;
-import com.t1.tripfy.domain.dto.chat.payload.ChatTempTestMessagePayload;
-
 /* jackson jsonTypeInfo, JsonSubTypes 관련 참조
  * https://kdohyeon.tistory.com/99
  * https://velog.io/@happyjamy/Jackson-%EC%9D%B4-%EA%B0%9D%EC%B2%B4%EB%A5%BC-%EB%A7%8C%EB%93%9C%EB%8A%94-%EB%B2%95-InvalidDefinitionException
@@ -11,10 +7,6 @@ import com.t1.tripfy.domain.dto.chat.payload.ChatTempTestMessagePayload;
  * https://isaac1102.github.io/2021/04/28/jackson
  * */
 
-@JsonSubTypes({
-	@JsonSubTypes.Type(value=ChatRoomEnterMessagePayload.class, name="chatRoomEnter"),
-	@JsonSubTypes.Type(value=ChatTempTestMessagePayload.class, name="notForRealCall")
-})
 public interface MessagePayload {
 
 }
