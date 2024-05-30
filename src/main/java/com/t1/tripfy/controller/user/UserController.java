@@ -199,7 +199,20 @@ public class UserController {
 	}
 	
 	@GetMapping("joinguide")
-	public void joinGuide() {}
+	public String joinGuide(HttpServletRequest req) {
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		UserDTO user = service.getUser(userid);
+		GuideDTO guide = new GuideDTO();
+		
+		guide.setUserid(user.getUserid());
+		guide.setIntroduce(user.getIntroduce());
+		
+		if(service.insertGuide(guide)==1) {
+			return "/user/myinfo";
+		} else {
+			return "redirect:/";
+		}
+	}
 	
 	@GetMapping("guide")
 	public String showGuideMenu(Criteria cri, Model model, HttpServletRequest req) {
@@ -229,12 +242,15 @@ public class UserController {
 		model.addAttribute("inglist", inglist);
 		
 		List<PackageDTO> packagelist = service.getMyPackages(guidenum, cri);
+		List<PackageFileDTO> thumbnaillist = new ArrayList<>();
 		if(packagelist.size()> 0) {
 			for (PackageDTO pack : packagelist) {
 				packagenums.add(pack.getPackagenum());
+				thumbnaillist.add(service.getPackThumbnail(pack.getPackagenum()));
 			}
 		}
 		
+		model.addAttribute("thumbnaillist", thumbnaillist);
 		model.addAttribute("packagelist", packagelist);
 		
 		return "/user/guide";
@@ -336,12 +352,27 @@ public class UserController {
 	
 	@GetMapping("receipt")
 	public String showReceipt(Model model, HttpServletRequest req) {
+		long pacakgenum = Long.parseLong(req.getParameter("packagenum"));
+		
 		if(req.getSession().getAttribute("loginUser") == null) {
+
+			String keycode = req.getParameter("keycode");
+			ReservationDTO reservation = service.getForeignerReservation(keycode);
+			PackageDTO pack = service.getJoinPackage(reservation.getPackagenum());
+			PackageFileDTO thumbnail = service.getPackThumbnail(pacakgenum);
 			
-			model.addAttribute("keycode", "");
+			model.addAttribute("pack", pack);
+			model.addAttribute("reservation", reservation);
+			model.addAttribute("thumbnail", thumbnail);
 		} else {
+			String userid = (String)req.getSession().getAttribute("loginUser");
+			ReservationDTO reservation = service.getResevationByIdPackagenum(userid, pacakgenum);
+			PackageDTO pack = service.getJoinPackage(reservation.getPackagenum());
+			PackageFileDTO thumbnail = service.getPackThumbnail(pacakgenum);
 			
-			model.addAttribute("keycode", null);
+			model.addAttribute("pack", pack);
+			model.addAttribute("reservation", reservation);
+			model.addAttribute("thumbnail", thumbnail);
 		}
 		return "/user/receipt";
 	}
@@ -490,5 +521,17 @@ public class UserController {
 		}
 		
 		return datas;
+	}
+	@PutMapping("request")
+	@ResponseBody
+	public String requestCansle(HttpServletRequest req) {
+		long reservationnum = Long.parseLong(req.getParameter("reservationnum"));
+		int targettype = Integer.parseInt(req.getParameter("targettype"));
+		
+		if(service.applyCansle(reservationnum, targettype)==1) {
+			return "O";
+		} else {
+			return "X";
+		}
 	}
 }

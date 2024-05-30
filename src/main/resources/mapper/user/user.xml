@@ -7,6 +7,10 @@
 		insert into `user`(userid, userpw, phone, email, gender, birth, addr, placeid, introduce) 
 		values(#{userid}, #{userpw}, #{phone}, #{email}, #{gender}, #{birth}, #{addr}, #{placeid}, '자기소개가 없어요')
 	</insert>
+	<insert id="insertGuide">
+		insert into `guide`(userid, introduce) 
+		values(#{userid}, #{introduce})
+	</insert>
 	<insert id="makeDefaultBadge">
 		insert into user_img(userid, sysname, orgname) values(#{userid}, 'defaultbadge.png', 'defaultbadge.png')
 	</insert>
@@ -67,4 +71,7 @@
 	<select id="getAllUserImg">
 		select * from user_img
 	</select>
+	<update id="updateCansle">
+		update reservation set isdelete=#{cansleStatus} where reservationnum = #{reservationnum}
+	</update>
 </mapper>

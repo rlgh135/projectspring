@@ -51,4 +51,7 @@ public interface UserService {
 	ReservationDTO getForeignerReservation(String keycode);
 	PackageFileDTO getPackThumbnail(long packagenum);
 	List<UserImgDTO> getAllUserImg();
+	int insertGuide(GuideDTO guide);
+	int applyCansle(long reservationnum, int cansleStatus);
+	ReservationDTO getResevationByIdPackagenum(String userid, long packagenum);
 }
