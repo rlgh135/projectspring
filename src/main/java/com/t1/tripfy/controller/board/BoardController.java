@@ -223,7 +223,8 @@ public class BoardController {
 	
 	
 	@GetMapping(value={"get", "modify"})
-	public void boardget(long boardnum, Model model) {
+	public void boardget(long boardnum, Model model,HttpServletRequest req) {
+		String requestURI = req.getRequestURI();
 	    BoardDTO board = service.getDetail(boardnum);
 	    int replyCnt = service.getReplyCnt(boardnum);
 

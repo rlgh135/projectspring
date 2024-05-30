@@ -616,7 +616,7 @@
 <script src="/js/summernote/summernote-ko-KR.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
-<script>
+<script th:inline="javascript">
 	const startdate = document.getElementById("startdate");
 	
 	if(startdate.value != "") {
@@ -992,6 +992,7 @@
 	//------------------------------------ 파일 ------------------------------------
 	//${files.size()} : 원래 업로드 되어있는 파일의 개수
 	let i = /*[[${files.size()}]]*/'';
+	console.log(i);
 	let orgSize = i;
 	//수정될 파일 명들을 \로 연결해서 담아줄 input[type=hidden]
 	//이곳에 담겨서 제출되는 파일명들은, 시스템에서 찾아서 삭제해 주어야 한다.(실제 파일, DB 정보)
@@ -1010,6 +1011,8 @@
 		orgnames.push(util_arr[j].innerText.trim());
 		systemnames.push(util_arr[j].previousElementSibling.value);
 	}
+	console.log(orgnames);
+	console.log(systemnames);
 		
 	//사용자가 수정하게 될 파일들의 이름들을 임시로 저장하는 배열
 	let deleteFiles = [];
@@ -1200,6 +1203,7 @@
 		//기존 파일을 삭제하는 경우라면? systemname : 기존 파일의 systemname
 		//새롭게 추가했던 파일을 삭제하는 경우라면? systemname : undefined
 		deleteFiles.push(systemname);
+		console.log(deleteFiles);
 		//삭제하려는 행 번호가 orgSize보다 작다면 기존에 업로드 되었던 파일을 삭제하는 경우이므로
 		if(num<orgSize){
 			//원본 파일들의 orgname과 systemname을 저장하고 있던 배열에서 해당 파일의 정보들을 삭제
@@ -1234,11 +1238,11 @@
 			//만들어지는 문자열 예시
 			//원본이 없던 행이라면 -> javascript:upload(0,undefined)
 			//원본이 있던 행이라면 -> javascript:upload(0,'apple.png')
-			let format = `javascript:upload(${j-1},${sysname})`
+			let format = `javascript:upload(${j-1},${systemname})`
 			console.log("format",format);
 			//위의 방법을 이용해서 a태그들의 href 달아주기
-			el.find("a")[0].href = `javascript:upload(${j-1},${sysname})`;
-			el.find("a")[1].href = `javascript:cancelFile(${j-1},${sysname})`;
+			el.find("a")[0].href = `javascript:upload(${j-1},${systemname})`;
+			el.find("a")[1].href = `javascript:cancelFile(${j-1},${systemname})`;
 		}
 		i--;
 		console.log(deleteFiles);

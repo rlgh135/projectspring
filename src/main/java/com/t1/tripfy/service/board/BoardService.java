@@ -47,7 +47,7 @@ public interface BoardService {
 	// boardnum으로 그 보드에 썸네일만 가져오기
 	List<BoardFileDTO> getBoardThumnailList(long boardnum);
 	//
-	BoardFileDTO getBoardThumnail(long boardnum);
+//	BoardFileDTO getBoardThumnail(long boardnum);
 
 	// 파일 다운로드
 	ResponseEntity<Resource> downloadFile(String systemname, String orgname) throws Exception;
