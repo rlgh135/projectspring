@@ -148,12 +148,20 @@
 							                    <h3>[[${recent.packageTitle}]]</h3>
 							                </div>
 							                <div class="rp_con">
-							                    [[${recent.packageContent}]]
+												[[${recent.startdate}]] ~
 							                </div>
 							            </div>
-							            <div class="rprice">
-							                <h3>[[${recent.adultPrice}]]</h3>
-							            </div>
+										<div class="rp_info2">
+										    <div class="rprice">
+										        <h3>[[${recent.adultPrice}]]원</h3>
+										    </div>
+											<div class="rp_count">
+												<p>최대인원 : [[${recent.maxcnt}]]명</p>
+												<p th:each="reserve : ${rreserve}" th:if="${reserve.packagenum == recent.packagenum}">
+													현재인원 : [[${reserve.currentCount}]]명
+												</p>
+											</div>
+										</div>
 							        </a>
 							    </div>
 							    <div th:if="${recent == null or #lists.size(recent) == 0}" class="rp_list no-list">
@@ -168,22 +176,30 @@
 							<div  class="pp_list">
 							    <div th:if="${pop != null and #lists.size(pop) > 0}" th:each="pop : ${pop}"class="ppackage">
 							        <a th:href="@{/package/pget(packagenum=${pop.packagenum})}" class="get">
-									<div class="pp_img">
-								    	<div class="imgbox" th:each="file : ${rfile}" th:if="${file.packagenum == pop.packagenum}">
-								        	<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
-								    	</div>
-								  	</div>
-								  	<div class="pp_info">
-								    	<div class="pp_title">
-								        	<h3>[[${pop.packageTitle}]]</h3>
-								      	</div>
-								      	<div class="pp_con">
-								        	[[${pop.packageContent}]]
-								      	</div>
-								  	</div>
-								  	<div class="pprice">
-								    	<h3>[[${pop.adultPrice}]]</h3>
-								  	</div>
+										<div class="pp_img">
+								    		<div class="imgbox" th:each="file : ${rfile}" th:if="${file.packagenum == pop.packagenum}">
+								        		<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
+								    		</div>
+								  		</div>
+								  		<div class="pp_info">
+								    		<div class="pp_title">
+								        		<h3>[[${pop.packageTitle}]]</h3>
+								      		</div>
+								      		<div class="pp_con">
+								        		예정 출발일 : [[${pop.startdate}]] ~
+								      		</div>
+								  		</div>
+										<div class="pp_info2">
+									  		<div class="pprice">
+									    		<h3>[[${pop.adultPrice}]]원</h3>
+									  		</div>
+											<div class="pp_count">
+												<p>최대인원 : [[${pop.maxcnt}]]명</p>
+												<p th:each="reserve : ${preserve}" th:if="${reserve.packagenum == pop.packagenum}">
+													현재인원 : [[${reserve.currentCount}]]명
+												</p>
+											</div>
+										</div>
 							        </a>
 							    </div>
 							    <div th:if="${pop == null or #lists.size(pop) == 0}" class="pp_list no-list">
@@ -197,31 +213,39 @@
 			                </div>
 							<div class="cp_list">
 							    <div th:if="${cheap != null and #lists.size(cheap) > 0}" th:each="cheap : ${cheap}" class="cpackage">
-						    	<a th:href="@{/package/pget(packagenum=${cheap.packagenum})}" class="get">
-									<div class="cp_img">
-										<div class="imgbox" th:each="file : ${rfile}" th:if="${file.packagenum == cheap.packagenum}">
-											<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
+						    		<a th:href="@{/package/pget(packagenum=${cheap.packagenum})}" class="get">
+										<div class="cp_img">
+											<div class="imgbox" th:each="file : ${rfile}" th:if="${file.packagenum == cheap.packagenum}">
+												<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
+											</div>
 										</div>
-									</div>
-									<div class="cp_info">
-										<div class="cp_title">
-									    	<h3>[[${cheap.packageTitle}]]</h3>
-									  	</div>
-									  	<div class="cp_con">
-									    	[[${cheap.packageContent}]]
-									  	</div>
-									</div>
-									<div class="cprice">
-										<h3>[[${cheap.adultPrice}]]</h3>
-									</div>
-							        </a>
-							    </div>
-							    <div th:if="${cheap == null or #lists.size(cheap) == 0}" class="pp_list no-list">
-							        <div>등록된 게시글이 없습니다.</div>
-							    </div>
-							</div>
-			            </div>
-			        </div>
+										<div class="cp_info">
+											<div class="cp_title">
+									    		<h3>[[${cheap.packageTitle}]]</h3>
+									  		</div>
+									  		<div class="cp_con">
+												예정 출발일 : [[${cheap.startdate}]] ~
+									  		</div>
+										</div>
+										<div class="cp_info2">
+											<div class="cprice">
+												<h3>[[${cheap.adultPrice}]]원</h3>
+											</div>
+											<div class="cp_count">
+												<p>최대인원 : [[${cheap.maxcnt}]]명</p>
+												<p th:each="reserve : ${creserve}" th:if="${reserve.packagenum == cheap.packagenum}">
+													현재인원 : [[${reserve.currentCount}]]명
+												</p>
+											</div>
+										</div>
+									</a>
+								</div>
+						<div th:if="${cheap == null or #lists.size(cheap) == 0}" class="pp_list no-list">
+							<div>등록된 게시글이 없습니다.</div>
+						</div>
+					</div>
+				</div>
+			</div>
         </div>
     </div>
 </body>

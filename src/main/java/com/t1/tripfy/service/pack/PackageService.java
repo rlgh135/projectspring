@@ -37,6 +37,7 @@ public interface PackageService {
 
 	void saveReservationForNonMember(ReservationDTO reservation);
 	void saveReservationForMember(ReservationDTO reservation);
+	List<ReservationDTO> getReservationCntByPackagenum(long packagenum);
 	
 	
 	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;

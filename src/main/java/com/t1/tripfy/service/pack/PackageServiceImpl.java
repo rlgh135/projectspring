@@ -34,6 +34,7 @@ import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.mapper.pack.PackageFileMapper;
 import com.t1.tripfy.mapper.pack.PackageMapper;
+import com.t1.tripfy.mapper.pack.ReservationMapper;
 import com.t1.tripfy.mapper.pack.TimelineMapper;
 import com.t1.tripfy.mapper.user.UserMapper;
 
@@ -53,6 +54,8 @@ public class PackageServiceImpl implements PackageService{
 	private PackageFileMapper pfmapper;
 	@Autowired
 	private TimelineMapper tmapper;
+	@Autowired
+	private ReservationMapper rmapper;
 	
 	@Override
 	public boolean regist(PackageDTO pack, MultipartFile file) throws Exception {
@@ -401,6 +404,11 @@ public class PackageServiceImpl implements PackageService{
 	@Override
 	public List<ReviewDTO> getReviewByGuidenum(long guidenum) {
 		return pmapper.getReviewByGuidenum(guidenum);
+	}
+	@Override
+	public List<ReservationDTO> getReservationCntByPackagenum(long packagenum) {
+		
+		return rmapper.getReservationCntByPackagenum(packagenum);
 	}
 	
 }

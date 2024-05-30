@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.JsonObject;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
+import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
@@ -45,36 +46,41 @@ public class PackController {
 	private UserService uservice;
 	
 	@GetMapping("pmain")
-	public void main(Criteria cri, Model model,HttpServletRequest req) {
-		List<PackageFileDTO> allRfiles = new ArrayList<>();
-		List<PackageFileDTO> allCfiles = new ArrayList<>();
-		List<PackageFileDTO> allPfiles = new ArrayList<>();
-		
+	public void main(Criteria cri, Model model, HttpServletRequest req) {
+	    List<PackageFileDTO> allRfiles = new ArrayList<>();
+	    List<PackageFileDTO> allCfiles = new ArrayList<>();
+	    List<PackageFileDTO> allPfiles = new ArrayList<>();
+	    List<ReservationDTO> allRreserves = new ArrayList<>();
+	    List<ReservationDTO> allCreserves = new ArrayList<>();
+	    List<ReservationDTO> allPreserves = new ArrayList<>();
+	    
 	    List<PackageDTO> recent = service.getRecentList(cri);
-
+	   
 	    for (PackageDTO pack : recent) {
 	        long rpackagenum = pack.getPackagenum();
-	        System.out.println("최신 :" + rpackagenum);
 	        List<PackageFileDTO> rfile = service.getFiles(rpackagenum);
-	        System.out.println(rfile);
+	        List<ReservationDTO> reserve = service.getReservationCntByPackagenum(rpackagenum); 
 	        allRfiles.addAll(rfile);
+	        allRreserves.addAll(reserve);
 	    }
 
 	    List<PackageDTO> cheap = service.getCheapList(cri);
 	    for (PackageDTO pack : cheap) {
 	        long cpackagenum = pack.getPackagenum();
-	        System.out.println("최신 :" + cpackagenum);
 	        List<PackageFileDTO> cfile = service.getFiles(cpackagenum);
-	        System.out.println(cfile);
+	        
+	        List<ReservationDTO> reserve = service.getReservationCntByPackagenum(cpackagenum); 
 	        allCfiles.addAll(cfile);
+	        allCreserves.addAll(reserve);
 	    }
+	    
 	    List<PackageDTO> pop = service.getPopList(cri);
 	    for (PackageDTO pack : pop) {
 	        long ppackagenum = pack.getPackagenum();
-	        System.out.println("최신 :" + ppackagenum);
 	        List<PackageFileDTO> pfile = service.getFiles(ppackagenum);
-	        System.out.println(pfile);
+	        List<ReservationDTO> reserve = service.getReservationCntByPackagenum(ppackagenum);
 	        allPfiles.addAll(pfile);
+	        allPreserves.addAll(reserve);
 	    }
 
 	    model.addAttribute("recent", recent);
@@ -83,7 +89,11 @@ public class PackController {
 	    model.addAttribute("rfile", allRfiles);
 	    model.addAttribute("cfile", allCfiles);
 	    model.addAttribute("pfile", allPfiles);
+	    model.addAttribute("rreserve", allRreserves);
+	    model.addAttribute("creserve", allCreserves);
+	    model.addAttribute("preserve", allPreserves);
 	}
+
 
 	@GetMapping("abroadmain")
 	public void abroadmain(Criteria cri,Model model) {
@@ -91,46 +101,52 @@ public class PackController {
 		List<PackageFileDTO> allRfiles = new ArrayList<>();
 		List<PackageFileDTO> allCfiles = new ArrayList<>();
 		List<PackageFileDTO> allPfiles = new ArrayList<>();
+		List<ReservationDTO> allRreserves = new ArrayList<>();
+		List<ReservationDTO> allCreserves = new ArrayList<>();
+		List<ReservationDTO> allPreserves = new ArrayList<>();
 		
 		List<PackageDTO> recent = service.getAbroadRecentList(cri);
-		System.out.println(recent);
+		
+		
 		  for (PackageDTO pack : recent) {
-		        long rpackagenum = pack.getPackagenum();
-		        System.out.println("최신 :" + rpackagenum);
+			  long rpackagenum = pack.getPackagenum();
 		        List<PackageFileDTO> rfile = service.getFiles(rpackagenum);
-		        System.out.println(rfile);
+		        List<ReservationDTO> reserve = service.getReservationCntByPackagenum(rpackagenum); 
 		        allRfiles.addAll(rfile);
+		        allRreserves.addAll(reserve);
 		    }
 		List<PackageDTO> cheap = service.getAbroadCheapList(cri);
-		System.out.println(cheap);
+	
 		for (PackageDTO pack : cheap) {
-	        long cpackagenum = pack.getPackagenum();
-	        System.out.println("최신 :" + cpackagenum);
+			long cpackagenum = pack.getPackagenum();
 	        List<PackageFileDTO> cfile = service.getFiles(cpackagenum);
-	        System.out.println(cfile);
+	        List<ReservationDTO> reserve = service.getReservationCntByPackagenum(cpackagenum); 
 	        allCfiles.addAll(cfile);
+	        allCreserves.addAll(reserve);
 	    }
 		
 		List<PackageDTO> pop = service.getAbroadPopList(cri);
 		System.out.println(pop);
 		
 		for (PackageDTO pack : pop) {
-		    long ppackagenum = pack.getPackagenum();
-		    System.out.println("최신 :" + ppackagenum);
-		    List<PackageFileDTO> pfile = service.getFiles(ppackagenum);
-		    System.out.println(pfile);
-		    allPfiles.addAll(pfile);
+			 long ppackagenum = pack.getPackagenum();
+		        List<PackageFileDTO> pfile = service.getFiles(ppackagenum);
+		        List<ReservationDTO> reserve = service.getReservationCntByPackagenum(ppackagenum);
+		        allPfiles.addAll(pfile);
+		        allPreserves.addAll(reserve);
 		}
 	
-//		List<PackageDTO> popguide = service.getPopularGuideList(cri);
-		model.addAttribute("recent", recent);
-		model.addAttribute("cheap", cheap);
-		model.addAttribute("pop",pop);
-//		model.addAttribute("popguide",popguide);
+
+	    model.addAttribute("cheap", cheap);
+	    model.addAttribute("pop", pop);
 	    model.addAttribute("rfile", allRfiles);
 	    model.addAttribute("cfile", allCfiles);
 	    model.addAttribute("pfile", allPfiles);
+	    model.addAttribute("rreserve", allRreserves);
+	    model.addAttribute("creserve", allCreserves);
+	    model.addAttribute("preserve", allPreserves);
 	}
+	
 	
 	
 	@GetMapping(value={"plist","abroadlist"})
@@ -138,15 +154,18 @@ public class PackController {
 	    System.out.println(cri);
 	    List<PackageFileDTO> allfiles = new ArrayList<>();
 	    List<PackageDTO> list = service.getDetailRegionList(cri);
+	    List<ReservationDTO> allReserves = new ArrayList<>();
 	    for (PackageDTO pack : list) {
 		    long ppackagenum = pack.getPackagenum();
-		    System.out.println("최신 :" + ppackagenum);
+		    List<ReservationDTO> reserve = service.getReservationCntByPackagenum(ppackagenum); 
 		    List<PackageFileDTO> lfile = service.getFiles(ppackagenum);
 		    System.out.println(lfile);
 		    allfiles.addAll(lfile);
+		    allReserves.addAll(reserve);
 		}
 	    model.addAttribute("file", allfiles);
 	    model.addAttribute("list", list);
+	    model.addAttribute("reserve", allReserves);
 	    model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
 	}
 	
@@ -161,8 +180,8 @@ public class PackController {
 	    model.addAttribute("package", pack);
 	    model.addAttribute("files", service.getFiles(packagenum));
 	    String loginUser = (String) session.getAttribute("loginUser");
-	    
-	    
+	    List<ReservationDTO> reserve = service.getReservationCntByPackagenum(packagenum); 
+	    System.out.println(reserve+"대체 왜 없는거야 슈우발 ");
 	    List<ReviewDTO> reviewlist = new ArrayList<>();
 	    long gunum = pack.getGuidenum();
 	    List<ReviewDTO> review = service.getReviewByGuidenum(gunum);
@@ -176,7 +195,7 @@ public class PackController {
 
 	    // model에 reviewlist 추가
 	    model.addAttribute("review", reviewlist);
-	    	    
+	    model.addAttribute("reserve",reserve);	    
 	    
 
 	    //일단 보류
@@ -219,7 +238,6 @@ public class PackController {
 
 	    return "package/pget";
 	}
-	
 	
 	@GetMapping("pay")
 	public String pay(long packagenum, HttpServletRequest req, HttpServletResponse resp, Model model) {

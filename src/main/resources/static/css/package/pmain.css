@@ -179,9 +179,19 @@ button{
 .rp_info{
     width: 80%;
     margin: 0 auto;
-    height: 90px;
-    margin-top: 45px;
+    height: 60px;
+    margin-top: 20px;
     overflow: hidden;
+}
+.rp_info2{
+	width: 80%;
+    margin: 0 auto;
+    display: flex;
+    margin-top: 20px;
+    height: 70px;   
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-between;
 }
 .rp_title h3{
 	font-size: 25px;
@@ -190,8 +200,7 @@ button{
 	font-size: 20px;
 }
 .rprice{
-    width: 80%;
-    margin: 0 auto;
+    width: 50%;
 }
 .pp_header{
     width:100%;
@@ -226,10 +235,21 @@ button{
 .pp_info{
     width: 80%;
     margin: 0 auto;
-    height: 90px;
-    margin-top: 45px;
+    height: 60px;
+    margin-top: 20px;
     overflow: hidden;
 }
+.pp_info2{
+	width: 80%;
+    margin: 0 auto;
+    display: flex;
+    margin-top: 20px;
+    height: 70px;   
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .pp_title h3{
 	font-size: 25px;
 }
@@ -237,8 +257,8 @@ button{
 	font-size: 20px;
 }
 .pprice{
-    width: 80%;
-    margin: 0 auto;
+    width: 50%;
+ 
 }
 .cp_header{
     width:100%;
@@ -274,10 +294,21 @@ button{
 .cp_info{
     width: 80%;
     margin: 0 auto;
-    height: 90px;
-    margin-top: 45px;
+    height: 60px;
+    margin-top: 20px;
     overflow: hidden;
 }
+.cp_info2{
+	width: 80%;
+    margin: 0 auto;
+    display: flex;
+    margin-top: 20px;
+    height: 70px;   
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .cp_title h3{
 	font-size: 25px;
 }
@@ -285,8 +316,7 @@ button{
 	font-size: 20px;
 }
 .cprice{
-    width: 80%;
-    margin: 0 auto;
+    width: 50%;
 }
 
 .hide{
