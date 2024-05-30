@@ -142,7 +142,11 @@
 	<select id="getBoardaddrByBoardnum">
 		select * from boardaddr
 		where boardnum = #{boardnum}
-	</select>
+	</select>	
+	
+	<select id="getThumbnail">
+		select * from board_file where boardnum = #{boardnum} and sysname like('%${BoardThumnail}%')
+	</select>	
 	
 	<delete id="deleteBoard">
 		delete from board where boardnum = #{boardnum}

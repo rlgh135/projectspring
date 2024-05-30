@@ -308,4 +308,28 @@ public class BoardServiceImpl implements BoardService {
 		return flag;
 	}
 	
+	// modify 이미지 썸네일
+	@Override
+	public ResponseEntity<Resource> getThumbnailResource(String sysname) throws Exception {
+		//경로에 관련된 객체(자원으로 가지고 와야 하는 파일에 대한 경로)
+		Path path = Paths.get(saveFolder+sysname);
+		//경로에 있는 파일의 MIME 타입을 조사해서 그대로 담기
+		String contentType = Files.probeContentType(path);
+		//응답 헤더 생성
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+		
+		//해당 경로(path)에 있는 파일로부터 뻗어나오는 InputStream*Files.newInputStream(path)을
+		//통해 자원화*new InputStreamResource()
+		Resource resource = new InputStreamResource(Files.newInputStream(path));
+		return new ResponseEntity<>(resource,headers,HttpStatus.OK);
+	}
+	
+	// boardnum으로 썸네일 가져오기
+	@Override
+	public BoardFileDTO getThumbnail(long boardnum) {
+		
+		return bmapper.getThumbnail(boardnum);
+	}
+	
 }

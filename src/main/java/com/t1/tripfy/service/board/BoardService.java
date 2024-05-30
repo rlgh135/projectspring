@@ -55,4 +55,10 @@ public interface BoardService {
 
 	boolean deleteSummernoteImageFile(String fileUrl);
 
+	// modify 이미지 썸네일
+	ResponseEntity<Resource> getThumbnailResource(String sysname) throws Exception;
+
+	// boardnum으로 썸네일 가져오기
+	BoardFileDTO getThumbnail(long boardnum);
+
 }

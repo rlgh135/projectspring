@@ -166,6 +166,16 @@
 		font-size: 14px;
 	}
 	
+	.addfile a {
+		display: block;
+		margin-bottom: 5px;
+	}
+	
+	.addfile a > .downloadImg {
+		width: 15px; height: 15px;
+		margin-right: 4px;
+	}
+	
 	.line {
 		margin-top: 45px;
 		border-bottom: 1px solid #f0f0f0;
@@ -292,7 +302,7 @@
                 </h2>
 				
 				<div th:if="${board.userid eq session.loginUser}" class="changebtn">
-				    <button onclick="modifyBoard();">수정</button>
+				    <button th:onclick="modifyBoard([[${board.boardnum}]]);">수정</button>
 				    <button th:onclick="deleteBoard([[${board.boardnum}]]);">삭제</button>
 				</div>
 
@@ -315,12 +325,12 @@
 					    <div></div>
 					</div>
 					
-					<div class="file" th:if="${files != null and files.size() > 0}">
+					<div class="file addfile" th:if="${files != null and files.size() > 0}">
 					    <table>
 							<tr>
 								<th><h4>첨부 파일</h4></th>
-								<td th:each="file:${files}">
-									<a th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}">[[${file.orgname}]]</a>
+								<td>
+									<a th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}" th:each="file:${files}"><img src="/images/boardimg/download.png" class="downloadImg">[[${file.orgname}]]</a>
 								</td>
 							</tr>
 						</table>
@@ -411,6 +421,12 @@ const geocoder = new google.maps.Geocoder();
 		console.log("삭제 클릭: " + boardnum)
 
 		location.replace("/board/remove?boardnum=" + boardnum);
+	}
+	
+	function modifyBoard(boardnum) {
+		console.log("수정 클릭: " + boardnum);
+		
+		location.replace("/board/modify?boardnum=" + boardnum);
 	}
 </script>
 </html>

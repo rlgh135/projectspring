@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>modify</title>
+	<link rel="stylesheet" href="/css/summernote/summernote-lite.min.css">
+	<link rel="stylesheet" href="/css/package/timelineWrite.css">
+	<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+</head>
+<style>
+    /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    
+    .wrap {
+        width: 1400px;
+        margin: 0 auto;
+        /* border: 1px solid red; */
+		margin-top: 130px;
+		position: relative;
+    }
+
+    [type=text] {
+        padding: 8px;
+        border: 1px solid #e0e0e0;
+        width: 220px;
+        outline: none;
+    }
+	
+	.place_detail td {
+		display: flex;
+	}
+	
+	.place_detail td div {
+		width: 70px; height: 35px;
+		line-height: 35px;
+		border-radius: 8px;
+		text-align: center;
+		font-size: 14px;
+		background-color: #64B5F6;
+		color: #fff;
+		margin-left: 10px;
+	}
+
+    .date1 [type=text] {
+        width: 100px;
+    }
+
+    .title [type=text] {
+        width: 780px;
+    }
+	
+	.place_detail [type=text] {
+		width: 650px;
+	}
+	
+	#writeForm {
+		margin-bottom: 50px;
+	}
+
+    .boardwrite {
+        margin: 0 auto;
+        padding: 30px;
+        /* border: 2px solid #42A5F5; */
+        border-collapse: collapse;
+    }
+    
+	.boardwrite caption {
+        font-weight: bold;
+        font-size: 30px;
+        margin-bottom: 30px;
+    }
+
+	.boardwrite th {
+        width: 220px; padding: 13px;
+        background-color: #fafafa;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+	.boardwrite th:first-of-type {
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .boardwrite td {
+        width: 800px;
+        padding: 10px;
+        border-bottom: 1px dashed #e0e0e0;
+    }
+
+	.boardwrite td:first-of-type {
+        border-top: 1px dashed #e0e0e0;
+    }
+
+	.boardwrite textarea {
+        width: 780px; height: 400px;
+        resize: none;
+        border: 1px solid #e0e0e0;
+        outline: none;
+        padding: 10px;
+    }
+
+	.boardwrite th h4 {
+        font-size: 14px;
+        font-weight: bold;
+    }
+	
+	.place > td {
+		position: relative;
+	}
+	
+	.boardwrite th h4::after {
+	    content: " *";
+		color: red;
+	}
+
+	.startdate, .enddate, .startdate::placeholder, .enddate::placeholder {
+        text-align: center;
+    }
+	
+	.yesno td [type="radio"] + label {
+	    margin-right: 10px; 
+	}
+
+    .buttons {
+        margin: 0 auto;
+        width: 218px;
+        margin-top: 30px;
+        /* border: 1px solid red; */
+    }
+
+    .modifyOk, .writeCancel {
+        width: 100px; height: 40px;
+        border: 1px solid #2196F3;
+        border-radius: 8px;
+        background-color: #2196F3;
+        color: #fff;
+        font-weight: bold;
+		font-size: 15px;
+    }
+
+    .writeOk {margin-right: 10px;}
+	
+	.nation_select {
+	    position: absolute;
+	    width: 350px; height: 340px;
+	    background-color: #fff;
+	    border: 1px solid rgb(233, 233, 233);
+	    border-radius: 10px;
+	    top: 173px; left: 420px;
+	    z-index: 1;
+	    box-shadow: 0px 0px 3px rgba(30, 30, 30, 0.15);
+	}
+	
+	.nation_select .category {
+	    position: absolute;
+	    width: 100%; height: 280px;
+	    display: flex;
+	    padding: 5px;
+	    flex-wrap: nowrap;
+	    justify-content: space-between;
+	    /* display: none; */
+	}
+	
+	.nation_select .category > * {
+	    width: 33.3%;
+	    height: 280px;
+	}
+	
+	.nation_select .category .nation {
+	    border-radius: 10px 0 0 10px / 10px 0 0 10px;
+	    border: 1px solid rgb(233, 233, 233);
+	    padding: 3px;
+	}
+
+	.nation_select .category .region {
+	    border-top: 1px solid rgb(233, 233, 233);
+	    border-bottom: 1px solid rgb(233, 233, 233);
+		padding: 3px;
+		    position: relative;
+	}
+	
+	.nation_select .category .region_detail {
+	    border-radius: 0 10px 10px 0 / 0 10px 10px 0;
+	    border: 1px solid rgb(233, 233, 233);
+		    padding: 3px;
+		    position: relative;
+	}
+	
+	.nation_select .category .nation > div, .region > div, .region_detail > div {
+		width: 95%;
+		height: 280px;
+		overflow-y: auto;
+	}
+	
+	.nation_select .category .nation > div {
+		width: 100%;
+	}
+		
+	.region > div, .region_detail > div {
+	    /* border: 1px solid red; */
+	    position: absolute;
+	}
+	
+	.nation_select .category .nation > div > button, .region > div > button, .region_detail > div > button {
+	    display: block;
+	    width: 100%;
+	    padding: 8px;
+	    border: none;
+	    background-color: #fff;
+	}
+	
+	.nation_select .category .nation > div > button > p, 
+	.nation_select .category .region > div > button > p, 
+	.nation_select .category .region_detail > div > button > p {
+	    width: 100%;
+	    text-align: left;
+	    white-space: nowrap;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	}
+	
+	.nation_select .n_btns {
+	   position: absolute;
+	   bottom: 9px; left: 24px;
+	}
+	
+	.n_btns button {
+	    background-color: #fff;
+	    border: 1px solid red;
+	    border-radius: 5px;
+	    height: 35px;
+	    font-size: 12px;
+	    font-weight: bold;
+	}
+	
+	.n_btns button:nth-child(1) {
+	    width: 90px;
+	    margin-right: 5px;
+	    color: #2196F3;
+	    background-color: #F5F5F5;
+	    border: 1px solid #F5F5F5;
+	}
+	
+	.n_btns button:nth-child(1) img {
+	    width: 18px;
+	    height: 18px;
+	    position: absolute;
+	    left: 16px;
+	}
+	
+	.n_btns button:nth-child(1) span {
+	    margin-left: 18px;
+	}
+	
+	.n_btns button:nth-child(2) {
+	    width: 200px;
+	    color: #fff;
+	    background-color: #2196F3;
+	    border: 1px solid #2196F3;
+	}
+	
+	.x img {
+		width: 20px; height: 20px;
+		position: absolute;
+		top: 17px; left: 203px;
+	}
+    
+	.file > td div:first-of-type {
+		float: left;
+	}
+	
+	.file > td div:last-of-type {
+		float: right;
+	}
+	
+	.file span {
+		font-size: 14px;
+	}
+	
+	.file a.btn {
+		display: inline-block;
+		font-size: 14px;
+		width: 100px; height: 30px;
+		background-color: #64B5F6;
+		text-align: center;
+		line-height: 30px;
+		border-radius: 5px;
+		color: #fff;
+		margin-right: 5px;
+	}
+	
+	.file th h4::after, .place_detail th h4::after {
+		content: "";
+	}
+	
+	img.thumbnail {
+		display: block;
+		width:200px;
+		clear:both;
+	}
+	/*모달 디자인*/
+	.modal {
+	    display: none;
+	    position: fixed;
+	    z-index: 1500;
+	    left: 0;
+	    top: 0;
+	    width: 100%;
+	    height: 100%;
+	    overflow: auto;
+	    background-color: rgb(0,0,0);
+	    background-color: rgba(0,0,0,0.4);
+	    padding-top: 60px;
+	}
+
+	.modal-content {
+	    background-color: #fefefe;
+	    margin: 5% auto;
+	    padding: 20px;
+	    border: 1px solid #888;
+	    width: 80%;
+	    border-radius: 10px;
+	    position: relative;
+	    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	    animation-name: animatetop;
+	    animation-duration: 0.4s;
+	}
+	.modal_title{
+	    text-align: center;
+	    color: #64B5F6;
+	    font-weight: bold;
+	}
+
+	@keyframes animatetop {
+	    from {top:-300px; opacity:0}
+	    to {top:0; opacity:1}
+	}
+
+	.close {
+	    color: #aaa;
+	    float: right;
+	    font-size: 28px;
+	    font-weight: bold;
+	}
+
+	.close:hover,
+	.close:focus {
+	    color: black;
+	    text-decoration: none;
+	    cursor: pointer;
+	}
+
+	#map {
+	    height: 800px;
+	    width: 100%;
+	    margin-top: 20px;
+	    margin-bottom: 20px;
+	}
+
+	#pac-input {
+	    margin-top: 10px;
+	    margin-bottom: 20px;
+	    padding: 10px;
+	    width: 40%;
+	    box-sizing: border-box;
+	    border: 1px solid #ccc;
+	    border-radius: 4px;
+	}
+
+	#description {
+	    text-align: center;
+	    margin-top: 20px;
+	    font-size: 16px;
+	    color: #333;
+	}
+	.modal-content .btn_area{
+	    width: 100%;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	}
+	.place_select_btn{
+	    width: 20%;
+	    height: 40px;
+	    background-color: rgb(248, 248, 248);
+	    color: #2196F3;
+	    font-weight: bold;
+	    border-radius: 20px;
+	    border: none;
+	    cursor: pointer;
+	    display: none;
+	    margin-top: 20px;
+	}
+	.place_select_btn:hover{
+	    background-color: #1976D2;
+	    color: #ffffff;
+	    border: 2px solid #ffffff;
+	    box-shadow: 0 0 0 2px #1976D2;
+	}
+	.place_select_btn.on{
+	    display: block;
+	}
+
+	/*모달 디자인끝*/
+	
+</style>
+<body>
+	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+	
+    <div class="wrap">
+        <form action="/board/modify" method="post" name="modifyForm" id="modifyForm" enctype="multipart/form-data">
+            <table class="boardwrite">
+                <caption>게시글 작성</caption>
+                <tr class="title">
+                    <th><h4>제목</h4></th>
+                    <td><input type="text" placeholder="제목" class="b_title" name="title" th:value="${board.title}"></td>
+                </tr>
+				
+				<tr class="place">
+					    <th><h4>지역</h4></th>
+					    <td>
+						<input type="text" placeholder="나라/지역" class="b_place" readonly name="regionname" th:value="${board.regionname}">
+						
+						<div class="x">
+						    <img src="/images/boardimg/cross.png" alt="">
+						</div>
+					</td>
+				</tr>
+
+                <tr class="writer">
+                    <th><h4>작성자</h4></th>
+                    <td><input type="text" placeholder="작성자" class="b_writer" th:value="${session.loginUser}" readonly name="userid"></td>
+                </tr>
+				
+				
+				
+				<tr class="yesno">
+				    <th><h4>동행 모집 여부</h4></th>
+				    <td>
+				        <input type="radio" name="yesno" id="yes" onclick="date_placeY();" th:checked="${boardaddr}"><label for="yes"> yes</label>
+				        <input type="radio" name="yesno" id="no" onclick="date_placeN();" th:checked="!${boardaddr}"><label for="no"> no</label>
+				    </td>
+				</tr>
+
+                <tr class="date1" style="display: none;">
+                    <th><h4>여행 기간</h4></th>
+                    <td>
+                        <input type="text" placeholder="출발일" class="startdate" id="startdate" name="startdate" readonly th:value="${boardaddr} ? ${boardaddr.startdate} : ''">
+                        ~
+                        <input type="text" placeholder="도착일" class="enddate" id="enddate" name="enddate" readonly 	th:value="${boardaddr} ? ${boardaddr.enddate} : ''">
+                    </td>
+                </tr>
+
+				<tr class="place_detail" style="display: none;">
+				    <th><h4>주소</h4></th>
+				    <td>
+						<input type="text" placeholder="주소" class="b_place_detail" name="placename" th:value="${boardaddr} ? ${boardaddr.placename} : ''">
+						<div style="cursor: pointer;" id="modalOnBtn">지도</div>
+					</td>
+				</tr>
+                
+                <tr class="content">
+                    <th><h4>내용</h4></th>
+                    <td><textarea id="summernote" name="content" th:utext="${board.content}"></textarea></td>
+                </tr>
+				
+				<tr th:class="${'r'+fileStat.index+ ' file'}" th:each="file:${files}" th:if="${files != null and files.size() > 0}">
+					<th>첨부 파일[[${fileStat.index+1}]]</th>
+					<td th:class="${'file'+fileStat.index+'_cont'}">
+						<div>
+							<input type="file" name="files" th:id="${'file'+fileStat.index}" style="display:none">
+							<input type="hidden" name="sysname" th:value="${file.sysname}">
+							<span th:id="${'file'+fileStat.index+'name'}" class="orgname">[[${file.orgname}]]</span>
+						</div>
+						<div>
+								<!--				   javascript:upload(fileStat.index,'file.systemname')-->
+							<a class="btn" th:href="'javascript:upload('+${fileStat.index}+',\''+${file.sysname}+'\')'">파일 선택</a>
+							<a class="btn" th:href="'javascript:cancelFile('+${fileStat.index}+',\''+${file.sysname}+'\')'">파일 삭제</a>
+						</div>
+						<th:block th:with="sar = ${file.orgname.split('[.]')}">
+							<th:block th:with="ext=${sar[sar.length-1]}">
+								<img th:if="${ext == 'jpeg' or ext == 'jpg' or ext == 'png' or ext == 'gif' or ext == 'webp'}"
+								class="thumbnail" th:src="@{/board/thumbnail (sysname=${file.sysname})}">
+							</th:block>
+						</th:block>
+					</td>
+				</tr>
+				
+				<th:block th:with="len=${files.size()}">
+					<tr th:class="${'r'+len + ' file'}">
+						<th>첨부 파일[[${len+1}]]</th>
+						<td th:class="${'file'+len+'_cont'}">
+							<div>
+								<input type="file" name="files" th:id="${'file'+len}" style="display:none">
+								<input type="hidden" name="sysname" value="">
+								<span th:id="${'file'+len+'name'}" class="orgname">선택된 파일 없음</span>
+							</div>
+							<div>
+								<a class="btn" th:href="${'javascript:upload('+len+')'}">파일 선택</a>
+								<a class="btn" th:href="${'javascript:cancelFile('+len+')'}">파일 삭제</a>
+							</div>
+						</td>
+					</tr>
+				</th:block>
+								
+				<input type="hidden" name="countrycode" class="b_countrycode">
+            </table>
+			<input type="hidden" value="" name="updateCnt" id="updateCnt">
+			
+            <div class="buttons">
+                <input type="button" value="글 수정" class="modifyOk" onclick="modifyOk();">
+                <input type="button" value="취소" class="writeCancel">
+            </div>
+			
+        </form>
+
+		<div class="nation_select" style="display: none;">
+			<div class="category">
+				<div class="nation">
+					<div>
+						<button class="countrybtn" name="kr"><p class="countrystr">국내</p></button>
+						<button class="countrybtn" name="fr"><p class="countrystr">해외</p></button>
+					</div>
+				</div>
+		
+				<div class="region">
+					<div style="visibility: hidden;" id="kr">
+						<button class="area" name="서울"><p class="areastr">서울</p></button>
+						<button class="area" name="제주도"><p class="areastr">제주도</p></button>
+						<button class="area" name="경기도"><p class="areastr">경기도</p></button>
+						<button class="area" name="강원도"><p	class="areastr">강원도</p></button>
+						<button	class="area" name="충청도"><p class="areastr">충청도</p></button>
+						<button	class="area" name="경상도"><p class="areastr">경상도</p></button>
+						<button class="area" name="전라도"><p class="areastr">전라도</p></button>
+						<button class="area" name="인천광역시"><p class="areastr">인천광역시</p></button>	
+					</div>
+					
+					<div style="visibility: hidden;" id="fr">
+						<button class="area" name="동남아시아"><p class="areastr">동남아시아</p></button>
+						<button class="area" name="괌/사이판/호주/뉴질랜드"><p class="areastr">괌/사이판/호주/뉴질랜드</p></button>
+						<button class="area" name="일본"><p class="areastr">일본</p></button>
+						<button class="area" name="중국"><p class="areastr">중국</p></button>
+						<button class="area" name="유럽"><p class="areastr">유럽</p></button>
+						<button class="area" name="미국"><p class="areastr">하와이/미국/중남미</p></button>
+					</div>
+				</div>
+				<div class="region_detail">
+					<div style="visibility: hidden;" id="ea">
+						 <button class="area_detail" name="태국"><p class="area_detailstr">태국</p></button>
+						 <button class="area_detail" name="베트남"><p class="area_detailstr">베트남</p></button>
+						 <button class="area_detail" name="필리핀"><p class="area_detailstr">필리핀</p></button>
+						 <button class="area_detail" name="싱가포르"><p class="area_detailstr">싱가포르</p></button>
+						 <button class="area_detail" name="말레이시아"><p class="area_detailstr">말레이시아</p></button>
+						 <button class="area_detail" name="캄보디아"><p class="area_detailstr">캄보디아</p></button>
+					 </div>
+					
+					 <div style="visibility: hidden;" id="jp">
+						 <button class="area_detail" name="오사카"><p class="area_detailstr">오사카</p></button>
+						 <button class="area_detail" name="후쿠오카"><p class="area_detailstr">후쿠오카</p></button>
+						 <button class="area_detail" name="도쿄"><p class="area_detailstr">도쿄</p></button>
+						 <button class="area_detail" name="교토"><p class="area_detailstr">교토</p></button>
+						 <button class="area_detail" name="삿포로"><p class="area_detailstr">삿포로</p></button>
+					 </div>
+					
+					 <div style="visibility: hidden;" id="cn">
+						 <button class="area_detail" name="하이난"><p class="area_detailstr">하이난</p></button>
+						 <button class="area_detail" name="청도"><p class="area_detailstr">청도</p></button>
+						 <button class="area_detail" name="베이징"><p	class="area_detailstr">베이징</p></button>
+						 <button class="area_detail" name="장가계"><p class="area_detailstr">장가계</p></button>
+					 </div>
+					
+					 <div style="visibility: hidden;" id="eu">
+						 <button class="area_detail" name="프랑스"><p class="area_detailstr">프랑스</p></button>
+						 <button class="area_detail" name="영국"><p class="area_detailstr">영국</p></button>
+						 <button class="area_detail" name="이탈리아"><p class="area_detailstr">이탈리아</p></button>
+						 <button class="area_detail" name="스페인"><p class="area_detailstr">스페인</p></button>
+						 <button class="area_detail" name="독일"><p class="area_detailstr">독일</p></button>
+						 <button class="area_detail" name="스위스"><p class="area_detailstr">스위스</p></button>
+						 <button class="area_detail" name="핀란드"><p class="area_detailstr">핀란드</p></button>
+						 <button class="area_detail" name="노르웨이"><p class="area_detailstr">노르웨이</p></button>
+						 <button class="area_detail" name="그리스"><p class="area_detailstr">그리스</p></button>
+						 <button class="area_detail" name="포르투갈"><p class="area_detailstr">포르투갈</p></button>
+					 </div>
+					 
+					 <div style="visibility: hidden;" id="us">
+						 <button class="area_detail" name="하와이"><p class="area_detailstr">하와이</p></button>
+						 <button class="area_detail" name="미국(동부)"><p class="area_detailstr">미국(동부)</p></button>
+						 <button class="area_detail" name="미국(서부)"><p class="area_detailstr">미국(서부)</p></button>
+						 <button class="area_detail" name="캐나다"><p class="area_detailstr">캐나다</p></button>
+						 <button class="area_detail" name="중남미"><p class="area_detailstr">중남미</p></button>
+					 </div>
+				</div>
+			</div>
+		
+			<div class="n_btns">
+				<button onclick="reset();"><img src="/images/boardimg/reset.png" alt=""><span>초기화</span></button>
+				<button onclick="regionApply();">적용</button>
+			</div>
+		</div>
+		<div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="modal_title">지도 검색하기</p>
+                <input id="pac-input" class="controls" type="text" placeholder="장소 검색">
+                <div id="map"></div>
+                <p id="description"></p>
+                <div class="btn_area">
+                    <button class="place_select_btn">선택하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/js/summernote/summernote-lite.min.js"></script>
+<script src="/js/summernote/summernote-ko-KR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
+<script>
+	const startdate = document.getElementById("startdate");
+	
+	if(startdate.value != "") {
+		document.querySelector(".date1").style.display = "";
+		document.querySelector(".place_detail").style.display = "";
+	}
+	
+	// 나라 및 지역 선택 창
+	const nation_select = document.querySelector(".nation_select");
+	
+	const countrybtn = document.getElementsByClassName("countrybtn");
+	const countrystr = document.getElementsByClassName("countrystr");
+	
+	const area = document.getElementsByClassName("area");
+	const areastr = document.getElementsByClassName("areastr");
+	
+	const area_detail = document.getElementsByClassName("area_detail");
+	const area_detailstr = document.getElementsByClassName("area_detailstr");
+	
+	const region_div_kr = document.querySelector(".region > div#kr");
+	const region_div_fr = document.querySelector(".region > div#fr");
+	const region_detail_div = document.querySelectorAll(".region_detail div");
+	
+	let country_select = document.querySelector(".country_select");
+	let area_select = document.querySelector(".area_select");
+	let area_detail_select = document.querySelector(".area_detail_select");
+		
+	// 라디오 버튼 yes
+	function date_placeY() {
+		document.querySelector(".date1").style.display = "";
+		document.querySelector(".place_detail").style.display = "";
+	}
+	
+	// 라디오 버튼 no
+	function date_placeN() {
+		document.querySelector(".date1").style.display = "none";
+		document.querySelector(".place_detail").style.display = "none";
+		
+		document.querySelector(".startdate").value = "";
+		document.querySelector(".enddate").value = "";
+		document.querySelector(".b_place_detail").value = "";
+		
+		nation_select.style.display = "none";
+		
+		let country_select = document.querySelector(".country_select");
+		let area_select = document.querySelector(".area_select");
+		let area_detail_select = document.querySelector(".area_detail_select");
+		
+		if(country_select != null) {
+			country_select.classList.remove("country_select");
+			country_select.style.backgroundColor = "#fff";
+		}
+		
+		if(area_select != null) {
+			area_select.classList.remove("area_select");
+			area_select.style.backgroundColor = "#fff";
+		}
+		
+		if(area_detail_select != null) {
+			area_detail_select.classList.remove("area_detail_select");
+			area_detail_select.style.backgroundColor = "#fff";
+		}
+	}
+	
+	const b_place = document.querySelector(".b_place");
+	
+	b_place.addEventListener("click", function() {
+		if(b_place.value == "" || b_place.focus()) {
+			nation_select.style.display = "";
+		}
+	})
+	
+	// 국내, 해외 버튼
+	for(let i = 0; i < countrystr.length; i++) {
+		countrystr[i].addEventListener("click", function(e) {
+			// p태그 클릭 시 이벤트 막고 그 부모 요소가 클릭되도록
+			e.stopPropagation();  // 이벤트 막음
+			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		})
+	}
+	
+	for(let i = 0; i < countrybtn.length; i++) {
+		countrybtn[i].addEventListener("click", countryClick);
+	}
+	
+	// 서울, 동남아시아 등 버튼
+	for(let i = 0; i < areastr.length; i++) {
+		areastr[i].addEventListener("click", function(e) {
+			// p태그 클릭 시 이벤트 막고 그 부모 요소가 클릭되도록
+			e.stopPropagation();  // 이벤트 막음
+			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		});
+	}
+	
+	// 오사카, 태국 등 버튼
+	for(let i = 0; i < area.length; i++) {
+		area[i].addEventListener("click", areaClick);
+	}
+	
+	for(let i = 0; i < area_detailstr.length; i++) {
+		area_detailstr[i].addEventListener("click", function(e) {
+			// p태그 클릭 시 이벤트 막고 그 부모 요소가 클릭되도록
+			e.stopPropagation();  // 이벤트 막음
+			this.parentElement.click();  // 부모 요소(button 태그 클릭)
+		});
+	}
+	
+	for(let i = 0; i < area_detail.length; i++) {
+		area_detail[i].addEventListener("click", areadetailClick);
+	}
+	
+	function countryClick(e) {
+	// 국내, 해외 버튼 색 초기화
+	for(let i = 0; i < countrybtn.length; i++) {
+			countrybtn[i].style.backgroundColor = "#fff";
+			countrybtn[i].classList.remove("country_select");
+		}
+		
+		let obj = e.target;
+		obj.style.backgroundColor = "#f0f0f0";
+		console.log(obj.textContent)  // obj.textContent: obj의 모든 텍스트(자식 요소의 텍스트 포함)
+		
+		if(obj.textContent == "국내") {
+			region_div_kr.style.visibility = "visible";
+			region_div_fr.style.visibility = "hidden";
+			
+			for(let i = 0; i < region_detail_div.length; i++) {
+				region_detail_div[i].style.visibility = "hidden";
+			}
+			
+		}
+		
+		else if(obj.textContent == "해외") {
+			region_div_kr.style.visibility = "hidden";
+			region_div_fr.style.visibility = "visible";
+			
+			if(area_select != null) {			
+				for(let i = 0; i < area_select.length; i++) {
+					area_select[i].classList.remove("area_select");
+				}
+			}
+			
+		}
+		
+		// 지역 버튼 색상 및 클래스 초기화
+		for(let i = 0; i < area.length; i++) {
+			area[i].style.backgroundColor = "#fff";
+			area[i].classList.remove("area_select");
+		}
+		
+		// 상세지역 버튼 색상 및 클래스 초기화
+		for(let i = 0; i < area_detail.length; i++) {
+			area_detail[i].style.backgroundColor = "#fff";
+			area_detail[i].classList.remove("area_detail_select");
+		}
+		
+		obj.classList.add("country_select");
+	}
+	
+	function areaClick(e) {
+		let obj = e.target;
+		console.log("------------------")
+		console.log(e.target.name)
+		
+		// 지역 버튼 색상 초기화
+		for(let i = 0; i < area.length; i++) {
+			area[i].style.backgroundColor = "#fff";
+			area[i].classList.remove("area_select");
+		}
+		
+		obj.style.backgroundColor = "#f0f0f0";
+		obj.classList.add("area_select");
+		
+		const ea = document.getElementById("ea");
+		const jp = document.getElementById("jp");
+		const cn = document.getElementById("cn");
+		const eu = document.getElementById("eu");
+		const us = document.getElementById("us");
+		
+		let txt = e.target.name;
+		
+		if(txt == "동남아시아") {
+			ea.style.visibility = "visible";
+			jp.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "괌/사이판/호주/뉴질랜드") {
+			ea.style.visibility = "hidden";
+			jp.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "일본") {
+			jp.style.visibility = "visible"; 
+			ea.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "중국") { 
+			cn.style.visibility = "visible";
+			ea.style.visibility = "hidden";
+			jp.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "유럽") { 
+			eu.style.visibility = "visible";
+			ea.style.visibility = "hidden";
+			jp.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			us.style.visibility = "hidden";
+		}
+		
+		else if(txt == "미국") { 
+			us.style.visibility = "visible";
+			ea.style.visibility = "hidden";
+			jp.style.visibility = "hidden";
+			cn.style.visibility = "hidden";
+			eu.style.visibility = "hidden";
+		}
+		
+	}
+	
+	function areadetailClick(e) {
+		let obj = e.target;
+		
+		// 지역 버튼 색상 초기화
+		for(let i = 0; i < area.length; i++) {
+			area_detail[i].style.backgroundColor = "#fff";
+			area_detail[i].classList.remove("area_detail_select");
+		}
+		
+		obj.style.backgroundColor = "#f0f0f0";
+		obj.classList.add("area_detail_select");
+	}
+	
+	function reset() {
+		// 국내, 해외 버튼 색 초기화
+		for(let i = 0; i < countrybtn.length; i++) {
+			countrybtn[i].style.backgroundColor = "#fff";
+		}
+		
+		// 지역 버튼 색 초기화
+		for(let i = 0; i < area.length; i++) {
+			area[i].style.backgroundColor = "#fff";
+		}
+		
+		const country_select = document.querySelector(".country_select");
+		const area_select = document.querySelector(".area_select");
+		const area_detail_select = document.querySelector(".area_detail_select");
+		
+		const region_detail_div = document.querySelectorAll(".region_detail div");
+		
+		if(country_select != null) {			
+			country_select.classList.remove("country_select");
+		}
+		
+		if(area_select != null) {			
+			area_select.classList.remove("area_select");
+		}
+		
+		if(area_detail_select != null) {
+			area_detail_select.classList.remove("area_detail_select");
+		}
+		
+		region_div_kr.style.visibility = "hidden";
+		region_div_fr.style.visibility = "hidden";
+		
+		for(let i = 0; i < region_detail_div.length; i++) {
+			region_detail_div[i].style.visibility = "hidden";
+		}
+	}
+	
+	function regionApply() {
+		let country_select = document.querySelector(".country_select");
+		let area_select = document.querySelector(".area_select");
+		let area_detail_select = document.querySelector(".area_detail_select");
+		
+		//console.log("country_select: " + country_select.name)
+		//console.log("area_select: " + area_select.name)
+		//console.log("area_detail_select: " + area_detail_select.name)
+		
+		if(country_select == null) {
+			alert("국내/해외를 선택해주세요");
+		}	
+		
+		else {
+			if(area_select == null) {
+				alert("지역을 선택해주세요");
+			}
+			
+			else {
+				if(area_select.name == "서울" || area_select.name == "제주도" || area_select.name == "경기도" || area_select.name == "강원도" || area_select.name == "충청도" || area_select.name == "경상도" || area_select.name == "전라도" || area_select.name == "인천광역시" || area_select.name == "괌/사이판/호주/뉴질랜드") {
+					b_place.value = area_select.name;
+				}
+				
+				else {
+					if(area_detail_select == null) {
+						alert("세부 지역을 선택해주세요");
+					}
+					
+					else {
+						b_place.value = area_detail_select.name;
+					}
+				}
+			}
+		}
+		
+		
+		if(b_place.value != "") {		
+			nation_select.style.display = "none";
+			const region_div = document.querySelectorAll(".region > div");
+			const region_detail_div = document.querySelectorAll(".region_detail > div");
+			
+			for(let i = 0; i < region_div.length; i++) {
+				region_div[i].style.visibility = "hidden";
+			}
+			
+			for(let i = 0; i < region_detail_div.length; i++) {
+				region_detail_div[i].style.visibility = "hidden";
+			}
+			
+			document.querySelector(".x").addEventListener("click", function() {
+				b_place.value = "";
+				
+				let country_select = document.querySelector(".country_select");
+				let area_select = document.querySelector(".area_select");
+				let area_detail_select = document.querySelector(".area_detail_select");
+				
+				if(country_select != null) {
+					country_select.classList.remove("country_select");
+					country_select.style.backgroundColor = "#fff";
+				}
+				
+				if(area_select != null) {
+					area_select.classList.remove("area_select");
+					area_select.style.backgroundColor = "#fff";
+				}
+				
+				if(area_detail_select != null) {
+					area_detail_select.classList.remove("area_detail_select");
+					area_detail_select.style.backgroundColor = "#fff";
+				}
+				
+			})
+		}
+	}
+	
+	// 여행 기간 선택하는 달력
+	flatpickr("#startdate", {
+	    mode: "range",
+	    dateFormat: "Y-m-d",
+		minDate: "today",
+	    onClose: function(selectedDates, dateStr, instance) {
+	        if (selectedDates.length === 2) {
+	            const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
+	            const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
+	            document.getElementById("startdate").value = startDate;
+	            document.getElementById("enddate").value = endDate;
+	        }
+	    }
+	});
+	
+	
+	//------------------------------------ 파일 ------------------------------------
+	//${files.size()} : 원래 업로드 되어있는 파일의 개수
+	let i = /*[[${files.size()}]]*/'';
+	let orgSize = i;
+	//수정될 파일 명들을 \로 연결해서 담아줄 input[type=hidden]
+	//이곳에 담겨서 제출되는 파일명들은, 시스템에서 찾아서 삭제해 주어야 한다.(실제 파일, DB 정보)
+	const updateCnt = $("#updateCnt");
+		
+	//로직 구성을 위한 임시 배열(막 사용되며 바뀔 배열)
+	let util_arr = null;
+	
+	util_arr = document.getElementsByClassName("orgname");
+	
+	//기존에 업로드 되어있는 파일들의 orgname들(문자열 값)을 담고있는 태그.
+	const orgnames = [];
+	//기존에 업로드 되어있는 파일들의 systemname들(문자열 값)을 담고있는 태그.
+	const systemnames = [];
+	for(let j=0;j<orgSize;j++){
+		orgnames.push(util_arr[j].innerText.trim());
+		systemnames.push(util_arr[j].previousElementSibling.value);
+	}
+		
+	//사용자가 수정하게 될 파일들의 이름들을 임시로 저장하는 배열
+	let deleteFiles = [];
+
+	function modifyOk() {
+		const b_title = document.querySelector(".b_title");
+		const yes = document.getElementById("yes");
+		const no = document.getElementById("no");
+		const startdate = document.getElementById("startdate");
+		const enddate = document.getElementById("enddate");
+		const b_place = document.querySelector(".b_place");
+		
+		if(b_title.value == "") {
+			alert("제목을 입력해주세요");
+			b_title.focus();
+			return;
+		}
+		
+		if(!yes.checked && !no.checked) {
+			alert("동행 모집 여부를 체크해주세요");
+			return;
+		}		
+	
+		if(yes.checked) {			
+			if(startdate.value == "" || enddate.value == "") {
+				alert("여행 기간을 입력해주세요");
+				return;
+			}
+			
+			if(b_place.value == "") {
+				alert("위치를 입력해주세요");
+				return;
+			}
+		}
+				
+		if(b_place.value != "") {			
+			const b_countrycode = document.querySelector(".b_countrycode");
+			if(b_place.value == "서울" || b_place.value == "제주도" || b_place.value == "경기도" || b_place.value == "강원도" || b_place.value == "충청도" || b_place.value == "경상도" 	|| b_place.value == "전라도" 	|| b_place.value == "인천광역시") {
+				b_countrycode.value = "kr";
+			}
+			
+			else if(b_place.value == "괌/사이판/호주/뉴질랜드") {
+				b_countrycode.value = "gu";
+			}
+			
+			else if(b_place.value == "태국" || b_place.value == "베트남" || b_place.value == "필리핀" || b_place.value == "싱가포르" || b_place.value == "말레이시아" || b_place.value == "캄보디아") {
+				b_countrycode.value = "ea";
+			}
+			
+			else if(b_place.value == "오사카" || b_place.value == "후쿠오카" || b_place.value == "도쿄" || b_place.value == "교토" || b_place.value == "삿포로") {
+				b_countrycode.value = "jp";
+			}
+			
+			else if(b_place.value == "하이난" || b_place.value == "청도" || b_place.value == "베이징" || b_place.value == "장가계") {
+				b_countrycode.value = "cn";
+			}
+			
+			else if(b_place.value == "프랑스" || b_place.value == "영국" || b_place.value == "이탈리아" || b_place.value == "스페인" || b_place.value == "독일" || b_place.value == "스위스" || b_place.value == "핀란드" || b_place.value == "노르웨이" || b_place.value == "그리스" || b_place.value == "포르투갈") {
+				b_countrycode.value = "eu";
+			}
+			
+			else if(b_place.value == "하와이" || b_place.value == "미국(동부)" || b_place.value == "미국(서부)" || b_place.value == "캐나다" || b_place.value == "중남미") {
+				b_countrycode.value = "us";
+			}
+		}
+			
+			
+		//deleteFiles 배열을 Set으로 변환하여 중복되는 값들 제거
+		const set = new Set(deleteFiles);
+		//다시 set에 있는 요소들 꺼내서 배열로 만들어서 deleteFiles에 넣기
+		deleteFiles = [...set];
+		//deleteFiles에서 undefined값 제거하기
+		deleteFiles = deleteFiles.filter((item) => { return item != undefined })
+		updateCnt.val(deleteFiles.join("\\"));
+		console.log(updateCnt.val())
+		
+		document.modifyForm.submit();
+	}
+		
+	//기존에 업로드 되어있던 파일 중 현재 변화를 시켜줄 파일의 이름
+	let temp_sysname = "";
+	
+	function upload(num,systemname){
+		if(systemname == undefined){
+			//기존 파일을 건드리지 않고 새롭게 업로드
+			$("#file"+num).click();
+		}
+		else{
+			//기존 파일을 건드리면서 업로드 버튼 클릭
+			//변화 시켜줄 파일의 이름을 임시 저장
+			//ex)temp_sysname = 'day03_배열2.png'
+			temp_sysname = systemname;
+			//변화될 파일명(삭제되어야 할 수도 있는 파일명)을 deleteFiles 배열에 추가
+			deleteFiles.push(systemname);
+			$("#file"+num).click();
+		}
+		
+	}
+	
+	$("[type=file]").change(function(e){
+		const fileTag = e.target;
+		const file = fileTag.files[0];
+		const num = Number(fileTag.id.split("e").pop());
+		
+		if(file == undefined){
+			//원본 파일의 systemname들을 담는 배열에 저장된 값
+			if(!systemnames[num]){
+				//그게 없다는 뜻은 기존에 업로드 되어있던 파일이 아닌 새로 올렸던 파일을 다시 취소하는 경우이므로 cancelFile 진행
+				cancelFile(num);
+			}
+			else{
+				//기존 파일을 건드렸다가(다른 파일로 변경했다가) 다시 클릭해서 취소한 경우
+				//ex) 현재 temp_sysname : 'day03_배열2.png'
+				//기존 파일의 orgname 추출
+				let orgname = orgnames[num];
+				//파일명이 뜨는 span태그 내부 텍스트로 기존 파일의 orgname 넣기(원래대로 되돌리기)
+				$("#file"+num+"name").text(orgname);
+				//파일을 업로드 하며 썸네일이 생겼었다면 제거
+				$("."+fileTag.id+"_cont .thumbnail").remove();
+				//원본 파일의 확장자
+				let ext = systemnames[num].split(".")[1];
+				//... 가 그림파일이라면 썸네일 다시 만들기
+				if(ext == "jpeg" || ext == "png" || ext == "jpg" || ext == "webp" || ext == "gif"){
+					const img = document.createElement("img");
+					//원본 파일의 경로를 이용해서 src 써주기
+					img.setAttribute("src","/board/thumbnail?sysname="+systemnames[num]);
+					img.setAttribute("class","thumbnail");
+					document.querySelector("."+fileTag.id+"_cont").appendChild(img);
+				}
+				
+				//기존 파일을 건드렸다가 취소했으므로, 기존 파일은 지워지면 안된다.(deleteFiles에 임시 저장했던 파일명을 없애줘야한다.)
+				for(let j=0;j<deleteFiles.length;j++){
+					if(deleteFiles[j] == temp_sysname){
+						//일단 수정 취소한 파일명이 담겨있던 방에는 undefined 넣어주기(일단 넣어놓고 224번 줄에서 한번에 처리)
+						deleteFiles[j] = undefined;
+					}
+				}
+				console.log(deleteFiles);
+			}
+		}
+		else{
+			//일반적인 파일 추가 진행
+			$("#"+fileTag.id+"name").text(file.name);
+			let ext = file.name.split(".").pop();
+			if(ext == "jpeg" || ext == "png" || ext == "jpg" || ext == "webp" || ext == "gif"){
+				$("."+fileTag.id+"_cont .thumbnail").remove();
+				const reader = new FileReader();
+				reader.onload = function(ie){
+					const img = document.createElement("img");
+					img.setAttribute("src",ie.target.result);
+					img.setAttribute("class","thumbnail");
+					document.querySelector("."+fileTag.id+"_cont").appendChild(img);
+				}
+				reader.readAsDataURL(file);
+			}
+			else{
+				$("."+fileTag.id+"_cont .thumbnail").remove();
+			}
+			
+			if(fileTag.id == "file"+i){
+				const cloneElement = $(".r"+i).clone(true);
+				i++;
+				cloneElement.attr("class","r"+i).addClass("file");
+				cloneElement.children("th").text("첨부 파일"+(i+1));
+				cloneElement.children("td").attr("class","file"+i+"_cont");
+				
+				cloneElement.find("input[type='file']").attr("name","files");
+				cloneElement.find("input[type='file']").attr("id","file"+i);
+				cloneElement.find("input[type='file']").val("");
+				
+				cloneElement.find("span").attr("id","file"+i+"name");
+				cloneElement.find("span").text("선택된 파일 없음");
+				
+				cloneElement.find("a")[0].href = "javascript:upload("+i+")";
+				cloneElement.find("a")[1].href = "javascript:cancelFile("+i+")";
+				
+				cloneElement.appendTo("#modifyForm tbody")
+				
+			}
+		}
+	})
+	
+	function cancelFile(num,systemname){
+		if(num == i){
+			return;
+		}
+		//넘겨준 systemname을 일단 deleteFiles 배열에 추가
+		//기존 파일을 삭제하는 경우라면? systemname : 기존 파일의 systemname
+		//새롭게 추가했던 파일을 삭제하는 경우라면? systemname : undefined
+		deleteFiles.push(systemname);
+		//삭제하려는 행 번호가 orgSize보다 작다면 기존에 업로드 되었던 파일을 삭제하는 경우이므로
+		if(num<orgSize){
+			//원본 파일들의 orgname과 systemname을 저장하고 있던 배열에서 해당 파일의 정보들을 삭제
+			orgnames.splice(num,1);
+			systemnames.splice(num,1);
+		}
+		$(".r"+num).remove();
+		//지워진 다음 행 부터 숫자 바꿔주기
+		for(let j=num+1;j<=i;j++){
+			console.log(j);
+			const el = $("#modifyForm tbody .r"+j);
+			el.attr("class","r"+(j-1)).addClass("file");
+			
+			el.find("th").text("첨부 파일"+j);
+			el.find("td").attr("class","file"+(j-1)+"_cont");
+			
+			el.find("input[type=file]").attr("name","files");
+			el.find("input[type=file]").attr("id","file"+(j-1));
+			
+			el.find("span").attr("id","file"+(j-1)+"name");
+			
+			//만약 지워진 다음 행에 systemname이 있었다면 upload(행번호,'apple.png') 형태로 a태그의 href를 달아주어야 함
+			//따라서 systemname 값을 그대로 연결하면  upload(행번호,apple.png) 형태로 달리기 때문에
+			//문자열 값으로 넘기기 위해 systemname이 존재하는 경우에는 양 옆에 ' 를 연결해주는 작업
+			let systemname = systemnames[j-1] == undefined ? undefined : "'"+systemnames[j-1]+"'";
+			
+			//jsp에서 javascript 백쿼트를 이용한 템플릿 문자열을 쓰는 방법
+			/*
+				참고
+				https://yermi.tistory.com/entry/JSP-JSP%EC%97%90%EC%84%9C-JavaScript-%ED%85%9C%ED%94%8C%EB%A6%BF-%EB%AC%B8%EC%9E%90%EC%97%B4-Template-literals-%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95-JavaScript-%EB%B0%B1%ED%8B%B1-%EC%82%AC%EC%9A%A9%EC%9D%B4-%EC%95%88%EB%90%A0-%EB%95%8C
+			*/
+			//만들어지는 문자열 예시
+			//원본이 없던 행이라면 -> javascript:upload(0,undefined)
+			//원본이 있던 행이라면 -> javascript:upload(0,'apple.png')
+			let format = `javascript:upload(${j-1},${sysname})`
+			console.log("format",format);
+			//위의 방법을 이용해서 a태그들의 href 달아주기
+			el.find("a")[0].href = `javascript:upload(${j-1},${sysname})`;
+			el.find("a")[1].href = `javascript:cancelFile(${j-1},${sysname})`;
+		}
+		i--;
+		console.log(deleteFiles);
+	}
+	
+	
+	// ----------------------------------------------------------------------------
+	
+	let mapModal = $("#modal");
+	let geocoder = new google.maps.Geocoder();
+	$(document).ready(function(){
+		//썸머노트 설정값
+	    $('#summernote').summernote({        
+	        codeviewFilter: false, // 코드 보기 필터 비활성화
+	            codeviewIframeFilter: false, // 코드 보기 iframe 필터 비활성화
+	            lang: 'ko-KR',
+	            placeholder: '장소의 사진이나 메모를 작성하세요',
+	            width: 950,
+	            maxWidth: 950,
+	            height: 500,
+	            maxHeight: 1000,
+	            focus : true,
+	            toolbar: [
+	                ['style', ['style']], // 글자 스타일 설정 옵션
+	                ['fontsize', ['fontsize']], // 글꼴 크기 설정 옵션
+	                ['fontname', ['fontname']],
+	                ['font', ['bold', 'underline', 'clear']], // 글자 굵게, 밑줄, 포맷 제거 옵션
+	                ['color', ['color']], // 글자 색상 설정 옵션
+	                ['table', ['table']], // 테이블 삽입 옵션
+	                ['para', ['ul', 'ol', 'paragraph']], // 문단 스타일, 순서 없는 목록, 순서 있는 목록 옵션
+	                ['height', ['height']], // 에디터 높이 조절 옵션
+	                ['insert', ['picture', 'link', 'video']], // 이미지 삽입, 링크 삽입, 동영상 삽입 옵션
+	                ['view', ['codeview', 'fullscreen', 'help']], // 코드 보기, 전체 화면, 도움말 옵션
+	            ],
+	            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체','Nanum Gothic'],
+	            fontSizes: [
+	                '8', '9', '10', '11', '12', '14', '16', '18',
+	                '20', '22', '24', '28', '30', '36', '50', '72',
+	            ], // 글꼴 크기 옵션
+	            styleTags: [
+	                'p',  // 일반 문단 스타일 옵션
+	                {
+	                    title: 'Blockquote',
+	                    tag: 'blockquote',
+	                    className: 'blockquote',
+	                    value: 'blockquote',
+	                },  // 인용구 스타일 옵션
+	                'pre',  // 코드 단락 스타일 옵션
+	                {
+	                    title: 'code_light',
+	                    tag: 'pre',
+	                    className: 'code_light',
+	                    value: 'pre',
+	                },  // 밝은 코드 스타일 옵션
+	                {
+	                    title: 'code_dark',
+	                    tag: 'pre',
+	                    className: 'code_dark',
+	                    value: 'pre',
+	                },  // 어두운 코드 스타일 옵션
+	                'h1', 'h2', 'h3', 'h4', 'h5', 'h6',  // 제목 스타일 옵션
+	            ],
+	         callbacks: {
+	            onImageUpload: function (files) {
+	               uploadSummernoteImageFile(files[0],this);
+	            },
+	            onMediaDelete: function ($target, editor, $editable) {
+	                if (confirm('이미지를 삭제 하시겠습니까?')) {
+	                    var deletedImageUrl = $target
+	                        .attr('src')
+	                        .split('/')
+	                        .pop()
+	                    // ajax 함수 호출
+	                    deleteSummernoteImageFile(deletedImageUrl)
+	                }
+	            },
+	        },
+	    });
+		
+		let defaultLocationName = $(".b_place").val() == "" ? "대한민국" : $(".b_place").val();
+
+		$(document).on("click","#modalOnBtn", function(){
+			mapModal.show();
+			geocodeLocation(defaultLocationName);
+		});
+				
+		function initMap(location) {
+		        map = new google.maps.Map(document.getElementById('map'), {
+		            center: location,
+		            zoom: 11
+		        });
+
+		        input = document.getElementById('pac-input');
+		        searchBox = new google.maps.places.SearchBox(input);
+
+		        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+		        map.addListener('bounds_changed', function() {
+		            searchBox.setBounds(map.getBounds());
+		        });
+
+		        searchBox.addListener('places_changed', function() {
+		            var places = searchBox.getPlaces();
+
+		            if (places.length == 0) {
+		                return;
+		            }
+
+		            // 기존 마커 제거
+		            if (marker) {
+		                marker.setMap(null);
+		            }
+
+		            var bounds = new google.maps.LatLngBounds();
+		            var place = places[0]; // 첫 번째 장소만 사용
+
+		            if (!place.geometry) {
+		                return;
+		            }
+
+		            // 새로운 마커 생성 및 설정
+		            marker = new google.maps.Marker({
+		                map: map,
+		                title: place.name,
+		                position: place.geometry.location
+		            });
+
+		            $('#description').text(place.formatted_address);
+		            if($('#description').text() !== ""){
+		                $('.place_select_btn').addClass('on');
+		            }else{
+		                $('.place_select_btn').removeClass('on');
+		            }
+
+		            if (place.geometry.viewport) {
+		                bounds.union(place.geometry.viewport);
+		            } else {
+		                bounds.extend(place.geometry.location);
+		            }
+
+		            map.fitBounds(bounds);
+		        });
+
+		        // 클릭 이벤트 추가
+		        map.addListener('click', function(event) {
+		            // 새로운 클릭 지점의 위도와 경도
+		            var clickedLocation = event.latLng;
+		            
+		            // 기존 마커 제거
+		            if (marker) {
+		                marker.setMap(null);
+		            }
+
+		            // 새로운 마커 생성
+		            marker = new google.maps.Marker({
+		                position: clickedLocation,
+		                map: map
+		            });
+
+		            // 마커 위치를 주소로 변환하여 표시
+		            geocoder.geocode({ 'location': clickedLocation }, function(results, status) {
+		                if (status === 'OK') {
+		                    if (results[0]) {
+		                        $('#description').text(results[0].formatted_address);
+		                        $('.place_select_btn').addClass('on');
+		                    } else {
+		                        window.alert('No results found');
+		                    }
+		                } else {
+		                    window.alert('Geocoder failed due to: ' + status);
+		                }
+		            });
+		        });
+		    }
+				
+	})
+	function geocodeLocation(locationName) {
+       geocoder.geocode({ 'address': locationName }, function(results, status) {
+           if (status === 'OK') {
+               if (!map) {
+                   initMap(results[0].geometry.location);
+               } else {
+                   map.setCenter(results[0].geometry.location);
+               }
+           } else {
+               alert('Geocode was not successful for the following reason: ' + status);
+           }
+       });
+   }
+
+	function uploadSummernoteImageFile(file, editor) {
+	    let data = new FormData();
+		data.append("file", file);
+		$.ajax({
+			data : data,
+			type : "POST",
+			url : "/board/SummerNoteImageFile",
+			contentType : false,
+			processData : false,
+			success : function(result){
+				$(editor).summernote("insertImage",result);
+			},
+			error: function(){
+				console.log("파일 올리기 오류");
+			}
+		});
+	}
+	
+	function deleteSummernoteImageFile(imageName) {
+	    data = new FormData()
+	    data.append('file', imageName)
+	    $.ajax({
+	        data: data,
+	        type: 'POST',
+	        url: '/board/deleteSummernoteImageFile',
+	        contentType: false,
+	        enctype: 'multipart/form-data',
+	        processData: false,
+	    })
+	}
+</script>
+</html>

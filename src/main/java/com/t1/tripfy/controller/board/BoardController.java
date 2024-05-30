@@ -53,33 +53,76 @@ public class BoardController {
 		}
 		
 		List<BoardDTO> list = new ArrayList<BoardDTO>();
+		List<BoardFileDTO> thumbnails = new ArrayList<BoardFileDTO>();
 		
 		if(method != null && !method.isEmpty()) {  // sort 파라미터 있는 경우(/board/list?sort="")
 			
 			switch (method) {
 			case "recent": 
 				list = service.getList(cri);
+				
+				for(int i = 0; i < list.size(); i++) {
+					long boardnum = list.get(i).getBoardnum();
+					BoardFileDTO thumbnail = service.getThumbnail(boardnum);
+					
+					if(thumbnail != null) {						
+						thumbnails.add(thumbnail);
+					}
+				}
+				
 				break;
 			
 			case "popular":
 				list = service.getpopularList(cri);
+				
+				for(int i = 0; i < list.size(); i++) {
+					long boardnum = list.get(i).getBoardnum();
+					BoardFileDTO thumbnail = service.getThumbnail(boardnum);
+					
+					if(thumbnail != null) {						
+						thumbnails.add(thumbnail);
+					}
+				}
+				
 				break;
 				
 			case "like":
 				list = service.getlikeList(cri);
+				
+				for(int i = 0; i < list.size(); i++) {
+					long boardnum = list.get(i).getBoardnum();
+					BoardFileDTO thumbnail = service.getThumbnail(boardnum);
+					
+					if(thumbnail != null) {						
+						thumbnails.add(thumbnail);
+					}
+				}
+				
 				break;
 			}
 		}
 		
 		else {  // sort 파라미터 없을 경우(/board/list 요청 시)
 			list = service.getList(cri);
+			
+			for(int i = 0; i < list.size(); i++) {
+				long boardnum = list.get(i).getBoardnum();
+				BoardFileDTO thumbnail = service.getThumbnail(boardnum);
+				
+				if(thumbnail != null) {						
+					thumbnails.add(thumbnail);
+				}
+			}
 		}
+		
 		System.out.println(cri);
 		System.out.println("sort: " + method);
 		
 		model.addAttribute("sort", method);
 		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
+		model.addAttribute("thumbnails", thumbnails);
+		System.out.println("thumbnails: " + thumbnails);
 		System.out.println("pageMaker:" + new PageDTO(service.getTotal(cri), cri));
 	}
 	
@@ -104,32 +147,74 @@ public class BoardController {
 		System.out.println(cri);
 		
 		List<BoardDTO> sortlist = new ArrayList<BoardDTO>();
+		List<BoardFileDTO> sortthumbnails = new ArrayList<BoardFileDTO>();
 		
 		if(method != null && !method.isEmpty()) {  // sort 파라미터 있는 경우(/board/list?sort="")
 			
 			switch (method) {
 			case "recent": 
 				sortlist = service.getList(cri);
+				
+				for(int i = 0; i < sortlist.size(); i++) {
+					long boardnum = sortlist.get(i).getBoardnum();
+					BoardFileDTO sortthumbnail = service.getThumbnail(boardnum);
+					
+					if(sortthumbnail != null) {						
+						sortthumbnails.add(sortthumbnail);
+					}
+				}
+				
 				break;
 			
 			case "popular":
 				sortlist = service.getpopularList(cri);
+				
+				for(int i = 0; i < sortlist.size(); i++) {
+					long boardnum = sortlist.get(i).getBoardnum();
+					BoardFileDTO sortthumbnail = service.getThumbnail(boardnum);
+					
+					if(sortthumbnail != null) {						
+						sortthumbnails.add(sortthumbnail);
+					}
+				}
+				
 				break;
 				
 			case "like":
 				sortlist = service.getlikeList(cri);
+				
+				for(int i = 0; i < sortlist.size(); i++) {
+					long boardnum = sortlist.get(i).getBoardnum();
+					BoardFileDTO sortthumbnail = service.getThumbnail(boardnum);
+					
+					if(sortthumbnail != null) {						
+						sortthumbnails.add(sortthumbnail);
+					}
+				}
+				
 				break;
 			}
 		}
 		
 		else {  // sort 파라미터 없을 경우(/board/list 요청 시)
 			sortlist = service.getList(cri);
+			
+			for(int i = 0; i < sortlist.size(); i++) {
+				long boardnum = sortlist.get(i).getBoardnum();
+				BoardFileDTO sortthumbnail = service.getThumbnail(boardnum);
+				
+				if(sortthumbnail != null) {						
+					sortthumbnails.add(sortthumbnail);
+				}
+			}
+			
 		}
 		
 		Map<String, Object> data = new HashMap<>();
 		data.put("sortlist", sortlist);
 		data.put("pageMaker", new PageDTO(service.getTotal(cri), cri));
 		data.put("sortValue", method);
+		data.put("sortthumbnails", sortthumbnails);
 		
 		System.out.println(data);
 		
@@ -137,7 +222,7 @@ public class BoardController {
 	}
 	
 	
-	@GetMapping("get")
+	@GetMapping(value={"get", "modify"})
 	public void boardget(long boardnum, Model model) {
 	    BoardDTO board = service.getDetail(boardnum);
 	    int replyCnt = service.getReplyCnt(boardnum);
@@ -215,6 +300,12 @@ public class BoardController {
 	    	result = "실패";
 	    }
 	    return result;
+	}
+	
+	@GetMapping("thumbnail")
+	public ResponseEntity<Resource> thumbnail(String sysname) throws Exception {
+		System.out.println(sysname);
+		return service.getThumbnailResource(sysname);
 	}
 
 }

@@ -605,12 +605,17 @@
                         </div>
 
                         <div class="p_img">
-                            <img src="/images/boardimg/2.jpg" alt="">
+							<th:block th:each="thumbnail : ${thumbnails}">
+								<img th:if="${thumbnail.boardnum == board.boardnum}" src="/BoardThumnail/BoardThumnail1.png" alt="">
+							</th:block>
+                            
+							
+							<!--<img th:src="/images/boardimg/2.jpg" alt="">-->
                         </div>
                         
                         <div class="post_write">
                             <div class="post_title">[[${board.title}]]</div>
-                            <div class="post_preview">[[${board.content}]]</div>
+                            <div class="post_preview" th:utext="${board.content}"></div>
                         </div>
                     </div>
                 </a>
@@ -1123,7 +1128,7 @@
 						
 						let divWrite = $("<div>").addClass("post_write");
 						let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
-						let postPrev = $("<div>").addClass("post_preview").text(data.sortlist[i].content);
+						let postPrev = $("<div>").addClass("post_preview").html(data.sortlist[i].content);
 							
 						divWrite.append(postTitle, postPrev);
 						
@@ -1341,7 +1346,7 @@
 						
 						let divWrite = $("<div>").addClass("post_write");
 						let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
-						let postPrev = $("<div>").addClass("post_preview").text(data.sortlist[i].content);
+						let postPrev = $("<div>").addClass("post_preview").html(data.sortlist[i].content);
 							
 						divWrite.append(postTitle, postPrev);
 						
@@ -1767,7 +1772,7 @@
 							
 							let divWrite = $("<div>").addClass("post_write");
 							let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
-							let postPrev = $("<div>").addClass("post_preview").text(data.sortlist[i].content);
+							let postPrev = $("<div>").addClass("post_preview").html(data.sortlist[i].content);
 								
 							divWrite.append(postTitle, postPrev);
 							

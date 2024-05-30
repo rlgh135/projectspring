@@ -58,4 +58,8 @@ public interface BoardMapper {
 	int deleteBoard(long boardnum);
 
 	int deleteBoardaddr(long boardnum);
+
+	// boardnum으로 썸네일 가져오기
+	BoardFileDTO getThumbnail(long boardnum);
+
 }
