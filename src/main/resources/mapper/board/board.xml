@@ -145,7 +145,7 @@
 	</select>	
 	
 	<select id="getThumbnail">
-		select * from board_file where boardnum = #{boardnum} and sysname like('%${BoardThumnail}%')
+		SELECT * FROM board_file WHERE boardnum = #{boardnum} AND sysname LIKE 'BoardThumnail%'
 	</select>	
 	
 	<delete id="deleteBoard">

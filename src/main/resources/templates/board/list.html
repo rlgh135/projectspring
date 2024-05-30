@@ -607,6 +607,7 @@
                         <div class="p_img">
 							<th:block th:each="thumbnail : ${thumbnails}">
 								<img th:if="${thumbnail.boardnum == board.boardnum}" src="/BoardThumnail/BoardThumnail1.png" alt="">
+								<img th:unless="${thumbnail.boardnum == board.boardnum}" src="/images/boardimg/2.jpg" alt="">
 							</th:block>
                             
 							
