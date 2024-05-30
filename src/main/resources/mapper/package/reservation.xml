@@ -46,4 +46,7 @@
 	<select id="getForignerReservation">
 		select * from reservation where keycode=#{keycode}
 	</select>
+	<select id="getMyRservationWithPackagenum">
+		select * from reservation where userid=#{userid} and packagenum=#{packagenum}
+	</select>
 </mapper>

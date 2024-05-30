@@ -148,10 +148,14 @@
 		delete from package where packagenum = #{packagenum} 
 	</delete>
 	
-	 <insert id="saveReservation">
-	     INSERT INTO reservation (packagenum, adult_cnt, child_cnt, userid, phone, email, keycode, price, pay_method, isDelete)
-	     VALUES (#{packagenum}, #{adultCnt}, #{childCnt}, #{userid}, #{phone}, #{email}, #{keycode}, #{price}, #{payMethod}, #{isDelete})
-	 </insert>
+	<insert id="saveReservationForNonMember">
+	    insert into reservation (packagenum, adult_cnt, child_cnt, userid, phone, email, keycode, price, pay_method, isDelete, name)
+	    values (#{packagenum}, #{adultCnt}, #{childCnt}, "비회원", #{phone}, #{email}, #{keycode}, #{price}, #{payMethod}, #{isDelete}, #{name})
+	</insert>
+	<insert id="saveReservationForMember">
+    insert into reservation (packagenum, adult_cnt, child_cnt, userid, phone, email, keycode, price, pay_method, isDelete, name)
+    values (#{packagenum}, #{adultCnt}, #{childCnt}, #{userid}, #{phone}, #{email}, #{keycode}, #{price}, #{payMethod}, #{isDelete}, "회원")
+	</insert>
 	 
 	 
 	 <select id="getMyPackages">

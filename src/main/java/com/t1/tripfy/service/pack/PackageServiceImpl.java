@@ -272,9 +272,14 @@ public class PackageServiceImpl implements PackageService{
 		return pmapper.getLastNum(guidenum);
 	}
 	@Override
-	public void saveReservation(ReservationDTO reservationDTO) {
-        pmapper.saveReservation(reservationDTO);
-    }
+	public void saveReservationForNonMember(ReservationDTO reservationDTO) {
+	    pmapper.saveReservationForNonMember(reservationDTO);
+	}
+
+	@Override
+	public void saveReservationForMember(ReservationDTO reservationDTO) {
+	    pmapper.saveReservationForMember(reservationDTO);
+	}
 	//새로 추가
 		@Override
 		public List<PackageFileDTO> getFiles(long packagenum) {

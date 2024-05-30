@@ -109,9 +109,9 @@ public class BoardServiceImpl implements BoardService {
 		long boardnum = bmapper.getLastNum(board.getUserid());
 		System.out.println("보드 : "+board);
 		System.out.println("보드에이디디알 : "+boardaddr);
-		if (boardaddr.getPlacename() != null && !boardaddr.getPlacename().isEmpty()
-		    && boardaddr.getStartdate() != null && !boardaddr.getStartdate().isEmpty()
-		    && boardaddr.getEnddate() != null && !boardaddr.getEnddate().isEmpty()) {
+		if (boardaddr.getPlacename() != null && boardaddr.getPlacename() != ""
+		    && boardaddr.getStartdate() != null && boardaddr.getStartdate() != ""
+		    && boardaddr.getEnddate() != null && boardaddr.getEnddate() != "") {
 		    boardaddr.setBoardnum(boardnum);
 		    System.out.println("Boardnum set to boardaddr: " + boardaddr.getBoardnum()); 
 		    if (bmapper.insertBoardAddr(boardaddr) != 1) {
@@ -306,6 +306,18 @@ public class BoardServiceImpl implements BoardService {
 			flag = true;
 		}
 		return flag;
+	}
+//	썸네일 여러개 긁을때쓰세요
+	@Override
+	public List<BoardFileDTO> getBoardThumnailList(long boardnum) {
+		
+		return null;
+	}
+
+// 썸네일 하나 긁을때 쓰세요
+	@Override
+	public BoardFileDTO getBoardThumnail(long boardnum) {
+		return bmapper.getBoardThumnail(boardnum);
 	}
 	
 	// modify 이미지 썸네일

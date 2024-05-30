@@ -17,6 +17,7 @@ public interface UserMapper {
 	int makeDefaultBadge(String userid);
 	int addLike(long guidenum, String userid);
 	int addHugi(ReviewDTO review);
+	int insertGuide(GuideDTO guide);
 	
 	//R
 	UserDTO getUserById(String userid);
@@ -35,6 +36,7 @@ public interface UserMapper {
 	int updateUser(UserDTO user);
 	int updateProfileimg(UserImgDTO userimg);
 	int updateSogae(String userid, String introduce);
+	int updateCansle(long reservationnum, int cansleStatus);
 	
 	//D
 	int deleteLike(long guidenum, String userid);

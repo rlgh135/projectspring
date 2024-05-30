@@ -268,4 +268,16 @@ public class UserServiceImpl implements UserService{
 	public List<UserImgDTO> getAllUserImg() {
 		return umapper.getAllUserImg();
 	}
+	@Override
+	public int insertGuide(GuideDTO guide) {
+		return umapper.insertGuide(guide);
+	}
+	@Override
+	public int applyCansle(long reservationnum, int cansleStatus) {
+		return umapper.updateCansle(reservationnum, cansleStatus);
+	}
+	@Override
+	public ReservationDTO getResevationByIdPackagenum(String userid, long packagenum) {
+		return resmapper.getMyRservationWithPackagenum(userid, packagenum);
+	}
 }

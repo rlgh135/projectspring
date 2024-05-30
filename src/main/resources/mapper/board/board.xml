@@ -160,4 +160,9 @@
 		delete from board_file where sysname = #{sysname}
 	</delete>
 	
+	<select id="getBoardThumnail">
+		select * from board_file
+		where sysname = 'BoardThumnail${boardnum}''
+	</select>
+	
 </mapper>

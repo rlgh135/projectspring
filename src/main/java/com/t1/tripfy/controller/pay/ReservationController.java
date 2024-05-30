@@ -21,7 +21,11 @@ public class ReservationController {
     @PostMapping("/save_payment")
     public ResponseEntity<Map<String, Boolean>> savePayment(@RequestBody ReservationDTO reservationDTO) {
         try {
-            service.saveReservation(reservationDTO);
+            if (reservationDTO.getUserid().equals("비회원")) {
+                service.saveReservationForNonMember(reservationDTO);
+            } else {
+                service.saveReservationForMember(reservationDTO);
+            }
             Map<String, Boolean> response = new HashMap<>();
             response.put("success", true);
             return ResponseEntity.ok(response);
