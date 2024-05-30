@@ -150,7 +150,7 @@
 	
 	<insert id="saveReservationForNonMember">
 	    insert into reservation (packagenum, adult_cnt, child_cnt, userid, phone, email, keycode, price, pay_method, isDelete, name)
-	    vlaues (#{packagenum}, #{adultCnt}, #{childCnt}, "비회원", #{phone}, #{email}, #{keycode}, #{price}, #{payMethod}, #{isDelete}, #{name})
+	    values (#{packagenum}, #{adultCnt}, #{childCnt}, "비회원", #{phone}, #{email}, #{keycode}, #{price}, #{payMethod}, #{isDelete}, #{name})
 	</insert>
 	<insert id="saveReservationForMember">
     insert into reservation (packagenum, adult_cnt, child_cnt, userid, phone, email, keycode, price, pay_method, isDelete, name)
