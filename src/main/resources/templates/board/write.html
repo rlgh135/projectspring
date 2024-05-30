@@ -299,7 +299,7 @@
 		clear:both;
 	}
 	/*모달 디자인*/
-	.modal {
+	.mapmodal {
 	    display: none;
 	    position: fixed;
 	    z-index: 1500;
@@ -351,7 +351,7 @@
 	}
 
 	#map {
-	    height: 800px;
+	    height: 600px;
 	    width: 100%;
 	    margin-top: 20px;
 	    margin-bottom: 20px;
@@ -567,19 +567,20 @@
 				<button onclick="regionApply();">적용</button>
 			</div>
 		</div>
-		<div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p class="modal_title">지도 검색하기</p>
-                <input id="pac-input" class="controls" type="text" placeholder="장소 검색">
-                <div id="map"></div>
-                <p id="description"></p>
-                <div class="btn_area">
-                    <button class="place_select_btn">선택하기</button>
-                </div>
+    </div>
+	<div id="modal" class="mapmodal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p class="modal_title">지도 검색하기</p>
+            <input id="pac-input" class="controls" type="text" placeholder="장소 검색">
+            <div id="map"></div>
+            <p id="description"></p>
+            <div class="btn_area">
+                <button class="place_select_btn">선택하기</button>
             </div>
         </div>
     </div>
+	<th:block th:include="~{layout/alertModal::alertModal}"></th:block>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/summernote/summernote-lite.min.js"></script>
@@ -968,7 +969,7 @@
 		const b_place_detail = document.querySelector(".b_place_detail");
 		
 		if(b_title.value == "") {
-			alert("제목을 입력해주세요");
+			showAlertModal(2,"재붕재붕아");
 			b_title.focus();
 			return;
 		}
