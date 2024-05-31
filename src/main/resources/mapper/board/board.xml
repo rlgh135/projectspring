@@ -159,11 +159,6 @@
 	</update>
 
 	
-	<update id="updateViewCnt">
-		update board set viewcnt = #{viewcnt} where boardnum = #{boardnum}
-	</update>	
-
-	
 	<select id="getBoardaddrByBoardnum">
 		select * from boardaddr
 		where boardnum = #{boardnum}
