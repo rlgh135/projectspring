@@ -65,11 +65,10 @@ public interface BoardMapper {
 	// boardnum으로 썸네일 가져오기
 	BoardFileDTO getThumbnail(long boardnum);
 
-	// 조회수 증가
-	int updateViewCnt(@Param("boardnum") long boardnum, @Param("viewcnt") long viewcnt);
-
 	int updateBoard(BoardDTO board);
 
 	int updateBoardAddr(BoardaddrDTO boardaddr);
 
+	// 조회수 증가
+	int updateViewCnt(@Param("boardnum") long boardnum, @Param("viewcnt") long viewcnt);
 }

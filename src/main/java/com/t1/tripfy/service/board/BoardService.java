@@ -68,14 +68,12 @@ public interface BoardService {
 	// boardnum으로 썸네일 가져오기
 	BoardFileDTO getThumbnail(long boardnum);
 
+	boolean modifyBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, String updateCnt) throws Exception;
 
 	// 조회수 증가
 	boolean increaseViewCount(long boardnum);
 
 	// 유저 프로필
 	UserImgDTO getUserProfile(String userid);
-
-	boolean modifyBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, String updateCnt) throws Exception;
-
 
 }

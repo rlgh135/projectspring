@@ -251,6 +251,8 @@ public class PackageServiceImpl implements PackageService{
 
 	@Override
 	public boolean remove(long packagenum) {
+		
+		tmapper.deleteTimeline(packagenum);
 		if(pmapper.deletePack(packagenum) == 1) {
 			List<PackageFileDTO> files = pfmapper.getFiles(packagenum);
 			for(PackageFileDTO pfdto : files) {
@@ -264,6 +266,7 @@ public class PackageServiceImpl implements PackageService{
 		}
 		return false;
 	}
+	
 	@Override
 	public boolean increaseReadCount(long packagenum) {
 		PackageDTO pack = pmapper.getPackageByPackageNum(packagenum);
