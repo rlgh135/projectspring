@@ -136,16 +136,22 @@
 	<update id="addReplyCnt">
 		update board set replycnt = replycnt+1 where boardnum=#{boardnum};
 	</update>
+	
 	<update id="reduceReplyCnt">
 		update board set replycnt = replycnt-1 where boardnum=#{boardnum};
 	</update>
+	
+	<update id="updateViewCnt">
+		update board set viewcnt = #{viewcnt} where boardnum = #{boardnum}
+	</update>	
+	
 	<select id="getBoardaddrByBoardnum">
 		select * from boardaddr
 		where boardnum = #{boardnum}
 	</select>	
 	
 	<select id="getThumbnail">
-		SELECT * FROM board_file WHERE boardnum = #{boardnum} AND sysname LIKE 'BoardThumnail%'
+		select * from board_file where boardnum = #{boardnum} and sysname like 'BoardThumnail%'
 	</select>	
 	
 	<delete id="deleteBoard">

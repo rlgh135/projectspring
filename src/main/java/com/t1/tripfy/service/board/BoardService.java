@@ -10,6 +10,7 @@ import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
+import com.t1.tripfy.domain.dto.user.UserImgDTO;
 
 public interface BoardService {
 	
@@ -66,5 +67,11 @@ public interface BoardService {
 
 	// boardnum으로 썸네일 가져오기
 	BoardFileDTO getThumbnail(long boardnum);
+
+	// 조회수 증가
+	boolean increaseViewCount(long boardnum);
+
+	// 유저 프로필
+	UserImgDTO getUserProfile(String userid);
 
 }

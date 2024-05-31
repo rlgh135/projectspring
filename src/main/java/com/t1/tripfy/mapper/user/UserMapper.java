@@ -43,4 +43,7 @@ public interface UserMapper {
 	int deleteUser(String userid);
 	int deleteProfileimg(String userid);
 	int deleteHugi(ReviewDTO review);
+	
+	// 유저 프로필
+	UserImgDTO getUserProfile(String userid);
 }

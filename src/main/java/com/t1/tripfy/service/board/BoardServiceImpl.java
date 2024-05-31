@@ -28,8 +28,10 @@ import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
+import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
 import com.t1.tripfy.mapper.board.BoardReplyMapper;
+import com.t1.tripfy.mapper.user.UserMapper;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -45,6 +47,9 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private BoardReplyMapper brmapper;
+	
+	@Autowired
+	private UserMapper umapper;
 	
 	
 	//사진검사
@@ -342,6 +347,20 @@ public class BoardServiceImpl implements BoardService {
 	public BoardFileDTO getThumbnail(long boardnum) {
 		
 		return bmapper.getThumbnail(boardnum);
+	}
+	
+	// 조회수 증가
+	@Override
+	public boolean increaseViewCount(long boardnum) {
+		BoardDTO board = bmapper.getBoardByBoardNum(boardnum);
+		return bmapper.updateViewCnt(boardnum, board.getViewcnt() + 1) == 1;
+	}
+	
+	// 유저 프로필
+	@Override
+	public UserImgDTO getUserProfile(String userid) {
+		
+		return umapper.getUserProfile(userid);
 	}
 	
 }

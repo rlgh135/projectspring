@@ -82,6 +82,11 @@ CREATE TABLE `board` (
   `replycnt` bigint default 0
 );
 
+create table board_like (
+	`boardnum` bigint,
+    `userid` varchar(300)
+);
+
 CREATE TABLE `boardaddr` (
   `boardnum` bigint,
   `placename` varchar(300),
