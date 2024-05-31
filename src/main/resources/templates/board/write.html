@@ -445,9 +445,9 @@
                 <tr class="date1" style="display: none;">
                     <th><h4>여행 기간</h4></th>
                     <td>
-                        <input type="text" placeholder="출발일" class="startdate" id="startdate" name="startdate" readonly>
+                        <input type="text" placeholder="출발일" class="startdate" id="boardstartdate" name="startdate" readonly>
                         ~
-                        <input type="text" placeholder="도착일" class="enddate" id="enddate" name="enddate" readonly>
+                        <input type="text" placeholder="도착일" class="enddate" id="boardenddate" name="enddate" readonly>
                     </td>
                 </tr>
 
@@ -582,7 +582,6 @@
     </div>
 	<th:block th:include="~{layout/alertModal::alertModal}"></th:block>
 </body>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/summernote/summernote-lite.min.js"></script>
 <script src="/js/summernote/summernote-ko-KR.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -943,7 +942,7 @@
 	}
 	
 	// 여행 기간 선택하는 달력
-	flatpickr("#startdate", {
+	flatpickr("#boardstartdate",{
 	    mode: "range",
 	    dateFormat: "Y-m-d",
 		minDate: "today",
@@ -951,8 +950,8 @@
 	        if (selectedDates.length === 2) {
 	            const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
 	            const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
-	            document.getElementById("startdate").value = startDate;
-	            document.getElementById("enddate").value = endDate;
+	            document.getElementById("boardstartdate").value = startDate;
+	            document.getElementById("boardenddate").value = endDate;
 	        }
 	    }
 	});
@@ -963,7 +962,7 @@
 		const b_title = document.querySelector(".b_title");
 		const yes = document.getElementById("yes");
 		const no = document.getElementById("no");
-		const startdate = document.getElementById("startdate");
+		const startdate = document.getElementById("boardstartdate");
 		const enddate = document.getElementById("enddate");
 		const b_place = document.querySelector(".b_place");
 		const b_place_detail = document.querySelector(".b_place_detail");
