@@ -226,7 +226,7 @@ public class BoardController {
 		String requestURI = req.getRequestURI();
 		HttpSession session = req.getSession();
 		String loginUser = (String) session.getAttribute("loginUser");
-		
+
 	    BoardDTO board = service.getDetail(boardnum);
 	    int replyCnt = service.getReplyCnt(boardnum);
 
