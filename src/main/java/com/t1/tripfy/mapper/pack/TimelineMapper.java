@@ -16,6 +16,8 @@ public interface TimelineMapper {
 	TimelineDTO getLastDetailNum(TimelineDTO tl);
 	TimelineDTO getTimeLineContent(TimelineDTO tl);
 	int tlUpdateContents(TimelineDTO tl);
+	
+	boolean deleteTimeline(long packagenum);
 }
 
 
