@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t1.tripfy.domain.dto.chat.MessageDTO;
 import com.t1.tripfy.domain.dto.chat.MessagePayload;
-import com.t1.tripfy.domain.dto.chat.payload.ChatRoomEnterMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
 
 /* 위치?
  * @Component 붙이고 configuration로 옮기기?
@@ -19,6 +19,10 @@ import com.t1.tripfy.domain.dto.chat.payload.ChatRoomEnterMessagePayload;
  * MessageDTO 형식?
  * 거 그냥 제네릭 대신 인터페이스 타입을 박으면 되는거 아닌가
  *   안됨 안되드라 아마 어떤 구현체가 들어갈지 명시가 안되서 그런가싶긴 한데
+ * */
+
+/**
+ * <p>-> c.t.t.domain.dto.chat.MessageDTO<br>@JsonDeserialize(using=ChatMessgeDTODeserializer.class)
  * */
 public class ChatMessageDTODeserializer extends JsonDeserializer<MessageDTO<? extends MessagePayload>> {
 	@Override

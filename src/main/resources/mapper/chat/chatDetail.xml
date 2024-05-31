@@ -39,4 +39,17 @@
 			chat_detail_idx DESC
 		LIMIT 1
 	</select>
+	<!-- 
+		특정 채팅방의 메시지 최근순 m번째부터 n개 가져오기
+	-->
+	<select id="selectBulkMessagesByChatRoomIdx">
+		SELECT * 
+		FROM chat_detail
+		WHERE 
+			chat_room_idx = #{chatRoomIdx}
+		ORDER BY 
+			chat_detail_idx DESC
+		LIMIT 
+			#{m}, #{n};
+	</select>
 </mapper>

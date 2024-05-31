@@ -212,6 +212,8 @@ async function connectWebSocket() {
 	};
 	WEBSOCKET.onmessage = (e) => {
 		console.log("WebSocket received msg");
+		console.log(e.data);
+		console.log(JSON.parse(e.data));
 		broadcastMsg("WebSocket", e.data);
 	};
 	WEBSOCKET.onerror = (e) => {

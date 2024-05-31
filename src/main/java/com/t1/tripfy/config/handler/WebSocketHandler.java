@@ -1,18 +1,25 @@
 package com.t1.tripfy.config.handler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t1.tripfy.domain.dto.chat.MessageDTO;
 import com.t1.tripfy.domain.dto.chat.MessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.sender.ChatFailedMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.sender.ChatFailedMessagePayload.ChatFailReason;
+import com.t1.tripfy.service.chat.ChatService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,12 +34,17 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	// 또한 ping/pong 시에도 임마를 순회하면서 쏴준다
 	private static final HashMap<String, WebSocketSession> WEBSOCKET_SESSIONS = new HashMap<>();
 	
+	// userid - WebsocketSession
+	// chatRoomIdx - userid
+	private static final HashMap<Long, List<String>> OPENED_CHAT_INFO = new HashMap<>();
+	
 	//jackson 직렬/역직렬화용
 	@Autowired
 	private ObjectMapper objectMapper;
-//	@Autowired
-//	private JavaType javaType;
-
+	
+	@Autowired @Qualifier("chatServiceImpl")
+	private ChatService chatServiceImpl;
+	
 	/* !!중요 240524
 	 * https://velog.io/@typo/sharing-websocket-connections-betwwen-tabs-and-windows
 	 * 웹소켓도 SSE처럼 웹페이지별임
@@ -84,11 +96,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		
 	
 	//5. 안 읽은 채팅 개수 끌고오기
-		// ChatServiceImpl가 필요함
-		
-		
 	//6. 채팅방 리스트와 안 읽은 채팅 개수 보내주기
-		// wip
+		//이제 채팅방 리스트/안 읽은 채팅 개수쪽은 Ajax로 처리함
 	}
 
 	// 메시지 발송시
@@ -114,12 +123,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	 * */
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		//테스트 240528
-		System.out.println(message);
-		System.out.println(message.getPayload());
 		//우선 역직렬화
-		/* domain.dto.MessagePayload, Message 참조
-		 * */
+		/* domain.dto.MessagePayload, Message 참조*/
 		MessageDTO<?> receivedMsg = objectMapper.readValue(message.getPayload(), 
 				objectMapper.getTypeFactory()
 						.constructParametricType(MessageDTO.class, MessagePayload.class));
@@ -129,15 +134,87 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 		if(log.isDebugEnabled()) {
 			log.debug("msg received, WebSocket, userid={}, msg={}", receivedMsg.getSenderId(), receivedMsg);
+			log.debug("msg ACT={}", receivedMsg.getAct());
+			log.debug("msg value={}", receivedMsg);
 		}
+		
+		//송신용 객체 생성
+		MessageDTO<? extends MessagePayload> sendingMsg;
 		
 		//receivedMsg.act 값을 기준으로 분기
 		switch(receivedMsg.getAct()) {
 		case "chatRoomEnter": //  -> MessageDTO<ChatRoomEnterMessagePayload>
 			//채팅방 진입 요청
-			log.debug("와시발 여기까지 왔다, act={}", receivedMsg.getAct());
-			log.debug("receivedMsg={}", receivedMsg);
-			log.debug("serialized={}", objectMapper.writeValueAsString(receivedMsg));
+			
+			Long chatRoomIdx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
+			
+			//진입하려는 채팅방이 이미 열린(OPENED_CHAT_INFO에 있는지) 채팅방인지 확인
+			if(!OPENED_CHAT_INFO.containsKey(chatRoomIdx)) {
+				//닫혀있는 경우 키밸류 생성 후 senderId 삽입
+				OPENED_CHAT_INFO.put(chatRoomIdx, createValueObjectOfOPENED_CHAT_INFO());
+				OPENED_CHAT_INFO.get(chatRoomIdx).add(receivedMsg.getSenderId());
+				//서비스 찍기
+				if(null == (sendingMsg = chatServiceImpl.chatRoomEnterHandling(receivedMsg))) {
+					//조회 실패시 처리
+					// 이거 좀 정리하자 -240531
+					session.sendMessage(new TextMessage(
+							objectMapper.writeValueAsString(
+									new MessageDTO<ChatFailedMessagePayload>()
+										.setAct(receivedMsg.getAct())
+										.setPayload(
+												new ChatFailedMessagePayload()
+													.setReason(
+															ChatFailReason.SERVER_FAIL
+													)
+										)
+							)
+					));
+					return;
+				}
+				//receiverId 삽입
+				OPENED_CHAT_INFO.get(chatRoomIdx).add(sendingMsg.getReceiverId());
+			} else {
+				//열려있는 경우
+				if(null == (sendingMsg = chatServiceImpl.chatRoomEnterHandling(receivedMsg))) {
+					//조회 실패시 처리
+					session.sendMessage(new TextMessage(
+							objectMapper.writeValueAsString(
+									new MessageDTO<ChatFailedMessagePayload>()
+										.setAct(receivedMsg.getAct())
+										.setPayload(
+												new ChatFailedMessagePayload()
+													.setReason(
+															ChatFailReason.SERVER_FAIL
+													)
+										)
+							)
+					));
+					return;
+				}
+			}
+			/*테스트용*/
+//			if(((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx() == 6) {
+//				session.sendMessage(new TextMessage(
+//						objectMapper.writeValueAsString(
+//								new MessageDTO<ChatFailedMessagePayload>()
+//									.setAct(receivedMsg.getAct())
+//									.setPayload(
+//											new ChatFailedMessagePayload()
+//												.setReason(
+//														ChatFailReason.SERVER_FAIL
+//												)
+//									)
+//						)
+//				));
+//				return;
+//			}
+			
+			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg)));
+			break;
+		case "chatRoomLeave":
+			//채팅방 이탈 요청
+			/*이거 여기(정상적 이탈)만이 아니라 afterConnClosed 쪽(비정상적 이탈) 시에도 처리해줘야할지도
+			 * 이탈자 userid로 존재하는 모든 캐시 날리기 정도?*/
 			break;
 		default:
 			//오류 처리 등?
@@ -157,5 +234,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		if(WEBSOCKET_SESSIONS.containsValue(session)) {
 			WEBSOCKET_SESSIONS.remove(session.getAttributes().get("loginUser"));
 		}
+	}
+	
+	//==========================================================================================
+	//== AOP ===================================================================================
+	private List<String> createValueObjectOfOPENED_CHAT_INFO() {
+		return new ArrayList<String>();
 	}
 }

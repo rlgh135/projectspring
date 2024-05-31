@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.t1.tripfy.domain.dto.chat.ChatDetailDTO;
 import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
+import com.t1.tripfy.domain.dto.chat.MessageDTO;
+import com.t1.tripfy.domain.dto.chat.MessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.sender.ChatDetailBulkMessagePayload;
 import com.t1.tripfy.mapper.chat.ChatDetailMapper;
 import com.t1.tripfy.mapper.chat.ChatInvadingMapper;
 import com.t1.tripfy.mapper.chat.ChatRoomMapper;
@@ -25,9 +29,68 @@ public class ChatServiceImpl implements ChatService {
 	@Autowired
 	private ChatInvadingMapper chatInvadingMapper;
 	
+	/*
+	 	중요!!
+	 	기능을 기준으로 메서드 나눌것
+	*/
+	
 	@Override
 	public Long createChat(String userid, Long packagenum) {
 		return null;
+	}
+	
+	//채팅방 진입
+	/*해야할거
+	 * 해당 채팅방의 캐시 존재여부 확인
+	 *  ㄴ 없을 경우 생성, userid 등록
+	 *  ㄴ 있는 경우 userid 등록
+	 * 최근채팅 n개 모아서 보내주기
+	 *  ㄴ 캐시 있는경우 우선 캐시 순회, 캐시의 메시지(최근 채팅방캐시 개설 후 수신 메시지) 가져오기
+	 *      ㄴ 일단 현재는 캐시 구현 x - 무조건 DB 조회 -240531
+	 *  ㄴ 캐시가 없거나 캐시 메시지가 n개 미만인 경우 DB 추가순회
+	 * 해당 채팅방/userid의 chat_user.chat_detail_idx 갱신하기
+	 * */
+	@Override
+	public MessageDTO<ChatDetailBulkMessagePayload> chatRoomEnterHandling(MessageDTO<? extends MessagePayload> receiveMsg) {
+		ChatDetailBulkMessagePayload bulk = new ChatDetailBulkMessagePayload();
+		String opperUserid;
+		
+		//상대 유저의 이름이 오지 않았으면 DB서 가져온다
+		if(null == (opperUserid = receiveMsg.getReceiverId())) {
+			if(null == (opperUserid = chatUserMapper.selectOpponentUserid(((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx()
+					, receiveMsg.getSenderId()))) {
+				//조회 실패시 처리
+				return null;
+			}
+		}
+		
+		//채팅방의 제일 최근부터 메시지 30개를 가져온다
+		if(null == (bulk.setChatDetails(chatDetailMapper.selectBulkMessagesByChatRoomIdx(
+				((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(), 
+				0, 
+				30))).getChatDetails()) {
+			//조회 실패시 처리
+			return null;
+		}
+
+		//나머지 속성 부여
+		//메시지 수가 30개가 아닌경우 제일 첫 메시지를 가져온 것임으로 체크
+		bulk
+			.setRoomidx(
+					((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx())
+			.setStartChatDetailIdx(
+					bulk.getChatDetails().get(bulk.getChatDetails().size() - 1).getChatDetailIdx())
+			.setEndChatDetailIdx(
+					bulk.getChatDetails().get(0).getChatDetailIdx())
+			.setIsFirst(bulk.getChatDetails().size() < 30 ? true : false);
+		
+		//MessageDTO 구성후 반환
+		MessageDTO<ChatDetailBulkMessagePayload> msg = new MessageDTO<>();
+		return msg
+			.setAct(receiveMsg.getAct())
+			.setPayload(bulk)
+			.setSenderId(receiveMsg.getSenderId())
+			.setReceiverId(opperUserid);
 	}
 
 	//채팅방 리스트 가져오기
