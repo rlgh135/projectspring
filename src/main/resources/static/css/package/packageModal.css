@@ -12,7 +12,7 @@
     justify-content: center;
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 100;
+    z-index: 2000;
 }
 
 #modalContainer.hidden {
@@ -68,199 +68,6 @@
     background-color: #2196F3;
     color: #ffffff;
 }
-/* 달력 css */
-
-input {
-padding: 22px 15px;
-border: 1px solid #CFD8DC ;
-border-radius: 4px ;
-box-sizing: border-box;
-background-color: #fff ;
-color: #000 ;
-font-size: 16px ;
-letter-spacing: 1px;
-position: relative;
-}
-
-input:focus {
--moz-box-shadow: none ;
--webkit-box-shadow: none ;
-box-shadow: none ;
-border: 1px solid #1976D2 ;
-outline-width: 0;
-}
-
-.fa-calendar {
-position: absolute;
-top: 13px;
-font-size: 20px;
-color: #1976D2;
-z-index: 1000;
-}
-
-#fa-1 {
-left: calc(50% - 40px);
-}
-
-#fa-2 {
-left: calc(100% - 40px);
-}
-
-.form-control-placeholder {
-position: absolute;
-top: -10px ;
-padding: 12px 2px 0 2px;
-opacity: 0.5;
-}
-
-#end-p {
-left: calc(50% + 4px);
-}
-
-.form-control:focus + .form-control-placeholder,
-.form-control:valid + .form-control-placeholder {
-font-size: 95%;
-top: 10px;
-transform: translate3d(0, -100%, 0);
-opacity: 1;
-}
-
-::placeholder {
-color: #BDBDBD;
-opacity: 1;
-}
-
-:-ms-input-placeholder {
-color: #BDBDBD;
-}
-
-::-ms-input-placeholder {
-color: #BDBDBD;
-}
-
-button:focus {
--moz-box-shadow: none ;
--webkit-box-shadow: none ;
-box-shadow: none ;
-outline-width: 0;
-}
-
-.datepicker {
-background-color: #fff;
-border-radius: 0 ;
-align-content: center ;
-padding: 0 ;
-}
-
-.datepicker-dropdown {
-top: 180px ;
-left: calc(50% - 173.5px) ;
-border-right: #1976D2;
-border-left: #1976D2;
-}
-
-.datepicker-dropdown.datepicker-orient-left:before {
-left: calc(50% - 6px) ;
-}
-
-.datepicker-dropdown.datepicker-orient-left:after {
-left: calc(50% - 5px) ;
-border-bottom-color: #1976D2;
-}
-
-.datepicker-dropdown.datepicker-orient-right:after {
-border-bottom-color: #1976D2;
-}
-
-.datepicker table tr td.today, span.focused {
-border-radius: 50% ;
-background-image: linear-gradient(#FFF3E0, #FFE0B2);
-}
-
-thead tr:nth-child(2) {
-background-color: #1976D2 ;
-}
-
-/*Weekday title*/
-thead tr:nth-child(3) th {
-font-weight: bold ;
-padding: 20px 10px ;
-color: #BDBDBD ;
-}
-
-tbody tr td {
-padding: 10px ;
-}
-
-tfoot tr:nth-child(2) th {
-padding: 10px ;
-border-top: 1px solid #CFD8DC ;
-}
-
-.cw {
-font-size: 14px ;
-background-color: #E8EAF6 ;
-border-radius: 0px ;
-padding: 0px 20px ;
-margin-right: 10px solid #fff ;
-}
-
-.old, .day, .new {
-width: 40px ;
-height: 40px ;
-border-radius: 0px ;
-}
-
-.day.old, .day.new {
-color: #E0E0E0 ;
-}
-
-.day.old:hover, .day.new:hover {
-border-radius: 50% ;
-}
-
-.old-day:hover, .day:hover, .new-day:hover, .month:hover, .year:hover, .decade:hover, .century:hover {
-border-radius: 50% ;
-background-color: #eee;
-}
-
-.active {
-border-radius: 50% ;
-background-image: linear-gradient(#1976D2, #1976D2) ;
-color: #fff ;
-}
-
-.range-start, .range-end {
-border-radius: 50% ;
-background-image: linear-gradient(#1976D2, #1976D2) ;
-}
-
-.range {
-background-color: #E3F2FD ;
-}
-
-.prev, .next, .datepicker-switch {
-border-radius: 0 ;
-padding: 10px 10px 10px 10px ;
-font-size: 18px;
-opacity: 0.7;
-color: #fff;
-}
-
-.prev:hover, .next:hover, .datepicker-switch:hover {
-background-color: inherit;
-opacity: 1;
-}
-
-@media screen and (max-width: 726px) {
-.datepicker-dropdown.datepicker-orient-right:before {
-right: calc(50% - 6px);
-}
-
-.datepicker-dropdown.datepicker-orient-right:after {
-right: calc(50% - 5px);
-}
-}
 /* 날짜입력 기준 안내문 */
 .notice{
 display: none;
@@ -286,6 +93,9 @@ font-weight: bold;
 border-radius: 20px;
 border: none;
 display: none;
+}
+#nextButton{
+	display: block;
 }
 .nxt_btn.on{
 display: block;
