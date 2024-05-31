@@ -2,11 +2,17 @@ package com.t1.tripfy.config.handler;
 
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.t1.tripfy.domain.dto.chat.MessageDTO;
+import com.t1.tripfy.domain.dto.chat.MessagePayload;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +26,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	// 메시지 전달(handleTextMessage) 시 임마를 기준으로 뿌려준다
 	// 또한 ping/pong 시에도 임마를 순회하면서 쏴준다
 	private static final HashMap<String, WebSocketSession> WEBSOCKET_SESSIONS = new HashMap<>();
+	
+	//jackson 직렬/역직렬화용
+	@Autowired
+	private ObjectMapper objectMapper;
+//	@Autowired
+//	private JavaType javaType;
 
 	/* !!중요 240524
 	 * https://velog.io/@typo/sharing-websocket-connections-betwwen-tabs-and-windows
@@ -104,6 +116,34 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		//테스트 240528
 		System.out.println(message);
+		System.out.println(message.getPayload());
+		//우선 역직렬화
+		/* domain.dto.MessagePayload, Message 참조
+		 * */
+		MessageDTO<?> receivedMsg = objectMapper.readValue(message.getPayload(), 
+				objectMapper.getTypeFactory()
+						.constructParametricType(MessageDTO.class, MessagePayload.class));
+
+		//발송자를 파악해 receivedMsg에 삽입
+		receivedMsg.setSenderId((String) session.getAttributes().get("loginUser"));
+
+		if(log.isDebugEnabled()) {
+			log.debug("msg received, WebSocket, userid={}, msg={}", receivedMsg.getSenderId(), receivedMsg);
+		}
+		
+		//receivedMsg.act 값을 기준으로 분기
+		switch(receivedMsg.getAct()) {
+		case "chatRoomEnter": //  -> MessageDTO<ChatRoomEnterMessagePayload>
+			//채팅방 진입 요청
+			log.debug("와시발 여기까지 왔다, act={}", receivedMsg.getAct());
+			log.debug("receivedMsg={}", receivedMsg);
+			log.debug("serialized={}", objectMapper.writeValueAsString(receivedMsg));
+			break;
+		default:
+			//오류 처리 등?
+			// 필요 없는 로직일 수도
+			break;
+		}
 	}
 
 	// 웹소켓 연결 해제시

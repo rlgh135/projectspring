@@ -320,10 +320,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 // 썸네일 하나 긁을때 쓰세요
-	@Override
-	public BoardFileDTO getBoardThumnail(long boardnum) {
-		return bmapper.getBoardThumnail(boardnum);
-	}
+//	@Override
+//	public BoardFileDTO getBoardThumnail(long boardnum) {
+//		return bmapper.getBoardThumnail(boardnum);
+//	}
 	
 	// modify 이미지 썸네일
 	@Override

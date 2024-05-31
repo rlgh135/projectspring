@@ -46,7 +46,7 @@ public interface BoardMapper {
 	BoardFileDTO getFileBySystemname(String systemname);
 	List<BoardFileDTO> getFiles(long boardnum);
 	//보드넘으로 보드 썸네일 긁어오기
-	BoardFileDTO getBoardThumnail(long boardnum);
+//	BoardFileDTO getBoardThumnail(long boardnum);
 	
 	// D
 	int deleteFilesBySystemname(String systemname);

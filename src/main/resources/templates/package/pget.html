@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/package/pget.css">
 </head>
 <body>
+	<div id="hiddenData" style="display: none;" th:if="${#lists.size(reserve) > 0}" th:data-maxcnt="${package.maxcnt}" th:data-reservedcnt="${reserve[0].currentCount}"></div>
     <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
     <div id="wrap" class="get">
         <div class="body_container">
@@ -22,6 +23,7 @@
                             <div class="p_title">
                                 <h3>[[${package.packageTitle}]]</h3>
                             </div>
+							
 							<div th:if="${package.guidenum == session.guideNum}" >
 							<div class="modidelete">
                                 <button><a th:href="@{/package/pmodify(packagenum=${package.packagenum})}">수정</a></button>
@@ -132,7 +134,39 @@
 	
 	const geocoder = new google.maps.Geocoder();
 	
+	const hiddenData = document.getElementById('hiddenData');
+	const maxCnt = parseInt(hiddenData.dataset.maxcnt);
+	console.log(maxCnt);
+	const reservedCnt = hiddenData.dataset.reservedcnt ? parseInt(hiddenData.dataset.reservedcnt) : 0;
+	console.log(reservedCnt);
+	
 	document.addEventListener("DOMContentLoaded", function() {
+
+		const remainingSeats = maxCnt - reservedCnt;
+		    if (remainingSeats <= 0) {
+		        // 수용 가능한 자리가 없는 경우
+		        disablePaymentButton();
+		    } else {
+		        // 수용 가능한 자리가 있는 경우에는 버튼을 활성화합니다.
+		        const payButton = document.querySelector('.paybutton button');
+		        payButton.disabled = false;
+		        payButton.style.backgroundColor = ''; // 기본 스타일로 변경
+		        payButton.innerText = '결제하기';
+		        payButton.addEventListener('click', function(event) {
+		            submitPaymentForm();
+		        });
+			}
+		
+		function disablePaymentButton() {
+		    const payButton = document.querySelector('.paybutton button');
+		    payButton.disabled = true;
+		    payButton.style.backgroundColor = 'grey'; // 원하는 스타일로 변경 가능
+		    payButton.innerText = '수용 가능한 인원이 없습니다';
+		}
+
+		
+		
+		
 		console.log(defaultLocationName);
 		console.log(zoomScope);
 	    geocoder.geocode({ 'address': defaultLocationName }, function(results, status) {
@@ -181,19 +215,33 @@
         resultElement.innerText = number;
     }
 
-    function submitPaymentForm() {
-        // 성인 및 아이 수를 가져와서 폼 필드에 설정
-        document.getElementById('adultCount').value = document.getElementById('result').innerText;
-        document.getElementById('childCount').value = document.getElementById('result_child').innerText;
-        
-        // packagenum 값을 URL에서 가져오기
-        const urlParams = new URLSearchParams(window.location.search);
-        const packagenum = urlParams.get('packagenum');
-        document.getElementById('packagenum').value = packagenum;
-        
-        // 폼 제출
-        document.getElementById('paymentForm').submit();
-    }
+	function submitPaymentForm() {
+	    // 성인 및 아이 수를 가져와서 폼 필드에 설정
+	    const adultCount = parseInt(document.getElementById('result').innerText);
+	    const childCount = parseInt(document.getElementById('result_child').innerText);
+	    const totalGuests = adultCount + childCount;
+		const remainConfirm = maxCnt - reservedCnt - totalGuests;
+	    if (totalGuests === 0) {
+	        alert('최소 1명 이상의 인원을 선택해주세요.');
+	        return; 
+	    }
+		else if(remainConfirm < 0){
+			alert("예약 가능 인원을 초과하였습니다.");
+			return;
+		}
+	
+	    document.getElementById('adultCount').value = adultCount;
+	    document.getElementById('childCount').value = childCount;
+	    
+	    // packagenum 값을 URL에서 가져오기
+	    const urlParams = new URLSearchParams(window.location.search);
+	    const packagenum = urlParams.get('packagenum');
+	    document.getElementById('packagenum').value = packagenum;
+	    
+	    // 폼 제출
+	    document.getElementById('paymentForm').submit();
+	}
+	
 	document.addEventListener("DOMContentLoaded", function() {
 	        // 메뉴 아이템을 변수에 저장
 	        const menu1 = document.getElementById('menu1');

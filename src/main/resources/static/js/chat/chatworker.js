@@ -69,10 +69,21 @@ self.onconnect = function(e) {
                 }
                 break;
             case "sendMsg":
-				console.log(e.data);
-				console.log(e.data.content);
-                WEBSOCKET.send(e.data.content);
+				console.log(e.data.payload);
+                // WEBSOCKET.send(JSON.stringify(e.data.content));
                 //웹소켓 연결시에만 받게 해야함
+
+				//reqAct로 분기
+				switch(e.data.payload.reqAct) {
+					case "chatRoomEnter": //  -> 채팅방 진입 요청
+						WEBSOCKET.send(JSON.stringify({
+							act: "chatRoomEnter", // <-- 이거 어케 스위치문 없이 통합할 수 없나
+							payload: {
+								roomidx: e.data.payload.roomidx
+							}
+						}));
+						break;
+				}
                 break;
 			case "chkConnState":
 				let state = "";

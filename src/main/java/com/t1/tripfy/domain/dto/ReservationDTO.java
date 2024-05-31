@@ -16,4 +16,14 @@ public class ReservationDTO {
     private String payMethod;
     private int isDelete;
     private String name;
+    
+    private int currentCount;
+
+    public int getCurrentCount() {
+        return currentCount;
+    }
+
+    public void setCurrentCount(int currentCount) {
+        this.currentCount = currentCount;
+    }
 }

@@ -49,8 +49,8 @@
                                     <input type="file" name="files" id="hiddenFileInput" accept="image/*" style="display: none;">
                                     <input type="hidden" name="someString" id="hiddenSomeString" value="someValue">
                                     <button type="button" onclick="submitForm()">수정완료</button>
-                                    <button><a th:href="@{/package/pget(packagenum=${package.packagenum})}">수정취소</a></button>
                                 </form>
+                                    <button><a th:href="@{/package/pget(packagenum=${package.packagenum})}">수정취소</a></button>
                             </div>
                         </div>
                         <hr>
@@ -102,9 +102,11 @@
                     <div class="maphead">
                         <h3>[[${package.regionname}]]</h>
                     </div>
-                    <hr>
-                    <div class="map"></div>
-                    <hr>
+					
+					<div class="map">
+						<div id="map"></div>
+					</div>
+					
                     <div class="mapfoot">
                         <a href="">타임라인 수정하기 ></a>
                     </div>
@@ -113,7 +115,38 @@
         </div>
     </div>
 </body>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
 <script>
+	const mapElement = document.getElementById('map');
+		const defaultLocationName = '[[${package.regionname}]]';
+		const zoomScope = 10;  // Replace with appropriate zoom level
+		
+		const geocoder = new google.maps.Geocoder();
+		
+		document.addEventListener("DOMContentLoaded", function() {
+			console.log(defaultLocationName);
+			console.log(zoomScope);
+		    geocoder.geocode({ 'address': defaultLocationName }, function(results, status) {
+		        if (status === 'OK') {
+		            const mapOptions = {
+		                zoom: zoomScope,
+		                center: results[0].geometry.location,
+		                mapTypeId: google.maps.MapTypeId.ROADMAP,
+		                disableDefaultUI: true
+		            };
+		            
+		            const map = new google.maps.Map(mapElement, mapOptions);
+		            const marker = new google.maps.Marker({
+		                position: results[0].geometry.location,
+		                map: map
+		            });
+		        } else {
+		            alert('Geocode was not successful for the following reason: ' + status);
+		        }
+		    });
+		});
+		
+		
     function submitForm() {
         document.getElementById('hiddenPackageTitle').value = document.getElementById('packageTitle').value;
         document.getElementById('hiddenAdultPrice').value = document.getElementById('adultPrice').value;

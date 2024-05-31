@@ -147,10 +147,14 @@
 								</div>
                             <div class="info">
                                 <h3>[[${board.packageTitle}]]</h3>
-                                <p>[[${board.packageContent}]]</p>
+								[[${board.startdate}]] ~
                             </div>
                             <div class="price">
                                 <h3>[[${board.adultPrice}]] 원</h3>
+								<p>최대인원 : [[${board.maxcnt}]] 명</p>
+								<p th:each="reserve : ${reserve}" th:if="${reserve.packagenum == board.packagenum}">
+									현재인원 : [[${reserve.currentCount}]]명
+								</p>
                             </div>
                             </a>
                         </div> 

@@ -49,4 +49,14 @@
 	<select id="getMyRservationWithPackagenum">
 		select * from reservation where userid=#{userid} and packagenum=#{packagenum}
 	</select>
+	<select id="getReservationCntByPackagenum">
+	   select 
+	    packagenum, 
+	    SUM(adult_cnt) as adultCnt, 
+	    SUM(child_cnt) as childCnt, 
+	    SUM(adult_cnt + child_cnt) as currentCount
+	   from reservation 
+	   where packagenum = #{packagenum}
+	   group by packagenum;
+	</select>
 </mapper>
