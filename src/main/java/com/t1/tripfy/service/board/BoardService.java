@@ -67,4 +67,6 @@ public interface BoardService {
 	// boardnum으로 썸네일 가져오기
 	BoardFileDTO getThumbnail(long boardnum);
 
+	boolean modifyBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, String updateCnt) throws Exception;
+
 }

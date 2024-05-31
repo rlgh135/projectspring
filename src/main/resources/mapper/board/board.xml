@@ -139,6 +139,18 @@
 	<update id="reduceReplyCnt">
 		update board set replycnt = replycnt-1 where boardnum=#{boardnum};
 	</update>
+	<update id="updateBoard">
+		update board
+		set title = #{title}, content = #{content}, updatecheck = 1, regionname = #{regionname}, countrycode = #{countrycode}
+		where boardnum = #{boardnum}
+	</update>
+	
+	<update id="updateBoardAddr">
+		update boardaddr
+		set placename = #{placename}, startdate = #{startdate}, enddate = #{enddate}
+		where boardnum = #{boardnum}
+	</update>
+	
 	<select id="getBoardaddrByBoardnum">
 		select * from boardaddr
 		where boardnum = #{boardnum}

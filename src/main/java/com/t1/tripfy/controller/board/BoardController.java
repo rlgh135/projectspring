@@ -223,8 +223,7 @@ public class BoardController {
 	
 	
 	@GetMapping(value={"get", "modify"})
-	public void boardget(long boardnum, Model model,HttpServletRequest req) {
-		String requestURI = req.getRequestURI();
+	public void boardget(long boardnum, Model model) {
 	    BoardDTO board = service.getDetail(boardnum);
 	    int replyCnt = service.getReplyCnt(boardnum);
 
@@ -243,7 +242,21 @@ public class BoardController {
 	    model.addAttribute("replyCnt", replyCnt);
 	    model.addAttribute("files", files);
 	}
-
+	
+	@PostMapping("modify")
+	public String modify(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, String updateCnt) throws Exception {
+		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+board);
+		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+boardaddr);
+		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+files);
+		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+updateCnt);
+		if(service.modifyBoard(board, boardaddr, files, updateCnt)) {
+			return "redirect:/board/get?boardnum=" + board.getBoardnum();
+		}
+		else {  			
+			return "redirect:/board/get?boardnum" + board.getBoardnum();
+		}
+	}
+	
 	
 	@GetMapping("write")
 	public void boardwrite() {}
