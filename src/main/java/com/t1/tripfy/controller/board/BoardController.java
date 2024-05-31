@@ -228,6 +228,16 @@ public class BoardController {
 		String loginUser = (String) session.getAttribute("loginUser");
 
 	    BoardDTO board = service.getDetail(boardnum);
+	    String userid = board.getUserid();
+	    
+	    UserImgDTO userprofile = service.getUserProfile(userid);
+	    
+	    if(userprofile == null) {
+	    	userprofile = new UserImgDTO();
+	    	userprofile.setUserid(userid);
+	    	userprofile.setSysname("profile.png");
+	    }
+	    
 	    int replyCnt = service.getReplyCnt(boardnum);
 
 	    BoardaddrDTO boardaddr = service.getBoardAddr(boardnum);
@@ -244,11 +254,12 @@ public class BoardController {
 	    // 게시글 맨 위 이미지
 	    BoardFileDTO thumbnailImg = service.getThumbnail(boardnum);
 	    
+	    
 	    if(thumbnailImg == null) {
 	    	thumbnailImg = new BoardFileDTO();
 	    	thumbnailImg.setSysname("no_img.jpg");
 	    }
-	    
+	   
 	    // 조회수
 	    if(requestURI.contains("get")) {	    	
 	    	if(!board.getUserid().equals(loginUser)) {
@@ -291,6 +302,8 @@ public class BoardController {
 	    model.addAttribute("replyCnt", replyCnt);
 	    model.addAttribute("files", files);
 	    model.addAttribute("thumbnailImg", thumbnailImg);
+	    model.addAttribute("userprofile", userprofile);
+	    System.out.println("userprofile: " + userprofile);
 	    
 	    return "board/get";
 	}
