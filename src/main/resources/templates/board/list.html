@@ -384,7 +384,13 @@
         align-items: center;
         border-radius: 12px;
     }
-
+	
+	.post > .p_img > img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+	
     .posts > a:hover {
         cursor: pointer;
     }
@@ -423,7 +429,7 @@
     }
 	
     .b_pagenation {
-        margin-top: 70px;
+        margin: 70px 0;
         display: flex;
         justify-content: center;
     }
@@ -591,26 +597,21 @@
             <!-- 게시글 목록 -->
             <section class="posts">
                 <!-- 게시글 -->
-                <a th:if="${list != null and list.size > 0}" th:each="board:${list}" th:href="@{/board/get(boardnum=${board.boardnum})}">
+                <a th:if="${list != null and list.size > 0}" th:each="board, i:${list}" th:href="@{/board/get(boardnum=${board.boardnum})}">
                     <div class="post">
                         <div class="guide">
-                            <img src="/images/boardimg/profile.png" alt="">
+                            <img th:src="'/BoardThumnail/' + ${profiles[i.index].sysname}" alt="">
                             <span>[[${board.userid}]]</span>
 							
 							<div class="cnts">
-							    <span><img src="/images/boardimg/emptyheart.png" alt=""><span>[[${board.likecnt}]]</span></span>
+							    <span><img src="/images/boardimg/emptyheart.png" alt="" class="likecntImg"><span>[[${board.likecnt}]]</span></span>
 							    <span> <img src="/images/boardimg/comments.png" alt=""><span>[[${board.replycnt}]]</span></span>
 							    <span> <img src="/images/boardimg/viewcnt.png" alt=""><span>[[${board.viewcnt}]]</span></span>
 							</div>
                         </div>
 
                         <div class="p_img">
-							<th:block th:each="thumbnail : ${thumbnails}">
-								<img th:if="${thumbnail.boardnum == board.boardnum}" src="/BoardThumnail/BoardThumnail1.png" alt="">
-								<img th:unless="${thumbnail.boardnum == board.boardnum}" src="/images/boardimg/2.jpg" alt="">
-							</th:block>
-                            
-							
+							<img th:src="'/BoardThumnail/' + ${thumbnails[i.index].sysname}" alt="">
 							<!--<img th:src="/images/boardimg/2.jpg" alt="">-->
                         </div>
                         
@@ -1098,7 +1099,8 @@
 						let divPost = $("<div>").addClass("post");
 							
 						let divGuide = $("<div>").addClass("guide");
-						let profile = $("<img>").attr("src", "/images/boardimg/profile.png");
+						let profileImg = data.sortprofiles[i] && data.sortprofiles[i].sysname ? data.sortprofiles[i].sysname : "profile.png";
+						let profile = $("<img>").attr("src", "/BoardThumnail/" + profileImg);
 						let spanTag = $("<span>").text(data.sortlist[i].userid);
 						
 						divGuide.append(profile, spanTag);
@@ -1123,9 +1125,10 @@
 						divGuide.append(divCnts);
 							
 						let divpImg = $("<div>").addClass("p_img");
-						let boardimg = $("<img>").attr("src", "/images/boardimg/2.jpg");
-						
+						let thumbnail = data.sortthumbnails[i] && data.sortthumbnails[i].sysname ? data.sortthumbnails[i].sysname : "no_img.jpg";
+						let boardimg = $("<img>").attr("src", "/BoardThumnail/" + thumbnail).attr("alt", "");
 						divpImg.append(boardimg);
+						
 						
 						let divWrite = $("<div>").addClass("post_write");
 						let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
@@ -1316,7 +1319,8 @@
 						let divPost = $("<div>").addClass("post");
 							
 						let divGuide = $("<div>").addClass("guide");
-						let profile = $("<img>").attr("src", "/images/boardimg/profile.png");
+						let profileImg = data.sortprofiles[i] && data.sortprofiles[i].sysname ? data.sortprofiles[i].sysname : "profile.png";
+						let profile = $("<img>").attr("src", "/BoardThumnail/" + profileImg);
 						let spanTag = $("<span>").text(data.sortlist[i].userid);
 						
 						divGuide.append(profile, spanTag);
@@ -1341,8 +1345,8 @@
 						divGuide.append(divCnts);
 							
 						let divpImg = $("<div>").addClass("p_img");
-						let boardimg = $("<img>").attr("src", "/images/boardimg/2.jpg");
-						
+						let thumbnail = data.sortthumbnails[i] && data.sortthumbnails[i].sysname ? data.sortthumbnails[i].sysname : "no_img.jpg";
+						let boardimg = $("<img>").attr("src", "/BoardThumnail/" + thumbnail).attr("alt", "");
 						divpImg.append(boardimg);
 						
 						let divWrite = $("<div>").addClass("post_write");
@@ -1742,7 +1746,8 @@
 							let divPost = $("<div>").addClass("post");
 								
 							let divGuide = $("<div>").addClass("guide");
-							let profile = $("<img>").attr("src", "/images/boardimg/profile.png");
+							let profileImg = data.sortprofiles[i] && data.sortprofiles[i].sysname ? data.sortprofiles[i].sysname : "profile.png";
+							let profile = $("<img>").attr("src", "/BoardThumnail/" + profileImg);
 							let spanTag = $("<span>").text(data.sortlist[i].userid);
 							
 							divGuide.append(profile, spanTag);
@@ -1767,8 +1772,8 @@
 							divGuide.append(divCnts);
 								
 							let divpImg = $("<div>").addClass("p_img");
-							let boardimg = $("<img>").attr("src", "/images/boardimg/2.jpg");
-							
+							let thumbnail = data.sortthumbnails[i] && data.sortthumbnails[i].sysname ? data.sortthumbnails[i].sysname : "no_img.jpg";
+							let boardimg = $("<img>").attr("src", "/BoardThumnail/" + thumbnail).attr("alt", "");
 							divpImg.append(boardimg);
 							
 							let divWrite = $("<div>").addClass("post_write");
@@ -1877,6 +1882,18 @@
 				$(this).css("color", '#2196F3');
 				$(this).css("border-color", '#2196F3');
 			}
+		});
+		
+		$(".likecntImg").on("click", function(e) {
+		    console.log("e.target: " + e.target)
+		    e.stopPropagation(); // 이벤트 전파 막음
+		    
+		    // 클릭된 요소가 <a> 태그의 하위 요소인지 확인
+		    if ($(this).closest("a").length > 0) {
+		        e.preventDefault(); // 링크 이동을 막음
+				
+				like(e);
+		    }
 		});
 	});
 	
@@ -2153,6 +2170,16 @@
 			location.replace("/board/write")
 		}
 	}
+	
+	function like(e) {
+		let loginUser = /*[[${session.loginUser}]]*/"";
+		
+		if(loginUser == null) {
+			alert("로그인 후 이용해주세요.");
+		}
+	}
+	
+	
 	
 
 </script>

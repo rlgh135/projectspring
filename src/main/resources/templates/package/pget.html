@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="/css/package/pget.css">
 </head>
 <body>
-	<div id="hiddenData" style="display: none;" th:if="${#lists.size(reserve) > 0}" th:data-maxcnt="${package.maxcnt}" th:data-reservedcnt="${reserve[0].currentCount}"></div>
+	<div id="hiddenData" style="display: none;" 
+	     th:data-maxcnt="${package.maxcnt}" 
+	     th:data-reservedcnt="${#lists.size(reserve) > 0 ? reserve[0].currentCount : 0}"></div>
     <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
     <div id="wrap" class="get">
         <div class="body_container">
@@ -37,6 +39,7 @@
                                 <div class="adultchild">
                                     <div class="ac_head">
                                         <h3>인원선택 (필수)</h3>
+										
                                     </div>
                                     <hr>
                                     <div class="ac_con">
@@ -130,32 +133,34 @@
 <script>
 	const mapElement = document.getElementById('map');
 	const defaultLocationName = '[[${package.regionname}]]';
-	const zoomScope = 10;  // Replace with appropriate zoom level
-	
+	const zoomScope = 10;  // Replace with appropriate zoom level	
 	const geocoder = new google.maps.Geocoder();
 	
-	const hiddenData = document.getElementById('hiddenData');
-	const maxCnt = parseInt(hiddenData.dataset.maxcnt);
-	console.log(maxCnt);
-	const reservedCnt = hiddenData.dataset.reservedcnt ? parseInt(hiddenData.dataset.reservedcnt) : 0;
-	console.log(reservedCnt);
 	
 	document.addEventListener("DOMContentLoaded", function() {
-
-		const remainingSeats = maxCnt - reservedCnt;
-		    if (remainingSeats <= 0) {
-		        // 수용 가능한 자리가 없는 경우
-		        disablePaymentButton();
-		    } else {
-		        // 수용 가능한 자리가 있는 경우에는 버튼을 활성화합니다.
-		        const payButton = document.querySelector('.paybutton button');
-		        payButton.disabled = false;
-		        payButton.style.backgroundColor = ''; // 기본 스타일로 변경
-		        payButton.innerText = '결제하기';
-		        payButton.addEventListener('click', function(event) {
-		            submitPaymentForm();
-		        });
-			}
+	    const hiddenData = document.getElementById('hiddenData');
+		console.log(hiddenData);
+	    if (hiddenData) {
+	        const maxCnt = parseInt(hiddenData.dataset.maxcnt);
+	        console.log(maxCnt);
+	        const reservedCnt = hiddenData.dataset.reservedcnt ? parseInt(hiddenData.dataset.reservedcnt) : 0;
+	        console.log(reservedCnt);
+	
+	        const remainingSeats = maxCnt - reservedCnt;
+	        if (remainingSeats <= 0) {
+	            // 수용 가능한 자리가 없는 경우
+	            disablePaymentButton();
+	        } else {
+	            // 수용 가능한 자리가 있는 경우에는 버튼을 활성화합니다.
+	            const payButton = document.querySelector('.paybutton button');
+	            payButton.disabled = false;
+	            payButton.style.backgroundColor = ''; // 기본 스타일로 변경
+	            payButton.innerText = '결제하기';
+	            payButton.addEventListener('click', function(event) {
+	                submitPaymentForm();
+	            });
+	        }
+	    }
 		
 		function disablePaymentButton() {
 		    const payButton = document.querySelector('.paybutton button');
@@ -216,6 +221,11 @@
     }
 
 	function submitPaymentForm() {
+		const hiddenData = document.getElementById('hiddenData');
+		const maxCnt = parseInt(hiddenData.dataset.maxcnt);
+		console.log(maxCnt);
+		const reservedCnt = hiddenData.dataset.reservedcnt ? parseInt(hiddenData.dataset.reservedcnt) : 0;
+		console.log(reservedCnt);
 	    // 성인 및 아이 수를 가져와서 폼 필드에 설정
 	    const adultCount = parseInt(document.getElementById('result').innerText);
 	    const childCount = parseInt(document.getElementById('result_child').innerText);

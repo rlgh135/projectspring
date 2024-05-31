@@ -56,7 +56,7 @@
 		select * from package
 		where countrycode = "kr"
 		and visibility ='O'
-		ORDER BY adult_price desc limit 4
+		ORDER BY adult_price asc limit 4
 	</select>
 	<!-- <select id="getPopularGuideList">
 		select p.packagenum, p.package_title, p.package_content, p.adult_price
@@ -87,7 +87,7 @@
 		select * from package
 		where countrycode != "kr"
 		and visibility ='O'
-		ORDER BY adult_price desc limit 4
+		ORDER BY adult_price asc limit 4
 	</select>
 	
 	<select id="getDetailRegionList">

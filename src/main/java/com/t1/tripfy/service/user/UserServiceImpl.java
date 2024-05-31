@@ -89,6 +89,8 @@ public class UserServiceImpl implements UserService{
 		// 사진을 /static/image에 UUID로 변경해서 저장
 		String orgname = thumbnail.getOriginalFilename();
         String sysname = PathUtil.writeImageFile(thumbnail);
+        System.out.println("orgname: "+orgname);
+        System.out.println("sysname: "+sysname);
         
         // 저장된 파일의 경로를 DB에 저장
         UserImgDTO userimg = new UserImgDTO();

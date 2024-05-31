@@ -3,6 +3,7 @@ package com.t1.tripfy.mapper.board;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
@@ -64,8 +65,11 @@ public interface BoardMapper {
 	// boardnum으로 썸네일 가져오기
 	BoardFileDTO getThumbnail(long boardnum);
 
+
 	int updateBoard(BoardDTO board);
 
 	int updateBoardAddr(BoardaddrDTO boardaddr);
 
+	// 조회수 증가
+	int updateViewCnt(@Param("boardnum") long boardnum, @Param("viewcnt") long viewcnt);
 }
