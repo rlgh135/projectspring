@@ -307,7 +307,21 @@ public class BoardController {
 	    
 	    return "board/get";
 	}
-
+	
+	@PostMapping("modify")
+	public String modify(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, String updateCnt) throws Exception {
+		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+board);
+		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+boardaddr);
+		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+files);
+		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+updateCnt);
+		if(service.modifyBoard(board, boardaddr, files, updateCnt)) {
+			return "redirect:/board/get?boardnum=" + board.getBoardnum();
+		}
+		else {  			
+			return "redirect:/board/get?boardnum" + board.getBoardnum();
+		}
+	}
+	
 	
 	@GetMapping("write")
 	public void boardwrite() {}

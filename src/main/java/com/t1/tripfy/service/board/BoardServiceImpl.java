@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -345,8 +348,115 @@ public class BoardServiceImpl implements BoardService {
 	// boardnum으로 썸네일 가져오기
 	@Override
 	public BoardFileDTO getThumbnail(long boardnum) {
-		
 		return bmapper.getThumbnail(boardnum);
+	}
+	@Override
+	public boolean modifyBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, String updateCnt) throws Exception {
+		long boardnum = board.getBoardnum();
+		if(bmapper.updateBoard(board) != 1) {
+			return false;
+		}
+		if (boardaddr.getPlacename() != null && boardaddr.getPlacename() != ""
+		    && boardaddr.getStartdate() != null && boardaddr.getStartdate() != ""
+		    && boardaddr.getEnddate() != null && boardaddr.getEnddate() != "") {
+		    boardaddr.setBoardnum(boardnum);
+		    if (bmapper.getBoardaddrByBoardnum(boardnum) != null) {
+		    	if(bmapper.deleteBoardaddr(boardnum) != 1) {
+		    		return false;		    		
+		    	}
+		    }
+		}
+		ArrayList<String> deleteNames = null;
+		boolean deleteThumnailflag = true;
+		
+		 if (updateCnt != null && !updateCnt.isEmpty()) {
+            deleteNames = new ArrayList<>(Arrays.asList(updateCnt.split("\\\\")));
+
+            Iterator<String> iterator = deleteNames.iterator();
+            while (iterator.hasNext()) {
+                String name = iterator.next();
+                if (name.startsWith("BoardThumnail")) {
+                    File file = new File("saveFolder", name);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    bmapper.deleteFilesBySystemname(name);
+                    deleteThumnailflag = false;
+                    iterator.remove(); // 요소 제거
+                }
+            }
+        }
+		 
+		List<BoardFileDTO> orgFileList = bmapper.getFiles(board.getBoardnum());
+		if(orgFileList.size() == 0 && (files == null || files.length == 0 || files[0].getSize() == 0)) {
+			return true;
+		}else {
+			System.out.println("service : "+files.length);
+			if(files != null && files.length != 0) {
+				boolean flag = false;
+				boolean thumnailflag = false;
+				ArrayList<String> sysnames = new ArrayList<>();
+				for(int i=0;i<files.length-1;i++) {
+					MultipartFile file = files[i];
+					if(file.getSize() == 0) {
+						continue;
+					}
+					String orgname = file.getOriginalFilename();
+					if(orgname == null || orgname.equals("")) {
+						continue;
+					}
+	
+					int lastIdx = orgname.lastIndexOf(".");
+					String extension = orgname.substring(lastIdx);
+					LocalDateTime now = LocalDateTime.now();
+					String time = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+					String systemname = "";
+					if(!deleteThumnailflag && !thumnailflag && isImageFile(extension.replace(".", ""))) {
+						systemname = "BoardThumnail"+boardnum+extension;
+						deleteThumnailflag = true;
+						thumnailflag = true;
+					}else {
+						systemname = time+UUID.randomUUID().toString()+extension;
+					}
+										
+					String path = saveFolder+systemname;
+								
+					BoardFileDTO fdto = new BoardFileDTO();
+					fdto.setBoardnum(board.getBoardnum());
+					fdto.setOrgname(orgname);
+					fdto.setSysname(systemname);
+					flag = bmapper.insertFile(fdto) == 1;
+	
+					file.transferTo(new File(path));
+					sysnames.add(systemname);
+					
+					if(!flag) {
+						break;
+					}
+				}
+				//강제탈출
+				if(!flag){
+					for(String systemname : sysnames){
+						File file = new File(saveFolder,systemname);
+						if(file.exists()) {
+							file.delete();
+						}
+						bmapper.deleteFilesBySystemname(systemname);
+					}
+				}
+			}
+			
+			if (deleteNames != null) {
+			    for(String systemname : deleteNames) {
+			        File file = new File(saveFolder, systemname);
+			        if(file.exists()) {
+			            file.delete();
+			        }
+			        bmapper.deleteFilesBySystemname(systemname);
+			    }
+			}
+			return true;
+		}
 	}
 	
 	// 조회수 증가

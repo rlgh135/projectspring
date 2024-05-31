@@ -409,6 +409,7 @@
 	
     <div class="wrap">
         <form action="/board/modify" method="post" name="modifyForm" id="modifyForm" enctype="multipart/form-data">
+			<input type="hidden" name = "boardnum" th:value="${board.boardnum}">
             <table class="boardwrite">
                 <caption>게시글 작성</caption>
                 <tr class="title">

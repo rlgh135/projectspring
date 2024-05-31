@@ -68,4 +68,8 @@ public interface BoardMapper {
 	// 조회수 증가
 	int updateViewCnt(@Param("boardnum") long boardnum, @Param("viewcnt") long viewcnt);
 
+	int updateBoard(BoardDTO board);
+
+	int updateBoardAddr(BoardaddrDTO boardaddr);
+
 }
