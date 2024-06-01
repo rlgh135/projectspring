@@ -51,21 +51,23 @@
                     <ul class="shuraud">
                         <li class="li-tit">개인정보로 조회하기</li>
                         <li>
-                            <input type="text" value="" name="name">
-                        </li>
-                        <li>
                             <input type="text" value="" name="phone" id="pchk">
                             <input type="button" value="인증번호발송" onclick="checkphone()"> 
+                        </li>
+                        <li>
+                            <input type="text" value="" name="name">
                         </li>
                         <li></li>
                     </ul>
                 </div>
                 <div>
                     <a href="javascript:sendnonu()">조회하기</a>
-                    <a href="/package/pmain">나가기</a>
                 </div>
             </form>
         </div>
+		<div>
+        	<a href="/package/pmain">나가기</a>			
+		</div>
     </div>
 </body>
 <script>
@@ -85,7 +87,7 @@
             method: "POST",
 
             success:function(datas){
-                $("shparent-info").html(name+"님이 제출해주신 정보로 "+datas.packagelist.size()+"개의 내역을 찾았습니다.");
+                $("#shparent-info").html(name+"님이 제출해주신 정보로 "+datas.packagelist.length+"개의 내역을 찾았습니다.");
                 const shparent = document.getElementById("shparent");
 
                 console.log(datas);
@@ -98,7 +100,7 @@
                     // li 요소 생성
                     var liElement = document.createElement('li');
                     liElement.onclick = function() {
-                        location.href = 'user/recipt?packagenum=' + datas.packagelist[i].packagenum + '&keycode=' + datas.reslist[i].keycode;
+                        location.href = '/user/receipt?packagenum=' + datas.packagelist[i].packagenum + '&keycode=' + datas.reslist[i].keycode;
                     };
 
                     // 첫 번째 div 요소 (packagethumb) 생성
@@ -162,7 +164,7 @@
 
 		                // li 요소 생성
 		                var liElement = document.createElement('li');
-						liElement.setAttribute("onclick", `location.href = 'user/receipt?packagenum=${datas.pack.packagenum}&keycode=${datas.reservation.keycode}'`);
+						liElement.setAttribute("onclick", `location.href = '/user/receipt?packagenum=${datas.pack.packagenum}&keycode=${datas.reservation.keycode}'`);
 
 		                // 첫 번째 div 요소 (packagethumb) 생성
 		                var packagethumbDiv = document.createElement('div');
