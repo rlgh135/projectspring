@@ -17,6 +17,7 @@ public class Criteria {
 	private String enddate;
 	private String regionname;
 	private int maxcnt;
+	private String orderBy; 
 	
 	public Criteria() {
 		this(1,20);

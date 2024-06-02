@@ -105,6 +105,40 @@
     limit #{startrow}, #{amount}
     ]]>
 	</select>
+		<select id="SortListByPrice">
+	<![CDATA[
+    select * from package
+    where
+    startdate <= #{enddate}
+    and enddate >= #{startdate}
+    and maxcnt >= #{maxcnt}
+    and regionname = #{regionname}
+    and visibility = 'O'
+    and (
+        startdate >= #{startdate} and enddate <= #{enddate}
+    )
+    order by adult_price asc
+    limit #{startrow}, #{amount}
+    ]]>
+	</select>
+
+	<select id="SortListByPop">
+	<![CDATA[
+    select * from package
+    where
+    startdate <= #{enddate}
+    and enddate >= #{startdate}
+    and maxcnt >= #{maxcnt}
+    and regionname = #{regionname}
+    and visibility = 'O'
+    and (
+        startdate >= #{startdate} and enddate <= #{enddate}
+    )
+    order by viewcnt desc
+    limit #{startrow}, #{amount}
+    ]]>
+	</select>	
+	<!--여기까지-->
 	
 	<select id="getTotal">
 	<![CDATA[

@@ -413,5 +413,18 @@ public class PackageServiceImpl implements PackageService{
 		
 		return rmapper.getReservationCntByPackagenum(packagenum);
 	}
+	///추가입니다
+	@Override
+	public List<PackageDTO> SortListByPop(Criteria cri) {
+		// TODO Auto-generated method stub
+		return pmapper.SortListByPop(cri);
+	}
+
+	@Override
+	public List<PackageDTO> SortListByPrice(Criteria cri) {
+		// TODO Auto-generated method stub
+		return pmapper.SortListByPrice(cri);
+	}
+	
 	
 }

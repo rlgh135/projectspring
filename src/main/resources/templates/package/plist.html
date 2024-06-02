@@ -91,6 +91,11 @@
                         </div>
                     </div>
                 </div>
+				<div class="sortingButtons">
+					<button class="sbtn" id="sortByPrice">가격순</button>
+					<button class="sbtn" id="sortByDate">최신순</button>
+					<button class="sbtn" id="sortByPopularity">인기순</button>
+				</div>
                 <div class="listwrap">
                     <div class="plist">
 						<div class="listok">
@@ -137,7 +142,6 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 <script>
     flatpickr("#startDateInput", {
         mode: "range",
@@ -167,6 +171,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
+
         // 세션 스토리지에서 검색 조건을 불러와서 결과 부분에 표시하는 함수
         function loadSearchConditions() {
             const region = sessionStorage.getItem("region");
@@ -194,7 +199,6 @@
                 document.getElementById("personCount").textContent = personCount + "명";
             }
         }
-
         // 페이지가 로드될 때 세션 스토리지에서 검색 조건을 불러옵니다.
         loadSearchConditions();
 
@@ -238,60 +242,130 @@
             sessionStorage.setItem("endDate", endDate);
             sessionStorage.setItem("personCount", personCount);
         });
-    });
 
-    function validateForm() {
-        const destination = document.getElementById("destinationInput").value;
-        const startDate = document.getElementById("startDateInput").value;
-        const endDate = document.getElementById("endDateInput").value;
-        const personCount = document.getElementById("personInput").value;
-
-        console.log("Destination:", destination);
-        console.log("Start Date:", startDate);
-        console.log("End Date:", endDate);
-        console.log("Person Count:", personCount);
-
-        if (!destination) {
-            alert("여행 목적지를 선택하세요.");
-            return false; // 폼 제출을 방지
-        }
-
-        if (!startDate || !endDate) {
-            alert("여행 날짜를 선택하세요.");
-            return false; // 폼 제출을 방지
-        }
-
-        if (!personCount) {
-            alert("인원 수를 선택하세요.");
-            return false; // 폼 제출을 방지
-        }
-
-        return true; // 폼 제출을 허용
-    }
-	document.querySelectorAll('.changePage').forEach(link => {
-		    link.addEventListener('click', function(event) {
-		        event.preventDefault(); // 링크 기본 동작 방지
-		
-		        // 링크의 href 속성에서 URL 가져오기
-		        const url = this.getAttribute('href');
-		
-		        // 페이지 번호만 추출
-		        const page = parseInt(url.split('/').pop());
-		
-		        // 쿼리스트링에서 기존 페이지 번호 추출
-		        const queryString = window.location.search;
-		        const urlParams = new URLSearchParams(queryString);
-		        const regionname = urlParams.get('regionname');
-		        const startDate = urlParams.get('startdate');
-		        const endDate = urlParams.get('enddate');
-		        const maxcnt = urlParams.get('maxcnt');
-		
-		        // 새로운 페이지 번호를 쿼리스트링에 반영하여 새 URL 생성
-		        const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&pagenum=${page}`;
-		
-		        // 현재 페이지를 새로운 URL로 변경
-		        window.location.href = newUrl;
-		    });
+		// 가격순 정렬 버튼 클릭 이벤트
+		document.getElementById("sortByPrice").addEventListener("click", function() {
+		    sortBy("price");
 		});
+		
+		// 최신순 정렬 버튼 클릭 이벤트
+		document.getElementById("sortByDate").addEventListener("click", function() {
+		    sortBy("latest");
+		});
+		
+		// 인기순 정렬 버튼 클릭 이벤트
+		document.getElementById("sortByPopularity").addEventListener("click", function() {
+		    sortBy("popularity");
+		});
+
+
+		function sortBy(orderBy) {
+		    console.log(orderBy);
+		    const url = new URL(window.location.href);
+		    const queryString = url.searchParams;
+		    const oldOrderBy = queryString.get('orderBy');
+		
+		    queryString.set('orderBy', orderBy);
+		    queryString.set('pagenum', 1); // 페이지 번호를 1로 설정
+		
+		    url.search = queryString.toString();
+		
+		    // fetch 요청 보내기
+		    fetch(url.href)
+		        .then(response => response.text()) // HTML 형식으로 데이터를 받음
+		        .then(data => {
+		            // 받은 HTML을 DOM에 삽입하여 페이지 업데이트
+		            const parser = new DOMParser();
+		            const htmlDocument = parser.parseFromString(data, 'text/html');
+		            const newList = htmlDocument.querySelector('.plist'); // 이 부분은 새로운 목록의 DOM 요소를 지정해야 합니다.
+		            const oldList = document.querySelector('.plist');
+		            oldList.replaceWith(newList); // 이전 목록을 새로운 목록으로 교체
+		
+		            // 페이지 이동 버튼에 orderBy 값을 함께 전달
+		            document.querySelectorAll('.changePage').forEach(link => {
+		                link.addEventListener('click', function(event) {
+		                    event.preventDefault(); // 링크 기본 동작 방지
+		
+		                    const url = this.getAttribute('href');
+		
+		                    const page = parseInt(url.split('/').pop());
+		
+		                    const orderBy = queryString.get('orderBy');
+		                    const urlParams = new URLSearchParams(queryString);
+		                    const regionname = urlParams.get('regionname');
+		                    const startDate = urlParams.get('startdate');
+		                    const endDate = urlParams.get('enddate');
+		                    const maxcnt = urlParams.get('maxcnt');
+		                    const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&orderBy=${orderBy}&pagenum=${page}`;
+		
+		                    // 현재 페이지를 새로운 URL로 변경
+		                    window.location.href = newUrl;
+		                });
+		            });
+		        })
+		        .catch(error => {
+		            console.error('Error:', error);
+		        });
+		}
+
+
+
+        function validateForm() {
+            const destination = document.getElementById("destinationInput").value;
+            const startDate = document.getElementById("startDateInput").value;
+            const endDate = document.getElementById("endDateInput").value;
+            const personCount = document.getElementById("personInput").value;
+
+            console.log("Destination:", destination);
+            console.log("Start Date:", startDate);
+            console.log("End Date:", endDate);
+            console.log("Person Count:", personCount);
+
+            if (!destination) {
+                alert("여행 목적지를 선택하세요.");
+                return false; // 폼 제출을 방지
+            }
+			            if (!startDate || !endDate) {
+                alert("여행 날짜를 선택하세요.");
+                return false;
+            }
+            if (!personCount) {
+                alert("인원 수를 선택하세요.");
+                return false; // 폼 제출을 방지
+            }
+
+            return true; // 폼 제출을 허용
+        }
+
+        document.querySelectorAll('.changePage').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // 링크 기본 동작 방지
+
+                // 링크의 href 속성에서 URL 가져오기
+                const url = this.getAttribute('href');
+
+                // 페이지 번호만 추출
+                const page = parseInt(url.split('/').pop());
+
+                // 쿼리스트링에서 기존 페이지 번호 추출
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const regionname = urlParams.get('regionname');
+                const startDate = urlParams.get('startdate');
+                const endDate = urlParams.get('enddate');
+                const maxcnt = urlParams.get('maxcnt');
+				const orderBy = urlParams.get('orderBy');
+
+                // 새로운 페이지 번호를 쿼리스트링에 반영하여 새 URL 생성
+                const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&orderBy=${orderBy}&pagenum=${page}`;
+
+                // 현재 페이지를 새로운 URL로 변경
+                window.location.href = newUrl;
+            });
+        });
+
+
+    });
 </script>
+
 </html>
