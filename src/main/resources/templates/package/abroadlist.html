@@ -137,53 +137,57 @@
                         </div>
                     </div>
                 </div>
-                <div class="listwrap">
-                    <div class="plist">
-						<div class="listok">
-                        <div th:if="${list != null and list.size() > 0}" th:each="board:${list}" class="package">
-                            <a th:href="@{/package/pget(packagenum=${board.packagenum})}">
-								<div class="thumbnail" th:each="file : ${file}" th:if="${file.packagenum == board.packagenum}">
-									<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
-								</div>
-                            <div class="info">
-                                <h3>[[${board.packageTitle}]]</h3>
-								[[${board.startdate}]] ~
-                            </div>
-                            <div class="price">
-                                <h3>[[${board.adultPrice}]] 원</h3>
-								<p>최대인원 : [[${board.maxcnt}]] 명</p>
-								<p th:each="reserve : ${reserve}" th:if="${reserve.packagenum == board.packagenum}">
-									현재인원 : [[${reserve.currentCount}]]명
-								</p>
-                            </div>
-                            </a>
-                        </div> 
-                        <div th:if="${list == null or list.size() == 0}" class="row no-list">
-                            <p>등록된 게시글이 없습니다.</p>
-                        </div>
-						</div>
-						<table class="pagination">
-							<tbody>
-								<tr>
-									<td>
-										<a class="btn changePage" th:href="${pageMaker.startPage - 1}" th:if="${pageMaker.prev}">&lt;</a>
-										<th:block th:each="i : ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
-											<span class="nowPage" th:if="${pageMaker.cri.pagenum == i}">[[${i}]]</span>
-											<a class="btn changePage" th:href="${i}" th:unless="${pageMaker.cri.pagenum == i}">[[${i}]]</a>
-										</th:block>
-										<a class="btn changePage" th:href="${pageMaker.endPage+1}" th:if="${pageMaker.next}">&gt;</a>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-                    </div>
+				<div class="sortingButtons">
+					<button class="sbtn" id="sortByPrice">가격순</button>
+					<button class="sbtn" id="sortByDate">최신순</button>
+					<button class="sbtn" id="sortByPopularity">인기순</button>
+				</div>
+				<div class="listwrap">
+				    <div class="plist">
+					<div class="listok">
+				        <div th:if="${list != null and list.size() > 0}" th:each="board:${list}" class="package">
+				            <a th:href="@{/package/pget(packagenum=${board.packagenum})}">
+							<div class="thumbnail" th:each="file : ${file}" th:if="${file.packagenum == board.packagenum}">
+								<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
+							</div>
+				            <div class="info">
+				                <h3>[[${board.packageTitle}]]</h3>
+							[[${board.startdate}]] ~
+				            </div>
+				            <div class="price">
+				                <h3>[[${board.adultPrice}]] 원</h3>
+							<p>최대인원 : [[${board.maxcnt}]] 명</p>
+							<p th:each="reserve : ${reserve}" th:if="${reserve.packagenum == board.packagenum}">
+								현재인원 : [[${reserve.currentCount}]]명
+							</p>
+				            </div>
+				            </a>
+				        </div> 
+				        <div th:if="${list == null or list.size() == 0}" class="row no-list">
+				            <p>등록된 게시글이 없습니다.</p>
+				        </div>
+					</div>
+					<table class="pagination">
+						<tbody>
+							<tr>
+								<td>
+									<a class="btn changePage" th:href="${pageMaker.startPage - 1}" th:if="${pageMaker.prev}">&lt;</a>
+									<th:block th:each="i : ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
+										<span class="nowPage" th:if="${pageMaker.cri.pagenum == i}">[[${i}]]</span>
+										<a class="btn changePage" th:href="${i}" th:unless="${pageMaker.cri.pagenum == i}">[[${i}]]</a>
+									</th:block>
+									<a class="btn changePage" th:href="${pageMaker.endPage+1}" th:if="${pageMaker.next}">&gt;</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				    </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     flatpickr("#startDateInput", {
         mode: "range",
@@ -213,6 +217,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
+
         // 세션 스토리지에서 검색 조건을 불러와서 결과 부분에 표시하는 함수
         function loadSearchConditions() {
             const region = sessionStorage.getItem("region");
@@ -240,91 +245,144 @@
                 document.getElementById("personCount").textContent = personCount + "명";
             }
         }
-
         // 페이지가 로드될 때 세션 스토리지에서 검색 조건을 불러옵니다.
-        loadSearchConditions();
-
-        const prButtons = document.querySelectorAll(".pr_list button");
-        prButtons.forEach(function(button) {
-            button.addEventListener("click", function() {
-                const countText = this.textContent.trim();
-                const count = parseInt(countText.match(/\d+/)[0]);
-                const personCountSpan = document.getElementById("personCount");
-                personCountSpan.textContent = count + "명";
-                document.getElementById("personInput").value = count;
-                document.getElementById("personInputForm").value = count;
-                console.log("Person Count Set:", count); // 디버그 메시지
-                openper();
-            });
-        });
-
-		const dlButtons = document.querySelectorAll(".RightDepth1");
-			dlButtons.forEach(function(button) {
-			    button.addEventListener("click", function() {
-					const destination = this.textContent.replace(/\s+/g, ''); // 버튼의 텍스트를 가져옴
-			        const desChoiceSpan = document.getElementById("desChoice");
-			        desChoiceSpan.textContent = destination; // 목적지 텍스트 업데이트
-			        document.getElementById("destinationInput").value = destination; // 폼에 목적지 업데이트
-			        document.getElementById("destinationInputForm").value = destination; // 검색 폼에 목적지 업데이트
-			        opendes(); // deslist 닫기
-			    });
-		});
-
-        // 검색 버튼 클릭 시 검색 조건을 세션 스토리지에 저장하는 함수 추가
-        document.querySelector("#searchForm").addEventListener("submit", function(event) {
-            const region = document.getElementById("destinationInput").value;
-            const startDate = document.getElementById("startDateInput").value;
-            const endDate = document.getElementById("endDateInput").value;
-            const personCount = document.getElementById("personInput").value;
-
-            // 세션 스토리지에 검색 조건 저장
-            sessionStorage.setItem("region", region);
-            sessionStorage.setItem("startDate", startDate);
-            sessionStorage.setItem("endDate", endDate);
-            sessionStorage.setItem("personCount", personCount);
-        });
-    });
-
-    function validateForm() {
-        const destination = document.getElementById("destinationInput").value;
-        const startDate = document.getElementById("startDateInput").value;
-        const endDate = document.getElementById("endDateInput").value;
-        const personCount = document.getElementById("personInput").value;
-
-        console.log("Destination:", destination);
-        console.log("Start Date:", startDate);
-        console.log("End Date:", endDate);
-        console.log("Person Count:", personCount);
-
-        if (!destination) {
-            alert("여행 목적지를 선택하세요.");
-            return false; // 폼 제출을 방지
-        }
-
-        if (!startDate || !endDate) {
-            alert("여행 날짜를 선택하세요.");
-            return false; // 폼 제출을 방지
-        }
-
-        if (!personCount) {
-            alert("인원 수를 선택하세요.");
-            return false; // 폼 제출을 방지
-        }
-
-        return true; // 폼 제출을 허용
-    }
-	document.querySelectorAll('.leftDepth1').forEach((button, index) => {
-	    button.addEventListener('click', () => {
-	        document.querySelectorAll('.leftDepth1').forEach(btn => {
-	            btn.classList.remove('active');
-	        });
-	        button.classList.add('active');
+	loadSearchConditions();
 	
-	        document.querySelectorAll('.choiceTableRight').forEach((ul, ulIndex) => {
-	            ul.classList.toggle('active', ulIndex === index);
-	        });
+	const prButtons = document.querySelectorAll(".pr_list button");
+	prButtons.forEach(function(button) {
+	    button.addEventListener("click", function() {
+	        const countText = this.textContent.trim();
+	        const count = parseInt(countText.match(/\d+/)[0]);
+	        const personCountSpan = document.getElementById("personCount");
+	        personCountSpan.textContent = count + "명";
+	        document.getElementById("personInput").value = count;
+	        document.getElementById("personInputForm").value = count;
+	        console.log("Person Count Set:", count); // 디버그 메시지
+	        openper();
 	    });
 	});
+	
+	const dlButtons = document.querySelectorAll(".dl");
+	dlButtons.forEach(function(button) {
+	    button.addEventListener("click", function() {
+	        const destination = this.textContent.trim();
+	        const desChoiceSpan = document.getElementById("desChoice");
+	        desChoiceSpan.textContent = destination;
+	        document.getElementById("destinationInput").value = destination;
+	        document.getElementById("destinationInputForm").value = destination;
+	        console.log("Destination Set:", destination); // 디버그 메시지
+	        opendes();
+	    });
+	});
+	
+	// 검색 버튼 클릭 시 검색 조건을 세션 스토리지에 저장하는 함수 추가
+	document.querySelector("#searchForm").addEventListener("submit", function(event) {
+	    const region = document.getElementById("destinationInput").value;
+	    const startDate = document.getElementById("startDateInput").value;
+	    const endDate = document.getElementById("endDateInput").value;
+	    const personCount = document.getElementById("personInput").value;
+	
+	    // 세션 스토리지에 검색 조건 저장
+	    sessionStorage.setItem("region", region);
+	    sessionStorage.setItem("startDate", startDate);
+	    sessionStorage.setItem("endDate", endDate);
+	    sessionStorage.setItem("personCount", personCount);
+	});
+	
+	// 가격순 정렬 버튼 클릭 이벤트
+	document.getElementById("sortByPrice").addEventListener("click", function() {
+	    sortBy("price");
+	});
+	
+	// 최신순 정렬 버튼 클릭 이벤트
+	document.getElementById("sortByDate").addEventListener("click", function() {
+	    sortBy("latest");
+	});
+	
+	// 인기순 정렬 버튼 클릭 이벤트
+	document.getElementById("sortByPopularity").addEventListener("click", function() {
+	    sortBy("popularity");
+	});
+	
+	
+	function sortBy(orderBy) {
+	    console.log(orderBy);
+	    const url = new URL(window.location.href);
+	    const queryString = url.searchParams;
+	    const oldOrderBy = queryString.get('orderBy');
+	
+	    queryString.set('orderBy', orderBy);
+		queryString.set('pagenum', 1); // 페이지 번호를 1로 설정
+		
+		url.search = queryString.toString();
+		
+		// fetch 요청 보내기
+		fetch(url.href)
+		    .then(response => response.text()) // HTML 형식으로 데이터를 받음
+		    .then(data => {
+		        // 받은 HTML을 DOM에 삽입하여 페이지 업데이트
+		        const parser = new DOMParser();
+		        const htmlDocument = parser.parseFromString(data, 'text/html');
+		        const newList = htmlDocument.querySelector('.plist'); // 이 부분은 새로운 목록의 DOM 요소를 지정해야 합니다.
+		        const oldList = document.querySelector('.plist');
+		        oldList.replaceWith(newList); // 이전 목록을 새로운 목록으로 교체
+		
+		        // 페이지 이동 버튼에 orderBy 값을 함께 전달
+		        document.querySelectorAll('.changePage').forEach(link => {
+		            link.addEventListener('click', function(event) {
+		                event.preventDefault(); // 링크 기본 동작 방지
+		
+		                const url = this.getAttribute('href');
+		
+		                const page = parseInt(url.split('/').pop());
+		
+		                const orderBy = queryString.get('orderBy');
+		                const urlParams = new URLSearchParams(queryString);
+		                const regionname = urlParams.get('regionname');
+		                const startDate = urlParams.get('startdate');
+		                const endDate = urlParams.get('enddate');
+		                const maxcnt = urlParams.get('maxcnt');
+		                const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&orderBy=${orderBy}&pagenum=${page}`;
+		
+		                // 현재 페이지를 새로운 URL로 변경
+		                window.location.href = newUrl;
+		            });
+		        });
+		    })
+		    .catch(error => {
+						            console.error('Error:', error);
+						        });
+	}
+	
+	
+	
+	function validateForm() {
+	    const destination = document.getElementById("destinationInput").value;
+	    const startDate = document.getElementById("startDateInput").value;
+	    const endDate = document.getElementById("endDateInput").value;
+	    const personCount = document.getElementById("personInput").value;
+	
+	    console.log("Destination:", destination);
+	    console.log("Start Date:", startDate);
+	    console.log("End Date:", endDate);
+	    console.log("Person Count:", personCount);
+	
+	    if (!destination) {
+	        alert("여행 목적지를 선택하세요.");
+	        return false; // 폼 제출을 방지
+	    }
+		            if (!startDate || !endDate) {
+	        alert("여행 날짜를 선택하세요.");
+	        return false;
+	    }
+	    if (!personCount) {
+	        alert("인원 수를 선택하세요.");
+	        return false; // 폼 제출을 방지
+	    }
+	
+	    return true; // 폼 제출을 허용
+	}
+	
 	document.querySelectorAll('.changePage').forEach(link => {
 	    link.addEventListener('click', function(event) {
 	        event.preventDefault(); // 링크 기본 동작 방지
@@ -342,15 +400,18 @@
 	        const startDate = urlParams.get('startdate');
 	        const endDate = urlParams.get('enddate');
 	        const maxcnt = urlParams.get('maxcnt');
+			const orderBy = urlParams.get('orderBy');
 	
 	        // 새로운 페이지 번호를 쿼리스트링에 반영하여 새 URL 생성
-	        const newUrl = `/package/abroadlist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&pagenum=${page}`;
+	        const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&orderBy=${orderBy}&pagenum=${page}`;
 	
 	        // 현재 페이지를 새로운 URL로 변경
 	        window.location.href = newUrl;
 	    });
-	});
+        });
 
 
+    });
 </script>
+
 </html>
