@@ -216,6 +216,7 @@
 	/*================================================================================*/
 	/*테스트*/
 	let CHAT_LIST_VD = {};
+	let CHAT_DETAIL_VD = {};
 
 	let WORKER = null;
 
@@ -391,10 +392,13 @@
 		const pTag3 = document.createElement("p");
 		secDiv.appendChild(pTag3);
 		pTag3.innerHTML = data.regdate;
+		const unchkmsgDiv = document.createElement("div");
+		secDiv.appendChild(unchkmsgDiv);
 		if(data.uncheckedmsg > 0) {
-			const unchkmsgDiv = document.createElement("div");
-			secDiv.appendChild(unchkmsgDiv);
 			unchkmsgDiv.innerHTML = data.uncheckedmsg > 99 ? "99.." : data.uncheckedmsg;
+		} else {
+			unchkmsgDiv.innerHTML = "0";
+			unchkmsgDiv.classList.add("cc-hidden");
 		}
 	}
 

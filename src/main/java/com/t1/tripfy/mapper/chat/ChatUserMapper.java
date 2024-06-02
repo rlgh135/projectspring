@@ -23,4 +23,13 @@ public interface ChatUserMapper {
 	//JOIN 사용해서 userid가 가입된 모든 채팅방중 최근 수신순 x ~ y 개의 chat_room_idx 가져오기
 	// chat_detail과 JOIN함
 	List<Map<String, Object>> selectSpecificRecentReceivedChatRoomIdx(Integer start, Integer end, String userid);
+	
+	/**
+	 * <p><strong>UPDATE</strong> : 마지막 확인 메시지 수정하기
+	 * */
+	Integer updateChatDetailIdx(Long chatRoomIdx, String userid, Long chatDetailIdx);
+	/**
+	 * <p><strong>UPDATE</strong> : 메시지 전부 확인처리
+	 * */
+	Integer updateChatDetailIdxToEnd(Long chatRoomIdx, String userid);
 }

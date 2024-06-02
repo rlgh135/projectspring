@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t1.tripfy.domain.dto.chat.MessageDTO;
 import com.t1.tripfy.domain.dto.chat.MessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatContentMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatLoadMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
 
 /* 위치?
@@ -41,7 +43,14 @@ public class ChatMessageDTODeserializer extends JsonDeserializer<MessageDTO<? ex
 		
 		switch(act) {
 		case "chatRoomEnter":
+		case "chatRoomLeave":
 			payload = mapper.treeToValue(payloadNode, ChatRoomEnterMessagePayload.class);
+			break;
+		case "sendChat":
+			payload = mapper.treeToValue(payloadNode, ChatContentMessagePayload.class);
+			break;
+		case "loadChat":
+			payload = mapper.treeToValue(payloadNode, ChatLoadMessagePayload.class);
 			break;
 		default:
 			throw new IllegalArgumentException("Invalid act value=" + act);

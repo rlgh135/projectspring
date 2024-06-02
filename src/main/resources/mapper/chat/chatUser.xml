@@ -74,4 +74,37 @@
 		LIMIT 
 			#{start}, #{end};
 	</select>
+	
+	<!-- 
+		마지막 확인 메시지 수정
+	-->
+	<update id="updateChatDetailIdx">
+		UPDATE chat_user
+		SET
+			chat_detail_idx = #{chatDetailIdx}
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+		AND
+			userid = #{userid}
+	</update>
+	<!-- 
+		메시지 전부 확인처리
+	-->
+	<update id="updateChatDetailIdxToEnd">
+		UPDATE chat_user
+		SET
+			chat_detail_idx = (
+				SELECT chat_detail_idx
+				FROM chat_detail
+				WHERE
+					chat_room_idx = #{chatRoomIdx}
+				ORDER BY
+					chat_detail_idx DESC
+				LIMIT 1
+			)
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+		AND
+			userid = #{userid}
+	</update>
 </mapper>

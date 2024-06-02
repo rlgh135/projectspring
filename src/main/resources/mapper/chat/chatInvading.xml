@@ -17,4 +17,15 @@
 			WHERE chat_room_idx = #{chatRoomIdx}
 		)
 	</select>
+	
+	<!-- 패키지명만 가져오기 -->
+	<select id="selectPackageNameByChatRoomIdx">
+		SELECT package_title
+		FROM package
+		WHERE packagenum = (
+			SELECT packagenum
+			FROM chat_room
+			WHERE chat_room_idx = #{chatRoomIdx}
+		)
+	</select>
 </mapper>

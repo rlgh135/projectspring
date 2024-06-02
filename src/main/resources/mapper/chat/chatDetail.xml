@@ -11,6 +11,7 @@
 			chat_detail
 		WHERE 
 			chat_room_idx = #{chatRoomIdx}
+		<if test="userid != null">
 		AND 
 			chat_detail_idx > (
 				SELECT 
@@ -22,6 +23,7 @@
 			    AND 
 			    	userid = #{userid}
 			)
+		</if>
 	</select>
 	<!-- 특정 채팅방의 모든 메시지 개수 세기 -->
 	<select id="selectAllCountOfChatDetail">
@@ -52,4 +54,34 @@
 		LIMIT 
 			#{m}, #{n};
 	</select>
+	<!-- 
+		특정 채팅방의 메시지 특정 chat_detail_idx 이전 n개 가져오기
+	-->
+	<select id="selectBulkMessagesByChatDetailIdx">
+		SELECT *
+		FROM chat_detail
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+		AND
+			chat_detail_idx <![CDATA[ < ]]> #{k}
+		ORDER BY
+			chat_detail_idx DESC
+		LIMIT
+			#{n};
+	</select>
+	
+	<!--
+		채팅 삽입
+	-->
+	<insert id="insertChat">
+		INSERT INTO chat_detail
+			(chat_room_idx, userid, chat_detail_content, regdate)
+		VALUES
+			(
+				#{chatRoomIdx},
+				#{userid},
+				#{chatContent},
+				#{time}
+			)
+	</insert>
 </mapper>

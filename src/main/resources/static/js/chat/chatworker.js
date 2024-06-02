@@ -37,6 +37,8 @@ let EVENTSOURCE = null;
 //Web Worker port
 const PORT_LIST = [];
 
+//채팅방이 열린 탭 목록
+
 //미확인 메시지 개수
 let uncheckedMsgCnt = 0;
 
@@ -82,6 +84,11 @@ self.onconnect = function(e) {
 								roomidx: e.data.payload.roomidx
 							}
 						}));
+						promised_WebSocketMsgReceiver("chatRoomEnter")
+						.then((data) => {
+							port.postMessage(data);
+						})
+						.catch((err) => {});
 						break;
 				}
                 break;
@@ -138,6 +145,22 @@ function broadcastMsg(by, data) {
 		console.log(port);
 		console.log("data=");
 		console.log(data);
+	});
+}
+
+/*================================================================================*/
+/*1회성 수신 함수*/
+async function promised_WebSocketMsgReceiver(act) {
+	return new Promise((resolve, reject) => {
+		const receiver = function(e) {
+			const data = JSON.parse(e.data);
+			if(data.act === act) {
+				console.log("promised_WebSocketMsgReceiver, act=" + act);
+				resolve(data);
+				WEBSOCKET.removeEventListener("message", receiver);
+			}
+		};
+		WEBSOCKET.addEventListener("message", receiver);
 	});
 }
 
