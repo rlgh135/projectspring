@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 
 @Mapper

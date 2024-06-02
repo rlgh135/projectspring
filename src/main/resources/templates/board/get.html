@@ -189,6 +189,12 @@
 	.reply_area > div {
 	    margin-top: 8px;
 	    position: relative;
+		border:1px solid #2196F3;
+		border-radius: 10px;
+	}
+	.reply_area > div > div{
+		margin-left: 10px;
+		margin-bottom: 10px;
 	}
 	
 	.reply_area > div > textarea {
@@ -202,6 +208,7 @@
 	    font-size: 13px;
 	    height: 80px;
 	    caret-color: #2196F3;
+		border: none;
 	}
 	
 	.reply_area > div > textarea::placeholder {
@@ -211,7 +218,7 @@
 	
 	.reply_area > div > [type="button"] {
 	 	position: absolute;
-	     top: 26%; right: 1.3%;
+	     top: 55%; right: 1.3%;
 	     font-size: 14px;
 	     border: none;
 	     border-radius: 6px;
@@ -286,6 +293,167 @@
 		font-weight: 400;
 		color: #9a9a9a;
 	}
+	
+	/*댓글 디자인*/
+	.replies{
+		padding:0;
+		margin-top:15px;
+		border-top: 1px solid gray;
+	}
+	.reply{
+		margin-top: 10px;
+		display:flex;
+		border-bottom: 1px solid #f2f2f2;
+	}
+	.reply .reply_userThumnail{
+		margin-right:5px;
+	}
+	.reply .reply_userThumnail img{
+		width:50px; height:50px;
+	}
+	.reply .reply_box .reply_userid{
+		width:100%;
+		font-size:20px;
+		font-weight:bold;
+		margin-bottom: 5px;
+	}
+	.reply .reply_box .reply_content{
+		margin-left:5px;
+		margin-bottom: 5px;
+		max-height:200px;
+		overflow-y: auto;
+		word-wrap: break-word;
+		word-break: break-all;
+		white-space: normal;
+	}
+	.reply .reply_box .reply_sticker img{
+		width:100px;
+		height:100px;
+	}
+	.reply .reply_box .reply_regdate{
+		font-size:12px;
+		color:#979797;
+	}
+	.reply .reply_tool{
+		position: relative;
+	}
+	.reply .tool-menu {
+	    position: absolute;
+		width: 100px;
+	    top: 30px;
+	    right: 0;
+	    background-color: white;
+	    border: 1px solid #ccc;
+	    border-radius: 5px;
+	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	    padding: 10px;
+	    z-index: 10;
+	}
+	.comment_attach{
+		position: relative;
+	}
+	.reply_area .comment_attach img{
+		width:100px; height:100px;
+	}
+	.reply_area .comment_attach .emoticon-close-btn{
+		position: absolute;
+		left: 80px;
+		top:5px;
+	    background: rgba(255, 255, 255, 0.7); 
+	    border: none;
+	    color: #ff0000;
+	    font-size: 16px;
+	    font-weight: bold;
+	    cursor: pointer;
+	    border-radius: 50%;
+	    width: 20px;
+	    height: 20px;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    padding: 0;
+	}
+	.reply_area .comment_attach .emoticon-close-btn:hover{
+		background: rgba(255, 255, 255, 1);
+	}
+	.reply .tool-menu button {
+	    display: block;
+	    width: 100%;
+	    background: none;
+	    border: none;
+	    padding: 10px 15px;
+	    text-align: left;
+	    color: #333;
+	    cursor: pointer;
+	    font-size: 14px;
+	}
+
+	.reply .tool-menu button:hover {
+	    background-color: #f0f0f0;
+	}
+
+	.reply .tool-menu button:focus {
+	    outline: none;
+	}
+	.emoji-picker {
+        position: absolute;
+        border: 1px solid #ccc;
+        background: #fff;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        margin-top: 5px;
+        z-index: 100;
+    }
+    .emoji-picker span {
+        cursor: pointer;
+        font-size: 20px;
+        margin: 5px;
+    }
+	.emoji-picker span img{
+		width:100px; height:100px;
+	}
+	.reply .reply_tool svg{
+		cursor:pointer;
+	}
+	.replies-page{
+		margin-top: 30px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.replies-page *{
+		text-align: center;
+		margin:0 2px;
+	}
+	.replies-page .page-btn{
+	    padding: 5px;
+	    width: 30px; height: 30px;
+	    display: inline-block;
+	    border-radius: 3px;
+	    background-color: rgb(0,200,80);
+	    color: #fff;
+	    font-weight: bold;
+	}
+	.replies-page .page-btn:hover{
+		background-color: rgb(198, 175, 245);
+	}
+	
+	.nowPage {
+		padding: 5px;
+		width: 30px;
+		height: 30px;
+		display: inline-block;
+		border-radius: 3px;
+		background-color: rgb(198, 175, 245);
+		color: #fff;
+		font-weight: bold;
+	}
+	
+	.no-reply{
+		text-align:center;
+		margin-top: 30px;
+		margin-bottom: 30px;
+	}
 </style>
 </head>
 <body>
@@ -343,9 +511,56 @@
                         <h4>댓글</h4>
                         <div>
                             <textarea name="replycontent" class="replycontent" placeholder="댓글을 입력해주세요."></textarea>
+							<div class="comment_attach">
+								<svg id ="emoji_toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-smile-fill" viewBox="0 0 16 16" style="cursor:pointer;">
+								  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+								</svg>
+							</div>
                             <input type="button" value="등록" onclick="replySubmit();">
                         </div>
                     </div>
+					<div class="replies">
+						<!--<div class="reply">				
+							<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
+							<div class="reply_box">
+								<div class="reply_userid">123</div>
+								<div class="reply_content">12412442112412414241241242141224141241242124424122141214214124</div>
+								<div class="reply_regdate">2024.06.02 15:24</div>
+							</div>
+							<div class="reply_tool">
+								<svg class="tool_btn" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="12" cy="5" r="2.25" transform="rotate(90 12 5)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+									<circle cx="12" cy="12" r="2.25" transform="rotate(90 12 12)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+									<circle cx="12" cy="19" r="2.25" transform="rotate(90 12 19)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+								</svg>
+							</div>
+						</div>
+						<div class="reply">				
+							<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
+							<div class="reply_box">
+								<div class="reply_userid">123</div>
+								<div class="reply_content">1241244211241241424124124214122414124124212442412214121asdfasfdfdsaasdfsfadsfasfdsaasdffsadsadfsfadsfadsdafsadfasfdadfsadfsdasafdsafd4214124</div>
+								<div class="reply_sticker"><img src="/images/layoutimg/logo_long.png" alt></div>
+								<div class="reply_regdate">2024.06.02 15:24</div>
+							</div>
+							<div class="reply_tool">
+								<svg class="tool_btn" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="12" cy="5" r="2.25" transform="rotate(90 12 5)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+									<circle cx="12" cy="12" r="2.25" transform="rotate(90 12 12)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+									<circle cx="12" cy="19" r="2.25" transform="rotate(90 12 19)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+								</svg>
+							</div>
+						</div>
+						<div class="reply">				
+							<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
+							<div class="reply_box">
+								<div class="reply_userid">123</div>
+								<div class="reply_content">12412442112412414241241242141224141241242124424122141214214124</div>
+								<div class="reply_regdate">2024.06.02 15:24</div>
+							</div>
+						</div>-->
+					</div>
+					<div class="replies-page"></div>
                 </div>
             </div>
 
@@ -382,52 +597,302 @@ const map = $("#map");
 const defaultLocationName = /*[[${boardaddr != null && boardaddr.placename != null ? boardaddr.placename : board.regionname}]]*/'';
 const zoomScope = /*[[${boardaddr != null && boardaddr.placename != null ? 11 : 5}]]*/'';
 const content = /*[[${board.content}]]*/'';
+let loginUser = /*[[${session.loginUser}]]*/'';
+let boardnum = [[${board.boardnum}]];
 const geocoder = new google.maps.Geocoder();
+let stickerNum = 0;
+const replies = $('.replies');
+const repliesPage = $('.replies-page');
+let emojiContent = `
+	           <svg id="emoji_toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-smile-fill" viewBox="0 0 16 16" style="cursor:pointer;">
+	               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+	           </svg>
+	       `;
 	$(document).ready(function() {
-		$(".trip_introduction div").html(content);
-           geocoder.geocode({ 'address': defaultLocationName }, function(results, status) {
-               if (status === 'OK') {
-                   const mapOptions = {
-                       zoom: zoomScope,
-                       center: results[0].geometry.location,
-                       mapTypeId: google.maps.MapTypeId.ROADMAP,
-					   disableDefaultUI: true
-                   };
-                   
-                   const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                   const marker = new google.maps.Marker({
-                       position: results[0].geometry.location,
-                       map: map
-                   });				   
-               } else {
-                   alert('Geocode was not successful for the following reason: ' + status);
-               }
-           });
+	   $(".trip_introduction div").html(content);
+	   showReplyList(1);
+       geocoder.geocode({ 'address': defaultLocationName }, function(results, status) {
+           if (status === 'OK') {
+               const mapOptions = {
+                   zoom: zoomScope,
+                   center: results[0].geometry.location,
+                   mapTypeId: google.maps.MapTypeId.ROADMAP,
+				   disableDefaultUI: true
+               };
+               
+               const map = new google.maps.Map(document.getElementById('map'), mapOptions);
+               const marker = new google.maps.Marker({
+                   position: results[0].geometry.location,
+                   map: map
+               });				   
+           } else {
+               alert('Geocode was not successful for the following reason: ' + status);
+           }
+   		});
+		
+		$(document).on('click', '.tool_btn', function(event) {
+	       event.stopPropagation();
+	       $('.tool-menu').remove();
+	       
+	       const toolMenu = $('<div class="tool-menu"></div>').html(`
+	           <button class="edit-button">수정</button>
+	           <button class="delete-button">삭제</button>
+	       `);
+	    
+	       $(this).parent().append(toolMenu);
+	   });
+	   
+	   $(document).on('click', function(event) {
+           if (!$(event.target).closest('.reply_tool').length) {
+               $('.tool-menu').remove();
+           }
        });
+	   
+	   $(document).on('click', '#emoji_toggle', function() {
+	       var $emojiPicker = $('#emoji-picker');
+	       if ($emojiPicker.length) {
+	           $emojiPicker.remove();
+	       } else {
+	           const emojiPickerHtml = `
+	               <div class="emoji-picker" id="emoji-picker">
+	                   <span class="emoticon" id="et1"><img src="/images/emoticon/1.jpg" alt></span>
+	                   <span class="emoticon" id="et2"><img src="/images/emoticon/2.jpg" alt></span>
+	               </div>
+	           `;
+	           $('.comment_attach').append(emojiPickerHtml);
+	       }
+	   });
+
+	   $(document).on('click', '.emoji-picker span', function() {
+	       let emojiId = $(this).attr("id").substring(2);
+		   stickerNum = emojiId;
+	       $('.comment_attach').empty();
+	       
+	       let newContent = `
+	           <img src="/images/emoticon/${emojiId}.jpg" alt>
+	           <button class="emoticon-close-btn">&times;</button>
+	       `;
+	       $('.comment_attach').append(newContent);
+	       $('#emoji-picker').remove();
+	   });
+
+	   $(document).on('click', '.emoticon-close-btn', function(){
+	       $('.comment_attach').empty();
+		   stickerNum = 0;
+	       $('.comment_attach').append(emojiContent);
+	   });
+		
+	   $(document).on('click', '.delete-button', function(){
+			const replyId = $(this).closest('.reply').attr('id').substring(3);
+			console.log("리플라이 아이디 : "+replyId)
+			boardReplyService.delete(
+	            {"replynum": replyId},
+	            function(result) {
+	                showReplyList(1);
+	            }
+	        );
+	   })
+	   
+	   $(document).on('click', '.edit-button', function(){
+   			const replyId = $(this).closest('.reply').attr('id').substring(3);
+   			console.log("리플라이 아이디 : "+replyId)
+   			boardReplyService.delete(
+   	            {"replynum": replyId},
+   	            function(result) {
+   	                showReplyList(1);
+   	            }
+   	        );
+   	   })
+   });
 	
 	// 댓글
 	function replySubmit() {
-		const replycontent = document.querySelector(".replycontent");
-		let loginUser = /*[[${session.loginUser}]]*/'';
-		console.log(loginUser)
+	    const replycontent = $(".replycontent");
+	   	const content = replycontent.val();
+		console.log(boardnum+loginUser+stickerNum+content+"asdasdasd")
+	    
+	    if(replycontent.val() == "" && stickerNum == 0) {
+	        alert("댓글을 입력해주세요.");
+	        replycontent.focus();
+	    } else {
+	        boardReplyService.insert(
+	            {"boardnum": boardnum, "userid": loginUser, "emSysname": stickerNum, "contents": content},
+	            function(result) {
+	                showReplyList(1);
+	            }
+	        );
+			stickerNum = 0;
+			replycontent.val("");
+			$('.comment_attach').empty();
+			$('.comment_attach').append(emojiContent);
+	    }
+		       
+	}
+	
+	function showReplyList(pagenum){
+		boardReplyService.getList(
+			{"boardnum":boardnum, "pagenum":pagenum||1},
+			function(replyCnt, list){
+				//LIST DOM
+				let str = "";
+				if(list == null || list.length == 0){
+					str += `<div class="no-reply">등록된 댓글이 없습니다.</div>`;
+					replies.html(str);
+					return;
+				}
+				
+				for(let i=0;i<list.length;i++){
+					const reply = list[i];
+					str += `<div class="reply" id="brn${reply.replynum}">
+					<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
+			        <div class="reply_box">
+			            <div class="reply_userid">${reply.userid}</div>
+			            <div class="reply_content">${reply.contents}</div>
+					`;
+					if(reply.emSysname !== "0"){
+						str += `<div class="reply_sticker"><img src="/images/emoticon/${reply.emSysname}.jpg" alt></div>`;
+					}
+					if(reply.updatecheck == 0){
+						str += `<div class="reply_regdate">${formatDateTime(reply.regdate)}</div>`;						
+					}else{
+						str += `<div class="reply_regdate">${formatDateTime(reply.regdate)}(수정됨)</div>`;	
+					}
+					str += "</div>"
+					if(reply.userid == loginUser){
+						str += `						
+						<div class="reply_tool">
+				            <svg class="tool_btn" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				                <circle cx="12" cy="5" r="2.25" transform="rotate(90 12 5)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+				                <circle cx="12" cy="12" r="2.25" transform="rotate(90 12 12)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+				                <circle cx="12" cy="19" r="2.25" transform="rotate(90 12 19)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
+				            </svg>
+				        </div>`;
+					}
+					str += "</div>"
+				}
+				replies.html(str);
+				
+				showReplyPages(replyCnt, pagenum);
+			}
+		)
+	}
+	
+	function showReplyPages(replyCnt, pagenum){
+		let endPage = Math.ceil(pagenum/5)*10;
+		let startPage = endPage - 9;
+		endPage = (endPage-1)*10 >= replyCnt ? Math.ceil(replyCnt/10) : endPage;
 		
-		console.log(replycontent.value)
-		if(replycontent.value == "") {
-			alert("댓글을 입력해주세요.");
-			replycontent.focus();
-		}		
+		let prev = startPage != 1;
+		let next = endPage*5 < replyCnt
+		
+		let str = "";
+		if(prev){
+			str += `<a class="changePage page-btn" href="${startPage-10}">&lt;<a>`
+		}
+		for(let i=startPage;i<=endPage;i++){
+			if(i == pagenum){
+				str += `<span class="nowPage">${i}</span>` 
+			}
+			else{
+				str += `<a class="changePage page-btn" href="${i}">${i}</a>`
+			}
+		}
+		if(next){
+			str += `<a class="changePage page-btn" href="${endPage+10}">&gt;</a>`
+		}
+		
+		repliesPage.html(str);
+		
+		$(".changePage").on("click",function(e){
+			e.preventDefault();
+			let target = $(this).attr("href");
+			target = parseInt(target);
+			showReplyList(target);
+			window.setTimeout(function(){
+				window.scrollTo(0,document.body.scrollHeight);
+			},10)
+		})
 	}
 	
 	function deleteBoard(boardnum) {
-		console.log("삭제 클릭: " + boardnum)
-
 		location.replace("/board/remove?boardnum=" + boardnum);
 	}
 	
-	function modifyBoard(boardnum) {
-		console.log("수정 클릭: " + boardnum);
-		
+	function modifyBoard(boardnum) {	
 		location.replace("/board/modify?boardnum=" + boardnum);
 	}
+	
+	const boardReplyService = {
+		insert:function(data,callback){
+			$.ajax({
+				type:"POST",
+				url:"/board/replyRegist",
+				data:JSON.stringify(data),
+				contentType:"application/json;charset=utf-8",
+				success:function(result,status,xhr){
+					callback(result)
+				},
+				error:function(result,status,xhr){
+					
+				}
+			})
+		},
+		getList:function(data,callback){
+			$.ajax({
+				type:"GET",
+				url:"/board/replyList",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(result,status,xhr){
+					callback(result.replyCnt,result.list);
+				},
+				error:function(result,status,xhr){
+					
+				}
+			})
+		},
+		modify:function(data,callback){
+			$.ajax({
+				type:"POST",
+				url:"/board/replyModify",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(status,xhr){
+					callback(result);
+				},
+				error:function(status,xhr){
+					
+				}
+			})
+		},
+		delete:function(data, callback){
+			$.ajax({
+				type:"POST",
+				url:"/board/replyDelete",
+				data:JSON.stringify(data),
+				contentType:"application/json;charset=utf-8",
+				success:function(result){
+					callback(result)
+				},
+				error:function(status,xhr){
+					 console.error("AJAX Error:", xhr.status, status);
+				}
+			})
+		}
+	}
+	
+	function formatDateTime(dateTimeStr) {
+	    const dateTime = new Date(dateTimeStr);
+
+	    const year = dateTime.getFullYear();
+	    const month = String(dateTime.getMonth() + 1).padStart(2, '0');
+	    const day = String(dateTime.getDate()).padStart(2, '0');
+	    const hours = String(dateTime.getHours()).padStart(2, '0');
+	    const minutes = String(dateTime.getMinutes()).padStart(2, '0');
+
+	    const formattedDate = `${year}.${month}.${day}  ${hours}:${minutes}`;
+	    return formattedDate;
+	}
+
 </script>
 </html>

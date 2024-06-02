@@ -5,6 +5,32 @@
 
 <mapper namespace="com.t1.tripfy.mapper.board.BoardReplyMapper">
 	<select id="getReplyCnt">
-		select count(*) from board_reply where boardnum = #{boardnum};
+		select count(*) from board_reply where boardnum = #{boardnum}
 	</select>
+	
+	<select id="getLastReply">
+		select * from board_reply where userid = #{userid} order by replynum desc limit 1
+	</select>
+	<select id="getTotal">
+		select count(*) from board_reply where boardnum = #{boardnum}
+	</select>
+	<select id="getReplyList">
+		select * from board_reply where boardnum = #{boardnum} limit #{startrow},#{amount}
+	</select>
+	<select id="getReplyByReplyNum">
+		select * from board_reply where replynum = #{replynum}
+	</select>
+	<insert id="insertReply">
+		insert into board_reply(boardnum,userid,em_sysname,contents) values(#{boardnum},#{userid},#{emSysname},#{contents})
+	</insert>
+	<update id="updateReply">
+		update board_reply
+		set em_sysname = #{emSysname}, contents = #{contents}
+		where replynum = #{replynum}
+	</update>
+	
+	<delete id="deleteReply">
+		delete from board_reply
+		where replynum = #{replynum}
+	</delete>
 </mapper>

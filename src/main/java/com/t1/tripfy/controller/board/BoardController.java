@@ -7,11 +7,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,8 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.PageDTO;
+import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyPageDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.service.board.BoardService;
@@ -382,5 +387,53 @@ public class BoardController {
 		System.out.println(sysname);
 		return service.getThumbnailResource(sysname);
 	}
-
+	
+	@PostMapping(value="replyRegist", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<BoardReplyDTO> replyRegist(@RequestBody BoardReplyDTO reply){
+		BoardReplyDTO result = service.replyRegist(reply);
+		if(result == null) {
+			return new ResponseEntity<BoardReplyDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		else {
+			return new ResponseEntity<BoardReplyDTO>(result,HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping(value="replyList", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<BoardReplyPageDTO> timeLineDayList(@RequestParam long boardnum, @RequestParam int pagenum){
+	    BoardReplyPageDTO result = service.getReplyList(boardnum, pagenum);
+        return new ResponseEntity<BoardReplyPageDTO>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping(value="replyModify", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<Void> replyModify(@RequestBody BoardReplyDTO reply, HttpServletRequest req){
+		HttpSession session = req.getSession();
+		String loginUser = (String) session.getAttribute("loginUser");
+		long replynum = reply.getReplynum();
+		if(!service.getReplyByReplyNum(replynum).getUserid().equals(loginUser)) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}else {
+			if (service.replyModify(reply)) {
+				return ResponseEntity.ok().build(); // 200 OK 상태 코드 반환
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 내부 서버 오류 상태 코드 반환
+			}			
+		}
+	}
+	
+	@PostMapping(value="replyDelete", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<BoardReplyDTO> deleteReply(@RequestBody BoardReplyDTO reply, HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		String loginUser = (String) session.getAttribute("loginUser");
+		long replynum = reply.getReplynum();
+		if(!service.getReplyByReplyNum(replynum).getUserid().equals(loginUser)) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}else {
+		    if (service.deleteReply(reply)) {
+		        return new ResponseEntity<>(HttpStatus.OK);
+		    } else {
+		        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		    }
+		}
+	}
 }

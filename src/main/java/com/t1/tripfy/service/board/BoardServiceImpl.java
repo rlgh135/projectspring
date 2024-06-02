@@ -30,6 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyPageDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
@@ -117,9 +119,9 @@ public class BoardServiceImpl implements BoardService {
 		long boardnum = bmapper.getLastNum(board.getUserid());
 		System.out.println("보드 : "+board);
 		System.out.println("보드에이디디알 : "+boardaddr);
-		if (boardaddr.getPlacename() != null && boardaddr.getPlacename() != ""
-		    && boardaddr.getStartdate() != null && boardaddr.getStartdate() != ""
-		    && boardaddr.getEnddate() != null && boardaddr.getEnddate() != "") {
+		if (boardaddr.getPlacename() != null && !boardaddr.getPlacename().isEmpty()
+		    && boardaddr.getStartdate() != null && !boardaddr.getStartdate().isEmpty()
+		    && boardaddr.getEnddate() != null && !boardaddr.getEnddate().isEmpty()) {
 		    boardaddr.setBoardnum(boardnum);
 		    System.out.println("Boardnum set to boardaddr: " + boardaddr.getBoardnum()); 
 		    if (bmapper.insertBoardAddr(boardaddr) != 1) {
@@ -356,9 +358,9 @@ public class BoardServiceImpl implements BoardService {
 		if(bmapper.updateBoard(board) != 1) {
 			return false;
 		}
-		if (boardaddr.getPlacename() != null && boardaddr.getPlacename() != ""
-		    && boardaddr.getStartdate() != null && boardaddr.getStartdate() != ""
-		    && boardaddr.getEnddate() != null && boardaddr.getEnddate() != "") {
+		if (boardaddr.getPlacename() != null && !boardaddr.getPlacename().isEmpty()
+		    && boardaddr.getStartdate() != null && !boardaddr.getStartdate().isEmpty()
+		    && boardaddr.getEnddate() != null && !boardaddr.getEnddate().isEmpty()) {
 		    boardaddr.setBoardnum(boardnum);
 		    if (bmapper.getBoardaddrByBoardnum(boardnum) != null) {
 		    	if(bmapper.deleteBoardaddr(boardnum) != 1) {
@@ -471,6 +473,31 @@ public class BoardServiceImpl implements BoardService {
 	public UserImgDTO getUserProfile(String userid) {
 		
 		return umapper.getUserProfile(userid);
+	}
+	@Override
+	public BoardReplyDTO replyRegist(BoardReplyDTO reply) {
+		if(brmapper.insertReply(reply) == 1) {
+			return brmapper.getLastReply(reply.getUserid());
+		}
+		return null;
+	}
+	@Override
+	public BoardReplyPageDTO getReplyList(long boardnum, int pagenum) {
+		int amount = 10;
+		int startrow = (pagenum-1)*amount;
+		return new BoardReplyPageDTO(brmapper.getTotal(boardnum), brmapper.getReplyList(amount,startrow,boardnum));
+	}
+	@Override
+	public boolean replyModify(BoardReplyDTO reply) {
+		return brmapper.updateReply(reply) == 1;
+	}
+	@Override
+	public boolean deleteReply(BoardReplyDTO reply) {
+		return brmapper.deleteReply(reply) == 1;
+	}
+	@Override
+	public BoardReplyDTO getReplyByReplyNum(long replynum) {
+		return brmapper.getReplyByReplyNum(replynum);
 	}
 	
 }

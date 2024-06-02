@@ -1,5 +1,6 @@
 package com.t1.tripfy.service.board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -9,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyPageDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 
@@ -76,4 +79,13 @@ public interface BoardService {
 	// 유저 프로필
 	UserImgDTO getUserProfile(String userid);
 
+	BoardReplyDTO replyRegist(BoardReplyDTO reply);
+
+	BoardReplyPageDTO getReplyList(long boardnum, int pagenum);
+
+	boolean replyModify(BoardReplyDTO reply);
+
+	boolean deleteReply(BoardReplyDTO reply);
+
+	BoardReplyDTO getReplyByReplyNum(long replynum);
 }
