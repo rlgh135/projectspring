@@ -119,9 +119,9 @@ public class BoardServiceImpl implements BoardService {
 		long boardnum = bmapper.getLastNum(board.getUserid());
 		System.out.println("보드 : "+board);
 		System.out.println("보드에이디디알 : "+boardaddr);
-		if (boardaddr.getPlacename() != null && !boardaddr.getPlacename().isEmpty()
-		    && boardaddr.getStartdate() != null && !boardaddr.getStartdate().isEmpty()
-		    && boardaddr.getEnddate() != null && !boardaddr.getEnddate().isEmpty()) {
+		if (!boardaddr.getPlacename().equals("") && !boardaddr.getPlacename().isEmpty()
+		    && !boardaddr.getStartdate().equals("") && !boardaddr.getStartdate().isEmpty()
+		    && !boardaddr.getEnddate().equals("") && !boardaddr.getEnddate().isEmpty()) {
 		    boardaddr.setBoardnum(boardnum);
 		    System.out.println("Boardnum set to boardaddr: " + boardaddr.getBoardnum()); 
 		    if (bmapper.insertBoardAddr(boardaddr) != 1) {
@@ -358,9 +358,9 @@ public class BoardServiceImpl implements BoardService {
 		if(bmapper.updateBoard(board) != 1) {
 			return false;
 		}
-		if (boardaddr.getPlacename() != null && !boardaddr.getPlacename().isEmpty()
-		    && boardaddr.getStartdate() != null && !boardaddr.getStartdate().isEmpty()
-		    && boardaddr.getEnddate() != null && !boardaddr.getEnddate().isEmpty()) {
+		if (!boardaddr.getPlacename().equals("") && !boardaddr.getPlacename().isEmpty()
+		    && !boardaddr.getStartdate().equals("") && !boardaddr.getStartdate().isEmpty()
+		    && !boardaddr.getEnddate().equals("") && !boardaddr.getEnddate().isEmpty()) {
 		    boardaddr.setBoardnum(boardnum);
 		    if (bmapper.getBoardaddrByBoardnum(boardnum) != null) {
 		    	if(bmapper.deleteBoardaddr(boardnum) != 1) {

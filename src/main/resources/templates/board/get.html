@@ -186,18 +186,19 @@
 		margin-top: 30px;
 	}
 	
-	.reply_area > div {
+	.reply_area > div, .reply > .replyModifyForm{
+		width: 100%;
 	    margin-top: 8px;
 	    position: relative;
 		border:1px solid #2196F3;
 		border-radius: 10px;
 	}
-	.reply_area > div > div{
+	.reply_area > div > div, .reply > div > div{
 		margin-left: 10px;
 		margin-bottom: 10px;
 	}
 	
-	.reply_area > div > textarea {
+	.reply_area > div > textarea, .reply > div > textarea {
 	    overflow: auto;
 	    resize: none;
 	    width: 91.3%;
@@ -211,12 +212,12 @@
 		border: none;
 	}
 	
-	.reply_area > div > textarea::placeholder {
+	.reply_area > div > textarea::placeholder, .reply > div > textarea::placeholder{
 	    font-size: 13px;
 	    color: #aaaaaa;
 	}
 	
-	.reply_area > div > [type="button"] {
+	.reply_area > div > [type="button"],  .reply > div > [type="button"]{
 	 	position: absolute;
 	     top: 55%; right: 1.3%;
 	     font-size: 14px;
@@ -226,6 +227,10 @@
 	     width: 60px;
 	     height: 35px;
 	     color: #fff;
+	 }
+	 .reply .replyModifyForm input:nth-of-type(1){
+		top:55%;
+		right:9%;
 	 }
 	
 	 .guide_profile {
@@ -296,11 +301,13 @@
 	
 	/*댓글 디자인*/
 	.replies{
+		width: 100%;
 		padding:0;
 		margin-top:15px;
 		border-top: 1px solid gray;
 	}
 	.reply{
+		width: 100%;
 		margin-top: 10px;
 		display:flex;
 		border-bottom: 1px solid #f2f2f2;
@@ -310,6 +317,9 @@
 	}
 	.reply .reply_userThumnail img{
 		width:50px; height:50px;
+	}
+	.reply .reply_box{
+		width: 96%;
 	}
 	.reply .reply_box .reply_userid{
 		width:100%;
@@ -700,15 +710,38 @@ let thispage = 1;
 			const thisUserId = replyBox.find('.reply_userid').text();
 			const thisContent = replyBox.find('.reply_content').text();
 			const hasSticker = replyBox.find('.reply_sticker').length > 0;
+			const stickerSrc = hasSticker ? replyBox.find('.reply_sticker img').attr('src') : '';
+
+			replyBox.empty();
+			const modifyBoardForm = `
+			        <div class="replyModifyForm">
+			            <textarea name="replyModifyContent" class="replyModifyContent" placeholder="댓글을 입력해주세요.">${thisContent}</textarea>
+			            <div class="comment_attach">
+			                ${hasSticker ? `
+			                    
+			                ` : `
+			                    <svg id="no_sticker_toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16" style="cursor:pointer;">
+			                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.646 4.646a.5.5 0 0 0-.708.708L7.293 8 3.938 11.354a.5.5 0 1 0 .708.708L8 8.707l3.354 3.355a.5.5 0 0 0 .708-.708L8.707 8l3.355-3.354a.5.5 0 0 0-.708-.708L8 7.293 4.646 4.646z"/>
+			                    </svg>
+			                `}
+			            </div>
+			            <input type="button" value="수정" onclick="replyModify();">
+			            <input type="button" value="취소" onclick="replyModifyCancel();">
+			        </div>
+			    `;
+			replyBox.append(modifyBoardForm);
    			console.log("리플라이 아이디 : "+replyId)
-   			boardReplyService.modify(
+   			/*boardReplyService.modify(
    	            {"replynum": replyId},
    	            function(result) {
    	                showReplyList(thispage);
    	            }
-   	        );
+   	        );*/
    	   })
    });
+   function replyModifyCancel(){
+		showReplyList(thispage);
+   }
 	
 	// 댓글
 	function replySubmit() {
