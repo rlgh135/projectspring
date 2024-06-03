@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 
 @Mapper
@@ -71,4 +73,28 @@ public interface BoardMapper {
 
 	// 조회수 증가
 	int updateViewCnt(@Param("boardnum") long boardnum, @Param("viewcnt") long viewcnt);
+
+	// 해당 userid가 해당 board에 좋아요 눌렀는지 찾음
+	BoardLikeDTO getBoardLike(@Param("userid") String userid, @Param("boardnum") long boardnum);
+
+	// 좋아요 등록
+	int likeRegist(@Param("userid") String userid, @Param("boardnum") long boardnum);
+
+	// 좋아요 취소
+	int likeDelete(@Param("userid") String userid, @Param("boardnum") long boardnum);
+
+	// 좋아요 수 업데이트
+	int updateLikeCnt(@Param("boardnum") long boardnum, @Param("likecnt") long likecnt);
+
+	// boardnum으로 해당 게시글에 있는 좋아요 클릭된 것 찾음
+	BoardLikeDTO getTotalBoardLike(long boardnum);
+
+	// boardnum으로 해당 게시글에 있는 좋아요 클릭된 것 삭제
+	int deleteTotalBoardLike(long boardnum);
+
+	// boardnum으로 해당 게시글의 댓글 찾음
+	BoardReplyDTO getTotalBoardReply(long boardnum);
+
+	// boardnum으로 해당 게시글의 댓글 삭제
+	int deleteTotalBoardReply(long boardnum);
 }

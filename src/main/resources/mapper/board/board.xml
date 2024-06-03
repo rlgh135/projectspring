@@ -117,6 +117,14 @@
 		select max(boardnum) from board where userid = #{userid}
 	</select>
 	
+	<select id="getTotalBoardLike">
+		select * from board_like where boardnum = #{boardnum}
+	</select>
+	
+	<select id="getTotalBoardReply">
+		select * from board_reply where boardnum = #{boardnum}
+	</select>
+	
 	<select id="getFiles">
 		select * from board_file where boardnum=#{boardnum}
 	</select>	
@@ -126,13 +134,17 @@
 	</insert>
 	
 	<insert id="insertBoardAddr">
-		insert into boardaddr values(#{boardnum}, #{placename}, #{startdate}, #{enddate})
+		<if test="(placename != null || placename != '') and (startdate != null || startdate != '') and (enddate!= null || enddate!= '')">insert into boardaddr values(#{boardnum}, #{placename}, #{startdate}, #{enddate})</if>
 	</insert>
 	
 	<insert id="insertFile">
 		insert into board_file values(#{boardnum}, #{sysname}, #{orgname}) 
 	</insert>
-		
+	
+	<insert id="likeRegist">
+		insert into board_like values(#{boardnum}, #{userid})	
+	</insert>
+			
 	<update id="addReplyCnt">
 		update board set replycnt = replycnt+1 where boardnum=#{boardnum};
 	</update>
@@ -145,7 +157,11 @@
 	<update id="updateViewCnt">
 		update board set viewcnt = #{viewcnt} where boardnum = #{boardnum}
 	</update>	
-
+	
+	<update id="updateLikeCnt">
+		update board set likecnt = #{likecnt} where boardnum = #{boardnum}
+	</update>
+	
 	<update id="updateBoard">
 		update board
 		set title = #{title}, content = #{content}, updatecheck = 1, regionname = #{regionname}, countrycode = #{countrycode}
@@ -158,6 +174,9 @@
 		where boardnum = #{boardnum}
 	</update>
 
+	<select id="getBoardLike">
+		select * from board_like where boardnum = #{boardnum} and userid = #{userid}
+	</select>
 	
 	<select id="getBoardaddrByBoardnum">
 		select * from boardaddr
@@ -178,6 +197,18 @@
 	
 	<delete id="deleteFilesBySystemname">
 		delete from board_file where sysname = #{sysname}
+	</delete>
+	
+	<delete id="likeDelete">
+		delete from board_like where userid = #{userid} and boardnum = #{boardnum}
+	</delete>
+	
+	<delete id="deleteTotalBoardLike">
+		delete from board_like where boardnum = #{boardnum}
+	</delete>
+	
+	<delete id="deleteTotalBoardReply">
+		delete from board_reply where boardnum = #{boardnum}
 	</delete>
 	
 	<select id="getBoardThumnail">

@@ -243,6 +243,15 @@
 	     top: 16px;
 	     font-size: 18px;
 	 }
+	 
+	 
+	 .guide_profile img.guidebadge {
+		position: absolute;
+		top: -3px;
+	 	width: 20px; height: 20px;
+	 	margin-left: 5px;
+	 }
+	 
 	/*
 	 .guide_profile p {
 	     margin-top: 5px;
@@ -286,6 +295,35 @@
 		font-weight: 400;
 		color: #9a9a9a;
 	}
+	
+	.info > div {
+		position: relative;
+	}
+	
+	#like {
+		display: inline-block;
+		width: 23px; height: 23px;
+	}
+	
+	.contour {
+		display: inline-block;
+		border-right: 1px solid #c5c5c5;
+		height: 20px;
+		width: 1px;
+		margin-left: 2px;
+	}
+
+	
+	#like_area {
+		position: relative;
+		top: 2px;
+		display: inline-block;
+		margin-left: 6px;
+		width: 23px; height: 23px;
+		padding-top: 10px;
+		/* border: 1px solid red; */
+	}
+
 </style>
 </head>
 <body>
@@ -302,6 +340,13 @@
                     [[${board.title}]]
                 </h2>
 				
+				<div class="contour"></div>
+	
+				<div id="like_area">
+					<img th:if="${boardLike}" src="/images/boardimg/fullheart.png" id="like">
+					<img th:unless="${boardLike}" src="/images/boardimg/emptyheart.png" id="like">
+				</div>
+			 
 				<div th:if="${board.userid eq session.loginUser}" class="changebtn">
 				    <button th:onclick="modifyBoard([[${board.boardnum}]]);">수정</button>
 				    <button th:onclick="deleteBoard([[${board.boardnum}]]);">삭제</button>
@@ -309,7 +354,7 @@
 
                 <div class="cnt_info">
                     <span>조회수 [[${board.viewcnt}]]</span>
-					<span>좋아요 [[${board.likecnt}]]</span>
+					<span id="likecnt">좋아요 [[${board.likecnt}]]</span>
                     <span>댓글 [[${replyCnt}]]</span>
                 </div>
 
@@ -326,12 +371,12 @@
 					    <div></div>
 					</div>
 					
-					<div class="file addfile" th:if="${files != null and files.size() > 1}">
+					<div class="file addfile" th:if="${files != null and files.size() > 0}">
 					    <table>
 							<tr>
 								<th><h4>첨부 파일</h4></th>
 								<td>
-									<a th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}" th:each="file:${files}"><img src="/images/boardimg/download.png" class="downloadImg">[[${file.orgname}]]</a>
+									<a th:if="${not file.sysname.contains('BoardThumnail')}" th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}" th:each="file:${files}"><img src="/images/boardimg/download.png" class="downloadImg">[[${file.orgname}]]</a>
 								</td>
 							</tr>
 						</table>
@@ -357,7 +402,7 @@
                     <h4>작성자</h4>
                     <div class="guide_profile">
                         <img th:src="'/BoardThumnail/' + ${userprofile.sysname}" alt="">
-						<span>[[${board.userid}]]</span>
+						<span>[[${board.userid}]]<img th:if="${guide}" src="/images/userimg/guidebadge.png" alt="" class="guidebadge"></span>
 						<!--<p>자기 소개를 아직 작성하지 않았습니다</p>-->
                     </div>
 
@@ -429,5 +474,55 @@ const geocoder = new google.maps.Geocoder();
 		
 		location.replace("/board/modify?boardnum=" + boardnum);
 	}
+	
+	$("#like_area").on("click", function() {
+		let loginUser = /*[[${session.loginUser}]]*/"";
+		let userid = /*[[${board.userid}]]*/"";	
+		let boardnum = /*[[${board.boardnum}]]*/"";
+		
+		console.log("boardnum: " + boardnum)	
+		
+		if(loginUser == null) {
+			alert("로그인 후 이용 가능합니다.");
+			return;
+		}
+		
+		if(loginUser == userid) {
+			alert("본인 게시글에는 좋아요를 클릭할 수 없습니다.");
+			return;
+		}
+		
+		else {			
+			$.ajax({
+				url: "/board/like?boardnum=" + boardnum,
+				method: "PUT",
+				
+				success:function(data) {
+					console.log(data)
+					console.log(data.boardlike)
+					console.log(data.board.likecnt)
+					
+					if(data.boardlike == null || !data.boardlike) {  // 좋아요 등록함
+						$("#like_area").html('<img src="/images/boardimg/emptyheart.png" id="like">');
+						$("#likecnt").html('좋아요 ' + data.board.likecnt);
+					}
+					
+					else {  // 좋아요 취소함
+						$("#like_area").html('<img src="/images/boardimg/fullheart.png" id="like">');
+						$("#likecnt").html('좋아요 ' + data.board.likecnt);
+					}
+						
+				},
+				
+				error:function(data) {
+					alert("잠시 후에 다시 시도해주세요.");
+				}
+				
+			});
+		}
+		
+		
+		
+	})
 </script>
 </html>
