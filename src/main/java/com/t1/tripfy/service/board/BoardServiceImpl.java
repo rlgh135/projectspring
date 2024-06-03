@@ -19,7 +19,6 @@ import java.util.UUID;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,8 +61,7 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private UserMapper umapper;
-	
-	
+
 	//사진검사
 	public static boolean isImageFile(String extension) {
         if (extension == null || extension.isEmpty()) {
@@ -522,7 +520,11 @@ public class BoardServiceImpl implements BoardService {
 	public BoardReplyPageDTO getReplyList(long boardnum, int pagenum) {
 		int amount = 10;
 		int startrow = (pagenum-1)*amount;
-		return new BoardReplyPageDTO(brmapper.getTotal(boardnum), brmapper.getReplyList(amount,startrow,boardnum));
+		List<BoardReplyDTO> list = brmapper.getReplyList(amount,startrow,boardnum);
+		for(BoardReplyDTO reply : list) {
+			reply.setSysname(umapper.getUserProfile(reply.getUserid()).getSysname());
+		}
+		return new BoardReplyPageDTO(brmapper.getTotal(boardnum), list);
 	}
 	@Override
 	public boolean replyModify(BoardReplyDTO reply) {

@@ -831,11 +831,13 @@ let thispage = 1;
 		       $('#modify-emoji-picker').remove();
 		   });
 		   
-		   $(document).on('click', '#replyModify', function(){
-				const content = $('.replyModifyContent').val();
-				replyModify(replyId,content);
-		   })
    	   })
+	   $(document).on('click', '#replyModify', function(){
+			const replyBox = $(this).closest('.reply');
+			const replyId = replyBox.attr('id').substring(3);
+			const content = $('.replyModifyContent').val();
+			replyModify(replyId,content);
+	   })
 	   
 	   
 	   $(document).on('click', '.modify_emoticon-close-btn', function(){
@@ -903,7 +905,7 @@ let thispage = 1;
 				for(let i=0;i<list.length;i++){
 					const reply = list[i];
 					str += `<div class="reply" id="brn${reply.replynum}">
-					<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
+					<div class="reply_userThumnail"><img src="/user/thumbnail?sysname=${reply.sysname}" alt></div>
 			        <div class="reply_box">
 			            <div class="reply_userid">${reply.userid}</div>
 			            <div class="reply_content">${reply.contents}</div>
@@ -1032,9 +1034,6 @@ let thispage = 1;
 				
 			});
 		}
-		
-		
-		
 	})
 
 	const boardReplyService = {

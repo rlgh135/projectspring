@@ -293,7 +293,7 @@ public class PackController {
 	@PostMapping("write")
 	public String write(PackageDTO pack, MultipartFile packageFile,HttpServletRequest req) throws Exception {
 		//가이드num 세션있다고 가정
-		long guidenum = 1;
+		long guidenum = 5;
 		pack.setGuidenum(guidenum);
 		System.out.println(packageFile);
 		System.out.println(pack.getCountrycode());
@@ -322,7 +322,7 @@ public class PackController {
 		model.addAttribute("pac",pac);
 		String[] dayMMdd = service.getDayMMdd(pac.getStartdate(),pac.getEnddate());
 		model.addAttribute("dayMMdd",dayMMdd);
-		return "package/timelineWrite";
+		return "/package/timelineWrite";
 	}
 	
 	@GetMapping("tlget")
