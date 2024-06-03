@@ -97,9 +97,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	
 	//4-1. 기존 SSE 연결 해제
 		
-	
-	//5. 안 읽은 채팅 개수 끌고오기
-		//전체 개수를 끌고온다
 	}
 
 	

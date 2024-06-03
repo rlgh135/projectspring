@@ -145,6 +145,8 @@ public class ChatServiceImpl implements ChatService {
 			return null;
 		}
 		
+		System.out.println(temp.getChatDetailIdx());
+		
 		//메시지 송신자 chat_user.chat_detail_idx 최신화
 		if(1 != chatUserMapper.updateChatDetailIdx(chatRoomIdx, receivedMsg.getSenderId(), temp.getChatDetailIdx())) {
 			//수정 실패 처리

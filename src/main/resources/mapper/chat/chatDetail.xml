@@ -33,7 +33,7 @@
 	</select>
 	<!-- 특정 채팅방의 마지막 메시지 가져오기 -->
 	<select id="selectLastRowByChatRoomIdx">
-		SELECT chat_detail_content, regdate
+		SELECT chat_detail_content, regdate, chat_detail_idx
 		FROM chat_detail
 		WHERE
 			chat_room_idx = #{chatRoomIdx}
