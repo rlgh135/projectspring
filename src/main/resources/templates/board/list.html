@@ -110,6 +110,7 @@
         max-height: 153px;
         display: flex;
         flex-wrap: wrap;
+		overflow: hidden;
         
     }
 
@@ -315,7 +316,7 @@
         margin-top: 30px;
         display: flex;
         flex-wrap: wrap;
-        overflow-y: auto;
+        /*overflow-y: auto;*/
         gap: 26.6px;  /* 전체에 여백 */
         padding-bottom: 10px;
     }
@@ -335,46 +336,44 @@
         display: flex;
     }
 
-    .post > .guide img {
+    .post > .guide > img {
         width: 30px;
         height: 30px;
         margin-right: 7px;
     }
 
-    .post > .guide span {
+    .post > .guide > span {
         margin-top: 5px;
     }
 	
+	.post > .guide .guidebadge {
+		width: 16px; height: 16px;
+		position: relative;
+		top: 4px;
+		margin-left: 5px;
+	}
+	
 	.post > .guide > .cnts {
-	     margin-left: auto;
-		 width: 90px;
-	 }
+		display: flex;
+		margin-top: 3px;
+		margin-left: auto;
+	}
 	
-	 .post > .guide > .cnts > span {
-	     position: relative;
-	     margin-right: 23px;
-	     top: 5px;
-	 }
+	.post > .guide > .cnts > div {
+		margin-right: 6px;
+	}
 	
-	 .post > .guide > .cnts > span:nth-child(2) {
-	    margin-right: 27px;
-	 }
+	.post > .guide > .cnts > div > img {
+	    width: 16px; height: 16px;
+		position: relative;
+		margin-right: 4px;
+		top: 3px;
+	}
 	
-	 .post > .guide > .cnts > span:last-of-type {
-	    margin-right: 0;
-	 }
+	.post > .guide > .cnts > div:nth-child(3) > img {
+		margin-right: 3px;
+	}
 	
-	 .post > .guide > .cnts > span > img {
-	     width: 16px; height: 16px;
-	     position: absolute;
-	     top: 2px; left: -20px;
-	 }
-	
-	 .post > .guide > .cnts > span:last-of-type > img {
-	     width: 20px; height: 20px;
-	     top: 0; left: -24px;
-	 }
-	    
     .post > .p_img {
         width: 100%;
         height: 160px;
@@ -492,7 +491,7 @@
                 <div class="recentsearch">
                     <div>최근 검색어</div>
                     <div class="keyword_area">
-                        <div class="keyword"><span>검색어</span><div class="xbtn"></div></div>
+						<!--<div class="keyword"><span>검색어</span><div class="xbtn"></div></div>-->
                     </div>
                 </div>
             </div>
@@ -601,12 +600,12 @@
                     <div class="post">
                         <div class="guide">
                             <img th:src="'/BoardThumnail/' + ${profiles[i.index].sysname}" alt="">
-                            <span>[[${board.userid}]]</span>
+                            <span>[[${board.userid}]]<img th:if="${guides[i.index]}"  src="/images/userimg/guidebadge.png" alt="" class="guidebadge"></span>
 							
 							<div class="cnts">
-							    <span><img src="/images/boardimg/emptyheart.png" alt="" class="likecntImg"><span>[[${board.likecnt}]]</span></span>
-							    <span> <img src="/images/boardimg/comments.png" alt=""><span>[[${board.replycnt}]]</span></span>
-							    <span> <img src="/images/boardimg/viewcnt.png" alt=""><span>[[${board.viewcnt}]]</span></span>
+							    <div><img src="/images/boardimg/emptyheart.png" alt="" class="likecntImg"><span>[[${board.likecnt}]]</span></div>
+							    <div><img src="/images/boardimg/comments.png" alt=""><span>[[${board.replycnt}]]</span></div>
+							    <div><img src="/images/boardimg/viewcnt.png" alt=""><span>[[${board.viewcnt}]]</span></div>
 							</div>
                         </div>
 
@@ -1102,21 +1101,26 @@
 						let profileImg = data.sortprofiles[i] && data.sortprofiles[i].sysname ? data.sortprofiles[i].sysname : "profile.png";
 						let profile = $("<img>").attr("src", "/BoardThumnail/" + profileImg);
 						let spanTag = $("<span>").text(data.sortlist[i].userid);
+							
+						if(data.sortguides[i] != null) {							
+							let guideBadge = $("<img>").attr("src", "/images/userimg/guidebadge.png").attr("alt", "").addClass("guidebadge");
+							spanTag.append(guideBadge)
+						}
 						
 						divGuide.append(profile, spanTag);
 							
 						let divCnts = $("<div>").addClass("cnts");
-						let likecnt = $("<span>");
+						let likecnt = $("<div>");
 						let likecntImg = $("<img>").addClass("likecntImg").attr("src", "/images/boardimg/emptyheart.png");
 						let likecntText = $("<span>").text(data.sortlist[i].likecnt);
 						likecnt.append(likecntImg, likecntText);
 						
-						let replycnt = $("<span>");
+						let replycnt = $("<div>");
 						let replycntImg = $("<img>").attr("src", "/images/boardimg/comments.png");
 						let replycntText = $("<span>").text(data.sortlist[i].replycnt);
 						replycnt.append(replycntImg, replycntText);
 						
-						let viewcnt = $("<span>");
+						let viewcnt = $("<div>");
 						let viewcntImg = $("<img>").attr("src", "/images/boardimg/viewcnt.png");
 						let viewcntText = $("<span>").text(data.sortlist[i].viewcnt);
 						viewcnt.append(viewcntImg, viewcntText);
@@ -1188,7 +1192,7 @@
 	function clickEnter(e) {
 		if(e.keyCode == 13) {  // 엔터 키 클릭 시
 			search(e.target.value);
-			b_searchDetail.style.display = "none";
+			// b_searchDetail.style.display = "none";
 		}
 	}
 	
@@ -1322,21 +1326,26 @@
 						let profileImg = data.sortprofiles[i] && data.sortprofiles[i].sysname ? data.sortprofiles[i].sysname : "profile.png";
 						let profile = $("<img>").attr("src", "/BoardThumnail/" + profileImg);
 						let spanTag = $("<span>").text(data.sortlist[i].userid);
+							
+						if(data.sortguides[i] != null) {							
+							let guideBadge = $("<img>").attr("src", "/images/userimg/guidebadge.png").attr("alt", "").addClass("guidebadge");
+							spanTag.append(guideBadge)
+						}
 						
 						divGuide.append(profile, spanTag);
 							
 						let divCnts = $("<div>").addClass("cnts");
-						let likecnt = $("<span>");
+						let likecnt = $("<div>");
 						let likecntImg = $("<img>").addClass("likecntImg").attr("src", "/images/boardimg/emptyheart.png");
 						let likecntText = $("<span>").text(data.sortlist[i].likecnt);
 						likecnt.append(likecntImg, likecntText);
 						
-						let replycnt = $("<span>");
+						let replycnt = $("<div>");
 						let replycntImg = $("<img>").attr("src", "/images/boardimg/comments.png");
 						let replycntText = $("<span>").text(data.sortlist[i].replycnt);
 						replycnt.append(replycntImg, replycntText);
 						
-						let viewcnt = $("<span>");
+						let viewcnt = $("<div>");
 						let viewcntImg = $("<img>").attr("src", "/images/boardimg/viewcnt.png");
 						let viewcntText = $("<span>").text(data.sortlist[i].viewcnt);
 						viewcnt.append(viewcntImg, viewcntText);
@@ -1348,6 +1357,7 @@
 						let thumbnail = data.sortthumbnails[i] && data.sortthumbnails[i].sysname ? data.sortthumbnails[i].sysname : "no_img.jpg";
 						let boardimg = $("<img>").attr("src", "/BoardThumnail/" + thumbnail).attr("alt", "");
 						divpImg.append(boardimg);
+						
 						
 						let divWrite = $("<div>").addClass("post_write");
 						let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
@@ -1392,13 +1402,14 @@
 				        $(this).css("border-color", '#2196F3');
 				    }
 				});
+				
+				recentKeyword();
 			},
 			
 			error:function(data) {
 				// console.log("X")
 				alert("잠시 후에 다시 시도해주세요.");
 			}
-			
 		})
 	}
 	
@@ -1749,21 +1760,26 @@
 							let profileImg = data.sortprofiles[i] && data.sortprofiles[i].sysname ? data.sortprofiles[i].sysname : "profile.png";
 							let profile = $("<img>").attr("src", "/BoardThumnail/" + profileImg);
 							let spanTag = $("<span>").text(data.sortlist[i].userid);
+								
+							if(data.sortguides[i] != null) {							
+								let guideBadge = $("<img>").attr("src", "/images/userimg/guidebadge.png").attr("alt", "").addClass("guidebadge");
+								spanTag.append(guideBadge)
+							}
 							
 							divGuide.append(profile, spanTag);
 								
 							let divCnts = $("<div>").addClass("cnts");
-							let likecnt = $("<span>");
+							let likecnt = $("<div>");
 							let likecntImg = $("<img>").addClass("likecntImg").attr("src", "/images/boardimg/emptyheart.png");
 							let likecntText = $("<span>").text(data.sortlist[i].likecnt);
 							likecnt.append(likecntImg, likecntText);
 							
-							let replycnt = $("<span>");
+							let replycnt = $("<div>");
 							let replycntImg = $("<img>").attr("src", "/images/boardimg/comments.png");
 							let replycntText = $("<span>").text(data.sortlist[i].replycnt);
 							replycnt.append(replycntImg, replycntText);
 							
-							let viewcnt = $("<span>");
+							let viewcnt = $("<div>");
 							let viewcntImg = $("<img>").attr("src", "/images/boardimg/viewcnt.png");
 							let viewcntText = $("<span>").text(data.sortlist[i].viewcnt);
 							viewcnt.append(viewcntImg, viewcntText);
@@ -1775,6 +1791,7 @@
 							let thumbnail = data.sortthumbnails[i] && data.sortthumbnails[i].sysname ? data.sortthumbnails[i].sysname : "no_img.jpg";
 							let boardimg = $("<img>").attr("src", "/BoardThumnail/" + thumbnail).attr("alt", "");
 							divpImg.append(boardimg);
+							
 							
 							let divWrite = $("<div>").addClass("post_write");
 							let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
@@ -1883,7 +1900,7 @@
 				$(this).css("border-color", '#2196F3');
 			}
 		});
-		
+		/*
 		$(".likecntImg").on("click", function(e) {
 		    console.log("e.target: " + e.target)
 		    e.stopPropagation(); // 이벤트 전파 막음
@@ -1895,6 +1912,27 @@
 				like(e);
 		    }
 		});
+		*/
+		
+		// 최근 검색어 삭제
+		$(document).on("click", ".xbtn", function(e) {
+		     // console.log("e.target: " + e.target);
+			 let keywordTxt = $(this).closest(".keyword").find("span").text().trim();  // .keyword의 span 태그의 text
+			 
+			 // 클릭된 xbtn의 부모 요소 중에서 .keyword 클래스를 가진 요소를 찾아 삭제
+			 $(this).closest(".keyword").remove();
+			 
+			 let keywords = getCookie("keywords");
+			 if(keywords) {
+				let keywordsArray = keywords.split("_-_");  // _-_ 기준으로 자름
+				
+				let updatedKeywords = keywordsArray.filter(function(keyword) {
+				    return keyword !== keywordTxt;
+				});
+				document.cookie = "keywords=" + updatedKeywords.join("_-_");
+			 }
+		 });
+		
 	});
 	
 	function pageChange(e) {
@@ -2171,19 +2209,73 @@
 		}
 	}
 	
-	function like(e) {
-		let loginUser = /*[[${session.loginUser}]]*/"";
-		
+	
+	// function like(e) {
+		// let loginUser = /*[[${session.loginUser}]]*/"";
+		/*
 		if(loginUser == null) {
 			alert("로그인 후 이용해주세요.");
 		}
-		
-		// 1. board_like 에서 loginUser가 몇번 게시글에 좋아요를 눌렀는지 리스트로 받아와야 함
-		// 2. 누른 게시글에는 fullheart 이미지, 안 누른 게시글에는 emptyheart
+	}
+	*/
+	
+	// 최근 검색어
+	function getCookie(name) {
+	    const cookies = document.cookie.split(';'); // 모든 쿠키를 ';'로 분리하여 배열로 만들어줌
+	    for (let i = 0; i < cookies.length; i++) {
+	        let cookie = cookies[i].trim(); // 공백 제거
+	        if (cookie.startsWith(name + '=')) { // 쿠키 이름으로 시작하는 쿠키를 찾음
+	            return cookie.substring(name.length + 1); // 찾은 쿠키 값을 반환
+	        }
+	    }
+	    return null; // 해당하는 이름의 쿠키가 없는 경우 null을 반환
 	}
 	
+	// const keywords = getCookie('keywords');
+	// console.log(keywords);
 	
 	
+	// 새로운 키워드를 기존 키워드 앞쪽에 추가하는 함수
+	function addNewKeyword(keyword) {
+	    const keyword_area = document.querySelector('.keyword_area'); // 최근 검색어를 표시할 부모 요소 선택
+	    const existingKeywords = document.querySelectorAll('.keyword'); // 기존 키워드 요소들 선택
+	    const firstKeyword = existingKeywords[0]; // 첫 번째 기존 키워드 요소
+	
+	    const keywordDivTag = document.createElement('div'); // 새로운 검색어를 담을 div 요소 생성
+	    keywordDivTag.classList.add('keyword'); // 클래스 추가
+	    keywordDivTag.innerHTML = `<span>${keyword}</span><div class="xbtn"></div>`; // 검색어와 삭제 버튼을 포함한 HTML 추가
+	
+	    // 첫 번째 기존 키워드 요소 앞에 새로운 키워드 요소 추가
+	    keyword_area.insertBefore(keywordDivTag, firstKeyword);
+	}
+	
+	// 최근 검색어를 가져오고 화면에 표시하는 함수
+	function recentKeyword() {
+	    const keywords = getCookie('keywords'); // 쿠키에서 검색어 가져오기
+		console.log(keywords);
+		
+	    if (keywords) {
+	        const keywordsArray = keywords.split('_-_'); // 구분자를 기준으로 검색어를 배열로 분리
+	        keywordsArray.forEach(keyword => {
+	            if (!isDuplicate(keyword)) {
+	                addNewKeyword(keyword); // 새로운 키워드를 기존 키워드 앞쪽에 추가
+	            }
+	        });
+	    }
+	}
 
+	// 중복 검사 함수
+	function isDuplicate(keyword) {
+	    const existingKeywords = document.querySelectorAll('.keyword span'); // 이미 표시된 검색어 목록 가져오기
+	    for (let i = 0; i < existingKeywords.length; i++) {
+	        if (existingKeywords[i].textContent === keyword) {
+	            return true; // 이미 있는 검색어인 경우 중복으로 처리
+	        }
+	    }
+	    return false; // 중복되지 않은 경우
+	}
+
+	// 페이지 로드 시 최근 검색어를 표시
+	window.addEventListener('load', recentKeyword);
 </script>
 </html>

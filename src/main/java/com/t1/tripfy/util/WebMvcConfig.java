@@ -20,6 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //        		.addResourceLocations("file:///D:/spring_yes/boardfile/");
         //보드 썸머노트 파일관리 폴더 매핑
         registry.addResourceHandler("/BoardSummerNoteThumnail/**")
-				.addResourceLocations("file:///D:/spring_yes/boardSummerNotefile/");
+//				.addResourceLocations("file:///D:/spring_yes/boardSummerNotefile/");
+        		.addResourceLocations("file:///C:/Users/USER/Desktop/spring/file/");
     }
 }

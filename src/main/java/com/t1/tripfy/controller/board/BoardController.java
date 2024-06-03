@@ -1,10 +1,15 @@
 package com.t1.tripfy.controller.board;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +30,11 @@ import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
 import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
 import com.t1.tripfy.domain.dto.board.BoardReplyPageDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
+import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.service.board.BoardService;
 
@@ -60,6 +68,7 @@ public class BoardController {
 		List<BoardDTO> list = new ArrayList<BoardDTO>();
 		List<BoardFileDTO> thumbnails = new ArrayList<BoardFileDTO>();
 		List<UserImgDTO> profiles = new ArrayList<UserImgDTO>();
+		List<GuideDTO> guides = new ArrayList<GuideDTO>(); 
 		
 		if(method != null && !method.isEmpty()) {  // sort 파라미터 있는 경우(/board/list?sort="")
 			
@@ -90,8 +99,16 @@ public class BoardController {
 			long boardnum = list.get(i).getBoardnum();
 			String userid = list.get(i).getUserid();
 			
+			// 서머노트로 작성한 content 이미지 태그 제거
+			String content = list.get(i).getContent();
+			String newContent = service.exceptImgTag(content);
+			list.get(i).setContent(newContent);
+			
 			BoardFileDTO thumbnail = service.getThumbnail(boardnum);
 			UserImgDTO profile = service.getUserProfile(userid);
+			GuideDTO guide = service.getGuide(userid);
+			
+			guides.add(guide);
 			
 			if(thumbnail == null) {
 				BoardFileDTO boardfile = new BoardFileDTO();
@@ -124,15 +141,17 @@ public class BoardController {
 		model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
 		model.addAttribute("thumbnails", thumbnails);
 		model.addAttribute("profiles", profiles);
+		model.addAttribute("guides", guides);
 		
 		System.out.println("thumbnails: " + thumbnails);
 		System.out.println("profiles: " + profiles);
 		System.out.println("pageMaker:" + new PageDTO(service.getTotal(cri), cri));
+		System.out.println("guides: " + guides);
 	}
 	
 	@GetMapping("sort")
 	@ResponseBody
-	public Map<String, Object> boardSort(@RequestParam(value = "sort", required = false) String method, Criteria cri) {  // 정렬 방법
+	public Map<String, Object> boardSort(@RequestParam(value = "sort", required = false) String method, Criteria cri, HttpServletRequest req, HttpServletResponse resp) {  // 정렬 방법
 		System.out.println("sort: " + method);
 		System.out.println(cri.getKeyword());
 		
@@ -153,6 +172,7 @@ public class BoardController {
 		List<BoardDTO> sortlist = new ArrayList<BoardDTO>();
 		List<BoardFileDTO> sortthumbnails = new ArrayList<BoardFileDTO>();
 		List<UserImgDTO> sortprofiles = new ArrayList<UserImgDTO>();
+		List<GuideDTO> sortguides = new ArrayList<GuideDTO>(); 
 		
 		if(method != null && !method.isEmpty()) {  // sort 파라미터 있는 경우(/board/list?sort="")
 			
@@ -183,8 +203,16 @@ public class BoardController {
 			long boardnum = sortlist.get(i).getBoardnum();
 			String userid = sortlist.get(i).getUserid();
 			
+			// 서머노트로 작성한 content 이미지 태그 제거
+			String sortcontent = sortlist.get(i).getContent();
+			String newsortContent = service.exceptImgTag(sortcontent);
+			sortlist.get(i).setContent(newsortContent);
+			
 			BoardFileDTO sortthumbnail = service.getThumbnail(boardnum);
 			UserImgDTO sortprofile = service.getUserProfile(userid);
+			GuideDTO sortguide = service.getGuide(userid);
+			
+			sortguides.add(sortguide);
 			
 			if(sortthumbnail == null) {
 				BoardFileDTO sortboardfile = new BoardFileDTO();
@@ -208,6 +236,35 @@ public class BoardController {
 				sortprofiles.add(sortprofile);
 			}
 		}
+
+		
+		
+		if(cri.getKeyword() != null && !cri.getKeyword().isEmpty()) {
+			String existingkeywords = "";
+			Cookie[] cookies = req.getCookies();
+			
+			if(cookies != null) {
+				for(Cookie cookie : cookies) {
+					if(cookie.getName().equals("keywords")) {
+						existingkeywords = cookie.getValue();
+						break;
+					}
+				}
+			}
+			
+			if(!existingkeywords.contains(cri.getKeyword())) {
+				existingkeywords += (existingkeywords.isEmpty() ? "" : "_-_") + cri.getKeyword();
+				 
+				// 검색어 목록을 쿠키에 저장
+		        Cookie keywordCookie = new Cookie("keywords", existingkeywords);
+		        keywordCookie.setMaxAge(24 * 60 * 60); // 유효기간 1일
+		        resp.addCookie(keywordCookie);
+			}
+			
+		}
+		
+
+		
 		
 		Map<String, Object> data = new HashMap<>();
 		data.put("sortlist", sortlist);
@@ -215,6 +272,7 @@ public class BoardController {
 		data.put("sortValue", method);
 		data.put("sortthumbnails", sortthumbnails);
 		data.put("sortprofiles", sortprofiles);
+		data.put("sortguides", sortguides);
 		
 		System.out.println(data);
 		
@@ -230,6 +288,8 @@ public class BoardController {
 
 	    BoardDTO board = service.getDetail(boardnum);
 	    String userid = board.getUserid();
+	    BoardLikeDTO boardLike = service.getBoardLike(loginUser, boardnum);
+	    GuideDTO guide = service.getGuide(userid);
 	    
 	    UserImgDTO userprofile = service.getUserProfile(userid);
 	    
@@ -304,7 +364,11 @@ public class BoardController {
 	    model.addAttribute("files", files);
 	    model.addAttribute("thumbnailImg", thumbnailImg);
 	    model.addAttribute("userprofile", userprofile);
+	    model.addAttribute("boardLike", boardLike);
+	    model.addAttribute("guide", guide);
 	    System.out.println("userprofile: " + userprofile);
+	    System.out.println("boardLike: " + boardnum + ", " + boardLike);
+	    
 	    
 	    return "board/get";
 	}
@@ -388,6 +452,31 @@ public class BoardController {
 		return service.getThumbnailResource(sysname);
 	}
 	
+
+	@PutMapping("like")
+	@ResponseBody
+	public Map<String, Object> boardlike(HttpServletRequest req, long boardnum) {
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		System.out.println("boardnum: " + boardnum);
+		
+		BoardLikeDTO boardlike = null;
+		BoardDTO board = null;
+		
+		// 좋아요 클릭 혹은 취소 관련
+		if(service.likeClick(userid, boardnum)) {  // 성공
+			// 해당 게시글에 해당 유저가 좋아요 유무 -> 객체 O 또는 X
+			boardlike = service.getBoardLike(userid, boardnum);
+			board = service.getDetail(boardnum);
+			
+		}
+		
+		Map<String, Object> data = new HashMap<>();
+		data.put("boardlike", boardlike);
+		data.put("board", board);
+		
+		return data;
+	}
+
 	@PostMapping(value="replyRegist", consumes = "application/json", produces = "application/json;charset=utf-8")
 	public ResponseEntity<BoardReplyDTO> replyRegist(@RequestBody BoardReplyDTO reply){
 		BoardReplyDTO result = service.replyRegist(reply);
