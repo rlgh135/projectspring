@@ -38,8 +38,8 @@
                         </div>
                     </div>
                     <div class="period">
-                        <input type="text" name="startdate" placeholder="출발일/도착일" id="startDateInput" readonly />
-                        <input type="text" name="enddate" placeholder="" id="endDateInput" readonly />
+                        <input type="text" name="startdate" placeholder="출발일" id="startDateInput" readonly />
+                        <input type="text" name="enddate" placeholder="/도착일" id="endDateInput" readonly />
                     </div>
                     <div class="person">
                         <button type="button" onclick="openper()">
@@ -148,14 +148,14 @@
         dateFormat: "Y-m-d",
         minDate: "today",
         onClose: function(selectedDates, dateStr, instance) {
-            if (selectedDates.length === 2) {
-                const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
-                const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
-                document.getElementById("startDateInput").value = startDate;
-                document.getElementById("endDateInput").value = endDate;
-                document.getElementById("endDateInput").style.display = 'block';
-                document.getElementById("startDateInputForm").value = startDate; // 폼에 시작 날짜 업데이트
-                document.getElementById("endDateInputForm").value = endDate; // 폼에 종료 날짜 업데이트
+			if (selectedDates.length === 2) {
+				const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
+				const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
+				document.getElementById("startDateInput").value = startDate;
+				document.getElementById("endDateInput").value = endDate;
+				document.getElementById("endDateInput").style.display = 'block'; // 여전히 표시
+				document.getElementById("startDateInputForm").value = startDate; // 폼에 시작 날짜 업데이트
+				document.getElementById("endDateInputForm").value = endDate; //
             }
         }
     });

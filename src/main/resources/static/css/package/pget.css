@@ -282,25 +282,30 @@ body{
 }
 .review{
 	width: 100%;
-	display: flex;
 	height: 60px;
-	align-items: center;
+	border-bottom: 1px solid lightgray;
+	line-height: 30px;
 }
 .userprofile{
+	margin-top: 20px;
 	display: flex;
 	width: 30%;
-	height: 100%;
+	height: 30%;
 	align-items: center;
 	
 }
 .userprofile img{
-	width: 40%;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right:5px;
 }
 .reviewcontent{
 	display: flex;
-	width: 70%;
-	justify-content: center;
+	width: 90%;
+	margin: 0 auto;
 }
+
 
 .mi_menu > .menu1, .mi_menu > .menu2,  .mi_menu > .menu3{
     width:100%;

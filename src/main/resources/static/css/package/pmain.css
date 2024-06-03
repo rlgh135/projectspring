@@ -328,13 +328,13 @@ button{
     background-color: white;
     position: absolute;
     z-index: 2;
-    width: 300px;
+    width: 350px;
     height: 330px;
-    margin: 0 auto;
-    overflow-y: scroll;
+    margin: 0 auto;    
 }
 #deslist > .list {
-    width:300px;
+    width:330px;
+    margin: 0 auto;
     height: 100%;
 
 }
@@ -342,6 +342,7 @@ button{
     width: 280px;
     height: 30px;
     margin: 0 auto;
+    margin-top: 10px;
 }
 .dl_header span{
     font-size: 30px;
