@@ -22,9 +22,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	//웹소켓 핸들러 등록
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(webSocketHandler, "/wschat")
-				.addInterceptors(new HttpSessionHandshakeInterceptor()) //웹소켓 세션 attribute로 HttpSession 넣어주기
-				.setAllowedOrigins("*"); //CORS
+		registry.addHandler(webSocketHandler, "/wschat").setAllowedOrigins("*"); //CORS
 	}
 	
 	//아마 웹소켓 설정

@@ -53,10 +53,10 @@
                         <p class="subtitles">작성중인 패키지</p>
                         <ul class="gmlists">
                             <th:block th:if="${inglist != null and inglist.size > 0}">
-                                <li th:each="ing:${inglist}" th:onclick="'rewrite(+'${ing.packagenum}+')'">
+                                <li th:each="ing, iterStats:${inglist}" th:onclick="'rewrite(+'${ing.packagenum}+')'">
                                     <div class="outerpckgs">
 										<div class="ingthumb">
-											<img src="/images/packageimg/384878.jpg">
+											<img th:src="${'/package/thumbnail?systemname='+ingthumblist[__${iterStats.index}__].pfSysname}">
 										</div>
                                         <div class="mypckgs">[[${ing.packageTitle}]]</div>
                                         <div class="stamparea"></div>
@@ -76,10 +76,10 @@
                         <p class="subtitles">내 패키지</p>
                         <ul class="gmlists">
                             <th:block th:if="${packagelist != null and packagelist.size > 0}">
-                                <li th:each="package:${packagelist}">
+                                <li th:each="package, iterStats:${packagelist}">
                                     <div class="outerpckgs">
 										<div class="ingthumb" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
-											<img src="/images/packageimg/384878.jpg">
+											<img th:src="${'/package/thumbnail?systemname='+thumbnaillist[__${iterStats.index}__].pfSysname}">
 										</div>
                                         <div class="mypckgs" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
 											<div>[[${package.packageTitle}]]</div>

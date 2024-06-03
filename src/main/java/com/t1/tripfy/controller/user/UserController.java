@@ -4,6 +4,7 @@ import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ import com.t1.tripfy.domain.dto.PageDTO;
 import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
@@ -98,11 +101,18 @@ public class UserController {
 		UserDTO user = service.getUser(loginUser);
 		
 		model.addAttribute("user", user);
-		
-		//내가 쓴 게시글 추가하기
 		cri = new Criteria(1, 6);
+		
 		List<BoardDTO> mylist = service.getMyBoardList(cri, loginUser);
+		List<BoardFileDTO> bflist = new ArrayList<>();
+		if(mylist.size()>0) {
+			for (BoardDTO board : mylist) {
+				bflist.add(service.getMyBoardThumbnail(board.getBoardnum()));
+				System.out.println(service.getMyBoardThumbnail(board.getBoardnum()));
+			}
+		}
 		model.addAttribute("list",mylist);
+		model.addAttribute("bflist",bflist);
 		model.addAttribute("pageMaker",new PageDTO(service.getMyTotal(cri), cri));
 		//내가 쓴 패키지 추가하기
 		
@@ -131,18 +141,23 @@ public class UserController {
 		String userid = (String)req.getSession().getAttribute("loginUser");
 
 		List<ReservationDTO> myreservation = service.getMyReservation(cri, userid);
-		
 		List<PackageDTO> joinpackage = new ArrayList<PackageDTO>();
+		List<PackageFileDTO> thumbnail = new ArrayList<>();
+		
 		Map<String, Object> datas = new HashMap<>();
 
 		if(myreservation.size()>0) {
 			for (ReservationDTO reservation : myreservation) {
 				joinpackage.add(service.getJoinPackage(reservation.getPackagenum()));
+				thumbnail.add(service.getPackThumbnail(reservation.getPackagenum()));
 			}			
 			datas.put("myreservation", myreservation);
 			datas.put("joinpackage", joinpackage);
+			datas.put("thumbnail", thumbnail);
+			
 		} else {
 			datas.put("joinpackage", joinpackage);
+			datas.put("thumbnail", thumbnail);
 			datas.put("nodata", "참여한 패키지가 없어요");
 		}
 
@@ -160,24 +175,42 @@ public class UserController {
 		System.out.println("무브페이지 타겟 페이지: "+targetpage);
 		
 		if(type.equals("board")) {
+			Map<String, Object> datas = new HashMap<>();
 			cri = new Criteria(targetpage, 6);
-			return service.getMyBoardList(cri, userid);
+			
+			List<BoardDTO> boardlist = service.getMyBoardList(cri, userid);
+			List<BoardFileDTO> thumbnail = new ArrayList<>();
+			
+			if(boardlist.size()>0) {
+				for (BoardDTO board : boardlist) {
+					thumbnail.add(service.getMyBoardThumbnail(board.getBoardnum()));
+					System.out.println("보드:" +service.getMyBoardThumbnail(board.getBoardnum()));
+				}
+			}
+			datas.put("boardlist", boardlist);
+			datas.put("thumbnail", thumbnail);
+			return datas;
 			
 		} else if(type.equals("package")) {
 			cri = new Criteria(targetpage, 4);
 			List<ReservationDTO> myreservation = service.getMyReservation(cri, userid);
-			
 			List<PackageDTO> joinpackage = new ArrayList<PackageDTO>();
+			List<PackageFileDTO> thumbnail = new ArrayList<>();
+			
 			Map<String, Object> datas = new HashMap<>();
 
 			if(myreservation.size()>0) {
 				for (ReservationDTO reservation : myreservation) {
 					joinpackage.add(service.getJoinPackage(reservation.getPackagenum()));
+					thumbnail.add(service.getPackThumbnail(reservation.getPackagenum()));
 				}			
+				
 				datas.put("myreservation", myreservation);
 				datas.put("joinpackage", joinpackage);
+				datas.put("thumbnail", thumbnail);
 			} else {
 				datas.put("joinpackage", joinpackage);
+				datas.put("thumbnail", thumbnail);
 				datas.put("nodata", "참여한 패키지가 없어요");
 			}
 			return datas;
@@ -238,8 +271,16 @@ public class UserController {
 		cri = new Criteria(1,6);
 		
 		List<PackageDTO> inglist = service.getMyIngPackages(guidenum, cri);
+		List<PackageFileDTO> ingthumblist = new ArrayList<>();
 		
+		if(inglist.size()> 0) {
+			for (PackageDTO pack : inglist) {
+				packagenums.add(pack.getPackagenum());
+				ingthumblist.add(service.getPackThumbnail(pack.getPackagenum()));
+			}
+		}
 		model.addAttribute("inglist", inglist);
+		model.addAttribute("ingthumblist", ingthumblist);
 		
 		List<PackageDTO> packagelist = service.getMyPackages(guidenum, cri);
 		List<PackageFileDTO> thumbnaillist = new ArrayList<>();

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.t1.tripfy.domain.dto.ReviewDTO;
+import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
@@ -30,6 +31,7 @@ public interface UserMapper {
 	UserImgDTO getGuideAndImg(long packagenum);
 	GuideUserDTO getLikeThisGuide(long guidenum, String userid);
 	List<UserImgDTO> getAllUserImg();
+	PackageFileDTO getMyPackThumb(long packagenum);
 	
 	
 	//U
