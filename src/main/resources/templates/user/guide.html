@@ -53,7 +53,7 @@
                         <p class="subtitles">작성중인 패키지</p>
                         <ul class="gmlists">
                             <th:block th:if="${inglist != null and inglist.size > 0}">
-                                <li th:each="ing, iterStats:${inglist}" th:onclick="'rewrite(+'${ing.packagenum}+')'">
+                                <li th:each="ing, iterStats:${inglist}" th:onclick="|location.href='/package/tlwrite?packagenum=${ing.packagenum}'|">
                                     <div class="outerpckgs">
 										<div class="ingthumb">
 											<img th:src="${'/package/thumbnail?systemname='+ingthumblist[__${iterStats.index}__].pfSysname}">
