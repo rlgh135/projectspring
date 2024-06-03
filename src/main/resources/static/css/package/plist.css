@@ -31,7 +31,7 @@ body{
 
 .sidebar{
     width:300px;
-    height: 550px;
+    height: 500px;
     background-color: white;
     border: 1px solid lightgray;
     border-radius: 20px;
@@ -51,7 +51,7 @@ body{
 }  
 .destination{
     width: 250px;
-    height: 100px;
+    height: 35px;
     margin: 0 auto;
     margin-top: 50px;
 }
@@ -135,7 +135,6 @@ body{
 #endDateInput{
 	margin-top:20px;
 	color:gray;
-	display:none;
 }
 .person{
     width: 250px;
@@ -200,7 +199,7 @@ body{
 	margin: 0 5px;
 	background-color: white;
 	border:none;
-	
+	font-size: 20px;
 }
 .sbtn:hover{
 	background-color: rgb(139, 206, 255)!important;

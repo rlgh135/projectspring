@@ -31,7 +31,7 @@ body{
 
 .sidebar{
     width:300px;
-    height: 550px;
+    height: 500px;
     background-color: white;
     border: 1px solid lightgray;
     border-radius: 20px;
@@ -51,7 +51,7 @@ body{
 }  
 .destination{
     width: 250px;
-    height: 100px;
+    height: 35px;
     margin: 0 auto;
     margin-top: 50px;
 }
@@ -194,11 +194,7 @@ body{
 	color:gray;
 }
 
-#endDateInput{
-	margin-top:20px;
-	color:gray;
-	font-size: 20px;
-}
+
 #startDateInput:focus{
 	border: 1px solid lightgray;
 }
@@ -229,7 +225,7 @@ body{
 #endDateInput{
 	margin-top:20px;
 	color:gray;
-	display:none;
+
 }
 .person{
     width: 250px;
@@ -443,4 +439,23 @@ body{
 .pagination a:hover {
     background-color: dodgerblue;
     color: #fff;
+}
+.sortingButtons{
+	height: 50px;
+    margin-top: 10px;
+   
+}
+.sbtn{
+	height: 40px;
+	width: 60px;
+	margin: 0 5px;
+	background-color: white;
+	border:none;
+	 font-size: 20px ;
+}
+.sbtn:hover{
+	background-color: rgb(139, 206, 255)!important;
+	border-radius: 10px!important;
+	color:white!important;
+	border:none;
 }
