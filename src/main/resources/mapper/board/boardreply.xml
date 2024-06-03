@@ -25,7 +25,7 @@
 	</insert>
 	<update id="updateReply">
 		update board_reply
-		set em_sysname = #{emSysname}, contents = #{contents}
+		set em_sysname = #{emSysname}, contents = #{contents}, updatecheck = 1
 		where replynum = #{replynum}
 	</update>
 	

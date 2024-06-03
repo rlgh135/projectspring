@@ -516,7 +516,7 @@ $(document).ready(function() {
         // Scroll to the current month
         const $currentMonthElement = $calendar.find('.calendar-month').eq(0);
         if ($currentMonthElement.length) {
-            $currentMonthElement[0].scrollIntoView({ behavior: 'smooth' });
+            /*$currentMonthElement[0].scrollIntoView({ behavior: 'smooth' });*/
         }
         
         $(document).on('click.calendar', function(event) {
