@@ -241,3 +241,14 @@ CREATE TABLE `chat_detail` (
     CONSTRAINT fk___chat_user___chat_detail___userid FOREIGN KEY (`userid`) REFERENCES `chat_user`(`userid`)
 	*/
 );
+#매니저와 쪽지
+create table manager(
+	manage_key varchar(1000)
+);
+
+create table tesk_message(
+	messagenum bigint primary key auto_increment,
+    sendid varchar(300),
+    receiveid varchar(300),
+    contents text
+);

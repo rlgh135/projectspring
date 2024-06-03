@@ -39,6 +39,7 @@
         box-shadow: 0px 4px 20px 0px rgba(25, 25, 25, 0.35);
         font-size: 20px;
         border: 1px solid #fff;
+		cursor: pointer;
     }
 
     .b_search:focus {
@@ -82,6 +83,7 @@
         height: 35px;
         position: absolute;
         top: 10px; right: 10px;
+		cursor: pointer;
     }
 
     .b_searchDetail .recentsearch {
@@ -122,7 +124,7 @@
         margin-right: 8px;
         margin-bottom: 8px;
         display: flex;
-
+		cursor: pointer;
     }
 
     .keyword > .xbtn {
@@ -130,6 +132,7 @@
         height: 18px;
         margin-left: 3px;
         background: url('/images/boardimg/xbtn.png') center/cover no-repeat;
+		cursor: pointer;
     }
 
     .post_area {
@@ -163,6 +166,7 @@
         font-weight: 500;
         color: #4e4c4c;
         margin-right: 5px;
+		cursor: pointer;
     }
 
     .sortbtn [type="button"]:first-child {
@@ -205,6 +209,10 @@
 	    /* display: none; */
 	}
 	
+	.nation_select .category button {
+		cursor: pointer;
+	}
+	
 	.nation_select .category > * {
 	        width: 33.3%;
 	        height: 280px;
@@ -216,7 +224,7 @@
 	    padding: 3px;
 	}
 
-	.nation_select .category .region {
+	.nation_select .category .c_region {
 	    border-top: 1px solid rgb(233, 233, 233);
 	    border-bottom: 1px solid rgb(233, 233, 233);
 		padding: 3px;
@@ -230,13 +238,13 @@
 		    position: relative;
 	}
 	
-	.nation_select .category .nation > div, .region > div, .region_detail > div {
+	.nation_select .category .nation > div, .c_region > div, .region_detail > div {
 		width: 100%;
 		height: 280px;
 		overflow-y: auto;
 	}
 	
-	.nation_select .category .region > div {
+	.nation_select .category .c_region > div {
 		width: 94%;
 	}
 	
@@ -244,12 +252,12 @@
 		width: 95%;
 	}
 	
-	.region > div, .region_detail > div {
+	.c_region > div, .region_detail > div {
 	    /* border: 1px solid red; */
 	    position: absolute;
 	}
 	
-	.nation_select .category .nation > div > button, .region > div > button, .region_detail > div > button {
+	.nation_select .category .nation > div > button, .c_region > div > button, .region_detail > div > button {
 	    display: block;
 	    width: 100%;
 	    padding: 8px;
@@ -258,7 +266,7 @@
 	}
 	
 	.nation_select .category .nation > div > button > p, 
-	.nation_select .category .region > div > button > p, 
+	.nation_select .category .c_region > div > button > p, 
 	.nation_select .category .region_detail > div > button > p {
 	    width: 100%;
 	    text-align: left;
@@ -278,6 +286,7 @@
 	    height: 35px;
 	    font-size: 12px;
 	    font-weight: bold;
+		cursor: pointer;
 	}
 	
 	.n_btns button:nth-child(1) {
@@ -474,6 +483,7 @@
 		 background-color: #fff;
 	     border: none;
 	     box-shadow: 1px 1px 15px #74747470;
+		 cursor: pointer;
 	 }
 
 
@@ -516,7 +526,7 @@
 						        </div>
 						    </div>
 						
-						    <div class="region">
+						    <div class="c_region">
 						        <div style="visibility: hidden;" id="kr">
 						            <button class="area" name="서울"><p class="areastr">서울</p></button>
 						            <button class="area" name="제주도"><p class="areastr">제주도</p></button>
@@ -666,8 +676,8 @@
 	const b_searchDetail = document.querySelector(".b_searchDetail");
 	const ximg = document.querySelector(".ximg");
 	const search_cancel = document.querySelector(".search_cancel");
-	const region_div_kr = document.querySelector(".region > div#kr");  // 서울 ~ 인천광역시
-	const region_div_fr = document.querySelector(".region > div#fr");  // 동남아시아 ~ 하와이/미국...
+	const region_div_kr = document.querySelector(".c_region > div#kr");  // 서울 ~ 인천광역시
+	const region_div_fr = document.querySelector(".c_region > div#fr");  // 동남아시아 ~ 하와이/미국...
 	const country_select = document.querySelector(".country_select");  // 국내, 해외
 	const area_select = document.querySelector(".area_select");  // 서울, 경기도 등 지역
 	const area_detail_select = document.querySelector(".area__detail_select");  // 하와이, 미국 등 상세 지역
@@ -716,7 +726,7 @@
 		else if(countrycode == "ea") {
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
-			document.querySelector(".region > div#fr").style.visibility = "visible";
+			document.querySelector(".c_region > div#fr").style.visibility = "visible";
 			area[8].style.backgroundColor = "#f0f0f0";
 			area[8].classList.add("area_select");
 		}
@@ -724,7 +734,7 @@
 		else if(countrycode == "gu") {
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
-			document.querySelector(".region > div#fr").style.visibility = "visible";
+			document.querySelector(".c_region > div#fr").style.visibility = "visible";
 			area[9].style.backgroundColor = "#f0f0f0";
 			area[9].classList.add("area_select");
 		}
@@ -732,7 +742,7 @@
 		else if(countrycode == "jp") {
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
-			document.querySelector(".region > div#fr").style.visibility = "visible";
+			document.querySelector(".c_region > div#fr").style.visibility = "visible";
 			area[10].style.backgroundColor = "#f0f0f0";
 			area[10].classList.add("area_select");
 		}
@@ -740,7 +750,7 @@
 		else if(countrycode == "cn") {
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
-			document.querySelector(".region > div#fr").style.visibility = "visible";
+			document.querySelector(".c_region > div#fr").style.visibility = "visible";
 			area[11].style.backgroundColor = "#f0f0f0";
 			area[11].classList.add("area_select");
 		}
@@ -748,7 +758,7 @@
 		else if(countrycode == "eu") {
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
-			document.querySelector(".region > div#fr").style.visibility = "visible";
+			document.querySelector(".c_region > div#fr").style.visibility = "visible";
 			area[12].style.backgroundColor = "#f0f0f0";
 			area[12].classList.add("area_select");
 		}
@@ -756,7 +766,7 @@
 		else if(countrycode == "us") {
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
-			document.querySelector(".region > div#fr").style.visibility = "visible";
+			document.querySelector(".c_region > div#fr").style.visibility = "visible";
 			area[13].style.backgroundColor = "#f0f0f0";
 			area[13].classList.add("area_select");
 		}
@@ -769,7 +779,7 @@
 		console.log("area_detail: " + area_detail[6].name)
 		
 		if(countrycode == "kr") {
-			document.querySelector(".region > div#kr").style.visibility = "visible";
+			document.querySelector(".c_region > div#kr").style.visibility = "visible";
 			/*
 			if(regionname == "서울") {
 				area[0].style.backgroundColor = "#f0f0f0";
@@ -822,7 +832,7 @@
 		}
 		
 		else {
-			// document.querySelector(".region > div#fr").style.visibility = "visible";
+			// document.querySelector(".c_region > div#fr").style.visibility = "visible";
 			
 			if(regionname == "태국" || regionname == "베트남" || regionname == "필리핀" || regionname == "싱가포르" || regionname == "말레이시아" || regionname == "캄보디아") {
 				document.querySelector(".region_detail > div#ea").style.visibility = "visible";
@@ -847,7 +857,7 @@
 			for(let i = 0; i < area_detail.length; i++) {
 				if(area_detail[i].name == regionname) {					
 					area_detail[i].style.backgroundColor = "#f0f0f0";
-					area_detail[i].classList.add("area__detail_select"); 
+					area_detail[i].classList.add("area_detail_select"); 
 				}
 			}
 			
@@ -1192,7 +1202,7 @@
 	function clickEnter(e) {
 		if(e.keyCode == 13) {  // 엔터 키 클릭 시
 			search(e.target.value);
-			// b_searchDetail.style.display = "none";
+			b_searchDetail.style.display = "none";
 		}
 	}
 	
@@ -1465,8 +1475,8 @@
 		obj.style.backgroundColor = "#f0f0f0";
 		console.log(obj.textContent)  // obj.textContent: obj의 모든 텍스트(자식 요소의 텍스트 포함)
 		
-		const region_div_kr = document.querySelector(".region > div#kr");
-		const region_div_fr = document.querySelector(".region > div#fr");
+		const region_div_kr = document.querySelector(".c_region > div#kr");
+		const region_div_fr = document.querySelector(".c_region > div#fr");
 		const region_detail_div = document.querySelectorAll(".region_detail div");
 		
 		if(obj.textContent == "국내") {
@@ -1609,7 +1619,7 @@
 		let obj = e.target;
 		
 		// 지역 버튼 색상 초기화
-		for(let i = 0; i < area.length; i++) {
+		for(let i = 0; i < area_detail.length; i++) {
 			area_detail[i].style.backgroundColor = "#fff";
 			area_detail[i].classList.remove("area_detail_select");
 		}
@@ -1916,6 +1926,7 @@
 		
 		// 최근 검색어 삭제
 		$(document).on("click", ".xbtn", function(e) {
+			e.stopPropagation();  // 이벤트 전파 막음(부모 요소인 .keyword가 클릭된 것으로 인식되지 않게)
 		     // console.log("e.target: " + e.target);
 			 let keywordTxt = $(this).closest(".keyword").find("span").text().trim();  // .keyword의 span 태그의 text
 			 
@@ -1932,6 +1943,16 @@
 				document.cookie = "keywords=" + updatedKeywords.join("_-_");
 			 }
 		 });
+		 
+		 $(document).on("click", ".keyword", function(e) {
+			let keywordDivTag = $(this);  // 현재 클릭된 .keyword
+			let keyword = keywordDivTag.find('span').text();  // 
+			console.log("-----------------------keyword: " + keyword)
+			$(".b_searchDetail").hide();
+			$(".b_search").val(keyword);
+			search(keyword);
+		 })
+		 
 		
 	});
 	
@@ -2219,13 +2240,16 @@
 	}
 	*/
 	
-	// 최근 검색어
+	// --------------- 최근 검색어 ---------------
 	function getCookie(name) {
 	    const cookies = document.cookie.split(';'); // 모든 쿠키를 ';'로 분리하여 배열로 만들어줌
 	    for (let i = 0; i < cookies.length; i++) {
 	        let cookie = cookies[i].trim(); // 공백 제거
 	        if (cookie.startsWith(name + '=')) { // 쿠키 이름으로 시작하는 쿠키를 찾음
-	            return cookie.substring(name.length + 1); // 찾은 쿠키 값을 반환
+				let cookieValue = cookie.substring(name.length + 1); // 찾은 쿠키 값
+				// 공백을 다시 원래대로 변환
+				cookieValue = cookieValue.replace(/--_--/g, " ");
+				return cookieValue; // 찾은 쿠키 값을 반환
 	        }
 	    }
 	    return null; // 해당하는 이름의 쿠키가 없는 경우 null을 반환

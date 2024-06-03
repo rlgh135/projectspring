@@ -58,6 +58,7 @@
 		background-color: #64B5F6;
 		color: #fff;
 		font-size: 14px;
+		cursor: pointer;
 	}
 	
 	.changebtn button:first-of-type {
@@ -315,6 +316,7 @@
 	#like {
 		display: inline-block;
 		width: 23px; height: 23px;
+		cursor: pointer;
 	}
 	
 	.contour {
@@ -577,7 +579,7 @@
 							<tr>
 								<th><h4>첨부 파일</h4></th>
 								<td>
-									<a th:if="${not file.sysname.contains('BoardThumnail')}" th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}" th:each="file:${files}"><img src="/images/boardimg/download.png" class="downloadImg">[[${file.orgname}]]</a>
+									<a th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}" th:each="file:${files}"><img src="/images/boardimg/download.png" class="downloadImg">[[${file.orgname}]]</a>
 								</td>
 							</tr>
 						</table>
@@ -649,7 +651,7 @@
                 <div class="guide_info">
                     <h4>작성자</h4>
                     <div class="guide_profile">
-                        <img th:src="'/BoardThumnail/' + ${userprofile.sysname}" alt="">
+                        <img th:src="'/user/thumbnail?sysname=' + ${userprofile.sysname}" alt="">
 						<span>[[${board.userid}]]<img th:if="${guide}" src="/images/userimg/guidebadge.png" alt="" class="guidebadge"></span>
 						<!--<p>자기 소개를 아직 작성하지 않았습니다</p>-->
                     </div>
@@ -831,11 +833,13 @@ let thispage = 1;
 		       $('#modify-emoji-picker').remove();
 		   });
 		   
-		   $(document).on('click', '#replyModify', function(){
-				const content = $('.replyModifyContent').val();
-				replyModify(replyId,content);
-		   })
    	   })
+	   $(document).on('click', '#replyModify', function(){
+			const replyBox = $(this).closest('.reply');
+			const replyId = replyBox.attr('id').substring(3);
+			const content = $('.replyModifyContent').val();
+			replyModify(replyId,content);
+	   })
 	   
 	   
 	   $(document).on('click', '.modify_emoticon-close-btn', function(){
@@ -903,7 +907,7 @@ let thispage = 1;
 				for(let i=0;i<list.length;i++){
 					const reply = list[i];
 					str += `<div class="reply" id="brn${reply.replynum}">
-					<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
+					<div class="reply_userThumnail"><img src="/user/thumbnail?sysname=${reply.sysname}" alt></div>
 			        <div class="reply_box">
 			            <div class="reply_userid">${reply.userid}</div>
 			            <div class="reply_content">${reply.contents}</div>
@@ -1032,9 +1036,6 @@ let thispage = 1;
 				
 			});
 		}
-		
-		
-		
 	})
 
 	const boardReplyService = {

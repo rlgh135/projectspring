@@ -292,12 +292,9 @@ public class PackController {
 	
 	@PostMapping("write")
 	public String write(PackageDTO pack, MultipartFile packageFile,HttpServletRequest req) throws Exception {
-		//가이드num 세션있다고 가정
-		long guidenum = 1;
+		HttpSession session = req.getSession();
+		long guidenum = (long)session.getAttribute("guideNum");
 		pack.setGuidenum(guidenum);
-		System.out.println(packageFile);
-		System.out.println(pack.getCountrycode());
-		System.out.println(pack.getRegionname());
 		if(service.regist(pack, packageFile)) {	
 				long packagenum = service.getLastNum(pack.getGuidenum());
 				return "redirect:/package/tlwrite?packagenum="+packagenum;
@@ -309,15 +306,13 @@ public class PackController {
 	}
 	
 	@GetMapping("tlwrite")
-	public String tlwrite(@RequestParam long packagenum, Model model) {
-		//가이드num 세션에 있다고 가정
-		long guidenum = 1;
+	public String tlwrite(@RequestParam long packagenum, Model model, HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		long guidenum = (long)session.getAttribute("guideNum");
 		model.addAttribute("packagenum", packagenum);
 		PackageDTO pac =  service.getDetail(packagenum);
-		//유효성검사 해야함
 		if(guidenum != pac.getGuidenum()) {
-			//옳은 경로로 가라고 경고페이지 띄워줘야함
-			return "redirect:/index";
+			return "error/500";
 		}
 		model.addAttribute("pac",pac);
 		String[] dayMMdd = service.getDayMMdd(pac.getStartdate(),pac.getEnddate());
@@ -326,11 +321,11 @@ public class PackController {
 	}
 	
 	@GetMapping("tlget")
-	public String tlget(@RequestParam long packagenum, Model model) {
-		//가이드num 세션에 있다고 가정
-		long guidenum = 1;
+	public String tlget(@RequestParam long packagenum, Model model, HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		long guidenum = (long)session.getAttribute("guideNum");
 		PackageDTO pac =  service.getDetail(packagenum);
-		//유효성검사 해야함
+		model.addAttribute("guideNum", guidenum);
 		model.addAttribute("pac",pac);
 		String[] dayMMdd = service.getDayMMdd(pac.getStartdate(),pac.getEnddate());
 		model.addAttribute("dayMMdd",dayMMdd);

@@ -231,9 +231,14 @@ public class UserController {
 		}
 	}
 	
+	
 	@GetMapping("joinguide")
-	public String joinGuide(HttpServletRequest req) {
+	public void joinGuide(HttpServletRequest req) {
+	}
+	@PostMapping("joinguide")
+	public String joinGuideOk(HttpServletRequest req) {
 		String userid = (String)req.getSession().getAttribute("loginUser");
+		System.out.println(userid);
 		UserDTO user = service.getUser(userid);
 		GuideDTO guide = new GuideDTO();
 		
@@ -241,7 +246,7 @@ public class UserController {
 		guide.setIntroduce(user.getIntroduce());
 		
 		if(service.insertGuide(guide)==1) {
-			return "/user/myinfo";
+			return "redirect:/user/myinfo";
 		} else {
 			return "redirect:/";
 		}

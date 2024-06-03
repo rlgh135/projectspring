@@ -19,7 +19,6 @@ import java.util.UUID;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,8 +61,7 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private UserMapper umapper;
-	
-	
+
 	//사진검사
 	public static boolean isImageFile(String extension) {
         if (extension == null || extension.isEmpty()) {
@@ -168,6 +166,7 @@ public class BoardServiceImpl implements BoardService {
 			boolean flag = false;
 			for(int i = 0; i < files.length - 1; i++) {
 				MultipartFile file = files[i];  // 업로드 된 파일 하나씩 꺼냄(실제 디렉토리에 업로드 되어 있지는 않고 데이터를 꺼낸 것)
+				System.out.println(files[i]);
 				if(file.getSize() == 0) {
 					continue;
 				}
@@ -393,6 +392,10 @@ public class BoardServiceImpl implements BoardService {
 		if(bmapper.updateBoard(board) != 1) {
 			return false;
 		}
+		System.out.println("보드 : "+board);
+		System.out.println("보드 에드 : "+boardaddr);
+		System.out.println("파일 : "+files);
+		System.out.println("업데이트Cnt : "+updateCnt);
 		if (!boardaddr.getPlacename().equals("") && !boardaddr.getPlacename().isEmpty()
 		    && !boardaddr.getStartdate().equals("") && !boardaddr.getStartdate().isEmpty()
 		    && !boardaddr.getEnddate().equals("") && !boardaddr.getEnddate().isEmpty()) {
@@ -404,11 +407,10 @@ public class BoardServiceImpl implements BoardService {
 		    }
 		}
 		ArrayList<String> deleteNames = null;
-		boolean deleteThumnailflag = true;
+		boolean deleteThumnailflag = false;
 		
 		 if (updateCnt != null && !updateCnt.isEmpty()) {
             deleteNames = new ArrayList<>(Arrays.asList(updateCnt.split("\\\\")));
-
             Iterator<String> iterator = deleteNames.iterator();
             while (iterator.hasNext()) {
                 String name = iterator.next();
@@ -425,7 +427,8 @@ public class BoardServiceImpl implements BoardService {
         }
 		 
 		List<BoardFileDTO> orgFileList = bmapper.getFiles(board.getBoardnum());
-		if(orgFileList.size() == 0 && (files == null || files.length == 0 || files[0].getSize() == 0)) {
+		if(orgFileList.size() == 0 && (files == null || files.length == 0)) {
+			System.out.println("123123123");
 			return true;
 		}else {
 			System.out.println("service : "+files.length);
@@ -522,7 +525,11 @@ public class BoardServiceImpl implements BoardService {
 	public BoardReplyPageDTO getReplyList(long boardnum, int pagenum) {
 		int amount = 10;
 		int startrow = (pagenum-1)*amount;
-		return new BoardReplyPageDTO(brmapper.getTotal(boardnum), brmapper.getReplyList(amount,startrow,boardnum));
+		List<BoardReplyDTO> list = brmapper.getReplyList(amount,startrow,boardnum);
+		for(BoardReplyDTO reply : list) {
+			reply.setSysname(umapper.getUserProfile(reply.getUserid()).getSysname());
+		}
+		return new BoardReplyPageDTO(brmapper.getTotal(boardnum), list);
 	}
 	@Override
 	public boolean replyModify(BoardReplyDTO reply) {
@@ -589,6 +596,11 @@ public class BoardServiceImpl implements BoardService {
 	// content 이미지 태그 제외하고 추출
 	@Override
 	public String exceptImgTag(String content) {
+		
+		if (content == null) {
+	        return null;
+	    }
+		
 		Document doc = Jsoup.parse(content);
 		
 		System.out.println("Before filtering:");
