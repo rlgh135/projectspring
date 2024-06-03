@@ -58,6 +58,7 @@
 		background-color: #64B5F6;
 		color: #fff;
 		font-size: 14px;
+		cursor: pointer;
 	}
 	
 	.changebtn button:first-of-type {
@@ -315,6 +316,7 @@
 	#like {
 		display: inline-block;
 		width: 23px; height: 23px;
+		cursor: pointer;
 	}
 	
 	.contour {
@@ -577,7 +579,7 @@
 							<tr>
 								<th><h4>첨부 파일</h4></th>
 								<td>
-									<a th:if="${not file.sysname.contains('BoardThumnail')}" th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}" th:each="file:${files}"><img src="/images/boardimg/download.png" class="downloadImg">[[${file.orgname}]]</a>
+									<a th:href="@{/board/download (sysname=${file.sysname}, orgname=${file.orgname})}" th:each="file:${files}"><img src="/images/boardimg/download.png" class="downloadImg">[[${file.orgname}]]</a>
 								</td>
 							</tr>
 						</table>
@@ -649,7 +651,7 @@
                 <div class="guide_info">
                     <h4>작성자</h4>
                     <div class="guide_profile">
-                        <img th:src="'/BoardThumnail/' + ${userprofile.sysname}" alt="">
+                        <img th:src="'/user/thumbnail?sysname=' + ${userprofile.sysname}" alt="">
 						<span>[[${board.userid}]]<img th:if="${guide}" src="/images/userimg/guidebadge.png" alt="" class="guidebadge"></span>
 						<!--<p>자기 소개를 아직 작성하지 않았습니다</p>-->
                     </div>
