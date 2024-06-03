@@ -246,7 +246,7 @@ create table manager(
 	manage_key varchar(1000)
 );
 
-create table tesk_message(
+create table task_message(
 	messagenum bigint primary key auto_increment,
     sendid varchar(300),
     receiveid varchar(300),
