@@ -498,7 +498,7 @@ public class UserController {
 			List<ReservationDTO> reslist = service.getForeignerReservations(fname, phone, cri);
 			ArrayList<PackageDTO> packagelist = new ArrayList<>();
 			ArrayList<PackageFileDTO> pthumblist = new ArrayList<>();
-			if(packagelist.size()>0) {
+			if(reslist.size()>0) {
 				for (ReservationDTO res : reslist) {
 					packagelist.add(service.getJoinPackage(res.getPackagenum()));
 					/* pthumblist.add(service.getPackThumbnail(res.getPackagenum())); */

@@ -1,5 +1,6 @@
 package com.t1.tripfy.service.board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -10,6 +11,8 @@ import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
 import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyPageDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
@@ -78,6 +81,7 @@ public interface BoardService {
 	// 유저 프로필
 	UserImgDTO getUserProfile(String userid);
 
+
 	// 해당 userid가 해당 board에 좋아요 눌렀는지 찾음
 	BoardLikeDTO getBoardLike(String userid, long boardnum);
 
@@ -91,4 +95,13 @@ public interface BoardService {
 	String exceptImgTag(String content);
 
 
+	BoardReplyDTO replyRegist(BoardReplyDTO reply);
+
+	BoardReplyPageDTO getReplyList(long boardnum, int pagenum);
+
+	boolean replyModify(BoardReplyDTO reply);
+
+	boolean deleteReply(BoardReplyDTO reply);
+
+	BoardReplyDTO getReplyByReplyNum(long replynum);
 }

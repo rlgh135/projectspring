@@ -7,13 +7,15 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class ErrorController {
-	@GetMapping("/error")
+    @GetMapping("/error")
     public String handleError(HttpServletRequest request) {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        if (statusCode == 404) {
-            return "error/404";
-        } else if (statusCode == 500) {
-            return "error/500";
+        if (statusCode != null) {
+            if (statusCode == 404) {
+                return "error/404";
+            } else if (statusCode == 500) {
+                return "error/500";
+            }
         }
         return "error/error";
     }

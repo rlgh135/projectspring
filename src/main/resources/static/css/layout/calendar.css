@@ -1,0 +1,84 @@
+.calendar-dateInput {
+    width: 200px;
+    padding: 10px;
+    border: none; /* border 삭제 */
+    border-bottom: 2px solid #007BFF; /* 밑줄 추가 */
+    font-size: 1em;
+    outline: none;
+    transition: border-bottom 0.3s; /* 부드러운 전환 효과 */
+    margin-left: 20px;
+}
+.calendar-dateInput:focus {
+    border-bottom: 2px solid #0056b3; /* 포커스 시 색 변경 */
+}
+.calendar-calendar {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    z-index: 3000;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    scrollbar-width: thin; /* 스크롤 바 너비 지정 */
+    scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0); /* 스크롤 바 색상 지정 */
+    overflow-y: auto; /* 세로 스크롤을 항상 표시 */
+}
+/* 스크롤 바의 스크롤 트랙(배경) */
+.calendar-calendar::-webkit-scrollbar-track {
+    background-color: transparent; /* 스크롤 바 배경색 투명으로 지정 */
+}
+
+/* 스크롤 바의 스크롤 핸들(스크롤바 자체) */
+.calendar-calendar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); /* 스크롤 바 색상 */
+    border-radius: 10px; /* 스크롤 바 테두리 반경 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 스크롤 바에 그림자 효과 추가 */
+}
+
+/* 스크롤 바 호버 효과 */
+.calendar-calendar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5); /* 호버 시 색상 변경 */
+}
+
+.calendar-calendar table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.calendar-calendar caption {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #007BFF;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2em;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-bottom: 10px;
+}
+.calendar-calendar th, .calendar-calendar td {
+    padding: 10px;
+    text-align: center;
+    border: none;
+}
+.calendar-calendar th {
+    color: #007BFF;
+    font-weight: bold;
+}
+.calendar-calendar td {
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+}
+.calendar-calendar td:hover {
+    background-color: #0056b3; /* 호버 시 색 변경 */
+    color: #fff;
+}
+.calendar-current-day {
+    background-color: burlywood; /* 현재 날짜 색 변경 */
+    color: #fff;
+}

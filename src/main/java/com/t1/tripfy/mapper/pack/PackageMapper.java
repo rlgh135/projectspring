@@ -23,6 +23,11 @@ public interface PackageMapper {
 	List<PackageDTO>getListByCountryCode(Criteria cri);
 	List<PackageDTO>getDetailRegionList(Criteria cri);
 	
+	//추가
+	List<PackageDTO>SortListByPrice(Criteria cri);
+
+	List<PackageDTO>SortListByPop(Criteria cri);
+	
 	long getTotal(Criteria cri);
 	long getLastNum(long guidenum);
 	PackageDTO getPackageByPackageNum(long packagenum);

@@ -1,6 +1,5 @@
 <th:block th:fragment="packageModal">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+	<link rel="stylesheet" href="/css/layout/calendar.css">
     <link rel="stylesheet" href="/css/package/packageModal.css">
     <form action="/package/write" name="packageForm" id="packageForm" method="post" enctype="multipart/form-data">
         <input type="hidden" id="countrycode" name="countrycode">
@@ -14,9 +13,8 @@
         <input type="hidden" name="childPrice" id="child_price">
         <input type="file" name="packageFile" id="package_file" accept="image/*,video/*" style="display: none;">
     </form>
+	<div id="calendar-calendar" class="calendar-calendar"></div>
     <div id="modalContainer" class="hidden"></div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="/js/package/packageModal.js"></script>
 </th:block>

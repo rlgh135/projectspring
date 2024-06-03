@@ -153,21 +153,48 @@ public class PackController {
 	public void list(Criteria cri, Model model) {
 	    System.out.println(cri);
 	    List<PackageFileDTO> allfiles = new ArrayList<>();
-	    List<PackageDTO> list = service.getDetailRegionList(cri);
+	    List<PackageDTO> list;
+	    // 페이지 정보 추가
+	    PageDTO pageMaker = new PageDTO(service.getTotal(cri), cri);
+
+	    // 정렬 방법에 따라 switch문 사용
+	    if (cri.getOrderBy() == null) {
+	        cri.setOrderBy("latest"); // 기본값으로 설정
+	    }
+
+	    switch(cri.getOrderBy()) {
+	        case "price":
+	            list = service.SortListByPrice(cri);
+	            break;
+	        case "popularity":
+	            list = service.SortListByPop(cri);
+	            break;
+	        case "latest":
+	        default:
+	            list = service.getDetailRegionList(cri);
+	            break;
+	    }
+
+	    // 파일 및 예약 정보 추가
 	    List<ReservationDTO> allReserves = new ArrayList<>();
 	    for (PackageDTO pack : list) {
-		    long ppackagenum = pack.getPackagenum();
-		    List<ReservationDTO> reserve = service.getReservationCntByPackagenum(ppackagenum); 
-		    List<PackageFileDTO> lfile = service.getFiles(ppackagenum);
-		    System.out.println(lfile);
-		    allfiles.addAll(lfile);
-		    allReserves.addAll(reserve);
-		}
+	        long ppackagenum = pack.getPackagenum();
+	        List<ReservationDTO> reserve = service.getReservationCntByPackagenum(ppackagenum); 
+	        List<PackageFileDTO> lfile = service.getFiles(ppackagenum);
+	        System.out.println(lfile);
+	        allfiles.addAll(lfile);
+	        allReserves.addAll(reserve);
+	    }
+	    
+
+
+	    // 모델에 추가
 	    model.addAttribute("file", allfiles);
 	    model.addAttribute("list", list);
 	    model.addAttribute("reserve", allReserves);
-	    model.addAttribute("pageMaker", new PageDTO(service.getTotal(cri), cri));
+	    model.addAttribute("pageMaker", pageMaker);
 	}
+
 	
 	@GetMapping(value={"pget", "pmodify"})
 	public String get(Criteria cri, long packagenum, HttpServletRequest req, HttpServletResponse resp, Model model) {

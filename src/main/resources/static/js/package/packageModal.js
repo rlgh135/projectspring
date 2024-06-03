@@ -1,6 +1,10 @@
 $(document).ready(function() {
     const modal = $('#modalContainer');
     const modalOpenButton = $('#modalOpenButton');
+    const $calendar = $('#calendar-calendar');
+    let $activeInput = null;
+    const today = new Date();
+    today.setDate(today.getDate() + 7);
     //돔구현
     //국내,해외선택
     const modalContent1 = `
@@ -224,22 +228,12 @@ $(document).ready(function() {
             <h2>언제<br>가시나요?</h2>
         </div>
         <div class="body_area" style="margin-top:50px;">
-            <form autocomplete="off">
-                <div class="flex-row d-flex justify-content-center">
-                    <div class="col-lg-6 col-11 px-1">
-                        <div class="input-group input-daterange">
-                            <input type="text" id="start" class="form-control text-left mr-2">
-                            <label class="ml-3 form-control-placeholder" id="start-p" for="start">시작</label>
-                            <span class="fa fa-calendar" id="fa-1"></span>
-                            <input type="text" id="end" class="form-control text-left ml-2">
-                            <label class="ml-3 form-control-placeholder" id="end-p" for="end">종료</label>
-                            <span class="fa fa-calendar" id="fa-2"></span>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            <div>
+            	<input type="text" class="calendar-dateInput" id="calendar-startdate" placeholder="날짜를 선택하세요">
+    			<input type="text" class="calendar-dateInput" id="calendar-enddate" placeholder="날짜를 선택하세요">
+            </div>
             <div class="nxt_btn_area">
-              <p class="notice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#1976D2"></circle><path d="M11.2485 14.0939H12.7336L13.0422 7.88978L13.1194 6.05957H10.8821L10.9399 7.88978L11.2485 14.0939ZM11.9814 17.9404C12.8301 17.9404 13.4858 17.4286 13.4858 16.6996C13.4858 15.9706 12.8301 15.4278 11.9814 15.4278C11.1521 15.4278 10.5156 15.9706 10.5156 16.6996C10.5156 17.4286 11.1521 17.9404 11.9814 17.9404Z" fill="white"></path></svg>시작일은 현재일 기준 8일 이후부터 가능합니다</p>
+              <p class="notice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#1976D2"></circle><path d="M11.2485 14.0939H12.7336L13.0422 7.88978L13.1194 6.05957H10.8821L10.9399 7.88978L11.2485 14.0939ZM11.9814 17.9404C12.8301 17.9404 13.4858 17.4286 13.4858 16.6996C13.4858 15.9706 12.8301 15.4278 11.9814 15.4278C11.1521 15.4278 10.5156 15.9706 10.5156 16.6996C10.5156 17.4286 11.1521 17.9404 11.9814 17.9404Z" fill="white"></path></svg>종료일은 시작일보다 이전일 수 없습니다</p>
               <button class="nxt_btn" id="nextButton">다음</button>
             </div>
         </div>
@@ -258,22 +252,12 @@ $(document).ready(function() {
             <h2>언제<br>가시나요?</h2>
         </div>
         <div class="body_area" style="margin-top:50px;">
-            <form autocomplete="off">
-                <div class="flex-row d-flex justify-content-center">
-                    <div class="col-lg-6 col-11 px-1">
-                        <div class="input-group input-daterange">
-                            <input type="text" id="start" class="form-control text-left mr-2">
-                            <label class="ml-3 form-control-placeholder" id="start-p" for="start">시작</label>
-                            <span class="fa fa-calendar" id="fa-1"></span>
-                            <input type="text" id="end" class="form-control text-left ml-2">
-                            <label class="ml-3 form-control-placeholder" id="end-p" for="end">종료</label>
-                            <span class="fa fa-calendar" id="fa-2"></span>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            <div>
+            	<input type="text" class="calendar-dateInput" id="calendar-startdate" placeholder="날짜를 선택하세요">
+    			<input type="text" class="calendar-dateInput" id="calendar-enddate" placeholder="날짜를 선택하세요">
+            </div>
             <div class="nxt_btn_area">
-              <p class="notice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#1976D2"></circle><path d="M11.2485 14.0939H12.7336L13.0422 7.88978L13.1194 6.05957H10.8821L10.9399 7.88978L11.2485 14.0939ZM11.9814 17.9404C12.8301 17.9404 13.4858 17.4286 13.4858 16.6996C13.4858 15.9706 12.8301 15.4278 11.9814 15.4278C11.1521 15.4278 10.5156 15.9706 10.5156 16.6996C10.5156 17.4286 11.1521 17.9404 11.9814 17.9404Z" fill="white"></path></svg>시작일은 현재일 기준 8일 이후부터 가능합니다</p>
+              <p class="notice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#1976D2"></circle><path d="M11.2485 14.0939H12.7336L13.0422 7.88978L13.1194 6.05957H10.8821L10.9399 7.88978L11.2485 14.0939ZM11.9814 17.9404C12.8301 17.9404 13.4858 17.4286 13.4858 16.6996C13.4858 15.9706 12.8301 15.4278 11.9814 15.4278C11.1521 15.4278 10.5156 15.9706 10.5156 16.6996C10.5156 17.4286 11.1521 17.9404 11.9814 17.9404Z" fill="white"></path></svg>종료일은 시작일보다 이전일 수 없습니다</p>
               <button class="nxt_btn" id="nextButton">다음</button>
             </div>
         </div>
@@ -425,7 +409,6 @@ $(document).ready(function() {
 	    console.log(region);
 	    $('#regionname').val(region);
         modal.html(modalContentovercal);
-        datepicker();
     });
 	let selectedRegion;
     //돌아가기 나누기
@@ -448,7 +431,6 @@ $(document).ready(function() {
             $('#startdate').val('');
             $('#enddate').val('');
             modal.html(modalContent3);
-            datepicker();
         }else if(btnId === 'c4'){
             modal.html(modalContent4);
             package_title = $('#package_title');
@@ -471,58 +453,32 @@ $(document).ready(function() {
         }
     })
 
-    // yyyy-mm-dd 형식의 날짜 문자열을 받아서 해당 날짜가 오늘로부터 8일 이후인지 체크하는 함수
-    function checkStartDate(startDate) {
-        const today = new Date();
-        today.setDate(today.getDate() + 8);
-        const targetDate = new Date(startDate); 
-        return targetDate > today;
-    }
-
-    //start,end 여부 확인
-    function checkNextButton() {
-        const startDate = $('#start').val();
-        const endDate = $('#end').val();
-        if (startDate.trim() !== '' && endDate.trim() !== '') {
-            if(checkStartDate(startDate)){
-              $('#nextButton').addClass('on');
-              $('.notice').removeClass('on');
-            }else{
-              $('#nextButton').removeClass('on');
-              $('.notice').addClass('on');
-            }
-        } else {
-            $('#nextButton').removeClass('on');
-        }
-    }
-
-    // 데이트피커 활성화
-    function datepicker(){
-      $('.input-daterange').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            calendarWeeks : false,
-            clearBtn: true,
-            disableTouchKeyboard: true
-        }).on('changeDate', function(){
-            checkNextButton();
-        });
-    }
     //두번째 분기
     modal.on('click', '.region', function() {
         $('#regionname').val($(this).text());
         modal.html(modalContent3);
-        datepicker();
     });
 
-    //날짜 선택 후 다음누를때
-    modal.on('click', '#nextButton', function(){
-        const startDate = $('#start').val();
-        const endDate = $('#end').val();
-        $('#startdate').val(startDate);
-        $('#enddate').val(endDate);
-        modal.html(modalContent4);
-    })
+   function isEndDateBeforeStartDate(start, end) {
+	    const startDate = new Date(start);
+	    const endDate = new Date(end);
+	    return startDate > endDate;
+	}
+
+	modal.on('click', '#nextButton', function(){
+	    const startDate = $('#calendar-startdate').val();
+	    const endDate = $('#calendar-enddate').val();
+	    
+	    if (isEndDateBeforeStartDate(startDate, endDate)) {
+	        $('.notice').addClass('on');
+	        return;
+	    }
+	
+	    $('#startdate').val(startDate);
+	    $('#enddate').val(endDate);
+	    modal.html(modalContent4);
+	});
+
     
     // 제목, 내용 통과 조건
     function checkNextButton2() {
@@ -545,6 +501,31 @@ $(document).ready(function() {
       $('.title_length').text(titleLength);
       $('.content_length').text(contentLength);
         checkNextButton2();
+    });
+
+   	modal.on('click',  '.calendar-dateInput', function(){
+        $activeInput = $(this);
+        const rect = this.getBoundingClientRect();
+        $calendar.css({
+            top: `${rect.bottom + window.scrollY}px`,
+            left: `${rect.left + window.scrollX}px`,
+            display: 'block'
+        });
+        buildCalendar(today.getFullYear(), today.getMonth());
+
+        // Scroll to the current month
+        const $currentMonthElement = $calendar.find('.calendar-month').eq(0);
+        if ($currentMonthElement.length) {
+            $currentMonthElement[0].scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        $(document).on('click.calendar', function(event) {
+	        const $target = $(event.target);
+	        if (!$target.closest('.calendar-container').length && !$target.hasClass('calendar-dateInput')) {
+	            $calendar.hide();
+	            $(document).off('click.calendar'); // 이벤트 핸들러를 제거합니다.
+	        }
+	    });
     });
 
     //넥스트 버튼 2눌렀을때
@@ -676,4 +657,60 @@ $(document).ready(function() {
     modal.on('click', '#nextButton4', function(){
         $("#packageForm").submit();
     });
+    
+     function buildCalendar(year, month) {
+        let calendarHtml = '';
+        const endYear = year + 1;
+
+        while (year < endYear || (year === endYear && month < today.getMonth() + 7)) {
+            const firstDay = new Date(year, month).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            calendarHtml += `<div class="calendar-month"><table>`;
+            calendarHtml += `<caption>${year}년 ${month + 1}월</caption>`;
+            calendarHtml += '<tr>';
+
+            const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+            $.each(daysOfWeek, function(index, day) {
+                calendarHtml += `<th>${day}</th>`;
+            });
+
+            calendarHtml += '</tr><tr>';
+
+            for (let i = 0; i < firstDay; i++) {
+                calendarHtml += '<td></td>';
+            }
+
+            for (let date = 1; date <= lastDate; date++) {
+                const currentDate = new Date(year, month, date);
+                const isToday = currentDate.toDateString() === today.toDateString();
+                const isPastDate = currentDate < today;
+                const className = isToday ? 'calendar-current-day' : (isPastDate ? 'calendar-past-day' : '');
+                if ((firstDay + date - 1) % 7 === 0 && date !== 1) {
+                    calendarHtml += '</tr><tr>';
+                }
+
+                calendarHtml += `<td class="${className}" data-date="${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}">${date}</td>`;
+            }
+
+            calendarHtml += '</tr></table></div>';
+
+            if (month === 11) {
+                year++;
+                month = 0;
+            } else {
+                month++;
+            }
+        }
+
+        $calendar.html(calendarHtml);
+        $('.calendar-past-day').text("");
+        $calendar.find('td[data-date]').on('click', function() {
+		    if (!$(this).hasClass('calendar-past-day')) {
+		        $activeInput.val($(this).data('date'));
+		        $calendar.hide();
+		    }
+		});
+
+    }
 });

@@ -41,7 +41,7 @@
 		select * from package where DATEDIFF(enddate, now())&lt;14 and packagenum=#{packagenum};
 	</select>
 	<select id="getForignerReservations">
-		select * from reservation where name=#{name} and phone=#{phone} order by reservationnum limit #{cri.startrow}, #{cri.amount}
+		select * from reservation where name=#{fname} and phone=#{phone} order by reservationnum limit #{cri.startrow}, #{cri.amount}
 	</select>
 	<select id="getForignerReservation">
 		select * from reservation where keycode=#{keycode}
