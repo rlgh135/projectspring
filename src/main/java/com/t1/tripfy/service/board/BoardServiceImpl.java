@@ -166,6 +166,7 @@ public class BoardServiceImpl implements BoardService {
 			boolean flag = false;
 			for(int i = 0; i < files.length - 1; i++) {
 				MultipartFile file = files[i];  // 업로드 된 파일 하나씩 꺼냄(실제 디렉토리에 업로드 되어 있지는 않고 데이터를 꺼낸 것)
+				System.out.println(files[i]);
 				if(file.getSize() == 0) {
 					continue;
 				}
@@ -391,6 +392,10 @@ public class BoardServiceImpl implements BoardService {
 		if(bmapper.updateBoard(board) != 1) {
 			return false;
 		}
+		System.out.println("보드 : "+board);
+		System.out.println("보드 에드 : "+boardaddr);
+		System.out.println("파일 : "+files);
+		System.out.println("업데이트Cnt : "+updateCnt);
 		if (!boardaddr.getPlacename().equals("") && !boardaddr.getPlacename().isEmpty()
 		    && !boardaddr.getStartdate().equals("") && !boardaddr.getStartdate().isEmpty()
 		    && !boardaddr.getEnddate().equals("") && !boardaddr.getEnddate().isEmpty()) {
@@ -402,11 +407,10 @@ public class BoardServiceImpl implements BoardService {
 		    }
 		}
 		ArrayList<String> deleteNames = null;
-		boolean deleteThumnailflag = true;
+		boolean deleteThumnailflag = false;
 		
 		 if (updateCnt != null && !updateCnt.isEmpty()) {
             deleteNames = new ArrayList<>(Arrays.asList(updateCnt.split("\\\\")));
-
             Iterator<String> iterator = deleteNames.iterator();
             while (iterator.hasNext()) {
                 String name = iterator.next();
@@ -423,7 +427,8 @@ public class BoardServiceImpl implements BoardService {
         }
 		 
 		List<BoardFileDTO> orgFileList = bmapper.getFiles(board.getBoardnum());
-		if(orgFileList.size() == 0 && (files == null || files.length == 0 || files[0].getSize() == 0)) {
+		if(orgFileList.size() == 0 && (files == null || files.length == 0)) {
+			System.out.println("123123123");
 			return true;
 		}else {
 			System.out.println("service : "+files.length);

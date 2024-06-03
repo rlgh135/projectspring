@@ -83,8 +83,8 @@
                     </div>
                 </div>
             </div>
-			<div class="regist_btn_area"><!--가이드 세션 걸어서 가이드만 열리게끔 수정해야함-->
-			        <button id="package_modify">패키지 수정하기</button>
+			<div th:if="${pac.guidenum == guideNum}" class="regist_btn_area">
+			    <button id="package_modify">패키지 수정하기</button>
 			</div>
         </div>
 		<div id="contentModal">
