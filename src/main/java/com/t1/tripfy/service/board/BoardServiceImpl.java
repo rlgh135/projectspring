@@ -583,6 +583,11 @@ public class BoardServiceImpl implements BoardService {
 	// content 이미지 태그 제외하고 추출
 	@Override
 	public String exceptImgTag(String content) {
+		
+		if (content == null) {
+	        return null;
+	    }
+		
 		Document doc = Jsoup.parse(content);
 		
 		System.out.println("Before filtering:");

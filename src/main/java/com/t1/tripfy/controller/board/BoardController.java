@@ -238,7 +238,7 @@ public class BoardController {
 		}
 
 		
-		
+		// 최근 검색어를 위한 쿠키 생성
 		if(cri.getKeyword() != null && !cri.getKeyword().isEmpty()) {
 			String existingkeywords = "";
 			Cookie[] cookies = req.getCookies();
@@ -253,7 +253,8 @@ public class BoardController {
 			}
 			
 			if(!existingkeywords.contains(cri.getKeyword())) {
-				existingkeywords += (existingkeywords.isEmpty() ? "" : "_-_") + cri.getKeyword();
+				// 띄어쓰기 있는 경우 다른 문자열(--_--)로 대체
+				existingkeywords += (existingkeywords.isEmpty() ? "" : "_-_") + cri.getKeyword().replace(" ", "--_--");
 				 
 				// 검색어 목록을 쿠키에 저장
 		        Cookie keywordCookie = new Cookie("keywords", existingkeywords);
@@ -262,9 +263,6 @@ public class BoardController {
 			}
 			
 		}
-		
-
-		
 		
 		Map<String, Object> data = new HashMap<>();
 		data.put("sortlist", sortlist);
