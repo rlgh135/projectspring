@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>CHAT TEST 02</title>
+	<title>CHAT TEST 03</title>
 	<style>	
 		*{
 	    	margin: 0; padding: 0;
@@ -60,11 +60,72 @@
 		#chat-list-cont {
 			height: 100%;
 			width: 100%;
-
-			padding-top: 10px;
-
-			overflow: auto;
 		}
+		#chat-list-header{
+			width: 100%;
+			height: 50px;
+
+			padding: 0 5px 0 5px;
+
+			border-radius: 20px 20px 0 0;
+
+			display: flex;
+			flex-direction: row;
+			align-content: stretch;
+			align-items: center;
+
+			background-color: lightblue;
+		}
+		#chat-list-footer {
+			width: 100%;
+			height: 50px;
+
+			background-color: lightblue;
+
+			border-radius: 0 0 20px 20px;
+
+			display: flex;
+			font-display: row;
+			justify-content: space-between;
+		}
+		.cc-footer-btn {
+			width: 120px;
+			height: 50px;
+			background-color: lightcoral;
+			text-align: center;
+			line-height: 50px;
+		}
+		#chat-list-footer-chatbot-btn {
+			border-radius: 0 0 0 20px;
+		}
+		#chat-list-footer-otm-btn {
+			border-radius: 0 0 20px 0;
+		}
+
+		#chat-list-chatbot-cont,
+		#chat-list-oto-cont,
+		#chat-list-otm-cont {
+			width: 100%;
+			height: 500px;
+
+			display: flex;
+			flex-direction: column;
+
+			overflow: scroll;
+		}
+		#chat-list-oto-cont::-webkit-scrollbar {
+			width: 10px;
+		}
+        #chat-list-oto-cont::-webkit-scrollbar-thumb {
+            background-color: lightcoral;
+            border-radius: 20px;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+        }
+        #chat-list-oto-cont::-webkit-scrollbar-track {
+            /* background-color: lightcyan; */
+        }
+
         #chat-body-cont {
             width: 100%;
             height: 100%;
@@ -123,8 +184,7 @@
 		.cc-list-element {
 			height: 100px;
 			width: 380px;
-
-			margin: 0 auto;
+			margin-left: 8px;
 			margin-bottom: 10px;
 
 			border-radius: 15px/15px;
@@ -250,13 +310,8 @@
 <body>
 	<div id="chat-wrapper">
 		<div id="chat-window-btn">채팅<br>이미지 여기에</div>
-		<div id="chat-window" class="cc-hidden">
-			<div id="chat-list-empty">
-				<!-- 이미지 바꿔라 -->
-				<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
-				<p>현재 입장해있는 채팅방이 없습니다</p>
-			</div>
-			<div id="chat-list-cont" class="cc-hidden">
+		<div id="chat-window" class="">
+			<div id="chat-list-cont" class="">
 				<!--아래와 같은 양식으로 채팅방 리스트 요소를 추가/수정한다
 					CSS도 아래 양식대로 묶여있으니 꼭 지켜줘야 함
 				<div id="cclistele-1" class="cc-list-element">
@@ -284,6 +339,55 @@
 					</div>
 				</div>
 				-->
+				<div id="chat-list-header"></div>
+				<div id="chat-list-inner-cont">
+					<div id="chat-list-empty" class="cc-hidden">
+						<!-- 이미지 바꿔라 -->
+						<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
+						<p>현재 입장해있는 채팅방이 없습니다</p>
+					</div>
+					<div id="chat-list-chatbot-cont" class="cc-hidden">
+						<!-- WIP -->
+					</div>
+					<div id="chat-list-oto-cont">
+						<!-- <div id="cclistele-1" class="cc-list-element">
+							<div>
+								<img src="../../static/images/layoutimg/logo.png" alt="img001">
+							</div>
+							<div>
+								<h4>패키지명 팔라우 바다여행</h4>
+								<p>qwerty1234</p>
+								<p>네 5박 6일 맞습니다</p>
+								<p>5월 28일</p>
+								<div>99..</div>
+							</div>
+						</div>
+						<div id="cclistele-2" class="cc-list-element">
+							<div>
+								<img src="../../static/images/layoutimg/logo.png" alt="img002">
+							</div>
+							<div>
+								<h4>팔라우 6박7일 하루빼고 바다만</h4>
+								<p>qwerty1234</p>
+								<p>진짜 6일동안 바다만 다녀요?</p>
+								<p>5월 28일</p>
+								<div class="cc-hidden">0</div>
+							</div>
+						</div> -->
+					</div>
+					<div id="chat-list-otm-cont" class="cc-hidden"></div>
+				</div>
+				<div id="chat-list-footer">
+					<div id="chat-list-footer-chatbot-btn" class="cc-footer-btn">
+						<h4>채팅봇</h4>
+					</div>
+					<div id="chat-list-footer-oto-btn" class="cc-footer-btn">
+						<h4>일대일</h4>
+					</div>
+					<div id="chat-list-footer-otm-btn" class="cc-footer-btn">
+						<h4>일대다</h4>
+					</div>
+				</div>
 			</div>
 			<div id="chat-body-cont" class="cc-hidden">
                 <div id="chat-body-header">
@@ -291,6 +395,7 @@
                     <h4 id="chat-body-title"></h4>
                 </div>
 				<div id="chat-body-inner-cont">
+
                 </div>
                 <div id="chat-body-input-cont">
                     <input type="text" id="input-chat">
@@ -318,48 +423,47 @@
 
 	/*================================================================================*/
 	/*테스트*/
-	let CHAT_LIST_VD = {};
 	let CHAT_DETAIL_VD = {};
 
 	let WORKER = null;
 
-	window.addEventListener("load", function(e) {
-		if(!!window.SharedWorker) {
-			//공유워커 지원 브라우저
-			WORKER = new SharedWorker("http://localhost:8080/js/chat/chatworkertemp.js", "tripfy-chatworker");
+	// window.addEventListener("load", function(e) {
+	// 	if(!!window.SharedWorker) {
+	// 		//공유워커 지원 브라우저
+	// 		WORKER = new SharedWorker("http://localhost:8080/js/chat/chatworkertemp.js", "tripfy-chatworker");
 
-			WORKER.port.onmessage = (e) => {
-				//공유워커에서 메세지 수신시
-				//일단 콘솔로그만 해둠
-				console.log("SharedWorder broadcasted data=" + e.data);
-				console.log(e.data);
-			};
+	// 		WORKER.port.onmessage = (e) => {
+	// 			//공유워커에서 메세지 수신시
+	// 			//일단 콘솔로그만 해둠
+	// 			console.log("SharedWorder broadcasted data=" + e.data);
+	// 			console.log(e.data);
+	// 		};
 
-			window.addEventListener("beforeunload", (e) => {
-				WORKER.port.postMessage({
-					action: "closePort"
-				});
-			});
+	// 		window.addEventListener("beforeunload", (e) => {
+	// 			WORKER.port.postMessage({
+	// 				action: "closePort"
+	// 			});
+	// 		});
 
-			WORKER.port.start();
-		} else {
-			//공유워커 미지원 브라우저
-			window.alert("아직도 IE를 쓰느냐");
-			window.close();
-		}
-	});
-
-	//한번에 로드할 채팅방 개수
-	const CHAT_ROOM_LOAD_CNT = 10;
-
-	//로드된 채팅방 개수
-	let CHAT_ROOM_CNT = 0;
+	// 		WORKER.port.start();
+	// 	} else {
+	// 		//공유워커 미지원 브라우저
+	// 		window.alert("아직도 IE를 쓰느냐");
+	// 		window.close();
+	// 	}
+	// });
+	/*
+		!!!! 테스트
+	*/
 
 	/*================================================================================*/
 	/*클릭이벤트 등록*/
 	
 	//채팅창 버튼
 	CHAT_WINDOW_BTN.addEventListener("click", chatWindowBtnClick);
+	/*
+		!!!! 테스트
+	*/
 
 	/*================================================================================*/
 	/*클릭이벤트*/
@@ -374,13 +478,9 @@
 			CHAT_WINDOW.classList.remove("cc-hidden");
 			if(CHAT_ROOM_CNT == 0) {
 				//Ajax 호출
-				ajaxGet("localhost:8080", "/chat", {
-					start: CHAT_ROOM_CNT,
-					end: CHAT_ROOM_CNT + CHAT_ROOM_LOAD_CNT
-				})
+				ajaxGet("localhost:8080", "/chat")
 				.then((data) => {
-					updateChatListVD(data);
-					printChatList();
+
 				})
 				.catch((error) => {
 					console.log("err");
@@ -399,60 +499,89 @@
 	/*
 		정렬 기준은 regdate
 		최초 로드인 경우 key값 i를 0으로, 그 외의 경우 CHAT_ROOM_CNT를 기준으로 함
+
+		240603
+		이제 한번에 모든 채팅을 불러오는 구조로 바뀜
+		+ 일대일 일대다 출력 별개로
+
+		따라서 VD를 나눌 필요가 있겠음
+
+		+ VD 목적
+		거창한 가상돔 그런거보다는
+		채팅방 정보를 HTML에 저장하는 구조가 좀 그런게 크다
+		채팅방 정보를 저장하는 목적
+
+		VD 구성
+		은 배열로 한다
+		생각해보니까 key-value면 정렬할때 좆됨
 	*/
+
+	//일대일 VD
+	let CHAT_OTO_VD = [];
+	//일대다 VD
+	let CHAT_OTM_VD = [];
+
+	//VD 처리
+	//VD 초기화
+	function setChatListVD(data) {
+		//data의 userList.length가 1인지 1 이상인지 체크, oto과 otm을 나눈다
+		for(let clObj of data) {
+			if(clObj.userList.length == 1) {
+				//oto
+				CHAT_OTO_VD.push(clObj);
+			} else {
+				//otm
+				CHAT_OTM_VD.push(clObj);
+			}
+		}
+	}
+	//VD 업데이트
 	function updateChatListVD(data) {
-		let i = 0;
-		if(CHAT_ROOM_CNT > 0) {
-			let i = CHAT_ROOM_CNT - 1;
-		}
-		for(let val of data) {
-			CHAT_LIST_VD[i] = val;
-			i++
-		}
-		CHAT_ROOM_CNT += data.length;
+		//data가 존재하는지 확인, 존재하면 순서를 바꾸고 없으면 제일 최상위에 삽입
 	}
 
 	/*================================================================================*/
 	/*DOM 구현*/
 
 	//채팅방 리스트 구현
-	function printChatList() {
-		if(CHAT_ROOM_CNT > 0) {
-			for(let orderKey in CHAT_LIST_VD) {
-				const vdRoomIdx = CHAT_LIST_VD[orderKey].roomidx;
-				const listArr = Array.from(CHAT_LIST_CONT.children);
+	//구조가 바뀌어서 임마도 다시 잡아야함
+	// function printChatList() {
+	// 	if(CHAT_ROOM_CNT > 0) {
+	// 		for(let orderKey in CHAT_LIST_VD) {
+	// 			const vdRoomIdx = CHAT_LIST_VD[orderKey].roomidx;
+	// 			const listArr = Array.from(CHAT_LIST_CONT.children);
 
-				let i = 0;
-				for(; i < listArr.length; i++) {
-					if(listArr[i].id === "cclistele-" + vdRoomIdx) {
-						if(i != orderKey) {
-							//요소 RD에 존재, RD/VD 위치 불일치
-							//기본적으로는 타겟 다음 위치로 삽입
-							if(orderKey < 1) {
-								listArr[orderKey].insertAdjacentElement("beforebegin", listArr[i]);
-							} else {
-								listArr[orderKey - 1].insertAdjacentElement("afterend", listArr[i]);
-							}
-						}
-						//요소 RD에 존재, RD/VD 위치 일치의 경우 요소를 움직이지 않는다
+	// 			let i = 0;
+	// 			for(; i < listArr.length; i++) {
+	// 				if(listArr[i].id === "cclistele-" + vdRoomIdx) {
+	// 					if(i != orderKey) {
+	// 						//요소 RD에 존재, RD/VD 위치 불일치
+	// 						//기본적으로는 타겟 다음 위치로 삽입
+	// 						if(orderKey < 1) {
+	// 							listArr[orderKey].insertAdjacentElement("beforebegin", listArr[i]);
+	// 						} else {
+	// 							listArr[orderKey - 1].insertAdjacentElement("afterend", listArr[i]);
+	// 						}
+	// 					}
+	// 					//요소 RD에 존재, RD/VD 위치 일치의 경우 요소를 움직이지 않는다
 
-						//내부 요소 수정
-						//일단 이미지는 건들지 않음
-						adjustChatList(listArr[i], CHAT_LIST_VD[orderKey]);
-					}
-				}
-				if(i === listArr.length) {
-					//요소 RD에 존재하지 않음
-					createCCListElement(CHAT_LIST_VD[orderKey]);
-				}
-			}
-			CHAT_LIST_CONT.classList.remove("cc-hidden");
-			CHAT_LIST_EMPTY.classList.add("cc-hidden");
-		} else {
-			CHAT_LIST_CONT.classList.add("cc-hidden");
-			CHAT_LIST_EMPTY.classList.remove("cc-hidden");
-		}
-	}
+	// 					//내부 요소 수정
+	// 					//일단 이미지는 건들지 않음
+	// 					adjustChatList(listArr[i], CHAT_LIST_VD[orderKey]);
+	// 				}
+	// 			}
+	// 			if(i === listArr.length) {
+	// 				//요소 RD에 존재하지 않음
+	// 				createCCListElement(CHAT_LIST_VD[orderKey]);
+	// 			}
+	// 		}
+	// 		CHAT_LIST_CONT.classList.remove("cc-hidden");
+	// 		CHAT_LIST_EMPTY.classList.add("cc-hidden");
+	// 	} else {
+	// 		CHAT_LIST_CONT.classList.add("cc-hidden");
+	// 		CHAT_LIST_EMPTY.classList.remove("cc-hidden");
+	// 	}
+	// }
 
 	//채팅방 요소 내부 수정
 	function adjustChatList(targetEle, dataObj) {

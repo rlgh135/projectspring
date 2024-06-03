@@ -125,7 +125,7 @@
             margin-right: 5px;
         }
 
-		.cc-list-element {
+		.cc-list-oto-ele {
 			height: 100px;
 			width: 380px;
 
@@ -147,7 +147,7 @@
 			letter-spacing: 0;
 			word-spacing: 0;
 		}
-		.cc-list-element>div:first-child {
+		.cc-list-oto-ele>div:first-child {
 			display: inline-block;
 			height: 100px;
 			width: 100px;
@@ -158,7 +158,7 @@
 			padding-top: 10px;
 			padding-left: 10px;
 		}
-		.cc-list-element>div:last-child {
+		.cc-list-oto-ele>div:last-child {
 			display: inline-block;
 			height: 100px;
 			width: 270px;
@@ -171,7 +171,7 @@
 
 			padding-top: 10px;
 		}
-		.cc-list-element>div:first-child>img {
+		.cc-list-oto-ele>div:first-child>img {
 			display: block;
 			height: 80px;
 			width: 80px;
@@ -180,21 +180,21 @@
 
 			object-fit: cover;
 		}
-		.cc-list-element>div:last-child>h4:first-child {
+		.cc-list-oto-ele>div:last-child>h4:first-child {
 			/* margin-bottom: 5px; */
 		}
-		.cc-list-element>div:last-child>p:nth-child(2) {
+		.cc-list-oto-ele>div:last-child>p:nth-child(2) {
 			font-size: 12px;
 			margin-bottom: 5px;
 		}
-		.cc-list-element>div:last-child>p:nth-child(3) {
+		.cc-list-oto-ele>div:last-child>p:nth-child(3) {
 			font-size: 14px;
 			margin-bottom: 8px;
 		}
-		.cc-list-element>div:last-child>p:nth-child(4) {
+		.cc-list-oto-ele>div:last-child>p:nth-child(4) {
 			font-size: 10px;
 		}
-		.cc-list-element>div:last-child>div:last-child {
+		.cc-list-oto-ele>div:last-child>div:last-child {
 			position: absolute;
 			right: 5px;
 			bottom: 5px;
@@ -261,10 +261,10 @@
 				<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
 				<p>현재 입장해있는 채팅방이 없습니다</p>
 			</div>
-			<div id="chat-list-cont" class="cc-hidden">
-				<!--아래와 같은 양식으로 채팅방 리스트 요소를 추가/수정한다
-					CSS도 아래 양식대로 묶여있으니 꼭 지켜줘야 함
-				<div id="cclistele-1" class="cc-list-element">
+			<div id="chat-list-cont">
+				<!-- 아래와 같은 양식으로 채팅방 리스트 요소를 추가/수정한다
+					CSS도 아래 양식대로 묶여있으니 꼭 지켜줘야 함 -->
+				<div id="cclistele-1" class="cc-list-oto-ele">
 					<div>
 						<img src="../../static/images/layoutimg/logo.png" alt="img001">
 					</div>
@@ -276,7 +276,7 @@
 						<div>99..</div>
 					</div>
 				</div>
-				<div id="cclistele-2" class="cc-list-element">
+				<div id="cclistele-2" class="cc-list-oto-ele">
 					<div>
 						<img src="../../static/images/layoutimg/logo.png" alt="img002">
 					</div>
@@ -288,9 +288,22 @@
 						<div class="cc-hidden">0</div>
 					</div>
 				</div>
-				-->
+				<div id="cclistele-3" class="cc-list-otm-ele">
+					<div>
+						<!-- <img src="../../static/images/layoutimg/logo.png" alt="img002"> -->
+                        
+					</div>
+					<div>
+						<h4>팔라우 6박7일 하루빼고 바다만</h4>
+						<p>qwerty1234</p>
+						<p>진짜 6일동안 바다만 다녀요?</p>
+						<p>5월 28일</p>
+						<div class="cc-hidden">0</div>
+					</div>
+				</div>
+				
 			</div>
-			<div id="chat-body-cont">
+			<div id="chat-body-cont" class="cc-hidden">
                 <div id="chat-body-header">
                     <input type="submit" value="나가기" id="quit-chat" class="ccbody-btn">
                     <h4>팔라우 바다만 5박 6일</h4>
