@@ -54,6 +54,8 @@ self.onconnect = function(e) {
 							PORT_LIST[key].chatRoomIdx = e.data.payload.roomidx;
 						}
 					}
+				} else {
+					connectSSE();
 				}
 				break;
 			case "chatRoomLeave":

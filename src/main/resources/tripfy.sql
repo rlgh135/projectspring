@@ -209,14 +209,18 @@ CREATE TABLE `chat_detail` (
 # 240516 채팅테이블 수정본
 CREATE TABLE `chat_room` (
 	`chat_room_idx` BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `packagenum` BIGINT NOT NULL
+    `chat_room_title` VARCHAR(300) COMMENT "null 가능, 패키지 관련이면 무조건 null",
+    `packagenum` BIGINT COMMENT "null이면 일반 <-> 일반, null이 아니면 판매자 <-> 일반",
+    `chat_room_is_terminated` BOOLEAN NOT NULL COMMENT "종료되었는지 여부",
+    `regdate` DATETIME NOT NULL DEFAULT(CURRENT_TIMESTAMP()) COMMENT "채팅방 개설 시간"
     #,CONSTRAINT fk___package___chat_room___packagenum FOREIGN KEY (`packagenum`) REFERENCES `package`(`packagenum`)
 );
 
 CREATE TABLE `chat_user` (
 	`chat_room_idx` BIGINT, 
     `userid` VARCHAR(300),
-    `chat_user_is_seller` BOOLEAN NOT NULL,
+    `chat_user_is_creator` BOOLEAN NOT NULL COMMENT "채팅방 생성자, 일반 <-> 일반의 경우 중요하지 않음, 판매자 <-> 유저의 경우 판매자가 true",
+    `chat_user_is_quit` BOOLEAN NOT NULL COMMENT "해당 사용자가 나갔는지 여부",
     `chat_detail_idx` BIGINT COMMENT "각 레코드의 userid가 조회한 제일 최근의 메시지, 순환 참조를 위해 null기입을 가능하게 함, 그리고 자기 자신의 메시지도 기입 가능하게 해야 함",
     PRIMARY KEY(`chat_room_idx`, `userid`)
     /*

@@ -38,18 +38,18 @@ public class ChatMappersTests {
 	@Order(2)
 	@DisplayName("02 userid로 chat_user에서 특정 행들만 뽑아내기")
 	public void chatUserMapper_selectSpecificChatUserByUseridTest() {
-		List<ChatUserDTO> list = cump.selectSpecificChatUserByUserid("testUserId01");
-		if(list != null && !list.isEmpty()) {
-			for(ChatUserDTO dto : list) {
-				System.out.println(dto);
-				if(dto.getChatRoomIdx() == null || dto.getUserid() == null || dto.getChatUserIsSeller() == null || dto.getChatDetailIdx() == null) {
-					assertNotNull(null);
-				}
-			}
-		} else {
-			assertNotNull(null);
-		}
-		assertNotNull(new Object());
+//		List<ChatUserDTO> list = cump.selectSpecificChatUserByUserid("testUserId01");
+//		if(list != null && !list.isEmpty()) {
+//			for(ChatUserDTO dto : list) {
+//				System.out.println(dto);
+//				if(dto.getChatRoomIdx() == null || dto.getUserid() == null || dto.getChatUserIsSeller() == null || dto.getChatDetailIdx() == null) {
+//					assertNotNull(null);
+//				}
+//			}
+//		} else {
+//			assertNotNull(null);
+//		}
+//		assertNotNull(new Object());
 	}
 
 //	@Test

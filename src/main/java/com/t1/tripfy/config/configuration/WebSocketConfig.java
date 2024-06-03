@@ -22,7 +22,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	//웹소켓 핸들러 등록
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(webSocketHandler, "/wschat").setAllowedOrigins("*"); //CORS
+		registry.addHandler(webSocketHandler, "/wschat")
+				.addInterceptors(new HttpSessionHandshakeInterceptor())
+				.setAllowedOrigins("*"); //CORS
 	}
 	
 	//아마 웹소켓 설정
@@ -40,39 +42,4 @@ public class WebSocketConfig implements WebSocketConfigurer {
 //		// 핑퐁 보낼거 생각해서 변경해줘야 함
 //		return fac;
 //	} 오류로 인해 일단 주석처리함
-	
-	/* #메모 240515
-	 *  진행사항
-	 *   패키지 생성
-	 *    com.t1.tripfy.config
-	 *     ㄴ configuration
-	 *     ㄴ handler
-	 *    com.t1.tripfy.service
-	 *     ㄴ chat
-	 *   컨피그 클래스 생성
-	 *    com.t1.tripfy.config.configuration.WebSocketConfig
-	 *     registerWebSocketHandlers(WebSocketHandlerRegistry registry) 오버라이드
-	 *      WebSocketHandler 핸들러(커스텀) 등록
-	 *      HttpSessionHandshakeInterceptor 인터셉터 등록
-	 *      CORS 관련(setAllowedOrigins("*")) 등록
-	 *     configureWebSocketContainer() @Bean 선언
-	 *      바이너리, 텍스트 메시지 최대 버퍼 크기 설정 - 왜 하는건지는 아직 모름
-	 *      `비동기 세션, 전송 타임아웃` 설정 - 이것도 좀 긴가민가함
-	 *      wip중
-	 *   핸들러 클래스 생성
-	 *    com.t1.tripfy.config.handler.WebSocketHandler
-	 *     웹소켓 세션 저장용 HashMap 객체 선언
-	 *     메서드 세개 오버라이드
-	 *      afterConnectionEstablished(WebSocketSession session)
-	 *      handleTextMessage(WebSocketSession session, TextMessage message)
-	 *      afterConnectionClosed(WebSocketSession session, CloseStatus status)
-	 *       각각 연결시, 메시지 전송시, 연결 해제시임
-	 *       wip중
-	 *   채팅 서비스 인터페이스 생성
-	 *    com.t1.tripfy.service.chat.ChatService
-	 *     wip중
-	 *   채팅 관련 DTO 수정
-	 *    com.t1.tripfy.domain.dto.chat.ChatDTO, ChatDetailDTO
-	 *     long 필드들을 Long형으로 수정
-	 * */
 }

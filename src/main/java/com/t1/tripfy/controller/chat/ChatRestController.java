@@ -51,7 +51,7 @@ public class ChatRestController {
 		
 	//서비스
 		//일단 받기
-		List<ChatListPayloadDTO> chatList = chatSV.selectChatList(start, end, loginUserId);
+		List<ChatListPayloadDTO> chatList = chatSV.selectChatList(loginUserId);
 	
 	//결과 체크
 		//DB접근 실패 체크
