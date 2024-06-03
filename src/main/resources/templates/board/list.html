@@ -124,7 +124,7 @@
         margin-right: 8px;
         margin-bottom: 8px;
         display: flex;
-
+		cursor: pointer;
     }
 
     .keyword > .xbtn {
@@ -1202,7 +1202,7 @@
 	function clickEnter(e) {
 		if(e.keyCode == 13) {  // 엔터 키 클릭 시
 			search(e.target.value);
-			// b_searchDetail.style.display = "none";
+			b_searchDetail.style.display = "none";
 		}
 	}
 	
@@ -1926,6 +1926,7 @@
 		
 		// 최근 검색어 삭제
 		$(document).on("click", ".xbtn", function(e) {
+			e.stopPropagation();  // 이벤트 전파 막음(부모 요소인 .keyword가 클릭된 것으로 인식되지 않게)
 		     // console.log("e.target: " + e.target);
 			 let keywordTxt = $(this).closest(".keyword").find("span").text().trim();  // .keyword의 span 태그의 text
 			 
@@ -1942,6 +1943,16 @@
 				document.cookie = "keywords=" + updatedKeywords.join("_-_");
 			 }
 		 });
+		 
+		 $(document).on("click", ".keyword", function(e) {
+			let keywordDivTag = $(this);  // 현재 클릭된 .keyword
+			let keyword = keywordDivTag.find('span').text();  // 
+			console.log("-----------------------keyword: " + keyword)
+			$(".b_searchDetail").hide();
+			$(".b_search").val(keyword);
+			search(keyword);
+		 })
+		 
 		
 	});
 	
@@ -2229,7 +2240,7 @@
 	}
 	*/
 	
-	// 최근 검색어
+	// --------------- 최근 검색어 ---------------
 	function getCookie(name) {
 	    const cookies = document.cookie.split(';'); // 모든 쿠키를 ';'로 분리하여 배열로 만들어줌
 	    for (let i = 0; i < cookies.length; i++) {
