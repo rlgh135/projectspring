@@ -78,7 +78,7 @@ self.onconnect = function(e) {
 				loadChat(e.data, port);
 				break;
 			case "sendChat":
-				//wip
+				sendChat(e.data, port);
 				break;
 		}
 	};
@@ -94,7 +94,7 @@ function broadcastMsg(by, data) {
 //chatRoomEnter 처리
 async function chatRoomEnter(data, port) {
 	//웹소켓 연결이 없는 경우에만
-	if(!EVENTSOURCE) {
+	if(!WEBSOCKET) {
 		disconnectSSE();
 		try {
 			await connectWebSocket();
@@ -203,8 +203,37 @@ async function loadChat(data, port) {
 }
 
 //sendChat 처리
-async function sendChat() {
-	//wip
+async function sendChat(data, port) {
+	WEBSOCKET.send(JSON.stringify({
+		act: "sendChat",
+		payload: {
+			roomidx: data.payload.roomidx,
+			chatContent: data.payload.chatContent
+		}
+	}));
+
+	try {
+		const res = await promised_WebSocketReceiver("sendChat");
+		if(!!res.payload.reason) {
+			port.postMessage({
+				action: "sendChat",
+				isSuccess: false
+			})
+			return;
+		}
+		port.postMessage({
+			action: "sendChat",
+			isSuccess: true,
+			payload: res.payload
+		});
+		return;
+	} catch(e) {
+		port.postMessage({
+			action: "sendChat",
+			isSuccess: false
+		})
+		return;
+	}
 }
 
 //1회성 수신 함수
@@ -219,7 +248,8 @@ async function promised_WebSocketReceiver(act) {
 		}
 		WEBSOCKET.addEventListener("message", receiver);
 		setTimeout(() => {
-			WEBSOCKET.removeEventListener("message", receiver);
+			if(!!WEBSOCKET)
+				WEBSOCKET.removeEventListener("message", receiver);
 			reject(new Error("timeout"));
 		}, 3000);
 	});
@@ -249,7 +279,9 @@ function connectSSE() {
 	});
 	EVENTSOURCE.addEventListener("broadcast", (e) => {
 		console.log("SSE received msg=broadcast");
-		broadcastMsg("SSE", e.data);
+		const data = JSON.parse(e.data);
+		if(data.act === "broadcastChat")
+			broadcastMsg("SSE", e.data);
 	});
 	EVENTSOURCE.onerror = (err) => {
 		console.log("SSE onerror=" + err);
@@ -272,9 +304,8 @@ async function connectWebSocket() {
 		console.log(e.data);
 		console.log(JSON.parse(e.data));
 		const data = JSON.parse(e.data);
-		if(data.act != "chatRoomEnter") {
+		if(data.act === "broadcastChat")
 			broadcastMsg("WebSocket", e.data);
-		}
 	};
 	WEBSOCKET.onerror = (e) => {
 		WEBSOCKET.close();

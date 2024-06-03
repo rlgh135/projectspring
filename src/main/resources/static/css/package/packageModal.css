@@ -113,6 +113,10 @@ margin-bottom: 20px;
 }
 #pac_title, #pac_content{
 width: 100%;
+padding: 5px;
+}
+#pac_title::placeholder, #pac_content::placeholder{
+	font-size: 13px;
 }
 #pac_content{
 resize: none;

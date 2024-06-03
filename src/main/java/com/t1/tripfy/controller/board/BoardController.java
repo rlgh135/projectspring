@@ -373,10 +373,6 @@ public class BoardController {
 	
 	@PostMapping("modify")
 	public String modify(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, String updateCnt) throws Exception {
-		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+board);
-		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+boardaddr);
-		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+files);
-		System.out.println("@@@@@@@@@@@@@@@@보드@@@@@@@@@@@@@@@@@@"+updateCnt);
 		if(service.modifyBoard(board, boardaddr, files, updateCnt)) {
 			return "redirect:/board/get?boardnum=" + board.getBoardnum();
 		}
@@ -493,7 +489,7 @@ public class BoardController {
 	}
 	
 	@PostMapping(value="replyModify", consumes = "application/json", produces = "application/json;charset=utf-8")
-	public ResponseEntity<Void> replyModify(@RequestBody BoardReplyDTO reply, HttpServletRequest req){
+	public ResponseEntity<BoardReplyDTO> replyModify(@RequestBody BoardReplyDTO reply, HttpServletRequest req){
 		HttpSession session = req.getSession();
 		String loginUser = (String) session.getAttribute("loginUser");
 		long replynum = reply.getReplynum();
@@ -501,9 +497,9 @@ public class BoardController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}else {
 			if (service.replyModify(reply)) {
-				return ResponseEntity.ok().build(); // 200 OK 상태 코드 반환
+				 return new ResponseEntity<>(HttpStatus.OK);
 			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 내부 서버 오류 상태 코드 반환
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}			
 		}
 	}

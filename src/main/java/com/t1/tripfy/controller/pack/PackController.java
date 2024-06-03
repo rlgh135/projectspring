@@ -311,7 +311,7 @@ public class PackController {
 	@GetMapping("tlwrite")
 	public String tlwrite(@RequestParam long packagenum, Model model) {
 		//가이드num 세션에 있다고 가정
-		long guidenum = 1;
+		long guidenum = 5;
 		model.addAttribute("packagenum", packagenum);
 		PackageDTO pac =  service.getDetail(packagenum);
 		//유효성검사 해야함
@@ -322,7 +322,7 @@ public class PackController {
 		model.addAttribute("pac",pac);
 		String[] dayMMdd = service.getDayMMdd(pac.getStartdate(),pac.getEnddate());
 		model.addAttribute("dayMMdd",dayMMdd);
-		return "/package/timelineWrite";
+		return "package/timelineWrite";
 	}
 	
 	@GetMapping("tlget")

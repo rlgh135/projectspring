@@ -511,8 +511,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public BoardReplyDTO replyRegist(BoardReplyDTO reply) {
-		if(brmapper.insertReply(reply) == 1) {
-			return brmapper.getLastReply(reply.getUserid());
+		if(bmapper.addReplyCnt(reply.getBoardnum()) == 1) {
+			if(brmapper.insertReply(reply) == 1) {
+				return brmapper.getLastReply(reply.getUserid());
+			}			
 		}
 		return null;
 	}
@@ -528,7 +530,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public boolean deleteReply(BoardReplyDTO reply) {
-		return brmapper.deleteReply(reply) == 1;
+		if(bmapper.reduceReplyCnt(brmapper.getReplyByReplyNum(reply.getReplynum()).getBoardnum()) == 1) {
+			return brmapper.deleteReply(reply) == 1;			
+		}else {
+			return false;
+		}
 	}
 	@Override
 	public BoardReplyDTO getReplyByReplyNum(long replynum) {

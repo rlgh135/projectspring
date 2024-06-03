@@ -187,6 +187,9 @@ public class SseEmitterService {
 	}
 	
 	public void broadcast(String userid, String msg) {
+		/*
+		 * 이거 상대 유저가 연결되어있지 않은 경우(null == sseSessions.get(userid)) 도 고려해야함
+		 * */
 		List<UUID> uuidList = sseSessions.get(userid);
 		
 		for(UUID uuid : uuidList) {
