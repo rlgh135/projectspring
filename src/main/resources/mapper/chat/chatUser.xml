@@ -22,6 +22,20 @@
 	</select>
 	
 	<!-- 
+		채팅방의 상대 유저정보 가져오기
+		요청자 제외
+		다대다 가능
+	-->
+	<select id="selectOpponentUserInfo">
+		SELECT *
+		FROM chat_user
+		WHERE
+				chat_room_idx = #{chatRoomIdx}
+			AND
+				userid != #{userid}
+	</select>
+	
+	<!-- 
 		userid로 chat_user 테이블 행 개수 가져오기
 	-->
 	<select id="selectCountOfSpecificChatUserByUserid">
@@ -74,4 +88,66 @@
 		LIMIT 
 			#{start}, #{end};
 	</select>
+	
+	<!-- 
+		userid로 채팅방 가져오기
+		닫힌 채팅방은 가져오지 않는다
+	-->
+	<select id="selectAllByUserid">
+		SELECT 
+			cu.chat_room_idx, cu.chat_user_is_creator, cr.regdate, MAX(cd.regdate) as last_msg_date
+		FROM 
+			chat_user AS cu
+		INNER JOIN 
+			chat_room AS cr
+		ON 
+			cu.chat_room_idx = cr.chat_room_idx
+		LEFT JOIN 
+			chat_detail AS cd
+		ON 
+			cu.chat_room_idx = cd.chat_room_idx
+		WHERE
+				cu.userid = "testUserId01"
+			AND
+				cu.chat_user_is_quit = false
+			AND
+				cr.chat_room_is_terminated = false
+		GROUP BY
+			cu.chat_room_idx
+		ORDER BY
+			last_msg_date DESC;
+	</select>
+	
+	<!-- 
+		마지막 확인 메시지 수정
+	-->
+	<update id="updateChatDetailIdx">
+		UPDATE chat_user
+		SET
+			chat_detail_idx = #{chatDetailIdx}
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+		AND
+			userid = #{userid}
+	</update>
+	<!-- 
+		메시지 전부 확인처리
+	-->
+	<update id="updateChatDetailIdxToEnd">
+		UPDATE chat_user
+		SET
+			chat_detail_idx = (
+				SELECT chat_detail_idx
+				FROM chat_detail
+				WHERE
+					chat_room_idx = #{chatRoomIdx}
+				ORDER BY
+					chat_detail_idx DESC
+				LIMIT 1
+			)
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+		AND
+			userid = #{userid}
+	</update>
 </mapper>

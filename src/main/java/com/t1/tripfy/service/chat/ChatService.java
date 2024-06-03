@@ -6,6 +6,7 @@ import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
 import com.t1.tripfy.domain.dto.chat.MessageDTO;
 import com.t1.tripfy.domain.dto.chat.MessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.sender.ChatContentDetailMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatDetailBulkMessagePayload;
 
 public interface ChatService {
@@ -26,6 +27,12 @@ public interface ChatService {
 	// 일단 메서드는 그대로 분리하고 chatRoomIdx < userid 매핑을 WebSocket쪽에 추가함 <-이거 ChatServiceImpl로 옮길까?
 	MessageDTO<ChatDetailBulkMessagePayload> chatRoomEnterHandling(MessageDTO<? extends MessagePayload> receivedMsg);
 	
+	// 채팅 수신 처리
+	MessageDTO<ChatContentDetailMessagePayload> chatReceiveHandling(MessageDTO<? extends MessagePayload> receivedMsg);
+	
+	// 채팅 로드 처리
+	MessageDTO<ChatDetailBulkMessagePayload> chatLoadHandling(MessageDTO<? extends MessagePayload> receivedMsg);
+	
 	// 채팅방 정보 가져오고 chat_user.chat_detail_idx 갱신
 //	List<ChatDetailDTO> getSpecificChatDetailByChatRoomIdx(Mess)
 	
@@ -33,5 +40,5 @@ public interface ChatService {
 	Integer selectCountOfUnreadChatByUserid(String userid);
 	
 	// 채팅방 리스트 + 각 채팅방의 마지막 메시지 + 안 읽은 메시지 개수 가져오기
-	List<ChatListPayloadDTO> selectChatList(Integer start, Integer end, String userid);
+	List<ChatListPayloadDTO> selectChatList(String userid);
 }

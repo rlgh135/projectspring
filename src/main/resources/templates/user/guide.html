@@ -44,22 +44,21 @@
                 </div>
             </section>
             <section class="right-side-section guideposts">
-                <ul id="choicezone">
-                    <li id="showpackagelist" class="guide-selected">내 패키지</li>
-                    <li id="showapplylist">신청 현황<span id="redalert"></span></li>
-                </ul>
+                
                 <div id="mypackagelist" class="guide-selected">
                     <div id="jacsunging">
                         <p class="subtitles">작성중인 패키지</p>
                         <ul class="gmlists">
                             <th:block th:if="${inglist != null and inglist.size > 0}">
-                                <li th:each="ing:${inglist}" th:onclick="'rewrite(+'${ing.packagenum}+')'">
+                                <li th:each="ing, iterStats:${inglist}" th:onclick="|location.href='/package/tlwrite?packagenum=${ing.packagenum}'|">
                                     <div class="outerpckgs">
 										<div class="ingthumb">
-											<img src="/images/packageimg/384878.jpg">
+											<img th:src="${'/package/thumbnail?systemname='+ingthumblist[__${iterStats.index}__].pfSysname}">
 										</div>
-                                        <div class="mypckgs">[[${ing.packageTitle}]]</div>
-                                        <div class="stamparea"></div>
+										<div class="inglow">
+	                                        <div class="mypckgs">[[${ing.packageTitle}]]</div>
+	                                        <div class="stamparea"></div>
+										</div>
                                     </div>
                                 </li>
                             </th:block>
@@ -76,10 +75,10 @@
                         <p class="subtitles">내 패키지</p>
                         <ul class="gmlists">
                             <th:block th:if="${packagelist != null and packagelist.size > 0}">
-                                <li th:each="package:${packagelist}">
+                                <li th:each="package, iterStats:${packagelist}">
                                     <div class="outerpckgs">
 										<div class="ingthumb" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
-											<img src="/images/packageimg/384878.jpg">
+											<img th:src="${'/package/thumbnail?systemname='+thumbnaillist[__${iterStats.index}__].pfSysname}">
 										</div>
                                         <div class="mypckgs" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
 											<div>[[${package.packageTitle}]]</div>
@@ -130,29 +129,7 @@
                                 </div>
                                 <div>
                                     <ul th:id="${'myapplies'+ply.packagenum}" class="myapplyuserlist hidden">
-                                        <!--
-                                        <li>
-                                            <div class="upperhugi">
-                                                <div>
-                                                    <img src="" alt="">
-                                                </div>
-                                                <div>id</div>
-                                                <div>stars</div>
-                                            </div>
-                                            <ul class="myapplyuserlist">
-                                                <li th:id="'appai'+${i}">
-                                                    <div>
-                                                        <div>이름, 회원여부 상태: <span class="rednotice">취소요청</span></div>
-                                                        <div>인원, 전화번호, 결제수단</div>
-                                                    </div>
-                                                    <div class="canslewrap">
-                                                        <input type="button" value="취소승인" class="acceptmgbtn" onclick="cansleApply(packagenum, true)">
-                                                        <input type="button" value="취소거절" class="rejectmgbtn" onclick="cansleApply(packagenum, false)">
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        -->
+                                        
                                     </ul>
                                     
                                 </div>
@@ -168,6 +145,19 @@
                     </ul>
                 </div>
             </section>
+			<div id="choicezone">
+				<div id="showpackagelist" class="guide-selected">
+					<p>
+						내 패키지						
+					</p>
+				</div>
+			    <div id="showapplylist">
+					<p>
+						신청 현황
+						<span id="redalert"></span>						
+					</p>
+				</div>
+			</div>
         </container>
     </div>
 </body>

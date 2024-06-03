@@ -58,6 +58,7 @@
 		background-color: #64B5F6;
 		color: #fff;
 		font-size: 14px;
+		cursor: pointer;
 	}
 	
 	.changebtn button:first-of-type {
@@ -186,18 +187,19 @@
 		margin-top: 30px;
 	}
 	
-	.reply_area > div {
+	.reply_area > div, .reply > .replyModifyForm{
+		width: 100%;
 	    margin-top: 8px;
 	    position: relative;
 		border:1px solid #2196F3;
 		border-radius: 10px;
 	}
-	.reply_area > div > div{
+	.reply_area > div > div, .reply > div > div{
 		margin-left: 10px;
 		margin-bottom: 10px;
 	}
 	
-	.reply_area > div > textarea {
+	.reply_area > div > textarea, .reply > div > textarea {
 	    overflow: auto;
 	    resize: none;
 	    width: 91.3%;
@@ -211,12 +213,12 @@
 		border: none;
 	}
 	
-	.reply_area > div > textarea::placeholder {
+	.reply_area > div > textarea::placeholder, .reply > div > textarea::placeholder{
 	    font-size: 13px;
 	    color: #aaaaaa;
 	}
 	
-	.reply_area > div > [type="button"] {
+	.reply_area > div > [type="button"],  .reply > div > [type="button"]{
 	 	position: absolute;
 	     top: 55%; right: 1.3%;
 	     font-size: 14px;
@@ -226,6 +228,10 @@
 	     width: 60px;
 	     height: 35px;
 	     color: #fff;
+	 }
+	 .reply .replyModifyForm input:nth-of-type(1){
+		top:55%;
+		right:9%;
 	 }
 	
 	 .guide_profile {
@@ -250,6 +256,15 @@
 	     top: 16px;
 	     font-size: 18px;
 	 }
+	 
+	 
+	 .guide_profile img.guidebadge {
+		position: absolute;
+		top: -3px;
+	 	width: 20px; height: 20px;
+	 	margin-left: 5px;
+	 }
+	 
 	/*
 	 .guide_profile p {
 	     margin-top: 5px;
@@ -294,13 +309,44 @@
 		color: #9a9a9a;
 	}
 	
+	.info > div {
+		position: relative;
+	}
+	
+	#like {
+		display: inline-block;
+		width: 23px; height: 23px;
+		cursor: pointer;
+	}
+	
+	.contour {
+		display: inline-block;
+		border-right: 1px solid #c5c5c5;
+		height: 20px;
+		width: 1px;
+		margin-left: 2px;
+	}
+
+	
+	#like_area {
+		position: relative;
+		top: 2px;
+		display: inline-block;
+		margin-left: 6px;
+		width: 23px; height: 23px;
+		padding-top: 10px;
+		/* border: 1px solid red; */
+	}
+
 	/*댓글 디자인*/
 	.replies{
+		width: 100%;
 		padding:0;
 		margin-top:15px;
 		border-top: 1px solid gray;
 	}
 	.reply{
+		width: 100%;
 		margin-top: 10px;
 		display:flex;
 		border-bottom: 1px solid #f2f2f2;
@@ -310,6 +356,10 @@
 	}
 	.reply .reply_userThumnail img{
 		width:50px; height:50px;
+		border-radius: 10px;
+	}
+	.reply .reply_box{
+		width: 96%;
 	}
 	.reply .reply_box .reply_userid{
 		width:100%;
@@ -318,7 +368,7 @@
 		margin-bottom: 5px;
 	}
 	.reply .reply_box .reply_content{
-		margin-left:5px;
+		margin-left:15px;
 		margin-bottom: 5px;
 		max-height:200px;
 		overflow-y: auto;
@@ -352,13 +402,31 @@
 	.comment_attach{
 		position: relative;
 	}
-	.reply_area .comment_attach img{
+	.reply_area .comment_attach img, .reply .modify_comment_attach img{
 		width:100px; height:100px;
 	}
 	.reply_area .comment_attach .emoticon-close-btn{
 		position: absolute;
 		left: 80px;
-		top:5px;
+		top:1px;
+	    background: rgba(255, 255, 255, 0.7); 
+	    border: none;
+	    color: #ff0000;
+	    font-size: 16px;
+	    font-weight: bold;
+	    cursor: pointer;
+	    border-radius: 50%;
+	    width: 20px;
+	    height: 20px;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    padding: 0;
+	}
+	.reply .modify_comment_attach .modify_emoticon-close-btn{
+		position: absolute;
+		left: 85px;
+		top:90px;
 	    background: rgba(255, 255, 255, 0.7); 
 	    border: none;
 	    color: #ff0000;
@@ -395,7 +463,7 @@
 	.reply .tool-menu button:focus {
 	    outline: none;
 	}
-	.emoji-picker {
+	.emoji-picker, .modify-emoji-picker{
         position: absolute;
         border: 1px solid #ccc;
         background: #fff;
@@ -404,12 +472,12 @@
         margin-top: 5px;
         z-index: 100;
     }
-    .emoji-picker span {
+    .emoji-picker span, .modify-emoji-picker span{
         cursor: pointer;
         font-size: 20px;
         margin: 5px;
     }
-	.emoji-picker span img{
+	.emoji-picker span img, .modify-emoji-picker span img{
 		width:100px; height:100px;
 	}
 	.reply .reply_tool svg{
@@ -426,13 +494,15 @@
 		margin:0 2px;
 	}
 	.replies-page .page-btn{
-	    padding: 5px;
-	    width: 30px; height: 30px;
-	    display: inline-block;
-	    border-radius: 3px;
-	    background-color: rgb(0,200,80);
+	    padding: 8px;
+	    width: 40px; height: 40px;
+	    display: flex;
+		justify-content: center;
+		align-items: center;
+	    background-color:#2196F3;
 	    color: #fff;
 	    font-weight: bold;
+		border-radius: 20px;
 	}
 	.replies-page .page-btn:hover{
 		background-color: rgb(198, 175, 245);
@@ -440,10 +510,12 @@
 	
 	.nowPage {
 		padding: 5px;
-		width: 30px;
-		height: 30px;
-		display: inline-block;
-		border-radius: 3px;
+		width: 40px;
+		height: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 20px;
 		background-color: rgb(198, 175, 245);
 		color: #fff;
 		font-weight: bold;
@@ -454,6 +526,7 @@
 		margin-top: 30px;
 		margin-bottom: 30px;
 	}
+
 </style>
 </head>
 <body>
@@ -470,6 +543,13 @@
                     [[${board.title}]]
                 </h2>
 				
+				<div class="contour"></div>
+	
+				<div id="like_area">
+					<img th:if="${boardLike}" src="/images/boardimg/fullheart.png" id="like">
+					<img th:unless="${boardLike}" src="/images/boardimg/emptyheart.png" id="like">
+				</div>
+			 
 				<div th:if="${board.userid eq session.loginUser}" class="changebtn">
 				    <button th:onclick="modifyBoard([[${board.boardnum}]]);">수정</button>
 				    <button th:onclick="deleteBoard([[${board.boardnum}]]);">삭제</button>
@@ -477,7 +557,7 @@
 
                 <div class="cnt_info">
                     <span>조회수 [[${board.viewcnt}]]</span>
-					<span>좋아요 [[${board.likecnt}]]</span>
+					<span id="likecnt">좋아요 [[${board.likecnt}]]</span>
                     <span>댓글 [[${replyCnt}]]</span>
                 </div>
 
@@ -494,7 +574,7 @@
 					    <div></div>
 					</div>
 					
-					<div class="file addfile" th:if="${files != null and files.size() > 1}">
+					<div class="file addfile" th:if="${files != null and files.size() > 0}">
 					    <table>
 							<tr>
 								<th><h4>첨부 파일</h4></th>
@@ -571,8 +651,8 @@
                 <div class="guide_info">
                     <h4>작성자</h4>
                     <div class="guide_profile">
-                        <img th:src="'/BoardThumnail/' + ${userprofile.sysname}" alt="">
-						<span>[[${board.userid}]]</span>
+                        <img th:src="'/user/thumbnail?sysname=' + ${userprofile.sysname}" alt="">
+						<span>[[${board.userid}]]<img th:if="${guide}" src="/images/userimg/guidebadge.png" alt="" class="guidebadge"></span>
 						<!--<p>자기 소개를 아직 작성하지 않았습니다</p>-->
                     </div>
 
@@ -601,6 +681,7 @@ let loginUser = /*[[${session.loginUser}]]*/'';
 let boardnum = [[${board.boardnum}]];
 const geocoder = new google.maps.Geocoder();
 let stickerNum = 0;
+let modifyStickerNum = 0;
 const replies = $('.replies');
 const repliesPage = $('.replies-page');
 let emojiContent = `
@@ -685,7 +766,6 @@ let thispage = 1;
 		
 	   $(document).on('click', '.delete-button', function(){
 			const replyId = $(this).closest('.reply').attr('id').substring(3);
-			console.log("리플라이 아이디 : "+replyId)
 			boardReplyService.delete(
 	            {"replynum": replyId},
 	            function(result) {
@@ -695,20 +775,98 @@ let thispage = 1;
 	   })
 	   
 	   $(document).on('click', '.edit-button', function(){
+			$('.tool_btn').prop('disabled', true);
 			const replyBox = $(this).closest('.reply');
    			const replyId = replyBox.attr('id').substring(3);
 			const thisUserId = replyBox.find('.reply_userid').text();
 			const thisContent = replyBox.find('.reply_content').text();
 			const hasSticker = replyBox.find('.reply_sticker').length > 0;
-   			console.log("리플라이 아이디 : "+replyId)
-   			boardReplyService.modify(
-   	            {"replynum": replyId},
-   	            function(result) {
-   	                showReplyList(thispage);
-   	            }
-   	        );
+			const stickerSrc = hasSticker ? replyBox.find('.reply_sticker img').attr('src') : '';
+			if(hasSticker){
+				modifyStickerNum = stickerSrc.match(/\/images\/emoticon\/(\d+)\.jpg/)[1];;
+			}else{
+				modifyStickerNum = 0;
+			}
+			replyBox.empty();
+			const modifyBoardForm = `
+			        <div class="replyModifyForm">
+			            <textarea name="replyModifyContent" class="replyModifyContent" placeholder="댓글을 입력해주세요.">${thisContent}</textarea>
+			            <div class="modify_comment_attach">
+			                ${hasSticker ? `
+								<img src="${stickerSrc}" alt="">
+								<button class="modify_emoticon-close-btn">×</button>
+			                ` : `
+								<svg id="modify_emoji_toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-smile-fill" viewBox="0 0 16 16" style="cursor:pointer;">
+					               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+					           </svg>
+			                `}
+			            </div>
+			            <input type="button" value="수정" id="replyModify">
+			            <input type="button" value="취소" onclick="replyModifyCancel();">
+			        </div>
+			    `;
+			replyBox.append(modifyBoardForm);
+			$(document).on('click', '#modify_emoji_toggle', function() {
+		        var $emojiPicker = $('#modify-emoji-picker');
+		        if ($emojiPicker.length) {
+		            $emojiPicker.remove();
+		        } else {
+		            const emojiPickerHtml = `
+		                <div class="modify-emoji-picker" id="modify_emoji_picker">
+		                    <span class="emoticon" id="et1"><img src="/images/emoticon/1.jpg" alt></span>
+		                    <span class="emoticon" id="et2"><img src="/images/emoticon/2.jpg" alt></span>
+		                </div>
+		            `;
+		            $('.modify_comment_attach').append(emojiPickerHtml);
+		        }
+		    });
+			$(document).on('click', '.modify-emoji-picker span', function() {
+		       let emojiId = $(this).attr("id").substring(2);
+			   modifyStickerNum = emojiId;
+		       $('.modify_comment_attach').empty();
+		       
+		       let newContent = `
+		           <img src="/images/emoticon/${emojiId}.jpg" alt>
+		           <button class="modify_emoticon-close-btn">&times;</button>
+		       `;
+		       $('.modify_comment_attach').append(newContent);
+		       $('#modify-emoji-picker').remove();
+		   });
+		   
    	   })
+	   $(document).on('click', '#replyModify', function(){
+			const replyBox = $(this).closest('.reply');
+			const replyId = replyBox.attr('id').substring(3);
+			const content = $('.replyModifyContent').val();
+			replyModify(replyId,content);
+	   })
+	   
+	   
+	   $(document).on('click', '.modify_emoticon-close-btn', function(){
+			modifyStickerNum = 0;
+			const modifyEmojiContent = `
+				<svg id="modify_emoji_toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-smile-fill" viewBox="0 0 16 16" style="cursor:pointer;">
+	               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+	           </svg>
+			`;
+			$('.modify_comment_attach').empty();
+	        $('.modify_comment_attach').append(modifyEmojiContent);
+	   })
    });
+   function replyModifyCancel(){
+		showReplyList(thispage);
+		$('.tool_btn').prop('disabled', false);
+   }
+   
+   function replyModify(replynum, content){
+		console.log("댓글번호 : "+replynum+" 콘텐츠내용 : "+content+" 스티커넘버 : "+modifyStickerNum);
+		boardReplyService.modify(
+			{"replynum":replynum, "contents":content, "emSysname":modifyStickerNum},
+			function(result){
+				showReplyList(thispage);
+			}
+		)
+   }
 	
 	// 댓글
 	function replySubmit() {
@@ -749,7 +907,7 @@ let thispage = 1;
 				for(let i=0;i<list.length;i++){
 					const reply = list[i];
 					str += `<div class="reply" id="brn${reply.replynum}">
-					<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
+					<div class="reply_userThumnail"><img src="/user/thumbnail?sysname=${reply.sysname}" alt></div>
 			        <div class="reply_box">
 			            <div class="reply_userid">${reply.userid}</div>
 			            <div class="reply_content">${reply.contents}</div>
@@ -782,43 +940,48 @@ let thispage = 1;
 		)
 	}
 	
-	function showReplyPages(replyCnt, pagenum){
-		let endPage = Math.ceil(pagenum/5)*10;
-		let startPage = endPage - 9;
-		endPage = (endPage-1)*10 >= replyCnt ? Math.ceil(replyCnt/10) : endPage;
-		
-		let prev = startPage != 1;
-		let next = endPage*5 < replyCnt
-		
-		let str = "";
-		if(prev){
-			str += `<a class="changePage page-btn" href="${startPage-10}">&lt;<a>`
-		}
-		for(let i=startPage;i<=endPage;i++){
-			if(i == pagenum){
-				str += `<span class="nowPage">${i}</span>` 
-			}
-			else{
-				str += `<a class="changePage page-btn" href="${i}">${i}</a>`
-			}
-		}
-		if(next){
-			str += `<a class="changePage page-btn" href="${endPage+10}">&gt;</a>`
-		}
-		
-		repliesPage.html(str);
-		
-		$(".changePage").on("click",function(e){
-			e.preventDefault();
-			let target = $(this).attr("href");
-			target = parseInt(target);
-			thispage = target;
-			showReplyList(target);
-			window.setTimeout(function(){
-				window.scrollTo(0,document.body.scrollHeight);
-			},10)
-		})
+	function showReplyPages(replyCnt, pagenum) {
+	    let totalPages = Math.ceil(replyCnt / 10); // 총 페이지 수
+	    let currentPage = parseInt(pagenum); // 현재 페이지 번호
+	    let prevPage = currentPage - 1; // 이전 페이지 번호
+	    let nextPage = currentPage + 1; // 다음 페이지 번호
+	    
+	    let str = "";
+	
+	    // 이전 페이지 링크 추가
+	    if (prevPage >= 1) {
+	        str += `<a class="changePage page-btn" href="${prevPage}">&lt;</a>`;
+	    }
+	
+	    // 페이지 번호 링크 추가
+	    for (let i = 1; i <= totalPages; i++) {
+	        if (i === currentPage) {
+	            str += `<span class="nowPage">${i}</span>`;
+	        } else {
+	            str += `<a class="changePage page-btn" href="${i}">${i}</a>`;
+	        }
+	    }
+	
+	    // 다음 페이지 링크 추가
+	    if (nextPage <= totalPages) {
+	        str += `<a class="changePage page-btn" href="${nextPage}">&gt;</a>`;
+	    }
+	
+	    repliesPage.html(str);
+	
+	    // 페이지 링크 클릭 이벤트 핸들러
+	    $(".changePage").on("click", function(e) {
+	        e.preventDefault();
+	        let target = $(this).attr("href");
+	        target = parseInt(target);
+	        thispage = target;
+	        showReplyList(target);
+	        window.setTimeout(function() {
+	            window.scrollTo(0, document.body.scrollHeight);
+	        }, 10);
+	    });
 	}
+
 	
 	function deleteBoard(boardnum) {
 		location.replace("/board/remove?boardnum=" + boardnum);
@@ -828,6 +991,53 @@ let thispage = 1;
 		location.replace("/board/modify?boardnum=" + boardnum);
 	}
 	
+	$("#like_area").on("click", function() {
+		let loginUser = /*[[${session.loginUser}]]*/"";
+		let userid = /*[[${board.userid}]]*/"";	
+		let boardnum = /*[[${board.boardnum}]]*/"";
+		
+		console.log("boardnum: " + boardnum)	
+		
+		if(loginUser == null) {
+			alert("로그인 후 이용 가능합니다.");
+			return;
+		}
+		
+		if(loginUser == userid) {
+			alert("본인 게시글에는 좋아요를 클릭할 수 없습니다.");
+			return;
+		}
+		
+		else {			
+			$.ajax({
+				url: "/board/like?boardnum=" + boardnum,
+				method: "PUT",
+				
+				success:function(data) {
+					console.log(data)
+					console.log(data.boardlike)
+					console.log(data.board.likecnt)
+					
+					if(data.boardlike == null || !data.boardlike) {  // 좋아요 등록함
+						$("#like_area").html('<img src="/images/boardimg/emptyheart.png" id="like">');
+						$("#likecnt").html('좋아요 ' + data.board.likecnt);
+					}
+					
+					else {  // 좋아요 취소함
+						$("#like_area").html('<img src="/images/boardimg/fullheart.png" id="like">');
+						$("#likecnt").html('좋아요 ' + data.board.likecnt);
+					}
+						
+				},
+				
+				error:function(data) {
+					alert("잠시 후에 다시 시도해주세요.");
+				}
+				
+			});
+		}
+	})
+
 	const boardReplyService = {
 		insert:function(data,callback){
 			$.ajax({
@@ -861,9 +1071,9 @@ let thispage = 1;
 			$.ajax({
 				type:"POST",
 				url:"/board/replyModify",
-				data:data,
+				data:JSON.stringify(data),
 				contentType:"application/json;charset=utf-8",
-				success:function(status,xhr){
+				success:function(result){
 					callback(result);
 				},
 				error:function(status,xhr){

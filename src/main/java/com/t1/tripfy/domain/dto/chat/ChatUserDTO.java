@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 public class ChatUserDTO {
 	private Long chatRoomIdx;
 	private String userid;
-	private Boolean chatUserIsSeller;
+	private Boolean chatUserIsCreator;
+	private Boolean chatUserIsQuit;
 	private Long chatDetailIdx;
 }

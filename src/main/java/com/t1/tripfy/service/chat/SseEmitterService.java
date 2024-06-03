@@ -12,6 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.t1.tripfy.domain.dto.chat.MessageDTO;
+import com.t1.tripfy.domain.dto.chat.MessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.sender.ChatContentDetailMessagePayload;
+
 import lombok.extern.slf4j.Slf4j;
 
 /* 메모 240520 1646
@@ -180,6 +184,28 @@ public class SseEmitterService {
 		}
 		
 		return emit;
+	}
+	
+	public void broadcast(String userid, String msg) {
+		/*
+		 * 이거 상대 유저가 연결되어있지 않은 경우(null == sseSessions.get(userid)) 도 고려해야함
+		 * */
+		List<UUID> uuidList = sseSessions.get(userid);
+		
+		for(UUID uuid : uuidList) {
+			try {
+				emitterMap.get(uuid).send(SseEmitter.event()
+						.name("broadcastChat")
+						.id("bcc-" + broadcastEventCount++)
+						.data(msg, MediaType.TEXT_EVENT_STREAM)
+						.reconnectTime(RECONNECTION_AFTER_TIMEOUT)
+				);
+			} catch(IOException e) {
+				if(log.isDebugEnabled()) {
+					log.info("error whild sending broadcast message, SseEmitter, userid={}, UUID={}, e={}", userid, uuid, e);
+				}
+			}
+		}
 	}
 	
 	//==========================================================================================

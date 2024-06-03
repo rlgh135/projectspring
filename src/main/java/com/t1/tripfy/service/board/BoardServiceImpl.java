@@ -16,6 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -30,9 +34,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
 import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
 import com.t1.tripfy.domain.dto.board.BoardReplyPageDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
+import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
 import com.t1.tripfy.mapper.board.BoardReplyMapper;
@@ -55,8 +61,7 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private UserMapper umapper;
-	
-	
+
 	//사진검사
 	public static boolean isImageFile(String extension) {
         if (extension == null || extension.isEmpty()) {
@@ -119,13 +124,28 @@ public class BoardServiceImpl implements BoardService {
 		long boardnum = bmapper.getLastNum(board.getUserid());
 		System.out.println("보드 : "+board);
 		System.out.println("보드에이디디알 : "+boardaddr);
-		if (boardaddr.getPlacename() != null && !boardaddr.getPlacename().isEmpty()
-		    && boardaddr.getStartdate() != null && !boardaddr.getStartdate().isEmpty()
-		    && boardaddr.getEnddate() != null && !boardaddr.getEnddate().isEmpty()) {
+		if (!boardaddr.getPlacename().equals("") && !boardaddr.getPlacename().isEmpty()
+		    && !boardaddr.getStartdate().equals("") && !boardaddr.getStartdate().isEmpty()
+		    && !boardaddr.getEnddate().equals("") && !boardaddr.getEnddate().isEmpty()) {
+
 		    boardaddr.setBoardnum(boardnum);
 		    System.out.println("Boardnum set to boardaddr: " + boardaddr.getBoardnum()); 
 		    if (bmapper.insertBoardAddr(boardaddr) != 1) {
 		        // 게시글은 작성되었으므로 삭제
+		    	bmapper.deleteBoard(boardnum);
+		    	
+		    	// 파일이 있다면 삭제
+		    	List<BoardFileDTO> boardfiles = bmapper.getFiles(boardnum);
+				System.out.println("files.size(): " + boardfiles.size());
+				
+				for(BoardFileDTO bfdto : boardfiles) {
+					File file = new File(saveFolder, bfdto.getSysname());
+					if(file.exists()) {
+						file.delete();
+						bmapper.deleteFilesBySystemname(bfdto.getSysname());
+					}
+				}
+				
 		        return false;
 		    }
 		}
@@ -146,6 +166,7 @@ public class BoardServiceImpl implements BoardService {
 			boolean flag = false;
 			for(int i = 0; i < files.length - 1; i++) {
 				MultipartFile file = files[i];  // 업로드 된 파일 하나씩 꺼냄(실제 디렉토리에 업로드 되어 있지는 않고 데이터를 꺼낸 것)
+				System.out.println(files[i]);
 				if(file.getSize() == 0) {
 					continue;
 				}
@@ -188,6 +209,7 @@ public class BoardServiceImpl implements BoardService {
 			return true;
 		}
 	}
+	
 
 	// 특정 userid로 작성된 게시글 번호 중 마지막 번호
 	@Override
@@ -272,8 +294,20 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		if(bmapper.deleteBoard(boardnum) == 1) {
-			System.out.println("게시글 삭제 완료");
 			// 댓글 삭제
+			if(bmapper.getTotalBoardReply(boardnum) != null) {
+				if(bmapper.deleteTotalBoardReply(boardnum) > 0) {
+					System.out.println("board의 댓글 삭제 완료");
+				}
+			}
+			
+			// board의 좋아요 삭제
+			if(bmapper.getTotalBoardLike(boardnum) != null) {
+				  if(bmapper.deleteTotalBoardLike(boardnum) > 0) {
+					  System.out.println("board의 좋아요 삭제 완료");
+				  }
+			}
+			System.out.println("게시글 삭제 완료");
 		}
 		
 		else {
@@ -358,9 +392,13 @@ public class BoardServiceImpl implements BoardService {
 		if(bmapper.updateBoard(board) != 1) {
 			return false;
 		}
-		if (boardaddr.getPlacename() != null && !boardaddr.getPlacename().isEmpty()
-		    && boardaddr.getStartdate() != null && !boardaddr.getStartdate().isEmpty()
-		    && boardaddr.getEnddate() != null && !boardaddr.getEnddate().isEmpty()) {
+		System.out.println("보드 : "+board);
+		System.out.println("보드 에드 : "+boardaddr);
+		System.out.println("파일 : "+files);
+		System.out.println("업데이트Cnt : "+updateCnt);
+		if (!boardaddr.getPlacename().equals("") && !boardaddr.getPlacename().isEmpty()
+		    && !boardaddr.getStartdate().equals("") && !boardaddr.getStartdate().isEmpty()
+		    && !boardaddr.getEnddate().equals("") && !boardaddr.getEnddate().isEmpty()) {
 		    boardaddr.setBoardnum(boardnum);
 		    if (bmapper.getBoardaddrByBoardnum(boardnum) != null) {
 		    	if(bmapper.deleteBoardaddr(boardnum) != 1) {
@@ -369,11 +407,10 @@ public class BoardServiceImpl implements BoardService {
 		    }
 		}
 		ArrayList<String> deleteNames = null;
-		boolean deleteThumnailflag = true;
+		boolean deleteThumnailflag = false;
 		
 		 if (updateCnt != null && !updateCnt.isEmpty()) {
             deleteNames = new ArrayList<>(Arrays.asList(updateCnt.split("\\\\")));
-
             Iterator<String> iterator = deleteNames.iterator();
             while (iterator.hasNext()) {
                 String name = iterator.next();
@@ -390,7 +427,8 @@ public class BoardServiceImpl implements BoardService {
         }
 		 
 		List<BoardFileDTO> orgFileList = bmapper.getFiles(board.getBoardnum());
-		if(orgFileList.size() == 0 && (files == null || files.length == 0 || files[0].getSize() == 0)) {
+		if(orgFileList.size() == 0 && (files == null || files.length == 0)) {
+			System.out.println("123123123");
 			return true;
 		}else {
 			System.out.println("service : "+files.length);
@@ -476,8 +514,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public BoardReplyDTO replyRegist(BoardReplyDTO reply) {
-		if(brmapper.insertReply(reply) == 1) {
-			return brmapper.getLastReply(reply.getUserid());
+		if(bmapper.addReplyCnt(reply.getBoardnum()) == 1) {
+			if(brmapper.insertReply(reply) == 1) {
+				return brmapper.getLastReply(reply.getUserid());
+			}			
 		}
 		return null;
 	}
@@ -485,7 +525,11 @@ public class BoardServiceImpl implements BoardService {
 	public BoardReplyPageDTO getReplyList(long boardnum, int pagenum) {
 		int amount = 10;
 		int startrow = (pagenum-1)*amount;
-		return new BoardReplyPageDTO(brmapper.getTotal(boardnum), brmapper.getReplyList(amount,startrow,boardnum));
+		List<BoardReplyDTO> list = brmapper.getReplyList(amount,startrow,boardnum);
+		for(BoardReplyDTO reply : list) {
+			reply.setSysname(umapper.getUserProfile(reply.getUserid()).getSysname());
+		}
+		return new BoardReplyPageDTO(brmapper.getTotal(boardnum), list);
 	}
 	@Override
 	public boolean replyModify(BoardReplyDTO reply) {
@@ -493,11 +537,96 @@ public class BoardServiceImpl implements BoardService {
 	}
 	@Override
 	public boolean deleteReply(BoardReplyDTO reply) {
-		return brmapper.deleteReply(reply) == 1;
+		if(bmapper.reduceReplyCnt(brmapper.getReplyByReplyNum(reply.getReplynum()).getBoardnum()) == 1) {
+			return brmapper.deleteReply(reply) == 1;			
+		}else {
+			return false;
+		}
 	}
 	@Override
 	public BoardReplyDTO getReplyByReplyNum(long replynum) {
 		return brmapper.getReplyByReplyNum(replynum);
 	}
 	
+	// 해당 userid가 해당 board에 좋아요 눌렀는지 찾음
+	@Override
+	public BoardLikeDTO getBoardLike(String userid, long boardnum) {
+		return bmapper.getBoardLike(userid, boardnum);
+	}
+	
+	// 좋아요 클릭
+	@Override
+	public boolean likeClick(String userid, long boardnum) {
+		BoardDTO board = bmapper.getBoardByBoardNum(boardnum);
+		
+		if(bmapper.getBoardLike(userid, boardnum) == null) {
+			// 좋아요 등록
+			if(bmapper.likeRegist(userid, boardnum) == 1) {
+				bmapper.updateLikeCnt(boardnum, board.getLikecnt() + 1);
+				System.out.println("좋아요 등록 성공");
+				return true;
+			}
+			
+			else {
+				System.out.println("좋아요 등록 실패");
+			}
+		}
+		
+		else {
+			// 좋아요 취소
+			if(bmapper.likeDelete(userid, boardnum) == 1) {
+				bmapper.updateLikeCnt(boardnum, board.getLikecnt() - 1);
+				System.out.println("좋아요 취소 성공");
+				return true;
+			}
+			
+			else {
+				System.out.println("좋아요 취소 실패");
+			}
+		}
+		return false;
+	}
+	
+	// 가이드
+	@Override
+	public GuideDTO getGuide(String userid) {
+		return umapper.getGuideNum(userid);
+	}
+	
+	// content 이미지 태그 제외하고 추출
+	@Override
+	public String exceptImgTag(String content) {
+		
+		if (content == null) {
+	        return null;
+	    }
+		
+		Document doc = Jsoup.parse(content);
+		
+		System.out.println("Before filtering:");
+		
+		// 모든 <img> 태그를 선택하고 제거
+        Elements imgTags = doc.select("img");
+        imgTags.remove();
+        
+        // 모든 <iframe> 태그를 선택하고 제거(동영상)
+        Elements iframeTags = doc.select("iframe");
+        for (Element iframeTag : iframeTags) {
+            iframeTag.remove();
+        }
+        
+        // 모든 <a> 태그를 선택하고 제거(링크)
+        Elements linkTags = doc.select("a");
+        for (Element linkTag : linkTags) {
+            linkTag.remove();
+        }
+		
+        // HTML 구조를 유지하면서 body의 내용을 가져옴
+        String exceptContent = doc.body().html();
+		
+		System.out.println("After filtering:");
+		System.out.println("exceptContent: " + exceptContent);
+		
+		return exceptContent;
+	}
 }

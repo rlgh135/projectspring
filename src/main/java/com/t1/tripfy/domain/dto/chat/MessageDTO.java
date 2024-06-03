@@ -1,5 +1,7 @@
 package com.t1.tripfy.domain.dto.chat;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -25,10 +27,9 @@ public class MessageDTO<T extends MessagePayload> {
 	@JsonIgnore
 	private String senderId;
 	/**
-	 * <p>일단 지금은 일대일 채팅만이 목적이니 수신자 userid 필드도 하나지만
-	 * <br>차후에는 컬렉션을 쓰거나 해야 함
-	 * <br>아니면 수신자 머릿수 * MessageDTO를 하거나
+	 * <p><strong>List&lt;String&gt; receiverId</strong>
+	 * <br>수신자 userid 리스트
 	 * */
 	@JsonIgnore
-	private String receiverId;
+	private List<String> receiverId;
 }

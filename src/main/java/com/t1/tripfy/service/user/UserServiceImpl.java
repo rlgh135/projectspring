@@ -23,6 +23,8 @@ import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
@@ -264,7 +266,7 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public PackageFileDTO getPackThumbnail(long packagenum) {
-		return null;
+		return umapper.getMyPackThumb(packagenum);
 	}
 	@Override
 	public List<UserImgDTO> getAllUserImg() {
@@ -281,5 +283,13 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public ReservationDTO getResevationByIdPackagenum(String userid, long packagenum) {
 		return resmapper.getMyRservationWithPackagenum(userid, packagenum);
+	}
+	@Override
+	public BoardFileDTO getMyBoardThumbnail(long boardnum) {
+		return bmapper.getThumbnail(boardnum);
+	}
+	@Override
+	public BoardLikeDTO getMyBoardLike(String userid, long boardnum) {
+		return bmapper.getBoardLike(userid, boardnum);
 	}
 }

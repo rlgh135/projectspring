@@ -1,17 +1,23 @@
 package com.t1.tripfy.service.chat;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.t1.tripfy.domain.dto.chat.ChatDetailDTO;
 import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
+import com.t1.tripfy.domain.dto.chat.ChatUserDTO;
 import com.t1.tripfy.domain.dto.chat.MessageDTO;
 import com.t1.tripfy.domain.dto.chat.MessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatContentMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatLoadMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.sender.ChatContentDetailMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatDetailBulkMessagePayload;
 import com.t1.tripfy.mapper.chat.ChatDetailMapper;
 import com.t1.tripfy.mapper.chat.ChatInvadingMapper;
@@ -40,35 +46,38 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	//채팅방 진입
-	/*해야할거
-	 * 해당 채팅방의 캐시 존재여부 확인
-	 *  ㄴ 없을 경우 생성, userid 등록
-	 *  ㄴ 있는 경우 userid 등록
-	 * 최근채팅 n개 모아서 보내주기
-	 *  ㄴ 캐시 있는경우 우선 캐시 순회, 캐시의 메시지(최근 채팅방캐시 개설 후 수신 메시지) 가져오기
-	 *      ㄴ 일단 현재는 캐시 구현 x - 무조건 DB 조회 -240531
-	 *  ㄴ 캐시가 없거나 캐시 메시지가 n개 미만인 경우 DB 추가순회
-	 * 해당 채팅방/userid의 chat_user.chat_detail_idx 갱신하기
-	 * */
+	// !!채팅방 진입시 chat_user.chat_detail_idx 수정해야함
 	@Override
+	@Transactional
 	public MessageDTO<ChatDetailBulkMessagePayload> chatRoomEnterHandling(MessageDTO<? extends MessagePayload> receiveMsg) {
 		ChatDetailBulkMessagePayload bulk = new ChatDetailBulkMessagePayload();
 		String opperUserid;
 		
 		//상대 유저의 이름이 오지 않았으면 DB서 가져온다
-		if(null == (opperUserid = receiveMsg.getReceiverId())) {
-			if(null == (opperUserid = chatUserMapper.selectOpponentUserid(((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx()
-					, receiveMsg.getSenderId()))) {
-				//조회 실패시 처리
-				return null;
-			}
+//		if(null == (opperUserid = receiveMsg.getReceiverId())) {
+//			if(null == (opperUserid = chatUserMapper.selectOpponentUserid(((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx()
+//					, receiveMsg.getSenderId()))) {
+//				//조회 실패시 처리
+//				return null;
+//			}
+//		}
+//		테스트를 위해 주석처리 - 240603
+		
+		
+		//chat_user.chat_detail_idx 최신화
+		if(1 != chatUserMapper.updateChatDetailIdxToEnd(
+				((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(),
+				receiveMsg.getSenderId()
+		)) {
+			//업데이트 실패시 처리
+			return null;
 		}
 		
 		//채팅방의 제일 최근부터 메시지 30개를 가져온다
 		if(null == (bulk.setChatDetails(chatDetailMapper.selectBulkMessagesByChatRoomIdx(
 				((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(), 
-				0, 
-				30))).getChatDetails()) {
+				0L, 
+				30L))).getChatDetails()) {
 			//조회 실패시 처리
 			return null;
 		}
@@ -79,9 +88,13 @@ public class ChatServiceImpl implements ChatService {
 			.setRoomidx(
 					((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx())
 			.setStartChatDetailIdx(
-					bulk.getChatDetails().get(bulk.getChatDetails().size() - 1).getChatDetailIdx())
+					bulk.getChatDetails().isEmpty()
+							? null
+							: bulk.getChatDetails().get(bulk.getChatDetails().size() - 1).getChatDetailIdx())
 			.setEndChatDetailIdx(
-					bulk.getChatDetails().get(0).getChatDetailIdx())
+					bulk.getChatDetails().isEmpty()
+					? null
+					: bulk.getChatDetails().get(0).getChatDetailIdx())
 			.setIsFirst(bulk.getChatDetails().size() < 30 ? true : false);
 		
 		//MessageDTO 구성후 반환
@@ -90,12 +103,112 @@ public class ChatServiceImpl implements ChatService {
 			.setAct(receiveMsg.getAct())
 			.setPayload(bulk)
 			.setSenderId(receiveMsg.getSenderId())
-			.setReceiverId(opperUserid);
+//			.setReceiverId(opperUserid);
+			;
+//		테스트를 위해 주석처리 - 240603
+	}
+	
+	//채팅 수신 처리
+	@Override
+	@Transactional
+	public MessageDTO<ChatContentDetailMessagePayload> chatReceiveHandling(MessageDTO<? extends MessagePayload> receivedMsg) {
+		//chatRoomIdx
+		Long chatRoomIdx = ((ChatContentMessagePayload)receivedMsg.getPayload()).getRoomidx();
+		//현재시간
+		LocalDateTime current = LocalDateTime.now();
+		
+		//일단 삽입
+		if(1 != chatDetailMapper.insertChat(
+				chatRoomIdx,
+				receivedMsg.getSenderId(),
+				((ChatContentMessagePayload)receivedMsg.getPayload()).getChatContent(),
+				current
+		)) {
+			//삽입 실패 처리
+			return null;
+		}
+		
+		//채팅방 최신 메시지의 chat_detail_idx 가져오기
+		ChatDetailDTO temp;
+		if(null == (temp = chatDetailMapper.selectLastRowByChatRoomIdx(chatRoomIdx))) {
+			//조회 실패 처리
+			return null;
+		}
+		
+		//채팅방의 패키지명 가져오기
+		String pkgname;
+		if(null == (pkgname = chatInvadingMapper.selectPackageNameByChatRoomIdx(chatRoomIdx))) {
+			//조회 실패 처리
+			return null;
+		}
+		
+		//수신자 기준 미확인 메시지 개수 가져오기
+//		Integer unchk;
+//		if(null == (unchk = chatDetailMapper.selectSpecificCountOfChatDetail(chatRoomIdx, receivedMsg.getReceiverId()))) {
+//			//조회 실패 처리
+//			return null;
+//		}
+		Integer unchk = null;
+//		테스트를 위해 주석처리 - 240603
+		
+		System.out.println(temp.getChatDetailIdx());
+		
+		//메시지 송신자 chat_user.chat_detail_idx 최신화
+		if(1 != chatUserMapper.updateChatDetailIdx(chatRoomIdx, receivedMsg.getSenderId(), temp.getChatDetailIdx())) {
+			//수정 실패 처리
+			return null;
+		}
+		
+		//payload 초기화
+		ChatContentDetailMessagePayload sendPayload = new ChatContentDetailMessagePayload();
+		sendPayload
+			.setRoomidx(chatRoomIdx)
+			.setPkgname(pkgname)
+			.setUserid(receivedMsg.getSenderId())
+			.setChatContent(temp.getChatDetailContent())
+			.setRegdate(current)
+			.setUncheckedmsg(unchk);
+		
+		//MessageDTO 구성 후 반환
+		MessageDTO<ChatContentDetailMessagePayload> msg = new MessageDTO<>();
+		return msg
+			.setAct(receivedMsg.getAct())
+			.setPayload(sendPayload)
+			.setSenderId(receivedMsg.getSenderId());
+	}
+	
+	//채팅 로드 처리
+	@Override
+	public MessageDTO<ChatDetailBulkMessagePayload> chatLoadHandling(MessageDTO<? extends MessagePayload> receivedMsg) {
+		//chatRoomIdx
+		Long chatRoomIdx = ((ChatLoadMessagePayload)receivedMsg.getPayload()).getRoomidx();
+		//startChatDetailIdx
+		Long startChatDetailIdx = ((ChatLoadMessagePayload)receivedMsg.getPayload()).getStartChatDetailIdx();
+		
+		//가져오기
+		List<ChatDetailDTO> list;
+		if(null == (list = chatDetailMapper.selectBulkMessagesByChatDetailIdx(chatRoomIdx, startChatDetailIdx, 30L))) {
+			//조회 실패 처리
+			return null;
+		}
+		
+		//payload 초기화
+		ChatDetailBulkMessagePayload sendPayload = new ChatDetailBulkMessagePayload();
+		sendPayload
+			.setRoomidx(chatRoomIdx)
+			.setStartChatDetailIdx(list.isEmpty() ? null : list.get(list.size() - 1).getChatDetailIdx())
+			.setEndChatDetailIdx(list.isEmpty() ? null : list.get(0).getChatDetailIdx())
+			.setIsFirst(list.size() < 30 ? true : false)
+			.setChatDetails(list);
+		//MessageDTO 구성 후 반환
+		return new MessageDTO<ChatDetailBulkMessagePayload>()
+				.setAct("loadChat")
+				.setPayload(sendPayload);
 	}
 
 	//채팅방 리스트 가져오기
 	@Override
-	public List<ChatListPayloadDTO> selectChatList(Integer start, Integer end, String userid) {
+	public List<ChatListPayloadDTO> selectChatList(String userid) {
 		//유효성
 		
 		/* userid로 ChatUserDTO를 긁어온다
@@ -122,6 +235,9 @@ public class ChatServiceImpl implements ChatService {
 		 * 해당 값을 기준으로 기존 로직을 반복하면 됨
 		 * 
 		 * end > chatRoomCnt ? return null 이거 지움
+		 * 
+		 * 240603
+		 * 이제 한번에 모든 채팅방을 가져온다
 		 * */
 		
 		Integer chatRoomCnt;
@@ -133,18 +249,19 @@ public class ChatServiceImpl implements ChatService {
 			//userid가 가입한 채팅방이 없는 경우(조회된 행이 0개인 경우)
 			return new ArrayList<ChatListPayloadDTO>();
 		}
-//		if(Integer.compare(end, chatRoomCnt) > 0) {
-//			//잘못된 end 값(채팅방 개수를 넘긴 end)
-//			return null;
-//		}
 		
 		//반환할 List 객체
 		List<ChatListPayloadDTO> resultPayload = new ArrayList<>();
-		//조회 타겟
-		List<Map<String, Object>> targetList;
 		
-		if(null == (targetList = chatUserMapper.selectSpecificRecentReceivedChatRoomIdx(start, end, userid))) {
-			//userid의 start ~ end 번째 최근 갱신 채팅방 조회를 실패한 경우
+		//userid가 가입한 채팅방 중 닫히지 않은
+		//    (chat_user.chat_user_is_quit = false, chat_room.chat_room_is_terminated = false)
+		//채팅방의
+		//    chat_room_idx, chat_user_is_creator, regdate(채팅방 개설 시간), last_msg_date(해당 채팅방의 마지막 메시지 regdate)
+		//를 가져온다
+		/*!!주의 last_msg_date는 null일 수 있음 <- 메시지가 없는 채팅방*/
+		List<Map<String, Object>> targetList;
+		if(null == (targetList = chatUserMapper.selectAllByUserid(userid))) {
+			//타겟 조회 실패
 			return null;
 		}
 		
@@ -156,31 +273,34 @@ public class ChatServiceImpl implements ChatService {
 			Long crIdx = (Long) tgt.get("chat_room_idx");
 			ChatListPayloadDTO clplDTO = new ChatListPayloadDTO();
 			
-			//채팅방의 packagenum, package_title 가져오기
+			//채팅방의 packagenum, package_title 가져와서 roomidx와 같이 넣기
 			Map<String, Object> pkgInfo = chatInvadingMapper.selectPackageInfoByChatRoomIdx(crIdx);
 			clplDTO.setRoomidx(crIdx)
 					.setPkgnum((Long)pkgInfo.get("packagenum"))
 					.setPkgname((String)pkgInfo.get("package_title"));
 			
 			//채팅방의 상대 유저 userid 가져오기
-			clplDTO.setUserid(chatUserMapper.selectOpponentUserid(crIdx, userid));
+			/*상대 유저 "들" 가져오기로 변경 - 240603*/
+			clplDTO.setUserList(chatUserMapper.selectOpponentUserInfo(crIdx, userid));
 			
 			//채팅방의 마지막 메시지 정보(chat_detail_content, regdate 가져오기)
 			/*채팅방에 메시지가 없는 경우도 고려해야함*/
-			ChatDetailDTO lastChat = chatDetailMapper.selectLastRowByChatRoomIdx(crIdx);
-			if(lastChat == null) {
-				//채팅방에 메시지가 없는 경우
-				clplDTO.setRecentchatbody(null)
-						.setRegdate(null);
+			if(tgt.get("last_msg_date") != null) {
+				ChatDetailDTO lastChat = chatDetailMapper.selectLastRowByChatRoomIdx(crIdx);
+				clplDTO.setChatContent(lastChat.getChatDetailContent())
+						.setChatContentRegdate((LocalDateTime)tgt.get("last_msg_date"));
 			} else {
-				//메시지가 있는 경우
-				clplDTO.setRecentchatbody(lastChat.getChatDetailContent())
-						.setRegdate(lastChat.getRegdate());
+				clplDTO.setChatContent(null)
+						.setChatContentRegdate(null);
 			}
+			clplDTO.setChatRegdate((LocalDateTime)tgt.get("regdate"));
 			
 			//채팅방의 미확인 채팅 개수 가져오기
 			/*모든 메시지를 확인했으면 0임*/
 			clplDTO.setUncheckedmsg(chatDetailMapper.selectSpecificCountOfChatDetail(crIdx, userid));
+			
+			//isCreator 설정
+			clplDTO.setIsCreator((Boolean) tgt.get("chat_user_is_creator"));
 			
 			//삽입
 			resultPayload.add(clplDTO);
@@ -189,14 +309,20 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	//안 읽은 채팅 개수 가져오기
-	/**
-	 * <p>아마... 안쓸거임 이거
-	 * <p>그래도 혹시 모르니 일단 냅둠
-	 * @deprecated
-	 * */
+	//모든 채팅 개수를 가져온다
 	@Override
 	public Integer selectCountOfUnreadChatByUserid(String userid) {
-		return null;
+		int count = 0;
+		
+		//userid가 가입한 모든 채팅방 정보를 가져온다
+		List<ChatUserDTO> chatlist = chatUserMapper.selectSpecificChatUserByUserid(userid);
+		
+		for(ChatUserDTO tgt : chatlist) {
+			Integer cnt;
+			cnt = chatDetailMapper.selectSpecificCountOfChatDetail(tgt.getChatRoomIdx(), tgt.getUserid());
+			count += cnt;
+		}
+		return count;
 	}
 
 }

@@ -18,6 +18,10 @@
 		margin-top: 130px;
 		position: relative;
     }
+	
+	#writeForm {
+		margin-bottom: 60px;
+	}
 
     [type=text] {
         padding: 8px;
@@ -25,6 +29,10 @@
         width: 220px;
         outline: none;
     }
+	
+	.b_place, #yes, #no, a.btn {
+		cursor: pointer;
+	}
 	
 	.place_detail td {
 		display: flex;
@@ -135,6 +143,7 @@
         color: #fff;
         font-weight: bold;
 		font-size: 15px;
+		cursor: pointer;
     }
 
     .writeOk {margin-right: 10px;}
@@ -171,7 +180,7 @@
 	    padding: 3px;
 	}
 
-	.nation_select .category .region {
+	.nation_select .category .c_region {
 	    border-top: 1px solid rgb(233, 233, 233);
 	    border-bottom: 1px solid rgb(233, 233, 233);
 		padding: 3px;
@@ -185,7 +194,7 @@
 		    position: relative;
 	}
 	
-	.nation_select .category .nation > div, .region > div, .region_detail > div {
+	.nation_select .category .nation > div, .c_region > div, .region_detail > div {
 		width: 95%;
 		height: 280px;
 		overflow-y: auto;
@@ -195,12 +204,12 @@
 		width: 100%;
 	}
 		
-	.region > div, .region_detail > div {
+	.c_region > div, .region_detail > div {
 	    /* border: 1px solid red; */
 	    position: absolute;
 	}
 	
-	.nation_select .category .nation > div > button, .region > div > button, .region_detail > div > button {
+	.nation_select .category .nation > div > button, .c_region > div > button, .region_detail > div > button {
 	    display: block;
 	    width: 100%;
 	    padding: 8px;
@@ -209,7 +218,7 @@
 	}
 	
 	.nation_select .category .nation > div > button > p, 
-	.nation_select .category .region > div > button > p, 
+	.nation_select .category .c_region > div > button > p, 
 	.nation_select .category .region_detail > div > button > p {
 	    width: 100%;
 	    text-align: left;
@@ -288,7 +297,7 @@
 		margin-right: 5px;
 	}
 	
-	.file th h4::after, .place_detail th h4::after {
+	.file th h4::after, .content th h4::after {
 		content: "";
 	}
 	
@@ -451,9 +460,9 @@
                 </tr>
 
 				<tr class="place_detail" style="display: none;">
-				    <th><h4>상세 지역 주소</h4></th>
+				    <th><h4>주소</h4></th>
 				    <td>
-						<input type="text" placeholder="주소" class="b_place_detail" name="placename">
+						<input type="text" placeholder="주소" class="b_place_detail" name="placename" readonly>
 						<div style="cursor: pointer;" id="modalOnBtn">지도</div>
 					</td>
 				</tr>
@@ -479,7 +488,7 @@
             </table>
             <div class="buttons">
                 <input type="button" value="글 작성" class="writeOk" onclick="writeOk();">
-                <input type="button" value="취소" class="writeCancel">
+                <input type="button" value="취소" class="writeCancel" onclick="writeCancel();">
             </div>
         </form>
 
@@ -492,7 +501,7 @@
 					</div>
 				</div>
 		
-				<div class="region">
+				<div class="c_region">
 					<div style="visibility: hidden;" id="kr">
 						<button class="area" name="서울"><p class="areastr">서울</p></button>
 						<button class="area" name="제주도"><p class="areastr">제주도</p></button>
@@ -585,7 +594,16 @@
 <script src="/js/summernote/summernote-ko-KR.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
-<script>
+<script th:inline="javascript">
+	$(document).ready(function(){
+		let loginUser = /*[[${session.loginUser}]]*/"";
+		
+		if(loginUser == null || loginUser == "") {
+			alert("로그인 후 이용하세요");
+			location.replace("/");
+		}
+	})
+
 	let defaultLocationName = "대한민국";
 	// 나라 및 지역 선택 창
 	const nation_select = document.querySelector(".nation_select");
@@ -599,8 +617,8 @@
 	const area_detail = document.getElementsByClassName("area_detail");
 	const area_detailstr = document.getElementsByClassName("area_detailstr");
 	
-	const region_div_kr = document.querySelector(".region > div#kr");
-	const region_div_fr = document.querySelector(".region > div#fr");
+	const region_div_kr = document.querySelector(".c_region > div#kr");
+	const region_div_fr = document.querySelector(".c_region > div#fr");
 	const region_detail_div = document.querySelectorAll(".region_detail div");
 	
 	let country_select = document.querySelector(".country_select");
@@ -815,7 +833,7 @@
 		let obj = e.target;
 		
 		// 지역 버튼 색상 초기화
-		for(let i = 0; i < area.length; i++) {
+		for(let i = 0; i < area_detail.length; i++) {
 			area_detail[i].style.backgroundColor = "#fff";
 			area_detail[i].classList.remove("area_detail_select");
 		}
@@ -903,7 +921,7 @@
 		
 		if(b_place.value != "") {		
 			nation_select.style.display = "none";
-			const region_div = document.querySelectorAll(".region > div");
+			const region_div = document.querySelectorAll(".c_region > div");
 			const region_detail_div = document.querySelectorAll(".region_detail > div");
 			
 			for(let i = 0; i < region_div.length; i++) {
@@ -975,7 +993,13 @@
 		if(!yes.checked && !no.checked) {
 			alert("동행 모집 여부를 체크해주세요");
 			return;
-		}		
+		}	
+		
+		if(b_place.value == "") {
+			alert("위치를 입력해주세요");
+			return;
+		}
+			
 
 		if(yes.checked) {			
 			if(startdate.value == "" || enddate.value == "") {
@@ -983,12 +1007,7 @@
 				return;
 			}
 			
-			if(b_place.value == "") {
-				alert("위치를 입력해주세요");
-				return;
-			}
-			
-			if(b_place_detail == ""){
+			if(b_place_detail.value == ""){
 				alert("상세 지역 주소를 등록해주세요");
 				return;
 			}
@@ -1127,6 +1146,10 @@
 			el.find("a")[1].href = "javascript:cancelFile("+(j-1)+")";
 		}
 		i--;
+	}
+	
+	function writeCancel() {
+		location.replace("/board/list");
 	}
 	
 </script>

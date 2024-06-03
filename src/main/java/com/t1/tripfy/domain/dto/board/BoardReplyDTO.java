@@ -11,4 +11,5 @@ public class BoardReplyDTO {
 	private String emSysname;
 	private String contents;
 	private String regdate;
+	private String sysname;
 }

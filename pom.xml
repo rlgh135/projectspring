@@ -76,6 +76,14 @@
 		    <artifactId>sdk</artifactId>
 		    <version>4.3.0</version>
 		</dependency>
+		
+		<!-- jsoup 의존성 추가 -->
+		<dependency>
+		    <groupId>org.jsoup</groupId>
+		    <artifactId>jsoup</artifactId>
+		    <version>1.14.2</version> <!-- 현재 버전 또는 사용하려는 버전으로 변경 -->
+		</dependency>
+
 	</dependencies>
 
 	<build>

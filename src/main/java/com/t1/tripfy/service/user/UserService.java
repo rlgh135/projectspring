@@ -11,6 +11,8 @@ import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
@@ -54,4 +56,6 @@ public interface UserService {
 	int insertGuide(GuideDTO guide);
 	int applyCansle(long reservationnum, int cansleStatus);
 	ReservationDTO getResevationByIdPackagenum(String userid, long packagenum);
+	BoardFileDTO getMyBoardThumbnail(long boardnum);
+	BoardLikeDTO getMyBoardLike(String userid, long boardnum);
 }

@@ -93,11 +93,11 @@
 				</ul>
 				<div id="mypostsection" class="mypstselected-body">
 					<div id="mainmypost">
-						<a th:if="${list != null and list.size > 0}" th:each="board:${list}"
+						<a th:if="${list != null and list.size > 0}" th:each="board, iterStats:${list}"
 							th:href="@{/board/get(boardnum=${board.boardnum})}">
 							<div class="mypost">
 								<div class="p_img">
-									<img src="/images/boardimg/2.jpg" alt="">
+									<img th:src="${'/board/thumbnail?sysmname='+bflist[__${iterStats.index}__].sysname}" alt="">
 								</div>
 								<div class="post_write">
 									<div class="pstguide">
@@ -109,15 +109,15 @@
 									<div class="post_preview">
 										<ul class="showboardspecs">
 											<li>
-												<img src="/images/boardimg/location.png">
+												<img src="/images/boardimg/viewcnt.png">
 												<span>[[${board.viewcnt}]]</span>
 											</li>
 											<li>
-												<img src="/images/boardimg/location.png">
+												<img src="/images/layoutimg/redheart.webp">
 												<span>[[${board.likecnt}]]</span>
 											</li>
 											<li>
-												<img src="/images/boardimg/location.png">
+												<img src="/images/boardimg/comments.png">
 												<span>[[${board.replycnt}]]</span>												
 											</li>
 										</ul>
@@ -326,12 +326,10 @@
 	function makeDOM(type, datas){
 		var postsection = document.getElementById("mainmypost");
 		if(type == 'board'){
-			for(let i in datas){
-				const board = datas[i];
-				
+			for(let i in datas.boardlist){
 				// <a> 요소 생성
 				const a = document.createElement('a');
-				a.href = '/board/get?boardnum='+board.boardnum;
+				a.href = '/board/get?boardnum='+datas.boardlist[i].boardnum;
 				
 				// <div class="mypost"> 요소 생성
 				const mypostDiv = document.createElement('div');
@@ -341,7 +339,7 @@
 				const pImgDiv = document.createElement('div');
 				pImgDiv.className = 'p_img';
 				const img1 = document.createElement('img');
-				img1.src = '/images/boardimg/2.jpg';
+				img1.src = '/board/thumbnail?systemname='+datas.thumbnail[i].sysname;;
 				img1.alt = '';
 				pImgDiv.appendChild(img1);
 				
@@ -356,7 +354,7 @@
 				img2.src = userdir;
 				img2.alt = '';
 				const span1 = document.createElement('span');
-				span1.textContent = board.userid;
+				span1.textContent = datas.boardlist[i].userid;
 				pstGuideDiv.appendChild(img2);
 				pstGuideDiv.appendChild(span1);
 				
@@ -367,7 +365,7 @@
 				// <div class="post_title"> 요소 생성 및 내용 추가
 				const postTitleDiv = document.createElement('div');
 				postTitleDiv.className = 'post_title';
-				postTitleDiv.textContent = board.title;
+				postTitleDiv.textContent = datas.boardlist[i].title;
 				
 				// <div class="post_preview"> 요소 생성
 				const postPreviewDiv = document.createElement('div');
@@ -388,9 +386,9 @@
 				    return li;
 				};
 				
-				ul.appendChild(createLi('/images/boardimg/location.png', board.viewcnt));
-				ul.appendChild(createLi('/images/boardimg/location.png', board.likecnt));
-				ul.appendChild(createLi('/images/boardimg/location.png', board.replycnt));
+				ul.appendChild(createLi('/images/boardimg/viewcnt.png', datas.boardlist[i].viewcnt));
+				ul.appendChild(createLi('/images/layoutimg/redheart.webp', datas.boardlist[i].likecnt));
+				ul.appendChild(createLi('/images/boardimg/comments.png', datas.boardlist[i].replycnt));
 				
 				postPreviewDiv.appendChild(ul);
 				
@@ -425,7 +423,7 @@
 				
 				// 이미지 생성
 				const img = document.createElement('img');
-				img.src = '/images/packageimg/384878.jpg';
+				img.src = '/package/thumbnail?systemname='+datas.thumbnail[i].pfSysname;
 				img.alt = '';
 				img.className = 'packstampimgwidth';
 				

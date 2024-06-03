@@ -10,9 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
 import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
 import com.t1.tripfy.domain.dto.board.BoardReplyPageDTO;
 import com.t1.tripfy.domain.dto.board.BoardaddrDTO;
+import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 
 public interface BoardService {
@@ -78,6 +80,20 @@ public interface BoardService {
 
 	// 유저 프로필
 	UserImgDTO getUserProfile(String userid);
+
+
+	// 해당 userid가 해당 board에 좋아요 눌렀는지 찾음
+	BoardLikeDTO getBoardLike(String userid, long boardnum);
+
+	// 좋아요 클릭
+	boolean likeClick(String userid, long boardnum);
+
+	// 가이드
+	GuideDTO getGuide(String userid);
+
+	// content 이미지 태그 제외하고 추출
+	String exceptImgTag(String content);
+
 
 	BoardReplyDTO replyRegist(BoardReplyDTO reply);
 

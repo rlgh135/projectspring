@@ -56,7 +56,7 @@
 		select * from guide_user where userid = #{userid}
 	</select>
 	<select id="getGuideAndImg">
-		select * from user_img where userid=(select userid from guide where (select guidenum from package where packagenum=#{packagenum}))
+		select * from user_img where userid=(select userid from guide where guidenum= (select guidenum from package where packagenum=#{packagenum}))
 	</select>
 	<select id="getLikeThisGuide">
 		select * from guide_user where userid=#{userid} and guidenum=#{guidenum};
@@ -79,4 +79,7 @@
 	<update id="updateCansle">
 		update reservation set isdelete=#{cansleStatus} where reservationnum = #{reservationnum}
 	</update>
+	<select id="getMyPackThumb">
+		select * from package_file where packagenum=#{packagenum}
+	</select>
 </mapper>

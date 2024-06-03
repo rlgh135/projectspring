@@ -19,6 +19,10 @@
 		margin-top: 130px;
 		position: relative;
     }
+	
+	#modifyForm {
+		margin-bottom: 60px;
+	}
 
     [type=text] {
         padding: 8px;
@@ -26,6 +30,10 @@
         width: 220px;
         outline: none;
     }
+	
+	.b_place, #yes, #no, a.btn {
+		cursor: pointer;
+	}
 	
 	.place_detail td {
 		display: flex;
@@ -128,7 +136,7 @@
         /* border: 1px solid red; */
     }
 
-    .modifyOk, .writeCancel {
+    .modifyOk, .modifyCancel {
         width: 100px; height: 40px;
         border: 1px solid #2196F3;
         border-radius: 8px;
@@ -136,9 +144,10 @@
         color: #fff;
         font-weight: bold;
 		font-size: 15px;
+		cursor: pointer;
     }
 
-    .writeOk {margin-right: 10px;}
+    .modifyOk {margin-right: 10px;}
 	
 	.nation_select {
 	    position: absolute;
@@ -172,7 +181,7 @@
 	    padding: 3px;
 	}
 
-	.nation_select .category .region {
+	.nation_select .category .c_region {
 	    border-top: 1px solid rgb(233, 233, 233);
 	    border-bottom: 1px solid rgb(233, 233, 233);
 		padding: 3px;
@@ -186,7 +195,7 @@
 		    position: relative;
 	}
 	
-	.nation_select .category .nation > div, .region > div, .region_detail > div {
+	.nation_select .category .nation > div, .c_region > div, .region_detail > div {
 		width: 95%;
 		height: 280px;
 		overflow-y: auto;
@@ -196,12 +205,12 @@
 		width: 100%;
 	}
 		
-	.region > div, .region_detail > div {
+	.c_region > div, .region_detail > div {
 	    /* border: 1px solid red; */
 	    position: absolute;
 	}
 	
-	.nation_select .category .nation > div > button, .region > div > button, .region_detail > div > button {
+	.nation_select .category .nation > div > button, .c_region > div > button, .region_detail > div > button {
 	    display: block;
 	    width: 100%;
 	    padding: 8px;
@@ -210,7 +219,7 @@
 	}
 	
 	.nation_select .category .nation > div > button > p, 
-	.nation_select .category .region > div > button > p, 
+	.nation_select .category .c_region > div > button > p, 
 	.nation_select .category .region_detail > div > button > p {
 	    width: 100%;
 	    text-align: left;
@@ -289,7 +298,7 @@
 		margin-right: 5px;
 	}
 	
-	.file th h4::after, .place_detail th h4::after {
+	.file th h4::after, .content th h4::after  {
 		content: "";
 	}
 	
@@ -299,18 +308,18 @@
 		clear:both;
 	}
 	/*모달 디자인*/
-	.modal {
-	    display: none;
-	    position: fixed;
-	    z-index: 1500;
-	    left: 0;
-	    top: 0;
-	    width: 100%;
-	    height: 100%;
-	    overflow: auto;
-	    background-color: rgb(0,0,0);
-	    background-color: rgba(0,0,0,0.4);
-	    padding-top: 60px;
+	.mapmodal {
+		display: none;
+		position: fixed;
+		z-index: 1500;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgb(0,0,0);
+		background-color: rgba(0,0,0,0.4);
+		padding-top: 60px;
 	}
 
 	.modal-content {
@@ -330,33 +339,33 @@
 	    color: #64B5F6;
 	    font-weight: bold;
 	}
-
+		
 	@keyframes animatetop {
 	    from {top:-300px; opacity:0}
 	    to {top:0; opacity:1}
 	}
-
+		
 	.close {
 	    color: #aaa;
 	    float: right;
 	    font-size: 28px;
 	    font-weight: bold;
 	}
-
+		
 	.close:hover,
 	.close:focus {
 	    color: black;
 	    text-decoration: none;
 	    cursor: pointer;
 	}
-
+	
 	#map {
-	    height: 800px;
+	    height: 600px;
 	    width: 100%;
 	    margin-top: 20px;
 	    margin-bottom: 20px;
 	}
-
+		
 	#pac-input {
 	    margin-top: 10px;
 	    margin-bottom: 20px;
@@ -366,7 +375,7 @@
 	    border: 1px solid #ccc;
 	    border-radius: 4px;
 	}
-
+		
 	#description {
 	    text-align: center;
 	    margin-top: 20px;
@@ -446,16 +455,16 @@
                 <tr class="date1" style="display: none;">
                     <th><h4>여행 기간</h4></th>
                     <td>
-                        <input type="text" placeholder="출발일" class="startdate" id="startdate" name="startdate" readonly th:value="${boardaddr} ? ${boardaddr.startdate} : ''">
+                        <input type="text" placeholder="출발일" class="startdate" id="boardstartdate" name="startdate" readonly th:value="${boardaddr} ? ${boardaddr.startdate} : ''">
                         ~
-                        <input type="text" placeholder="도착일" class="enddate" id="enddate" name="enddate" readonly 	th:value="${boardaddr} ? ${boardaddr.enddate} : ''">
+                        <input type="text" placeholder="도착일" class="enddate" id="boardenddate" name="enddate" readonly 	th:value="${boardaddr} ? ${boardaddr.enddate} : ''">
                     </td>
                 </tr>
 
 				<tr class="place_detail" style="display: none;">
 				    <th><h4>주소</h4></th>
 				    <td>
-						<input type="text" placeholder="주소" class="b_place_detail" name="placename" th:value="${boardaddr} ? ${boardaddr.placename} : ''">
+						<input type="text" placeholder="주소" class="b_place_detail" name="placename" th:value="${boardaddr} ? ${boardaddr.placename} : ''" readonly>
 						<div style="cursor: pointer;" id="modalOnBtn">지도</div>
 					</td>
 				</tr>
@@ -510,7 +519,7 @@
 			
             <div class="buttons">
                 <input type="button" value="글 수정" class="modifyOk" onclick="modifyOk();">
-                <input type="button" value="취소" class="writeCancel">
+                <input type="button" value="취소" class="modifyCancel" th:onclick="modifyCancel([[${board.boardnum}]]);">
             </div>
 			
         </form>
@@ -524,7 +533,7 @@
 					</div>
 				</div>
 		
-				<div class="region">
+				<div class="c_region">
 					<div style="visibility: hidden;" id="kr">
 						<button class="area" name="서울"><p class="areastr">서울</p></button>
 						<button class="area" name="제주도"><p class="areastr">제주도</p></button>
@@ -598,16 +607,17 @@
 				<button onclick="regionApply();">적용</button>
 			</div>
 		</div>
-		<div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p class="modal_title">지도 검색하기</p>
-                <input id="pac-input" class="controls" type="text" placeholder="장소 검색">
-                <div id="map"></div>
-                <p id="description"></p>
-                <div class="btn_area">
-                    <button class="place_select_btn">선택하기</button>
-                </div>
+    </div>
+	
+	<div id="modal" class="mapmodal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p class="modal_title">지도 검색하기</p>
+            <input id="pac-input" class="controls" type="text" placeholder="장소 검색">
+            <div id="map"></div>
+            <p id="description"></p>
+            <div class="btn_area">
+                <button class="place_select_btn">선택하기</button>
             </div>
         </div>
     </div>
@@ -618,7 +628,8 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
 <script th:inline="javascript">
-	const startdate = document.getElementById("startdate");
+	//const startdate = document.getElementById("startdate");
+	const startdate = document.querySelector(".startdate");
 	
 	if(startdate.value != "") {
 		document.querySelector(".date1").style.display = "";
@@ -637,8 +648,8 @@
 	const area_detail = document.getElementsByClassName("area_detail");
 	const area_detailstr = document.getElementsByClassName("area_detailstr");
 	
-	const region_div_kr = document.querySelector(".region > div#kr");
-	const region_div_fr = document.querySelector(".region > div#fr");
+	const region_div_kr = document.querySelector(".c_region > div#kr");
+	const region_div_fr = document.querySelector(".c_region > div#fr");
 	const region_detail_div = document.querySelectorAll(".region_detail div");
 	
 	let country_select = document.querySelector(".country_select");
@@ -853,7 +864,7 @@
 		let obj = e.target;
 		
 		// 지역 버튼 색상 초기화
-		for(let i = 0; i < area.length; i++) {
+		for(let i = 0; i < area_detail.length; i++) {
 			area_detail[i].style.backgroundColor = "#fff";
 			area_detail[i].classList.remove("area_detail_select");
 		}
@@ -937,7 +948,7 @@
 		
 		if(b_place.value != "") {		
 			nation_select.style.display = "none";
-			const region_div = document.querySelectorAll(".region > div");
+			const region_div = document.querySelectorAll(".c_region > div");
 			const region_detail_div = document.querySelectorAll(".region_detail > div");
 			
 			for(let i = 0; i < region_div.length; i++) {
@@ -949,6 +960,7 @@
 			}
 			
 			document.querySelector(".x").addEventListener("click", function() {
+				console.log("함수 실행됨")
 				b_place.value = "";
 				
 				let country_select = document.querySelector(".country_select");
@@ -974,8 +986,10 @@
 		}
 	}
 	
+	console.log(".x: " + document.querySelector(".x"))
+	
 	// 여행 기간 선택하는 달력
-	flatpickr("#startdate", {
+	flatpickr("#boardstartdate", {
 	    mode: "range",
 	    dateFormat: "Y-m-d",
 		minDate: "today",
@@ -983,8 +997,8 @@
 	        if (selectedDates.length === 2) {
 	            const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
 	            const endDate = instance.formatDate(selectedDates[1], "Y-m-d");
-	            document.getElementById("startdate").value = startDate;
-	            document.getElementById("enddate").value = endDate;
+	            document.getElementById("boardstartdate").value = startDate;
+	            document.getElementById("boardenddate").value = endDate;
 	        }
 	    }
 	});
@@ -1022,9 +1036,10 @@
 		const b_title = document.querySelector(".b_title");
 		const yes = document.getElementById("yes");
 		const no = document.getElementById("no");
-		const startdate = document.getElementById("startdate");
-		const enddate = document.getElementById("enddate");
+		const startdate = document.getElementById("boardstartdate");
+		const enddate = document.getElementById("boardenddate");
 		const b_place = document.querySelector(".b_place");
+		const b_place_detail = document.querySelector(".b_place_detail");
 		
 		if(b_title.value == "") {
 			alert("제목을 입력해주세요");
@@ -1036,15 +1051,20 @@
 			alert("동행 모집 여부를 체크해주세요");
 			return;
 		}		
-	
+		
+		if(b_place.value == "") {
+			alert("위치를 입력해주세요");
+			return;
+		}
+		
 		if(yes.checked) {			
 			if(startdate.value == "" || enddate.value == "") {
 				alert("여행 기간을 입력해주세요");
 				return;
 			}
 			
-			if(b_place.value == "") {
-				alert("위치를 입력해주세요");
+			if(b_place_detail.value == ""){
+				alert("상세 지역 주소를 등록해주세요");
 				return;
 			}
 		}
@@ -1254,7 +1274,47 @@
 	
 	let mapModal = $("#modal");
 	let geocoder = new google.maps.Geocoder();
+	let map;
+	let span = $(".close");
+	let marker = null; // 단일 마커를 저장할 변수
+	
 	$(document).ready(function(){
+		let loginUser = /*[[${session.loginUser}]]*/"";
+		
+		if(loginUser == null || loginUser == "") {
+			alert("로그인 후 이용하세요");
+			location.replace("/");
+		}
+		
+		
+		const b_place = document.querySelector(".b_place");
+		if(b_place.value != "") {		
+			document.querySelector(".x").addEventListener("click", function() {
+				console.log("함수 실행됨")
+				b_place.value = "";
+				
+				let country_select = document.querySelector(".country_select");
+				let area_select = document.querySelector(".area_select");
+				let area_detail_select = document.querySelector(".area_detail_select");
+				
+				if(country_select != null) {
+					country_select.classList.remove("country_select");
+					country_select.style.backgroundColor = "#fff";
+				}
+				
+				if(area_select != null) {
+					area_select.classList.remove("area_select");
+					area_select.style.backgroundColor = "#fff";
+				}
+				
+				if(area_detail_select != null) {
+					area_detail_select.classList.remove("area_detail_select");
+					area_detail_select.style.backgroundColor = "#fff";
+				}
+				
+			})
+		}
+		
 		//썸머노트 설정값
 	    $('#summernote').summernote({        
 	        codeviewFilter: false, // 코드 보기 필터 비활성화
@@ -1327,99 +1387,127 @@
 
 		$(document).on("click","#modalOnBtn", function(){
 			mapModal.show();
-			geocodeLocation(defaultLocationName);
-		});
-				
-		function initMap(location) {
-		        map = new google.maps.Map(document.getElementById('map'), {
-		            center: location,
-		            zoom: 11
-		        });
-
-		        input = document.getElementById('pac-input');
-		        searchBox = new google.maps.places.SearchBox(input);
-
-		        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-		        map.addListener('bounds_changed', function() {
-		            searchBox.setBounds(map.getBounds());
-		        });
-
-		        searchBox.addListener('places_changed', function() {
-		            var places = searchBox.getPlaces();
-
-		            if (places.length == 0) {
-		                return;
-		            }
-
-		            // 기존 마커 제거
-		            if (marker) {
-		                marker.setMap(null);
-		            }
-
-		            var bounds = new google.maps.LatLngBounds();
-		            var place = places[0]; // 첫 번째 장소만 사용
-
-		            if (!place.geometry) {
-		                return;
-		            }
-
-		            // 새로운 마커 생성 및 설정
-		            marker = new google.maps.Marker({
-		                map: map,
-		                title: place.name,
-		                position: place.geometry.location
-		            });
-
-		            $('#description').text(place.formatted_address);
-		            if($('#description').text() !== ""){
-		                $('.place_select_btn').addClass('on');
-		            }else{
-		                $('.place_select_btn').removeClass('on');
-		            }
-
-		            if (place.geometry.viewport) {
-		                bounds.union(place.geometry.viewport);
-		            } else {
-		                bounds.extend(place.geometry.location);
-		            }
-
-		            map.fitBounds(bounds);
-		        });
-
-		        // 클릭 이벤트 추가
-		        map.addListener('click', function(event) {
-		            // 새로운 클릭 지점의 위도와 경도
-		            var clickedLocation = event.latLng;
-		            
-		            // 기존 마커 제거
-		            if (marker) {
-		                marker.setMap(null);
-		            }
-
-		            // 새로운 마커 생성
-		            marker = new google.maps.Marker({
-		                position: clickedLocation,
-		                map: map
-		            });
-
-		            // 마커 위치를 주소로 변환하여 표시
-		            geocoder.geocode({ 'location': clickedLocation }, function(results, status) {
-		                if (status === 'OK') {
-		                    if (results[0]) {
-		                        $('#description').text(results[0].formatted_address);
-		                        $('.place_select_btn').addClass('on');
-		                    } else {
-		                        window.alert('No results found');
-		                    }
-		                } else {
-		                    window.alert('Geocoder failed due to: ' + status);
-		                }
-		            });
-		        });
+			 if (!map) {
+		        geocodeLocation(defaultLocationName);
+		    } else {
+		        google.maps.event.trigger(map, 'resize');
+		        map.setCenter(map.getCenter());
 		    }
+		
+		    span.on("click", function() {
+		        resetMapAndControls();
+		        mapModal.hide();
+		    });
+		
+		    $(window).on("click", function(event) {
+		        if ($(event.target).is(mapModal)) {
+		            resetMapAndControls();
+		            mapModal.hide();
+		        }
+		    });
+		});
+		
+		$('.place_select_btn').on("click", function(){
+		    $('.b_place_detail').val($('#description').text());
+		    resetMapAndControls();
+		    mapModal.hide();
+		    
+		    $('#description').text();
+		    $('.place_select_btn').removeClass('on');
+		})
+	});
+		
+	function initMap(location) {
+		map = new google.maps.Map(document.getElementById('map'), {
+		    center: location,
+		    zoom: 11
+		});
+		
+		input = document.getElementById('pac-input');
+		searchBox = new google.maps.places.SearchBox(input);
+		
+		map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+		
+		map.addListener('bounds_changed', function() {
+		    searchBox.setBounds(map.getBounds());
+		});
+		
+		searchBox.addListener('places_changed', function() {
+		    var places = searchBox.getPlaces();
+		
+		    if (places.length == 0) {
+		        return;
+		    }
+		
+		    // 기존 마커 제거
+		    if (marker) {
+		        marker.setMap(null);
+		    }
+		
+		    var bounds = new google.maps.LatLngBounds();
+		    var place = places[0]; // 첫 번째 장소만 사용
+		
+		    if (!place.geometry) {
+		        return;
+		    }
+	
+	        // 새로운 마커 생성 및 설정
+	        marker = new google.maps.Marker({
+	            map: map,
+	            title: place.name,
+	            position: place.geometry.location
+	        });
+	
+	        $('#description').text(place.formatted_address);
+	        if($('#description').text() !== ""){
+	            $('.place_select_btn').addClass('on');
+	        }else{
+	            $('.place_select_btn').removeClass('on');
+	        }
+	
+	        if (place.geometry.viewport) {
+	            bounds.union(place.geometry.viewport);
+	        } else {
+	            bounds.extend(place.geometry.location);
+	        }
+	
+	        map.fitBounds(bounds);
+	    });
+	
+		// 클릭 이벤트 추가
+		map.addListener('click', function(event) {
+		    // 새로운 클릭 지점의 위도와 경도
+		    var clickedLocation = event.latLng;
+		    
+		    // 기존 마커 제거
+		    if (marker) {
+		        marker.setMap(null);
+		    }
+		
+		    // 새로운 마커 생성
+		    marker = new google.maps.Marker({
+		        position: clickedLocation,
+		        map: map
+		    });
+		
+		    // 마커 위치를 주소로 변환하여 표시
+		    geocoder.geocode({ 'location': clickedLocation }, function(results, status) {
+		        if (status === 'OK') {
+		            if (results[0]) {
+		                $('#description').text(results[0].formatted_address);
+		                $('.place_select_btn').addClass('on');
+		            } else {
+		                window.alert('No results found');
+		            }
+		        } else {
+		            window.alert('Geocoder failed due to: ' + status);
+		        }
+		    });
+		});
+    }	
+		
 				
-	})
+	
 	function geocodeLocation(locationName) {
        geocoder.geocode({ 'address': locationName }, function(results, status) {
            if (status === 'OK') {
@@ -1432,6 +1520,28 @@
                alert('Geocode was not successful for the following reason: ' + status);
            }
        });
+   }
+   
+   let defaultLocationName = $(".b_place").val() == "" ? "대한민국" : $(".b_place").val();
+   function resetMapAndControls() {
+       if (input) {
+           input.value = '';
+       }
+       $('#description').text('');
+   
+       // 기존 마커 제거
+       if (marker) {
+           marker.setMap(null);
+           marker = null;
+       }
+   
+       if (map && searchBox) {
+           searchBox.setBounds(map.getBounds());
+           google.maps.event.trigger(map, 'resize');
+           map.setCenter(map.getCenter());
+       }
+	   
+       geocodeLocation(defaultLocationName);
    }
 
 	function uploadSummernoteImageFile(file, editor) {
@@ -1463,6 +1573,10 @@
 	        enctype: 'multipart/form-data',
 	        processData: false,
 	    })
+	}
+	
+	function modifyCancel(boardnum) {
+		location.replace("/board/get?boardnum=" + boardnum);
 	}
 </script>
 </html>

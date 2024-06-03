@@ -3,7 +3,22 @@
 	padding: 0;
 	box-sizing: border-box;
 }
-
+@font-face {
+    font-family: 'NanumSquareRound';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/nanumgothic/v23/PN_3Rfi-oW3hYwmKDpxS7F_z-7rJxHVIsPV5MbNO2rV2_va-Nv6p.0.woff2) format('woff2');
+  unicode-range: U+f9ca-fa0b, U+ff03-ff05, U+ff07, U+ff0a-ff0b, U+ff0d-ff19, U+ff1b, U+ff1d, U+ff20-ff5b, U+ff5d, U+ffe0-ffe3, U+ffe5-ffe6;
+}
+#wrap{
+	font-family: 'NanumSquareRound';
+}
 #wrap p {
 	margin-bottom: 0;
 }
@@ -169,24 +184,30 @@ body{
 /*오른쪽*/
 /*버튼*/
 #choicezone{
-	display: flex;
+	width: 50px;
 }
-#choicezone  li {
-	width: 100px;
-	height: 50px;
+#choicezone  > div {
+	height: 130px;
 	font-size: 20px;
 	text-align: center;
-	line-height: 50px;
+	line-height: 35px;
 	background-color: rgba(0, 0, 0, 0.05);
 	border-top-right-radius: 10px;
-	border-top-left-radius: 10px;
+	border-bottom-right-radius: 10px;
 	cursor: pointer;
+	padding: 5px 5px 5px 5px;
 }
-#choicezone > li:hover{
+
+#choicezone > div:hover{
 	background-color: #fff;
 }
-#choicezone > li + .guide-selected{
+#choicezone > div + .guide-selected{
 	background-color: #fff;
+}
+#choicezone > div > p {
+	width: 35px;
+	text-align: left;
+	writing-mode: vertical-lr;
 }
 #showpackagelist .guide-selected{
 	background-color: #fff;	
@@ -196,11 +217,20 @@ body{
 }
 
 /*작성중 패키지*/
+#mypackagelist{
+	display: flex;
+}
 #jacsunging{
-	padding-top: 20px;
+	width: 400px;
+	padding: 10px 20px 10px 20px;
+}
+#mypacklists{
+	width: 500px;
 }
 #jacsunging .subtitles{
 	font-size: 25px;
+	font-family: "Nanum Gothic";
+	font-weight: bold;
 }
 .gmlists{
 	margin-top: 15px;
@@ -208,18 +238,35 @@ body{
 .gmlists > li{
 	margin-top: 5px;
 	cursor: pointer;
+	border-radius: 25px;
 }
 .gmlists > li:hover{
-	background-color: rgba(0, 0, 0, 0.05);
+	-webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -ms-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 .ingthumb > img{
-	height: 80px;
-	width: 150px;
+	height: 180px;
+	width: 320px;
+	border-top-left-radius: 25px;
+	border-top-right-radius: 25px;
 }
 .outerpckgs{
 	display: flex;
 	flex-wrap: wrap;
-	gap: 10px;
+	height: 300px;
+	border-radius: 25px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.inglow{
+	width: 320px;
+}
+.mypckgs{
+	padding-left: 10px;
+	font-weight: bold;
+	font-size: 20px;
 }
 .stamparea{
 	margin-left: auto;
