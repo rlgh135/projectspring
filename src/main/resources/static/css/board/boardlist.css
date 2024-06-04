@@ -1,0 +1,495 @@
+/* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
+* {margin: 0; padding: 0; box-sizing: border-box;}
+
+a {text-decoration: none;}
+a:visited, a:active, a:link {color: #000;}
+a:hover {color: #000; cursor: pointer;}
+	
+.wrap {
+    width: 1400px;
+    margin: 0 auto;
+	margin-top: 80px;
+}
+	
+
+.b_banner {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    background: url('/images/boardimg/1.jpg') center/cover no-repeat;
+}
+
+.b_search {
+    width: 500px;
+    border-radius: 30px;
+    background-color: #fff;
+    position: absolute;
+    top: 42%;
+    left: 32%;
+    outline: none;
+    padding: 20px 20px 20px 63px;
+    box-shadow: 0px 4px 20px 0px rgba(25, 25, 25, 0.35);
+    font-size: 20px;
+    border: 1px solid #fff;
+		cursor: pointer;
+		font-family: 'Nanum Gothic';
+}
+
+.b_search:focus {
+    caret-color: #2196F3;
+    border: 1px solid #2196F3;
+}
+
+.b_search::placeholder {
+    color: #444;
+}
+
+.b_searchimg {
+    width: 43px;
+    height: 43px;
+    position: absolute;
+    top: 45%;
+    left: 33%;
+}
+	
+.search_cancel {
+    width: 30px; height: 30px;
+    position: absolute;
+    top: 47%;
+    right: 33.2%;
+ }
+
+.b_searchDetail {
+    width: 500px; height: 250px;
+    position: absolute;
+    top: 64%;
+    left: 32%;
+    background-color: #fff;
+    border-radius: 15px;
+    /* display: none; */
+    z-index: 1;
+    box-shadow: 0px 10px 20px 0px rgba(25, 25, 25, 0.35);
+}
+
+.b_searchDetail .ximg {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    top: 10px; right: 10px;
+	cursor: pointer;
+}
+
+.b_searchDetail .recentsearch {
+    border-top: 1px solid rgb(233, 233, 233);
+    position: absolute;
+    top: 50px;
+    width: 100%;
+    height: 200px;
+    padding: 0 15px;
+    padding-top: 10px;
+}
+
+.recentsearch > div {
+    color: black;
+    font-size: 14px;
+}
+
+.recentsearch > div:nth-child(1) {
+    font-weight: bold;
+    margin-left: 3px;
+	font-family: 'Nanum Gothic';
+}
+
+.keyword_area {
+    margin-top: 12px;
+    width: 100%;
+    max-height: 153px;
+    display: flex;
+    flex-wrap: wrap;
+	overflow: hidden;
+    
+}
+
+.keyword_area > .keyword {
+    width: auto;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    padding: 6px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    display: flex;
+	cursor: pointer;
+}
+	
+.keyword_area > .keyword > span {
+	font-family: 'Nanum Gothic';
+}
+
+.keyword > .xbtn {
+    width: 18px;
+    height: 18px;
+    margin-left: 3px;
+    background: url('/images/boardimg/xbtn.png') center/cover no-repeat;
+	cursor: pointer;
+}
+
+.post_area {
+    margin-top: 40px;
+    padding: 0 20px;
+}
+	
+.post_area > div:last-of-type {
+	text-align: center;
+	/* margin: 80px 0; */
+}
+
+.b_buttons {
+    height: 40px;
+}
+
+.nation_area {
+    float: right;
+    position: relative;
+}
+
+.sortbtn {
+    float: left;
+}
+
+.sortbtn [type="button"] {
+    background-color: #F5F5F5;
+    border: 1px solid #F5F5F5;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 500;
+    color: #4e4c4c;
+    margin-right: 5px;
+	cursor: pointer;
+	font-family: 'Nanum Gothic';
+}
+
+.sortbtn [type="button"]:first-child {
+    background-color: #000;
+    color: #fff;
+    }
+   
+.nation_area > button {
+        width: 80px;
+        background-color: #fff;
+        border: 1px solid rgb(233, 233, 233);
+        padding: 10px 13px 10px;
+        border-radius: 10px;
+        font-weight: 500;
+        color: #4e4c4c;
+        position: relative;
+        text-align: right;
+        float: right;
+		cursor: pointer;
+		font-family: 'Nanum Gothic';
+}
+	
+.nation_select {
+    position: absolute;
+    width: 350px; height: 340px;
+    background-color: #fff;
+    border: 1px solid rgb(233, 233, 233);
+    border-radius: 10px;
+    top: 55px; right: 0;
+    box-shadow: 0px 0px 3px rgba(30, 30, 30, 0.15);
+	z-index: 100;
+}
+	
+.nation_select .category {
+    position: absolute;
+    width: 100%; height: 280px;
+    display: flex;
+    padding: 5px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    /* display: none; */
+}
+	
+.nation_select .category button {
+	cursor: pointer;
+}
+	
+.nation_select .category > * {
+        width: 33.3%;
+        height: 280px;
+}
+	
+.nation_select .category .nation {
+    border-radius: 10px 0 0 10px / 10px 0 0 10px;
+    border: 1px solid rgb(233, 233, 233);
+    padding: 3px;
+}
+
+.nation_select .category .c_region {
+    border-top: 1px solid rgb(233, 233, 233);
+    border-bottom: 1px solid rgb(233, 233, 233);
+	padding: 3px;
+	    position: relative;
+}
+	
+.nation_select .category .region_detail {
+    border-radius: 0 10px 10px 0 / 0 10px 10px 0;
+    border: 1px solid rgb(233, 233, 233);
+	    padding: 3px;
+	    position: relative;
+}
+	
+.nation_select .category .nation > div, .c_region > div, .region_detail > div {
+	width: 100%;
+	height: 280px;
+	overflow-y: auto;
+}
+	
+.nation_select .category .c_region > div {
+	width: 94%;
+}
+	
+.nation_select .category .region_detail > div {
+	width: 95%;
+}
+	
+.c_region > div, .region_detail > div {
+    /* border: 1px solid red; */
+    position: absolute;
+}
+	
+.nation_select .category .nation > div > button, .c_region > div > button, .region_detail > div > button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background-color: #fff;
+}
+	
+.nation_select .category .nation > div > button > p, 
+.nation_select .category .c_region > div > button > p, 
+.nation_select .category .region_detail > div > button > p {
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	font-family: 'Nanum Gothic';
+}
+	
+.nation_select .n_btns {
+   position: absolute;
+   bottom: 9px; left: 24px;
+}
+	
+.n_btns button {
+	background-color: #fff;
+    border-radius: 5px;
+    height: 35px;
+    font-size: 12px;
+    font-weight: bold;
+	cursor: pointer;
+}
+	
+.n_btns button:nth-child(1) {
+	width: 90px;
+    margin-right: 5px;
+    color: #2196F3;
+    background-color: #F5F5F5;
+    border: 1px solid #F5F5F5;
+}
+	
+.n_btns button:nth-child(1) img {
+	width: 18px;
+    height: 18px;
+    position: absolute;
+    left: 15px; top: 9px;
+}
+	
+.n_btns button:nth-child(1) span {
+    margin-left: 18px;
+	font-family: 'Nanum Gothic';
+}
+	
+.n_btns button:nth-child(2) {
+    width: 200px;
+    color: #fff;
+    background-color: #2196F3;
+    border: 1px solid #2196F3;
+	font-family: 'Nanum Gothic';
+}
+	
+.settings {
+    width: 19px; height: 19px;
+    position: absolute;
+    top:9px; left: 13px;
+}
+
+.posts {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    /*overflow-y: auto;*/
+    gap: 26.6px;  /* 전체에 여백 */
+    padding-bottom: 10px;
+}
+
+.posts .post {
+    width: 320px;
+    height: 300px;
+    border-radius: 14px;
+    box-shadow: 0px 3px 8px rgba(25, 25, 25, 0.2);
+}
+
+.post > .guide {
+    height: 45px;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+}
+
+.post > .guide > img {
+    width: 30px;
+    height: 30px;
+    margin-right: 7px;
+}
+
+.post > .guide > span {
+    margin-top: 5px;
+	font-family: 'Nanum Gothic';
+}
+	
+.post > .guide .guidebadge {
+	width: 16px; height: 16px;
+	position: relative;
+	top: 4px;
+	margin-left: 5px;
+}
+	
+.post > .guide > .cnts {
+	display: flex;
+	margin-top: 3px;
+	margin-left: auto;
+}
+	
+.post > .guide > .cnts > div {
+	margin-right: 6px;
+}
+	
+.post > .guide > .cnts > div > img {
+    width: 16px; height: 16px;
+	position: relative;
+	margin-right: 4px;
+	top: 3px;
+}
+	
+.post > .guide > .cnts > div:nth-child(3) > img {
+	margin-right: 3px;
+}
+	
+.post > .p_img {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+}
+	
+.post > .p_img > img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+	
+.posts > a:hover {
+    cursor: pointer;
+}
+
+.posts > a:hover .p_img > img {
+    transform: scale(1.2);
+    transition: 0.25s ease-in-out;
+}
+
+.post > .post_write {
+    padding: 10px;
+    height: 95px;
+}
+
+.post > .post_write > .post_title {
+	margin-bottom: 7px;
+	font-family: 'Malgun Gothic';
+	font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.post > .post_write > .post_preview {
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #777;
+    font-size: 15px;
+}
+
+.no_post {
+	font-family: 'Nanum Gothic';
+}
+	
+.b_pagenation {
+    margin: 70px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.b_pagenation img {
+    width: 20px; height: 20px;
+    margin-top: 5px;
+}
+
+.b_pagenation a {
+    font-size: 18px;
+    font-weight: bold;
+    width: 33px; height: 33px;
+    text-align: center;
+    margin-right: 15px;
+    border: 1px solid rgb(233, 233, 233);
+    border-radius: 5px;
+    line-height: 28px;
+	font-family: 'Nanum Gothic';
+}
+	
+/* 이전 버튼 */
+.b_pagenation a:first-of-type {
+     background: url("/images/boardimg/prev.png") no-repeat center/20px 20px;
+}
+	
+/* 다음 버튼 */
+.b_pagenation a:last-of-type {
+    background: url("/images/boardimg/next.png") no-repeat center/20px 20px;
+    margin-right: 0;
+}
+	 
+.writebtn {
+     width: 70px; height: 70px;
+     position: absolute;
+     bottom: 50px; right: 100px; 
+     position: fixed;
+}
+	
+ .writebtn > [type="button"] {
+     width: 70px; height: 70px;
+     background: url("/images/boardimg/writebtn.png") no-repeat center/50px 50px;
+     border-radius: 50%;
+	 background-color: #fff;
+     border: none;
+     box-shadow: 1px 1px 15px #74747470;
+	 cursor: pointer;
+}
+
