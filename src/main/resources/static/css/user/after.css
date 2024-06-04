@@ -59,7 +59,7 @@ li {
 
 /*모달베이스 히든토글*/
 .himo {
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     width: 100%;
@@ -77,7 +77,6 @@ li {
     background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.609);
-    overflow-y: scroll;
 }
 /*모달상세*/
 #gprofileimg{
@@ -111,7 +110,6 @@ li {
 	margin-top:20px;
 }
 .himo_body > form > textarea{
-	margin-top: 10px;
 	width: 395px;
 	resize: none;
 	height: 40px;
@@ -119,4 +117,76 @@ li {
 }
 .himo_body > form > textarea:focus{
 	outline: 1px solid #2196f3;
+}
+/*임티*/
+.grayback{
+	background-color: rgba(0, 0, 0, 0.05);
+}
+.grayback::before{
+	content: "";
+	opacity: 0.5;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: rgba(0, 0, 0, 0.15);
+}
+.nylllc{
+	margin-bottom: 10px;
+}
+.stickers{
+	width: 100px;
+	height: 100px;
+	background-size: cover;
+}
+.emclk{
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	right: 25px;
+    bottom: 52px;
+}
+.hugicont{
+	margin-top: 0px;
+}
+#stickerlist{
+	padding: 5px;
+	position: absolute;
+	width: 235px;
+	height: auto;
+	background-color: white;
+	opacity: 0.9;
+	z-index: 3001;
+	border-radius: 15px;
+	right: 10px;
+}
+#stickerlist > img{
+	width: 40px;
+	height: 40px;
+}
+.yetda{
+	background-color: aliceblue;
+	border: 1px solid #2196f3;
+	color: black;
+	cursor: pointer;
+	padding: 2px 5px 2px 5px;
+	border-radius: 10px;
+}
+.yetda:hover{
+	background: #2196f3;
+	color: azure;
+	
+}
+#theong{
+	width: 500px;
+    height: 500px;
+}
+.backbtse{
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+}
+.backbtse > a:hover{
+	border-bottom: 1px solid black;
 }

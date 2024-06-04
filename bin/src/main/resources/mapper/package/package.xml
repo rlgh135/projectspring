@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t1.tripfy.domain.mapper.pack.PackMapper">
+	
+	<sql id="cri">
+		<if test="keyword != '' and type != ''">
+			<trim prefixOverrides="or" prefix="(" suffix=") and">
+				<foreach collection="typeArr" item="type">
+					or
+					<choose>
+						<when test="type == 'T'.toString()">
+							boardtitle like('%${keyword}%')
+						</when>
+						<when test="type == 'C'.toString()">
+							boardcontents like('%${keyword}%')
+						</when>
+						<when test="type == 'W'.toString()">
+							userid like('%${keyword}%')
+						</when>
+					</choose>
+				</foreach>
+			</trim>
+		</if>
+	</sql>
+	
+	<insert id="insertPack">
+		insert into package
+		(guidenum, package_title,
+		max_cnt, adult_price, child_price, startdate, enddate, tourdays, deadline)
+		values
+		(#{guidenum}, #{package_title},#{max_cnt}, #{adult_price},
+		#{child_price}, #{startdate}, #{enddate}, #{tourdays}, #{deadline})	
+	</insert>
+	<update id="insertPackContent">
+		update package
+		set packagecontent = #{packagecontent}, visibility ='O'
+		 
+	</update>
+	
+	<select id="getAllList">
+		select * from package
+		where visibility ='O'
+		order by packagenum
+		desc limit #{startrow},#{amount}
+	</select>
+	
+	<select id="getListByCountryCode">
+    select * from package
+	    <where>
+	        <if test="countrycode != null">
+	            <choose>
+	                <when test="countrycode == 'kr'">
+	                    and countrycode = #{countrycode}
+	                </when>
+	            
+	                <when test="countrycode != 'kr'">
+	                    and countrycode != 'kr'
+	                </when>
+	            </choose>
+	        </if>
+	    </where>
+	    and visibility ='O'
+	</select>
+	
+	<select id="getDetailRegionList">
+		select * from package
+		where
+		startdate = #{startdate}
+		and enddate = #{enddate}
+		and countrycode = #{countrycode}
+		and regionname = #{regionname}
+		and maxcnt = #{maxcnt}	
+		and visibility ='O'
+	</select>
+	
+	<select id="getTotal">
+		select count(*) from package where
+		<include refid="cri"></include>
+		boardnum > 0
+	</select>
+	
+	<select id="getLastNum">
+		select max(packagenum) from package where userid=#{userid}
+	</select>
+	
+	
+	<select id="getPackageByPackageNum">
+		select * from package where packagenum = #{packagenum}
+	</select>
+	
+		<update id="updatePackage">
+		update package
+		set package_title = {#package_title}, package_content = #{package_content}, 
+		maxcnt = #{maxcnt}, adult_price =  #{adult_price}, child_price = #{child_price},
+		startdate =  #{startdate}, enddate = #{enddate}, tourdays = #{tourdays},
+		deadline =  #{deadline})	
+		where visibility ='O'
+	</update>
+	
+	<delete id="deletePackage">
+		delect from package where packagenum = #{packagenum} 
+	</delete>
+	
+	
+</mapper>

@@ -1,8 +1,11 @@
 package com.t1.tripfy.controller.user;
 
 import java.net.http.HttpRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -289,15 +292,31 @@ public class UserController {
 		
 		List<PackageDTO> packagelist = service.getMyPackages(guidenum, cri);
 		List<PackageFileDTO> thumbnaillist = new ArrayList<>();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		ArrayList<Integer> moreend = new ArrayList<>();
+		
 		if(packagelist.size()> 0) {
 			for (PackageDTO pack : packagelist) {
-				packagenums.add(pack.getPackagenum());
+				try {
+					Date enddate = formatter.parse(pack.getEnddate());
+					Date today = new Date();
+					
+					if(today.compareTo(enddate)<=0) {
+						moreend.add(1);
+					} else {
+						moreend.add(0);
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				thumbnaillist.add(service.getPackThumbnail(pack.getPackagenum()));
 			}
 		}
 		
 		model.addAttribute("thumbnaillist", thumbnaillist);
 		model.addAttribute("packagelist", packagelist);
+		model.addAttribute("moreend", moreend);
 		
 		return "/user/guide";
 	}
@@ -307,6 +326,12 @@ public class UserController {
 	public Map<String, Object> getReplyByPackagenum(HttpServletRequest req){
 		Map<String, Object> datas = new HashMap<>();
 		long packagenum = Long.parseLong(req.getParameter("packagenum"));
+		
+		PackageFileDTO ptum = service.getPackThumbnail(packagenum);
+		datas.put("ptum", ptum);
+		
+		PackageDTO pack = service.getJoinPackage(packagenum);
+		datas.put("pack", pack);
 		
 		List<ReviewDTO> reviewlist = service.getReviewByPackagenum(packagenum);
 		datas.put("reviewlist", reviewlist);
@@ -363,7 +388,7 @@ public class UserController {
 				}
 			}
 		}
-		
+		System.out.println(rpacklist);
 		model.addAttribute("guideimg", guideimgmap);
 		model.addAttribute("guideids", guideids);
 		model.addAttribute("packagelist", rpacklist);

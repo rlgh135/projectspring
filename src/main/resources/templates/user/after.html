@@ -31,20 +31,39 @@
                 </div>
             </div>
             <form method="post" action="/user/hugi" name="huhuform">
-			<input type="hidden" name="emSysname" id="stickersysname">
+				<input type="hidden" name="emSysname" id="stickersysname">
                 <input type="hidden" name="guidenum" val="" id="hugignum">
                 <input type="hidden" name="packagenum" val="" id="hugipnum">
-			<div id="anboim" class="grayback">
-				<div id="uploadedsticekrs" class="stickers hidden" data-action="upload">
-					
+                <div class="nylllc">가이드님과의 여행은 어땠는지 후기를 작성해보세요 </div>
+				<div id="anboim" class="grayback">
+					<div id="uploadedsticekrs" class="stickers hidden" data-action="upload">
+					</div>
 				</div>
-			</div>
-                <div>가이드님과의 여행은 어땠는지 후기를 작성해보세요 <a href="javascript:showstickers()">보여줘</a></div>
                 <textarea name="contents" id="hugicont"></textarea>
-			<div id="stickerlist" class="hidden">
-				<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
-			</div>    
+				<a href="javascript:showstickers()"><img class="emclk" src="/images/layoutimg/emclk.png"></a>
             </form>
+				<div id="stickerlist" class="hidden">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+					<img class="stickers" data-action="upload" src="/images/userimg/mail.svg" data-sysname="mail.svg">
+				</div>    
             <div class="btns">
                 <button class="yetda" onclick="yeogihugi()">작성완료</button>
                 <button class="yetda" onclick="canslehugi()">취소</button>
@@ -69,12 +88,16 @@
                         </div>
                     </li>
                 </ul>
-            </th>
+            </th:block>
             <th:block th:unless="${packagelist != null and packagelist.size > 0}">
-                <img src="" alt="teong">
-            </th>
+            	<div class="theongwrap">
+					<div class="theongin">
+						<img id="theong" src="/images/layoutimg/notrip.png" alt="teong">
+					</div>
+				</div>    
+            </th:block>
         </div>
-        <div><a href="/user/myinfo">돌아가기</a></div>
+        <div class="backbtse"><a href="/user/myinfo">돌아가기</a></div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -115,16 +138,17 @@
 				$("#hugignum").val(guidenum);
 				$("#hugipnum").val(packagenum);
 				
+				let stickdiv = document.getElementById("uploadedsticekrs");
 				if(datas.review!=null){
 					// 이모티콘 분기
-					let stickdiv = document.getElementById("uploadedsticekrs");
 					if(datas.review.emSysname!=""){
 						$("#stickersysname").val($(this).data(datas.review.emSysname));
-						stickdiv.classList.toggle("hidden");
+						stickdiv.className="stickers"
 						stickdiv.innerHTML='<img class="stickers" data-action="upload" src="/images/userimg/'+datas.review.emSysname+'" data-sysname="'+datas.review.emSysname+'">';
 						
 					} else {
 						$("#stickersysname").val($(this).data(""));
+						stickdiv.className="stickers hidden"
 						stickdiv.innerHTML=""						
 					}
 					
@@ -136,6 +160,8 @@
 						$("#hg-glike").html('이 가이드를 추천하시겠어요? <span id="likeClk"><img id="likeHeart" src="/images/layoutimg/whiteheart.webp" alt="" onclick="presslike('+guidenum+')"></span>');
 					}
 				} else {
+					stickdiv.innerHTML="";
+					stickdiv.className="stickers hidden"						
 					$("#hugicont").val("");
 				}
 				

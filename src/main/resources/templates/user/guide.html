@@ -16,7 +16,20 @@
     <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
 	<div id="pkgmodal" class="gumodal hidden">
 		<div id="pkgmodal-body" class="gumodalbody">
-			
+			<img id="gumoclose" src="/images/layoutimg/cancel_10289710.png">
+			<div class="gumothumb">
+				<img src="">
+			</div>
+			<div class="phyosi"><span style="color: red;">*</span>이미지를 클릭하면 해당 패키지로 이동합니다</div>
+			<div class="gumosection">
+				<div id="gumopt"></div>
+				<div id="gumopa"></div>
+				<div id="gumopd"></div>
+			</div>
+			<div class="gumohufi">
+				<h2>패키지 후기</h2>
+				<ul id="addhugiul" class=""></ul>
+			</div>
 		</div>
 	</div>
 	<div id="aplmodal" class="gumodal hidden">
@@ -87,26 +100,27 @@
                             <th:block th:if="${packagelist != null and packagelist.size > 0}">
                                 <li class="rlis" th:each="package, iterStats:${packagelist}">
                                     <div class="outerpckgs">
-										<div class="ingthumb" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
+										<div class="ingthumb" th:onclick="'showhugis('+${package.packagenum}+', 0)'">
 											<img th:src="${'/package/thumbnail?systemname='+thumbnaillist[__${iterStats.index}__].pfSysname}">
 										</div>
-                                        <div class="mypckgs" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
+                                        <div class="mypckgs" th:onclick="'showhugis('+${package.packagenum}+', 0)'">
 											
-											<div>[[${package.packageTitle}]]<img src="/images/userimg/packageready.png" class="stp"></div>
+											<div>
+												[[${package.packageTitle}]]
+												<th:block th:if="${moreend[__${iterStats.index}__]==0}">
+													<img src="/images/userimg/packagewan.png" class="stp">
+												</th:block>
+												<th:block th:unless="${moreend[__${iterStats.index}__]==0}">
+													<img src="/images/userimg/packageready.png" class="stp">
+												</th:block>
+											</div>
 											<div class="bonm"><br><img src="/images/boardimg/location.png" class="mapmarker"> [[${package.regionname}]]</div>
 											<div class="bonm">[[${package.startdate}]] ~ [[${package.enddate}]]([[${package.tourdays}]]일)</div>
 											<div class="bonm">상태: <span>여행준비</span> 인원: 2/[[${package.maxcnt}]]</div>
+											<input type="hidden" th:id="'hupage'+${package.packagenum}" value="1"><span></span>												
 										</div>
                                     </div>
-									<div class="rrside">
-                                        <div class="showhugiswr" th:onclick="'showhugis('+${package.packagenum}+', 0)'">
-											<div>
-												후기
-												<div class="showhugis"></div>
-												<input type="hidden" th:id="'hupage'+${package.packagenum}" value="1"><span></span>												
-											</div>
-										</div>
-									</div>
+									
                                 </li>
                             </th:block>
                             <th:block th:unless="${packagelist != null and packagelist.size > 0}">
@@ -174,6 +188,21 @@
     </div>
 </body>
 <script>
+	$(document).ready(function () {
+	    $('.gmlists').on('wheel', function (event) {
+	        const scrollAmount = 2;
+	        if (event.originalEvent.deltaX > 0) {
+			console.log("456");
+	            // Scroll right
+	            $(this).scrollLeft($(this).scrollLeft() + scrollAmount);
+	        } else if (event.originalEvent.deltaX < 0) {
+			console.log("789");
+	            // Scroll left
+	            $(this).scrollLeft($(this).scrollLeft() - scrollAmount);
+	        }
+	    });
+	});
+	
     $("#showpackagelist").click(function (){
         if($(this).hasClass("guide-selected")){
             return;
@@ -221,12 +250,16 @@
         location.href = "";
     }
 
+	$("#gumoclose").on("click", function(){
+		$("#pkgmodal").toggleClass("hidden");
+	});
     //후기 보여주기
     function showhugis(packagenum, diff) {
         let hugilabel = document.getElementById("hupage"+packagenum);
 		let curpage = hugilabel.value;
 		let tarpage = curpage+diff;
 		const parentnode = document.getElementById("addhugiul");
+		$("#pkgmodal").toggleClass("hidden");
 		
 		if(tarpage==0){
 			alert("첫 페이지입니다.");
@@ -238,11 +271,16 @@
 			method: "GET",
 			
 			success:function(datas){
-				if(datas.length==0||datas==null){
-					alert("후기가 없어요");
+				console.log(datas);
+				$(".gumothumb").attr("onclick", "location.href='/package/pget?packagenum="+datas.pack.packagenum+"'");
+				$(".gumothumb > img").attr("src", "/package/thumbnail?systemname="+datas.ptum.pfSysname);
+				$("#gumopt").text(datas.pack.packageTitle+"(인원리스트랑 채팅방개설버튼)");
+				$("#gumopa").text("여행지: "+datas.pack.regionname);
+				$("#gumopd").text(datas.pack.startdate+" ~ "+datas.pack.enddate+"("+datas.pack.tourdays+"일)");
+				parentnode.innerHTML="";
+				if(datas.reviewlist.length==0||datas==null){
+					parentnode.innerHTML ="<li>후기가 없어요</li>"
 				} else{
-					parentnode.classList.toggle("hidden");
-					console.log(datas);
 					makeDOM(datas, 'hugi', parentnode);
 				}
 			},
@@ -338,26 +376,38 @@
 				newImage.src = "/user/thumbnail?sysname="+datas.thumbnaillist[i];
 				newUpperDiv.appendChild(newImage);
 				
+				//wrap
+				const newWrapDiv = document.createElement('div');
+				newWrapDiv.classList.add('rightias');
+				
 				// 새로운 id 요소 추가
 				const newIdDiv = document.createElement('div');
 				newIdDiv.textContent = datas.reviewlist[i].userid;
-				newUpperDiv.appendChild(newIdDiv);
+				newWrapDiv.appendChild(newIdDiv);
 				
 				// 새로운 stars 요소 추가
 				const newStarsDiv = document.createElement('div');
-				newStarsDiv.textContent = '';
-				newUpperDiv.appendChild(newStarsDiv);
+				newStarsDiv.classList.add('concontdk');
+				newStarsDiv.textContent = datas.reviewlist[i].contents;
+				newWrapDiv.appendChild(newStarsDiv);
 				
+				//임티
+				const newImtiDiv = document.createElement('div');
+				newImtiDiv.classList.add('soimtitii');
+				
+				//임티이미지
+				if(datas.reviewlist[i].emSysname!=""){
+					const newImtiImg = document.createElement('img');
+					newImtiImg.src = "/images/emoticon/"+datas.reviewlist[i].emSysname;
+					newImtiImg.classList.add('imtitii');
+					newImtiDiv.appendChild(newImtiImg);
+				}
+				
+				newWrapDiv.appendChild(newImtiDiv);
+				
+				newUpperDiv.appendChild(newWrapDiv);
 				// newLi에 newUpperDiv 추가
 				newLi.appendChild(newUpperDiv);
-				
-				// 새로운 div.lowerhugi 요소 생성
-				const newLowerDiv = document.createElement('div');
-				newLowerDiv.classList.add('lowerhugi');
-				newLowerDiv.textContent = datas.reviewlist[i].contents;
-				
-				// newLi에 newLowerDiv 추가
-				newLi.appendChild(newLowerDiv);
 				
 				parentnode.appendChild(newLi);
 			}

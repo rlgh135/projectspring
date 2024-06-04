@@ -38,7 +38,7 @@
 		update reservation set isdelete=#{isdelete} where reservationnum = #{reservationnum}
 	</update>
 	<select id="getMyPackageTwoWeek">
-		select * from package where DATEDIFF(enddate, now())&lt;14 and packagenum=#{packagenum};
+		select * from package where (DATEDIFF(enddate, now())&gt;-14 and DATEDIFF(enddate, now())&lt;1) and packagenum=#{packagenum};
 	</select>
 	<select id="getForignerReservations">
 		select * from reservation where name=#{fname} and phone=#{phone} order by reservationnum limit #{cri.startrow}, #{cri.amount}

@@ -1,11 +1,12 @@
 <th:block th:fragment="header(loginUser)">
 	
+	<link rel="stylesheet" href="/css/layout/fontscroll.css">
 	<link rel="stylesheet" href="/css/layout/headerstyle.css">
 	<!-- 탑 해더 부분 -->
 	<div id="top_wrap">
 		<div class="gnb">
 			<div class="logo_box">
-				<a href="#">
+				<a href="/package/pmain">
 					<img src="/images/layoutimg/logo_long.png" class="logo" id="logo_img">
 				</a>
 			</div>
@@ -113,12 +114,10 @@
 								<div>
 									<button id="modalOpenButton">패키지 작성</button>
 								</div>
+								<div>
+									<button id="" onclick="location.href='/user/logout'">로그아웃</button>
+								</div>
 							</div>
-						</li>
-						<li class="userinfo_gnb">
-							<a href="/user/logout">
-								<img src="/images/userimg/free-icon-sign-out-7046204.png" alt="로그아웃" srcset="">
-							</a>
 						</li>
 					</ul>
 				</div>
