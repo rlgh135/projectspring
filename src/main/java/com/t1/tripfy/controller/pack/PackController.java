@@ -296,8 +296,8 @@ public class PackController {
 		long guidenum = (long)session.getAttribute("guideNum");
 		pack.setGuidenum(guidenum);
 		if(service.regist(pack, packageFile)) {	
-				long packagenum = service.getLastNum(pack.getGuidenum());
-				return "redirect:/package/tlwrite?packagenum="+packagenum;
+			long packagenum = service.getLastNum(pack.getGuidenum());
+			return "redirect:/package/tlwrite?packagenum="+packagenum;
 		}
 		//실패처리
 		else {

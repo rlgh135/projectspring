@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #wrap{
+        margin: 0 auto;
+        width: 90%;
+        height: 900px;
+    }
+    header{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .body{
+        display: flex;
+        gap: 5%;
+        height: 800px;
+        width: 90%;
+        margin-top: 20px;
+    }
+    .body .sidebar{
+        width: 20%;
+        margin: 0 auto;
+        border-right: 1px solid #ccc;
+    }
+    .body .sidebar div{
+        width: 90%;
+        height: 50px;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        text-align: center;
+		cursor: pointer;
+    }
+	.active{
+		width: 90%;
+        height: 50px;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        text-align: center;
+		cursor: pointer;
+		background-color: cadetblue;
+		color: #ffffff;
+	}
+	.on{
+		width: 30%;
+        height: 50px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        text-align: center;
+		cursor: pointer;
+		background-color: cadetblue;
+		color: #ffffff;
+	}
+    .body .content_area{
+        overflow: auto;
+        padding: 20px;
+        width: 75%;
+        margin: 0 auto;
+    }
+
+    .body .content_area::-webkit-scrollbar {
+        width: 10px; 
+    }
+
+    .body .content_area::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .body .content_area::-webkit-scrollbar-thumb {
+        background: #888; 
+        border-radius: 5px; 
+    }
+    .message {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .message p {
+        margin: 5px 0;
+    }
+	
+	.status-area{
+		display: flex;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		gap:5%;
+	}
+	.status-area .status{
+		width: 30%;
+        height: 50px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        text-align: center;
+		cursor: pointer;
+	}
+	.answerToggleBtn, .answerSubmit {
+	    background-color: cadetblue;
+	    color: white;
+	    border: none;
+	    padding: 5px 10px;
+	    cursor: pointer;
+		border-radius: 20px;
+	}
+	.answer_area{
+		margin-top: 20px;		
+	}
+	.answer_area textarea{
+		resize: none;
+		padding: 10px;
+	}
+
+</style>
+<body>
+    <div id="wrap">
+        <header>
+			<h1>신고함</h1>
+		</header>	
+		<div class="status-area">			
+			<div class="status" id="status1"><p>처리중</p></div>
+			<div class="status" id="status2"><p>처리완료</p></div>			
+		</div>
+        <div class="body">
+            <div class="sidebar">
+                <div class="listType" id="type-board"><p>게시판 신고</p></div>
+                <div class="listType" id="type-package"><p>패키지 신고</p></div>
+                <div class="listType" id="type-user"><p>유저 신고</p></div>
+            </div>
+            <div class="content_area">
+				<div th:if="${list.empty}" class="message">
+				    <p><strong>신고 내역이 없습니다.</strong></p>
+				</div>
+				<div th:unless="${list.empty}" th:each="msg : ${list}" class="message" th:id="${msg.messagenum}">
+					<p><strong>신고 내역 :</strong> 
+						<span th:if="${msg.taskType == '1'}">게시판</span>
+			            <span th:if="${msg.taskType == '2'}">패키지</span>
+			            <span th:if="${msg.taskType == '3'}">유저</span>
+					</p>
+                    <p><strong>발신자 :</strong> [[${msg.sendid}]]</p>
+                    <p><strong>날짜 :</strong> [[${msg.regdate}]]</p>
+                    <p><strong>내용 :</strong> [[${msg.contents}]]</p>
+					<p><strong>관련주소 :</strong>
+			            <span th:if="${msg.taskType == '1'}">
+			                <a th:href="'http://localhost:8080/board/get?boardnum=' + ${msg.detailNum}">[[${msg.detailNum}]]번 게시판 바로가기</a>
+			            </span>
+			            <span th:if="${msg.taskType == '2'}">
+			                <a th:href="'http://localhost:8080/package/pget?packagenum=' + ${msg.detailNum}">[[${msg.detailNum}]]번 패키지 바로가기</a>
+			            </span>
+						<span th:if="${msg.taskType == '3'}">
+			                <a>유저아이디 - [[${msg.detailNum}]]</a>
+			            </span>
+			        </p>
+					<p><strong>처리상태 :</strong>
+						 <span th:if="${msg.taskStatus == '1'}">처리중</span>
+						 <span th:if="${msg.taskStatus == '2'}">처리완료</span>
+					</p>
+					<p><strong>답변 :</strong>
+						<div th:if="${msg.answer == null}">					
+							<button class="answerToggleBtn">답장 창 열기</button>
+							<div class="answer_area" style="display: none;">
+								<textarea class="answer" cols="65" rows="30"></textarea>
+								<button class="answerSubmit">제출하기</button>
+							</div>
+						</div>
+						<span th:if="${msg.answer != null}">[[${msg.answer}]]</span>
+					</p>
+				</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function(){	
+	let taskStatus = "0";
+	let taskType = "0";
+	$(document).on("click", ".listType", function(){
+		$('.active').addClass("listType");
+		$('.listType').removeClass("active");
+		$(this).removeClass("listType");
+		$(this).addClass("active");
+		const typeId = $(this).attr("id");
+		if (typeId === "type-board") {
+		    taskType = "1";
+		} else if (typeId === "type-package") {
+		    taskType = "2";
+		} else if (typeId === "type-user") {
+		    taskType = "3";
+		}
+		getTaskList(taskType, taskStatus);
+	})
+	$(document).on("click",".active",function(event){
+		taskType = "0";
+		$(this).removeClass("active");
+		$(this).addClass("listType");
+		getTaskList(taskType, taskStatus);
+	})
+	
+	$(document).on('click','.status',function(){
+		$('.on').addClass('status');
+		$('.status').removeClass('on');
+		$(this).removeClass("status");
+		$(this).addClass("on");
+		const typeId = $(this).attr("id");
+		if(typeId === "status1"){
+			taskStatus = "1";
+		}else if(typeId === "status2"){
+			taskStatus = "2";
+		}
+		getTaskList(taskType, taskStatus);
+	})
+	$(document).on("click",".on",function(event){
+		taskStatus = "0";
+		$(this).removeClass("on");
+		$(this).addClass("status");
+		getTaskList(taskType, taskStatus);
+	})
+	
+	$(document).on('click','.answerToggleBtn',function(){
+		$(this).next('.answer_area').toggle();	
+	})
+	$(document).on('click','.answerSubmit', function(){
+		let answer = $(this).siblings('textarea').val();
+		let messageNum = (parseInt)(this).closest('.message').attr("id");
+	})	
+})
+	
+	function getTaskList(taskType, taskStatus){
+		taskService.getList(
+					{"taskType": taskType,"taskStatus": taskStatus},
+					function(result){
+						let str = "";
+						$('.content_area').empty();
+						if(result.length == 0){
+							str +=`
+								<div class="message">
+								    <p><strong>신고 내역이 없습니다.</strong></p>
+								</div>
+							`;
+						}else{
+							
+						for (let i = 0; i < result.length; i++) {
+				            const msg = result[i];
+				            let taskTypeText = "";
+				            let taskTypeLink = "";
+				            let taskStatusText = "";
+				            let answerText = "";
+				
+				            // taskType에 따른 텍스트 설정
+				            if (msg.taskType === '1') {
+				                taskTypeText = "게시판";
+				                taskTypeLink = `<a href="http://localhost:8080/board/get?boardnum=${msg.detailNum}">${msg.detailNum}번 게시판 바로가기</a>`;
+				            } else if (msg.taskType === '2') {
+				                taskTypeText = "패키지";
+				                taskTypeLink = `<a href="http://localhost:8080/package/pget?packagenum=${msg.detailNum}">${msg.detailNum}번 패키지 바로가기</a>`;
+				            } else if (msg.taskType === '3') {
+				                taskTypeText = "유저";
+				                taskTypeLink = `유저아이디 - ${msg.detailNum}`;
+				            }
+				
+				            // taskStatus에 따른 텍스트 설정
+				            if (msg.taskStatus === '1') {
+				                taskStatusText = "처리중";
+				            } else if (msg.taskStatus === '2') {
+				                taskStatusText = "처리완료";
+				            }
+				
+				            // answer에 따른 텍스트 설정
+				            if (msg.answer === null) {
+				                answerText = `<p><strong>답변 :</strong></p>
+											<button class="answerToggleBtn">답장 창 열기</button>
+												<div class="answer_area" style="display: none;">
+													<textarea class="answer" cols="65" rows="30"></textarea>
+													<button class="answerSubmit">제출하기</button>
+												</div>`;
+				            } else {
+				                answerText = `<p><strong>답변 :</strong>${msg.answer}</p>`;
+				            }		
+				            str += `
+				                <div class="message" id="${msg.messagenum}">
+				                    <p><strong>신고 내역 :</strong> ${taskTypeText}</p>
+				                    <p><strong>발신자 :</strong> ${msg.sendid}</p>
+				                    <p><strong>날짜 :</strong> ${msg.regdate}</p>
+				                    <p><strong>내용 :</strong> ${msg.contents}</p>
+				                    <p><strong>관련주소 :</strong> ${taskTypeLink}</p>
+				                    <p><strong>처리상태 :</strong> ${taskStatusText}</p>
+				                    ${answerText}
+				                </div>
+				            `;
+				        }
+				        $('.content_area').html(str);
+					}
+				}
+			)
+	}
+	
+	const taskService = {
+		getList:function(data, callback){
+			$.ajax({
+				type:"GET",
+				url:"/manager/taskListByType",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(result){
+					callback(result)
+				},
+				error:function(status,xhr){
+					 console.error("AJAX Error:", xhr.status, status);
+				}
+			})
+		},
+	}
+</script>
+</html>

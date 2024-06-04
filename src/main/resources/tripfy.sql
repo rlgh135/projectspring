@@ -248,7 +248,11 @@ create table manager(
 
 create table task_message(
 	messagenum bigint primary key auto_increment,
+    task_type varchar(300), /*1보드 2패키지 3유저*/
+    detail_num varchar(300),
     sendid varchar(300),
-    receiveid varchar(300),
-    contents text
+    contents text,
+	answer text,
+    task_status varchar(300) default "1", /*1은 진행중 2는 처리완료*/
+    regdate datetime DEFAULT now()
 );
