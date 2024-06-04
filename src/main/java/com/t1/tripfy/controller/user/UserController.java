@@ -346,6 +346,7 @@ public class UserController {
 		List<ReservationDTO> reslist = service.getMyReservation(cri, userid);
 		ArrayList<PackageDTO> rpacklist = new ArrayList<>();
 		ArrayList<ReviewDTO> reviewlist = new ArrayList<>();
+		ArrayList<PackageFileDTO> thumbnaillist = new ArrayList<>();
 		HashMap<Long, String> guideimgmap = new HashMap<>();
 		HashMap<Long, String> guideids = new HashMap<>();
 		
@@ -353,6 +354,7 @@ public class UserController {
 			for (ReservationDTO reservation : reslist) {
 				PackageDTO pack = service.getMyPackageTwoWeek(reservation.getPackagenum());
 				if(pack!=null) {
+					thumbnaillist.add(service.getPackThumbnail(reservation.getPackagenum()));
 					reviewlist.add(service.getMyReviewByPackagenum(reservation.getPackagenum(), userid));
 					rpacklist.add(pack);
 					UserImgDTO guideimg = service.getGuideAndImg(reservation.getPackagenum());
@@ -365,6 +367,7 @@ public class UserController {
 		model.addAttribute("guideimg", guideimgmap);
 		model.addAttribute("guideids", guideids);
 		model.addAttribute("packagelist", rpacklist);
+		model.addAttribute("thumbnaillist", thumbnaillist);
 		model.addAttribute("reviewlist", reviewlist);
 		
 		return "/user/after";
