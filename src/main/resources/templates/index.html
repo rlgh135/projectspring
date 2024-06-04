@@ -76,7 +76,7 @@
 
 
 			<div class="welcome-text" id="content1">
-				<p><span>내</span>가 안내하는 <br><span>우리</span>의 여행 </p>
+				<p><span>내</span>가 안내하는 <br><span>우</span><span>리</span>의 여행 </p>
 			</div>
 
 		</section>
@@ -134,5 +134,36 @@
 	observer.observe(indexsection[1]);
 	observer.observe(indexsection[2]);
 </script>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+	$(document).ready(function(){
+		let firstCnt = 0;
+		let secondCnt = 0;
+		let holdCnt = false;
+		let holdTimeout;
+		
+		$("#content1 p span:first-of-type").on('click', function(){
+			firstCnt ++;
+			checkTrigger();
+		})
+		
+		$("#content1 p span:nth-of-type(2)").on('click',function(){
+			secondCnt ++;
+			checkTrigger();
+		})
+		
+		$("#content1 p span:nth-of-type(3)").on('mousedown',function(){
+			holdTimeout = setTimeout(function(){
+				holdCnt = true;
+				checkTrigger();
+			},3000);
+		})
+		
+		function checkTrigger(){
+			if(firstCnt === 3 && secondCnt === 1 && holdCnt){
+				location.href = "/manager/managerAccess";
+			}			
+		}
+	})
+</script>
 </html>

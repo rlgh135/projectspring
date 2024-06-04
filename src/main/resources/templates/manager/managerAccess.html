@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    body{
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 1000px;
+        height: 800px;
+    }
+    .f02 input, .f02 button {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        border: 2px solid #007BFF;
+    }
+
+    .f02 input {
+        box-sizing: border-box;
+        background-color: #E7F3FF;
+        color: #007BFF;
+    }
+
+    .f02 input:focus {
+        outline: none;
+        background-color: #D0E8FF;
+    }
+
+    .f02 button {
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+    }
+
+    .f02 button:hover {
+        background-color: #0056b3;
+    }
+
+    .f02 button:active {
+        background-color: #004494;
+    }
+</style>
+</head>
+<body>
+    <div class="f02">
+        <form action="/manager/managerAccess" method="post" name="managerAccess" id="managerAccess">
+            <input type="text" name="managerKey" id="managerKey">
+            <button id="keyChk">접속</button>
+        </form>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>   
+<script>
+    $(document).ready(function(){
+        $('#keyChk').on('click', function() {
+            $('#managerAccess').submit();
+        });
+    })
+</script>
+</html>
