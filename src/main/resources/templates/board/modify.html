@@ -621,6 +621,7 @@
             </div>
         </div>
     </div>
+	<th:block th:include="~{layout/alertModal::alertModal}"></th:block>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/summernote/summernote-lite.min.js"></script>
@@ -920,12 +921,12 @@
 		//console.log("area_detail_select: " + area_detail_select.name)
 		
 		if(country_select == null) {
-			alert("국내/해외를 선택해주세요");
+			showAlertModal(2, "국내/해외를 선택해주세요");
 		}	
 		
 		else {
 			if(area_select == null) {
-				alert("지역을 선택해주세요");
+				showAlertModal(2, "지역을 선택해주세요");
 			}
 			
 			else {
@@ -935,7 +936,7 @@
 				
 				else {
 					if(area_detail_select == null) {
-						alert("세부 지역을 선택해주세요");
+						showAlertModal(2, "세부 지역를 선택해주세요");
 					}
 					
 					else {
@@ -1042,29 +1043,29 @@
 		const b_place_detail = document.querySelector(".b_place_detail");
 		
 		if(b_title.value == "") {
-			alert("제목을 입력해주세요");
+			showAlertModal(2, "제목을 입력해주세요");
 			b_title.focus();
 			return;
 		}
 		
 		if(!yes.checked && !no.checked) {
-			alert("동행 모집 여부를 체크해주세요");
+			showAlertModal(2, "동행 모집 여부를 체크해주세요");
 			return;
 		}		
 		
 		if(b_place.value == "") {
-			alert("위치를 입력해주세요");
+			showAlertModal(2, "위치를 입력해주세요");
 			return;
 		}
 		
 		if(yes.checked) {			
 			if(startdate.value == "" || enddate.value == "") {
-				alert("여행 기간을 입력해주세요");
+				showAlertModal(2, "여행 기간을 입력해주세요");
 				return;
 			}
 			
 			if(b_place_detail.value == ""){
-				alert("상세 지역 주소를 등록해주세요");
+				showAlertModal(2, "상세 지역 주소를 등록해주세요");
 				return;
 			}
 		}
@@ -1282,7 +1283,7 @@
 		let loginUser = /*[[${session.loginUser}]]*/"";
 		
 		if(loginUser == null || loginUser == "") {
-			alert("로그인 후 이용하세요");
+			showAlertModal(2, "로그인 후 이용하세요");
 			location.replace("/");
 		}
 		

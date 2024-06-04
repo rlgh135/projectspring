@@ -668,6 +668,7 @@
 		<input type="hidden" id="regionname" th:value="${pageMaker.cri.regionname}">
 		<input type="hidden" id="method" th:value="${sort}">
     </div>
+	<th:block th:include="~{layout/alertModal::alertModal}"></th:block>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script th:inline="javascript">
@@ -1192,7 +1193,7 @@
 			
 			error:function() {
 				// console.log("X")
-				alert("잠시 후에 다시 시도해주세요.");
+				showAlertModal(1,"잠시 후에 다시 시도해주세요");
 			}
 			
 		})
@@ -1209,7 +1210,7 @@
 	function search(keyword) {
 		
 		if(keyword == "") {
-			alert("검색어를 입력해주세요");
+			showAlertModal(2,"검색어를 입력해주세요");
 			e.target.focus();
 		}
 		
@@ -1418,7 +1419,7 @@
 			
 			error:function(data) {
 				// console.log("X")
-				alert("잠시 후에 다시 시도해주세요.");
+				showAlertModal(1, "잠시 후에 다시 시도해주세요");
 			}
 		})
 	}
@@ -1636,7 +1637,7 @@
 		
 		// 국내, 해외 선택하지 않은 경우
 		if(country == null) {
-			alert("나라를 선택해주세요")
+			showAlertModal(2, "나라를 선택해주세요");
 		}
 		
 		// 국내, 해외 선택
@@ -1851,7 +1852,7 @@
 				
 				error:function(data) {
 					// console.log("X")
-					alert("잠시 후에 다시 시도해주세요.");
+					showAlertModal(1, "잠시 후에 다시 시도해주세요");
 				}
 			})
 		}
@@ -1971,7 +1972,7 @@
 		
 		if(e.target.classList.contains('b_prevbtn')) {
 			if(pagenum <= 0) {
-				alert("첫번째 페이지입니다.")
+				showAlertModal(2, "첫번째 페이지입니다");
 			}
 			
 			else {
@@ -2054,7 +2055,7 @@
 		
 		else if(e.target.classList.contains('b_nextbtn')) {
 			if(parseInt(pagenum) > parseInt(realEndPage)) {
-				alert("마지막 페이지입니다.")
+				showAlertModal(2, "마지막 페이지입니다");
 			}
 			
 			else {
@@ -2222,7 +2223,7 @@
 		console.log(loginUser)
 		
 		if(loginUser == null) {
-			alert("로그인 후 이용해주세요.")
+			showAlertModal(2, "로그인 후 이용 가능합니다");
 		}
 		
 		else {
