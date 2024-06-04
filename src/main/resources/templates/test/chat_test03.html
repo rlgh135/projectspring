@@ -39,13 +39,16 @@
 			
 			/*background-color: lightcoral;*/
 		}
-		#chat-list-empty {		
+		#chat-list-empty {
+			width: 100%;
+			height: 500px;
+
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
 			
-			height: 100%;
+			/* height: 100%; */
 		}
 		#cc-logo-empty {
 			display: block;
@@ -113,6 +116,11 @@
 
 			overflow: scroll;
 		}
+		#chat-list-oto-cont>div:first-child,
+		#chat-list-otm-cont>div:first-child {
+			margin-top: 10px;
+		}
+
 		#chat-list-oto-cont::-webkit-scrollbar {
 			width: 10px;
 		}
@@ -181,7 +189,7 @@
             margin-right: 5px;
         }
 
-		.cc-list-element {
+		.cc-list-oto-ele {
 			height: 100px;
 			width: 380px;
 			margin-left: 8px;
@@ -202,7 +210,7 @@
 			letter-spacing: 0;
 			word-spacing: 0;
 		}
-		.cc-list-element>div:first-child {
+		.cc-list-oto-ele>div:first-child {
 			display: inline-block;
 			height: 100px;
 			width: 100px;
@@ -213,7 +221,7 @@
 			padding-top: 10px;
 			padding-left: 10px;
 		}
-		.cc-list-element>div:last-child {
+		.cc-list-oto-ele>div:last-child {
 			display: inline-block;
 			height: 100px;
 			width: 270px;
@@ -226,7 +234,7 @@
 
 			padding-top: 10px;
 		}
-		.cc-list-element>div:first-child>img {
+		.cc-list-oto-ele>div:first-child>img {
 			display: block;
 			height: 80px;
 			width: 80px;
@@ -235,21 +243,21 @@
 
 			object-fit: cover;
 		}
-		.cc-list-element>div:last-child>h4:first-child {
+		.cc-list-oto-ele>div:last-child>h4:first-child {
 			/* margin-bottom: 5px; */
 		}
-		.cc-list-element>div:last-child>p:nth-child(2) {
+		.cc-list-oto-ele>div:last-child>p:nth-child(2) {
 			font-size: 12px;
 			margin-bottom: 5px;
 		}
-		.cc-list-element>div:last-child>p:nth-child(3) {
+		.cc-list-oto-ele>div:last-child>p:nth-child(3) {
 			font-size: 14px;
 			margin-bottom: 8px;
 		}
-		.cc-list-element>div:last-child>p:nth-child(4) {
+		.cc-list-oto-ele>div:last-child>p:nth-child(4) {
 			font-size: 10px;
 		}
-		.cc-list-element>div:last-child>div:last-child {
+		.cc-list-oto-ele>div:last-child>div:last-child {
 			position: absolute;
 			right: 5px;
 			bottom: 5px;
@@ -265,6 +273,73 @@
 			line-height: 40px;
 			font-size: 25px;
 			color: white;
+		}
+
+		.cc-list-otm-ele {
+			height: 100px;
+			width: 380px;
+			margin-left: 8px;
+			margin-bottom: 10px;
+
+			border-radius: 15px/15px;
+
+			background-color: lightsalmon;
+
+			/* overflow: hidden; */
+			/*
+				inline-block 자식 못난놈들 여백 없애기
+				https://rgy0409.tistory.com/4678 참조
+				자식요소에서 글씨 쓰려면 아래 속성들을 초기화해줘야 함
+				특히 fz
+			*/
+			font-size: 0;
+			letter-spacing: 0;
+			word-spacing: 0;
+		}
+		.cc-list-otm-ele>div:first-child {
+			display: inline-block;
+			height: 100px;
+			width: 100px;
+			margin-right: 10px;
+
+			/* font-size: 16px; */
+
+			padding-top: 10px;
+			padding-left: 10px;
+		}
+		.cc-list-otm-ele>div:last-child {
+			display: inline-block;
+			height: 100px;
+			width: 270px;
+
+			font-size: 16px;
+
+			vertical-align: top;
+
+			position: relative;
+
+			padding-top: 10px;
+		}
+		.cc-list-otm-ele>div:first-child>img {
+			display: inline-block;
+			height: 40px;
+			width: 40px;
+
+			/* border-radius: 10px/10px; */
+
+			object-fit: cover;
+		}
+		.cc-list-otm-ele>div:first-child>img:nth-child(1) {
+			border-radius: 10px 0 0 0;
+		}
+		.cc-list-otm-ele>div:first-child>img:nth-child(2) {
+			border-radius: 0 10px 0 0;
+		}
+		.cc-list-otm-ele>div:first-child>img:nth-child(3) {
+			border-radius: 0 0 0 10px;
+		}
+		.cc-list-otm-ele>div:first-child>img:nth-child(4) {
+			border-radius: 0 0 10px 0;
 		}
 
         .ccbody-left, .ccbody-right {
@@ -310,35 +385,8 @@
 <body>
 	<div id="chat-wrapper">
 		<div id="chat-window-btn">채팅<br>이미지 여기에</div>
-		<div id="chat-window" class="">
+		<div id="chat-window" class="cc-hidden">
 			<div id="chat-list-cont" class="">
-				<!--아래와 같은 양식으로 채팅방 리스트 요소를 추가/수정한다
-					CSS도 아래 양식대로 묶여있으니 꼭 지켜줘야 함
-				<div id="cclistele-1" class="cc-list-element">
-					<div>
-						<img src="../../static/images/layoutimg/logo.png" alt="img001">
-					</div>
-					<div>
-						<h4>패키지명 팔라우 바다여행</h4>
-						<p>qwerty1234</p>
-						<p>네 5박 6일 맞습니다</p>
-						<p>5월 28일</p>
-						<div>99..</div>
-					</div>
-				</div>
-				<div id="cclistele-2" class="cc-list-element">
-					<div>
-						<img src="../../static/images/layoutimg/logo.png" alt="img002">
-					</div>
-					<div>
-						<h4>팔라우 6박7일 하루빼고 바다만</h4>
-						<p>qwerty1234</p>
-						<p>진짜 6일동안 바다만 다녀요?</p>
-						<p>5월 28일</p>
-						<div class="cc-hidden">0</div>
-					</div>
-				</div>
-				-->
 				<div id="chat-list-header"></div>
 				<div id="chat-list-inner-cont">
 					<div id="chat-list-empty" class="cc-hidden">
@@ -350,7 +398,8 @@
 						<!-- WIP -->
 					</div>
 					<div id="chat-list-oto-cont">
-						<!-- <div id="cclistele-1" class="cc-list-element">
+						<!-- oto, otm 요소 예시 -->
+						<!-- <div id="otoele-1" class="cc-list-oto-ele">
 							<div>
 								<img src="../../static/images/layoutimg/logo.png" alt="img001">
 							</div>
@@ -362,8 +411,23 @@
 								<div>99..</div>
 							</div>
 						</div>
-						<div id="cclistele-2" class="cc-list-element">
+						<div id="otoele-2" class="cc-list-oto-ele">
 							<div>
+								<img src="../../static/images/layoutimg/logo.png" alt="img002">
+							</div>
+							<div>
+								<h4>팔라우 6박7일 하루빼고 바다만</h4>
+								<p>qwerty1234</p>
+								<p>진짜 6일동안 바다만 다녀요?</p>
+								<p>5월 28일</p>
+								<div class="cc-hidden">0</div>
+							</div>
+						</div>
+						<div id="otoele-2" class="cc-list-otm-ele">
+							<div>
+								<img src="../../static/images/layoutimg/logo.png" alt="img002">
+								<img src="../../static/images/layoutimg/logo.png" alt="img002">
+								<img src="../../static/images/layoutimg/logo.png" alt="img002">
 								<img src="../../static/images/layoutimg/logo.png" alt="img002">
 							</div>
 							<div>
@@ -412,13 +476,27 @@
 	const CHAT_WINDOW_BTN = document.getElementById("chat-window-btn");
 	//채팅창
 	const CHAT_WINDOW = document.getElementById("chat-window");
-	//채팅방 목록 empty 시 출력 요소
-	const CHAT_LIST_EMPTY = document.getElementById("chat-list-empty");
-	//채팅방 목록창
+	
+	//채팅방 목록창 container
 	const CHAT_LIST_CONT = document.getElementById("chat-list-cont");
-	//채팅창
+	//빈 채팅방 목록
+	const CHAT_LIST_EMPTY = document.getElementById("chat-list-empty");
+	//챗봇창
+	const CHAT_LIST_CHATBOT = document.getElementById("chat-list-chatbot-cont");
+	//일대일 목록창
+	const CHAT_LIST_OTO = document.getElementById("chat-list-oto-cont");
+	//다대다 목록창
+	const CHAT_LIST_OTM = document.getElementById("chat-list-otm-cont");
+	//채팅리스트창 푸터
+	const CHAT_LIST_FOOTER = document.getElementById("chat-list-footer");
+	//채팅방 목록창 푸터 버튼 <--이새끼들 필요없을거같은데
+	const CHAT_LIST_CHATBOT_BTN = document.getElementById("chat-list-footer-chatbot-btn");
+	const CHAT_LIST_OTO_BTN = document.getElementById("chat-list-footer-oto-btn");
+	const CHAT_LIST_OTM_BTN = document.getElementById("chat-list-footer-otm-btn");
+
+	//채팅창 container
 	const CHAT_BODY_CONT = document.getElementById("chat-body-cont");
-	//채팅창 제목
+	//title
 	const CHAT_BODY_TITLE = document.getElementById("chat-body-title");
 
 	/*================================================================================*/
@@ -461,34 +539,90 @@
 	
 	//채팅창 버튼
 	CHAT_WINDOW_BTN.addEventListener("click", chatWindowBtnClick);
-	/*
-		!!!! 테스트
-	*/
+	//채팅리스트창 푸터 버튼
+	CHAT_LIST_FOOTER.addEventListener("click", chatListFooterBtnClick);
+	//채팅리스트 요소
 
 	/*================================================================================*/
-	/*클릭이벤트*/
+	/*클릭이벤트와 관련 함수*/
 
 	//채팅창 버튼 클릭
 	/*
 		채팅창 열기 <-> 닫기
 		이미 로드된 채팅창이 있을 경우 서버 요청을 하지 않음
+
+		이거 나중에 기존 로드내역과 무관하게
+		채탕창 열 때마다 다시 Ajax로 로드하게 바꿔주자
+		그래야 편하게 새로고침할거아님
+		+ 그런 경우 로드시마다 기존 채팅방리스트는 날리고 새로 넣어줘야 함
 	*/
 	function chatWindowBtnClick(e) {
 		if(CHAT_WINDOW.classList.contains("cc-hidden")) {
 			CHAT_WINDOW.classList.remove("cc-hidden");
-			if(CHAT_ROOM_CNT == 0) {
+			// if(CHAT_OTO_VD.length == 0 && CHAT_OTM_VD.length == 0) { <--매번 로드하게끔 임시로 가려둠
 				//Ajax 호출
 				ajaxGet("localhost:8080", "/chat")
 				.then((data) => {
-
+					setChatListVD(data);
+					printChatList();
 				})
 				.catch((error) => {
 					console.log("err");
 					console.log(error);
 				});
-			}
+			// }
 		} else {
 			CHAT_WINDOW.classList.add("cc-hidden");
+		}
+	}
+
+	//채팅방 리스트창 푸터 버튼들 클릭
+	/*
+		이벤트 버블링 사용
+	*/
+	function chatListFooterBtnClick(e) {
+		if(e.target.parentElement.classList.contains("cc-footer-btn") || e.target.classList.contains("cc-footer-btn")) {
+			const clickedId = e.target.parentElement.classList.contains("cc-footer-btn")
+							? e.target.parentElement.id
+							: e.target.id;
+			switch(clickedId) {
+				case "chat-list-footer-chatbot-btn":
+					//채팅봇
+					//임마는 일단 안 적어둠
+					break;
+				case "chat-list-footer-oto-btn":
+					//일대일
+					if(CHAT_OTO_VD.length > 0) {
+						CHAT_LIST_EMPTY.classList.add("cc-hidden");
+						CHAT_LIST_CHATBOT.classList.add("cc-hidden");
+						CHAT_LIST_OTM.classList.add("cc-hidden");
+
+						CHAT_LIST_OTO.classList.remove("cc-hidden");
+					} else {
+						CHAT_LIST_CHATBOT.classList.add("cc-hidden");
+						CHAT_LIST_OTO.classList.add("cc-hidden");
+						CHAT_LIST_OTM.classList.add("cc-hidden");
+
+						CHAT_LIST_EMPTY.classList.remove("cc-hidden");
+					}
+					break;
+				case "chat-list-footer-otm-btn":
+					//다대다
+					if(CHAT_OTM_VD.length > 0) {
+						CHAT_LIST_EMPTY.classList.add("cc-hidden");
+						CHAT_LIST_CHATBOT.classList.add("cc-hidden");
+						CHAT_LIST_OTO.classList.add("cc-hidden");
+						
+						CHAT_LIST_OTM.classList.remove("cc-hidden");
+					} else {
+						CHAT_LIST_CHATBOT.classList.add("cc-hidden");
+						CHAT_LIST_OTO.classList.add("cc-hidden");
+						CHAT_LIST_OTM.classList.add("cc-hidden");
+
+						CHAT_LIST_EMPTY.classList.remove("cc-hidden");
+					}
+					break;
+			}
 		}
 	}
 
@@ -514,24 +648,42 @@
 		VD 구성
 		은 배열로 한다
 		생각해보니까 key-value면 정렬할때 좆됨
+
+		!!!!!!!중요
+		채팅방 ID는 정렬 순서가 아니라 roomidx로 준다
 	*/
 
 	//일대일 VD
 	let CHAT_OTO_VD = [];
 	//일대다 VD
 	let CHAT_OTM_VD = [];
+	//채팅방 저장객체 생성자
+	function ChatRoom(eleId, dataObj) {
+		this.eleId = eleId;
+		this.dataObj = dataObj;
+	}
+	//총 안 읽은 개수
+	let UNCHECKED_MSG_COUNT = 0;
 
 	//VD 처리
 	//VD 초기화
+	/*
+		!!중요 - "초기화"임 기존 요소들이랑 미확인카운팅값 날린다
+	*/
 	function setChatListVD(data) {
+		//기존값 초기화
+		CHAT_OTO_VD = [];
+		CHAT_OTM_VD = [];
+		UNCHECKED_MSG_COUNT = 0;
+
 		//data의 userList.length가 1인지 1 이상인지 체크, oto과 otm을 나눈다
 		for(let clObj of data) {
 			if(clObj.userList.length == 1) {
 				//oto
-				CHAT_OTO_VD.push(clObj);
+				CHAT_OTO_VD.push(new ChatRoom("otoele-" + clObj.roomidx, clObj));
 			} else {
 				//otm
-				CHAT_OTM_VD.push(clObj);
+				CHAT_OTM_VD.push(new ChatRoom("otmele-" + clObj.roomidx, clObj));
 			}
 		}
 	}
@@ -543,47 +695,189 @@
 	/*================================================================================*/
 	/*DOM 구현*/
 
-	//채팅방 리스트 구현
-	//구조가 바뀌어서 임마도 다시 잡아야함
-	// function printChatList() {
-	// 	if(CHAT_ROOM_CNT > 0) {
-	// 		for(let orderKey in CHAT_LIST_VD) {
-	// 			const vdRoomIdx = CHAT_LIST_VD[orderKey].roomidx;
-	// 			const listArr = Array.from(CHAT_LIST_CONT.children);
+	//채팅방 DOM 구현
+	//단순히 채팅창 목록에 요소를 채워넣기만 하는 메서드임 추가적인(cc-hidden 등)조작은 안함
+	//	다만 counterDiv(미확인 채팅 개수 출력)만은 cc-hidden 할당 체크함
+	//일단 임마는 채팅방 리스트가 닫혀 있어도(정확히는 채팅창이 열려 있어도) 작동하지는.. 않음
+	//해당 페이지서 최초 채팅창 로드시 한번만 실행되는거임
+	/*
+		이거 생각해보니까 채팅창 열 때가 아니라
+		페이지 로드시 바로 해줘야할거같음
+		그래야 UNCHECKED_MSG_COUNT 초기화가 제때 됨
+	*/
+	function printChatList() {
+		//우선 기존 DOM 초기화
+		CHAT_LIST_OTO.replaceChildren();
+		CHAT_LIST_OTM.replaceChildren();
 
-	// 			let i = 0;
-	// 			for(; i < listArr.length; i++) {
-	// 				if(listArr[i].id === "cclistele-" + vdRoomIdx) {
-	// 					if(i != orderKey) {
-	// 						//요소 RD에 존재, RD/VD 위치 불일치
-	// 						//기본적으로는 타겟 다음 위치로 삽입
-	// 						if(orderKey < 1) {
-	// 							listArr[orderKey].insertAdjacentElement("beforebegin", listArr[i]);
-	// 						} else {
-	// 							listArr[orderKey - 1].insertAdjacentElement("afterend", listArr[i]);
-	// 						}
-	// 					}
-	// 					//요소 RD에 존재, RD/VD 위치 일치의 경우 요소를 움직이지 않는다
+		//oto
+		const otoFragment = document.createDocumentFragment();
+		//otm
+		const otmFragment = document.createDocumentFragment();
+		
+		//oto 요소 생성
+		for(let arrEle of CHAT_OTO_VD) {
+			//안 읽은 챗 개수 합산
+			UNCHECKED_MSG_COUNT += arrEle.uncheckedmsg;
 
-	// 					//내부 요소 수정
-	// 					//일단 이미지는 건들지 않음
-	// 					adjustChatList(listArr[i], CHAT_LIST_VD[orderKey]);
-	// 				}
-	// 			}
-	// 			if(i === listArr.length) {
-	// 				//요소 RD에 존재하지 않음
-	// 				createCCListElement(CHAT_LIST_VD[orderKey]);
-	// 			}
-	// 		}
-	// 		CHAT_LIST_CONT.classList.remove("cc-hidden");
-	// 		CHAT_LIST_EMPTY.classList.add("cc-hidden");
-	// 	} else {
-	// 		CHAT_LIST_CONT.classList.add("cc-hidden");
-	// 		CHAT_LIST_EMPTY.classList.remove("cc-hidden");
-	// 	}
-	// }
+			//요소 틀
+			const div = document.createElement("div");
+			div.id = arrEle.eleId;
+			div.classList.add("cc-list-oto-ele");
+			//첫 자식 div
+			const innerDivFir = document.createElement("div");
+			div.appendChild(innerDivFir);
+			//이미지
+			/*
+				추후 서버에서 이미지 링크를 받아 실제로 출력하게끔 수정해야함
+			*/
+			const img = document.createElement("img");
+			img.src = "/images/layoutimg/logo.png";
+			img.alt = "Chat room image";
+			innerDivFir.appendChild(img);
+			//두번째 자식 div
+			const innerDivSec = document.createElement("div");
+			div.appendChild(innerDivSec);
 
-	//채팅방 요소 내부 수정
+			//title, p1(userid) 생성
+			const h4 = document.createElement("h4");
+			const p1 = document.createElement("p");
+
+			//title, userid 처리 관련 분기(일반/일반 <-> 판매자/일반)
+			if(!!arrEle.pkgnum) {
+				//판매자/일반
+				h4.innerHTML = arrEle.dataObj.title;
+				p1.innerHTML = arrEle.dataObj.userList[0].userid;
+			} else {
+				//일반/일반
+				if(!!arrEle.title) {
+					h4.innerHTML = arrEle.dataObj.title;
+					p1.innerHTML = arrEle.dataObj.userList[0].userid;
+				} else {
+					h4.innerHTML = arrEle.dataObj.userList[0].userid;
+				}
+			}
+			
+			//title, userid 할당
+			innerDivSec.appendChild(h4);
+			innerDivSec.appendChild(p1);
+		
+			//p2(chatContent)
+			const p2 = document.createElement("p");
+			p2.innerHTML = !!arrEle.dataObj.chatContent
+							? arrEle.dataObj.chatContent
+							: "아직 메시지가 없습니다";
+			innerDivSec.appendChild(p2);
+			//p3(chatContentRegdate 혹은 chatRegdate)
+			const p3 = document.createElement("p");
+			p3.innerHTML = !!arrEle.dataObj.chatContent
+							? arrEle.dataObj.chatContentRegdate
+							: arrEle.dataObj.chatRegdate;
+			innerDivSec.appendChild(p3);
+			//div(미확인 메시지 카운터)
+			const counterDiv = document.createElement("div");
+			if(arrEle.dataObj.uncheckedmsg > 0) {
+				counterDiv.innerHTML = arrEle.dataObj.uncheckedmsg > 99 ? "99.." : arrEle.dataObj.uncheckedmsg;
+			} else {
+				counterDiv.classList.add("cc-hidden");
+			}
+			innerDivSec.appendChild(counterDiv);
+
+			//fragment에 삽입
+			otoFragment.appendChild(div);
+		}
+
+		//otm 요소 생성
+		for(let arrEle of CHAT_OTM_VD) {
+			//안 읽은 챗 개수 합산
+			UNCHECKED_MSG_COUNT += arrEle.uncheckedmsg;
+
+			//요소 틀
+			const div = document.createElement("div");
+			div.id = arrEle.eleId;
+			div.classList.add("cc-list-otm-ele");
+			//첫 자식 div
+			const innerDivFir = document.createElement("div");
+			div.appendChild(innerDivFir);
+			//이미지
+			/*
+				추후 서버에서 이미지 링크를 받아 실제로 출력하게끔 수정해야함
+				+ 이미지도 List<>로 가져오게 해야 함
+				반복문도 최대 4번이지만 이미지 개수 < 4 인 경우 그 만큼만 돌게 하고
+				참여자가 3명일 때(유저 포함) 이미지를 기존 4등분이 아닌 좌우 2등분으로 바꿀 수 있게
+				css도 짜 줘야 함
+			*/
+			for(let i = 0 ; i < 4; i++) {
+				const img = document.createElement("img");
+				img.src = "/images/layoutimg/logo.png";
+				img.alt = "Chat room image";
+				innerDivFir.appendChild(img);
+			}
+			//두번째 자식 div
+			const innerDivSec = document.createElement("div");
+			div.appendChild(innerDivSec);
+
+			//title, p1(userid) 생성
+			const h4 = document.createElement("h4");
+			const p1 = document.createElement("p");
+
+			//userid들 묶은 문자열 생성
+			let userids = "";
+			for(let dto of arrEle.dataObj.userList) {
+				userids += dto.userid + ",";
+			}
+			userids = userids.slice(0, -1);
+
+			//title, userid 처리 관련 분기(일반/일반 <-> 판매자/일반)
+			if(!!arrEle.pkgnum) {
+				//판매자/일반
+				h4.innerHTML = arrEle.dataObj.title;
+				p1.innerHTML = userids;
+			} else {
+				//일반/일반
+				if(!!arrEle.title) {
+					h4.innerHTML = arrEle.dataObj.title;
+					p1.innerHTML = userids;
+				} else {
+					h4.innerHTML = userids;
+				}
+			}
+			
+			//title, userid 할당
+			innerDivSec.appendChild(h4);
+			innerDivSec.appendChild(p1);
+		
+			//p2(chatContent)
+			const p2 = document.createElement("p");
+			p2.innerHTML = !!arrEle.dataObj.chatContent
+							? arrEle.dataObj.chatContent
+							: "아직 메시지가 없습니다";
+			innerDivSec.appendChild(p2);
+			//p3(chatContentRegdate 혹은 chatRegdate)
+			const p3 = document.createElement("p");
+			p3.innerHTML = !!arrEle.dataObj.chatContent
+							? arrEle.dataObj.chatContentRegdate
+							: arrEle.dataObj.chatRegdate;
+			innerDivSec.appendChild(p3);
+			//div(미확인 메시지 카운터)
+			const counterDiv = document.createElement("div");
+			if(arrEle.dataObj.uncheckedmsg > 0) {
+				counterDiv.innerHTML = data.dataObj.uncheckedmsg > 99 ? "99.." : data.dataObj.uncheckedmsg;
+			} else {
+				counterDiv.classList.add("cc-hidden");
+			}
+			innerDivSec.appendChild(counterDiv);
+
+			//fragment에 삽입
+			otmFragment.appendChild(div);
+		}
+
+		//DOM에 fragment들 삽입
+		CHAT_LIST_OTO.appendChild(otoFragment);
+		CHAT_LIST_OTM.appendChild(otmFragment);
+	}
+
+	//채팅방 요소 내부 수정 - 미수정 240604
 	function adjustChatList(targetEle, dataObj) {
 		const secInnerDiv = targetEle.children[1];
 
@@ -612,65 +906,6 @@
 			secInnerDiv.children[4].classList.add("cc-hidden");
 		} else {
 			secInnerDiv.children[4].classList.remove("cc-hidden");
-		}
-	}
-
-	/*================================================================================*/
-	/*DOM 요소 생성*/
-
-	//채팅방 리스트 요소(div.cclistele-*) 생성 함수
-	function createCCListElement(data) {
-
-		console.log("enter createCCListElement()");
-
-		//리스트 요소 생성, DOM에 추가, id/class 할당, 이벤트 할당
-		const ccListElement = document.createElement("div");
-		CHAT_LIST_CONT.appendChild(ccListElement);
-		ccListElement.id = "cclistele-" + data.roomidx;
-		ccListElement.classList.add("cc-list-element");
-		// ccListElement.addEventListener("click", chatListEle_handlingClickEvent);
-
-		//이미지 div/img 생성, DOM에 추가, 속성 부여
-		const firDiv = document.createElement("div");
-		ccListElement.appendChild(firDiv);
-		const imgTag = document.createElement("img");
-		firDiv.appendChild(imgTag);
-		/*
-			240529 현재는 ChatListPayloadDTO에서 이미지 관련값을 가져오지 않음
-			따라서 지금은 이미지 링크를 static 이미지로 대체함
-		*/
-		imgTag.src = "/images/layoutimg/logo.png";
-		imgTag.alt = data.pkgname + " 타이틀 이미지";
-
-		//텍스트 div와 그 내부의 h4/p/div를 생성, DOM에 추가, 속성 부여
-		/*
-			각각
-			패키지명, 상대 유저 userid, 마지막 메시지, 마지막 메시지 송신시각, 안 읽은 메시지 개수
-			미확인 메시지개수는 0일 경우 출력하지 않으며 100개 이상인 경우 99..로 표시함
-
-			일단 지금은 문자열이 길 경우 생략하는 기능은 없음 - 240529
-		*/
-		const secDiv = document.createElement("div");
-		ccListElement.appendChild(secDiv);
-		const h4Tag = document.createElement("h4");
-		secDiv.appendChild(h4Tag);
-		h4Tag.innerHTML = data.pkgname;
-		const pTag1 = document.createElement("p");
-		secDiv.appendChild(pTag1);
-		pTag1.innerHTML = data.userid;
-		const pTag2 = document.createElement("p");
-		secDiv.appendChild(pTag2);
-		pTag2.innerHTML = data.chatContent;
-		const pTag3 = document.createElement("p");
-		secDiv.appendChild(pTag3);
-		pTag3.innerHTML = data.regdate;
-		const unchkmsgDiv = document.createElement("div");
-		secDiv.appendChild(unchkmsgDiv);
-		if(data.uncheckedmsg > 0) {
-			unchkmsgDiv.innerHTML = data.uncheckedmsg > 99 ? "99.." : data.uncheckedmsg;
-		} else {
-			unchkmsgDiv.innerHTML = "0";
-			unchkmsgDiv.classList.add("cc-hidden");
 		}
 	}
 

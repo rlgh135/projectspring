@@ -26,9 +26,7 @@ public class ChatRestController {
 	//채팅방 리스트 요청
 	@GetMapping
 	public ResponseEntity<List<ChatListPayloadDTO>> getChatList(
-			@SessionAttribute(name="loginUser", required=false) String loginUserId,
-			@RequestParam Integer start,
-			@RequestParam Integer end
+			@SessionAttribute(name="loginUser", required=false) String loginUserId
 			) {
 		
 		System.out.println("ChatRestController.getChatList 진입");
@@ -44,9 +42,6 @@ public class ChatRestController {
 //			loginUserId = "testNoMessageInChatUser06";
 			//가입한 채팅방이 없는 유저
 //			loginUserId = "testNoChattingUser05";
-		}
-		if(start == null || end == null || start >= end || start < 0) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		
 	//서비스

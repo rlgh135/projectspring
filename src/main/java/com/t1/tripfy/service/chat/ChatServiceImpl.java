@@ -211,31 +211,7 @@ public class ChatServiceImpl implements ChatService {
 	public List<ChatListPayloadDTO> selectChatList(String userid) {
 		//유효성
 		
-		/* userid로 ChatUserDTO를 긁어온다
-		 * ChatUserDTO의 chat_room_idx로
-		 *     chat_room의 packagenum, packagenum으로 package.package_title을 가져오고
-		 *     chat_user에서 가입해있는 상대방 사용자의 userid를 가져오고
-		 *     chat_detail에서 해당 채팅방의 최신 메시지를 가져온다
-		 *         (chat_detail_content, regdate)
-		 * ChatUserDTO의 chat_detail_idx로
-		 *     cu.cdi < cd.cdi ? 를 돌려서 안 읽은 채팅 개수도 가져온다
-		 * 
-		 * 이 메서드는 일반사용자 뿐만이 아니라 패키지 판매자도 사용하게 만들거임
-		 * 따라서 chat_user.chat_user_is_seller 등의 컬럼은 가져오지 않는다
-		 * 1대1 채팅만 구현하는 상황이니 상대방이 판매자인지 체크할 필요가 없음
-		 *     내가 일반사용자면 상대가 판매자고 내가 판매자여도 마찬가지 - 240523
-		 *     
-		 * 240528 좆됐다
-		 * 이거 서버단에서 정렬해서 보내줘야하는데 안했다
-		 * 다시짠다
-		 * 
-		 * 우선 userid의 최근 갱신된 채팅방중 x ~ y번째를 불러온다
-		 * 이 결과값을 List<Map<String, Object>>으로 담아온다
-		 * 
-		 * 해당 값을 기준으로 기존 로직을 반복하면 됨
-		 * 
-		 * end > chatRoomCnt ? return null 이거 지움
-		 * 
+		/*
 		 * 240603
 		 * 이제 한번에 모든 채팅방을 가져온다
 		 * */
@@ -273,11 +249,24 @@ public class ChatServiceImpl implements ChatService {
 			Long crIdx = (Long) tgt.get("chat_room_idx");
 			ChatListPayloadDTO clplDTO = new ChatListPayloadDTO();
 			
-			//채팅방의 packagenum, package_title 가져와서 roomidx와 같이 넣기
-			Map<String, Object> pkgInfo = chatInvadingMapper.selectPackageInfoByChatRoomIdx(crIdx);
-			clplDTO.setRoomidx(crIdx)
-					.setPkgnum((Long)pkgInfo.get("packagenum"))
-					.setPkgname((String)pkgInfo.get("package_title"));
+			//roomidx 할당
+			clplDTO.setRoomidx(crIdx);
+			
+			//packagenum, package_title/chat_room_title 삽입
+			if(tgt.get("packagenum") == null) {
+				//일반<->일반 채팅
+				clplDTO.setPkgnum(null)
+						.setTitle(null == tgt.get("chat_room_title") ? null : (String)tgt.get("chat_room_title"));
+			} else {
+				//판매자<->일반 채팅
+				/*
+				 * 이거 chatInvadingMapper 나중에라도 수정해라
+				 * 이제 Map<> 써서 가져올 필요가 없음 그냥 cr.packagenum으로 package.package_title만 가져오면 됨
+				 * */
+				Map<String, Object> pkgInfo = chatInvadingMapper.selectPackageInfoByChatRoomIdx(crIdx);
+				clplDTO.setPkgnum((Long)pkgInfo.get("packagenum"))
+						.setTitle((String)pkgInfo.get("package_title"));
+			}
 			
 			//채팅방의 상대 유저 userid 가져오기
 			/*상대 유저 "들" 가져오기로 변경 - 240603*/
