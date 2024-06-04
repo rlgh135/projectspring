@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>내 패키지 관리</title>
+    <link rel="stylesheet" href="/css/layout/fontscroll.css">
     <link rel="stylesheet" href="/css/user/guidestyle.css">
     <script>
         function compareDates(currentdate, targetDate) {
@@ -44,10 +45,9 @@
                 </div>
             </section>
             <section class="right-side-section guideposts">
-                
                 <div id="mypackagelist" class="guide-selected">
                     <div id="jacsunging">
-                        <p class="subtitles">작성중인 패키지</p>
+	                    <p class="subtitles">작성중인 패키지</p>
                         <ul class="gmlists">
                             <th:block th:if="${inglist != null and inglist.size > 0}">
                                 <li th:each="ing, iterStats:${inglist}" th:onclick="|location.href='/package/tlwrite?packagenum=${ing.packagenum}'|">
@@ -57,7 +57,7 @@
 										</div>
 										<div class="inglow">
 	                                        <div class="mypckgs">[[${ing.packageTitle}]]</div>
-	                                        <div class="stamparea"></div>
+	                                        <div class="stamparea imgbear"></div>
 										</div>
                                     </div>
                                 </li>
@@ -72,32 +72,31 @@
                         </ul>
                     </div>
                     <div id="mypacklists">
-                        <p class="subtitles">내 패키지</p>
-                        <ul class="gmlists">
+	                    <p class="subtitles">내 패키지</p>
+                        <ul class="gmlists rgmlis">
                             <th:block th:if="${packagelist != null and packagelist.size > 0}">
-                                <li th:each="package, iterStats:${packagelist}">
+                                <li class="rlis" th:each="package, iterStats:${packagelist}">
                                     <div class="outerpckgs">
 										<div class="ingthumb" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
 											<img th:src="${'/package/thumbnail?systemname='+thumbnaillist[__${iterStats.index}__].pfSysname}">
 										</div>
                                         <div class="mypckgs" th:onclick="|location.href='/package/pget?packagenum=${package.packagenum}'|">
-											<div>[[${package.packageTitle}]]</div>
-											<div>[[${package.startdate}]] ~ [[${package.enddate}]]([[${package.tourdays}]]일)</div>
+											
+											<div>[[${package.packageTitle}]]<img src="/images/userimg/packageready.png" class="stp"></div>
+											<div class="bonm"><br><img src="/images/boardimg/location.png" class="mapmarker"> [[${package.regionname}]]</div>
+											<div class="bonm">[[${package.startdate}]] ~ [[${package.enddate}]]([[${package.tourdays}]]일)</div>
+											<div class="bonm">상태: <span>여행준비</span> 인원: 2/[[${package.maxcnt}]]</div>
 										</div>
-                                        <div class="showhugis" th:onclick="'showhugis('+${package.packagenum}+', 0)'">
-											후기<input type="hidden" th:id="'hupage'+${package.packagenum}" value="1"><span></span>
+                                    </div>
+									<div class="rrside">
+                                        <div class="showhugiswr" th:onclick="'showhugis('+${package.packagenum}+', 0)'">
+											<div>
+												후기
+												<div class="showhugis"></div>
+												<input type="hidden" th:id="'hupage'+${package.packagenum}" value="1"><span></span>												
+											</div>
 										</div>
-                                        <div class="stamparea">
-											<!--
-                                            <img th:if="${#temporals.createNow().isBefore(#temporals.localDate(package.startdate))}" src="/images/userimg/packready.png">
-                                            <img th:if="${#temporals.createNow().isAfter(#temporals.localDate(package.startdate))} && ${#temporals.createNow().isBefore(#temporals.localDate(package.enddate))}" src="/images/userimg/packing.png">
-                                            <img th:if="${#temporals.createNow().isAfter(#temporals.localDate(package.enddate))}" src="/images/userimg/packwan.png">
-											-->
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <ul th:id="'addhugis'+${package.packagenum}" class="hidden"></ul>
-                                    </div>
+									</div>
                                 </li>
                             </th:block>
                             <th:block th:unless="${packagelist != null and packagelist.size > 0}">
@@ -129,9 +128,7 @@
                                 </div>
                                 <div>
                                     <ul th:id="${'myapplies'+ply.packagenum}" class="myapplyuserlist hidden">
-                                        
                                     </ul>
-                                    
                                 </div>
                             </li>
                         </th:block>
@@ -159,6 +156,11 @@
 				</div>
 			</div>
         </container>
+		<div id="modalcnt" class="hugimodal">
+			<div>
+			    <ul th:id="addhugiul" class="hidden"></ul>
+			</div>
+		</div>
     </div>
 </body>
 <script>
@@ -211,10 +213,10 @@
 
     //후기 보여주기
     function showhugis(packagenum, diff) {
-        let hugilabel = document.getElementById("addhugis"+packagenum);
+        let hugilabel = document.getElementById("hupage"+packagenum);
 		let curpage = hugilabel.value;
 		let tarpage = curpage+diff;
-		const parentnode = document.getElementById("addhugis"+packagenum);
+		const parentnode = document.getElementById("addhugiul");
 		
 		if(tarpage==0){
 			alert("첫 페이지입니다.");

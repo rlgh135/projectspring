@@ -547,23 +547,27 @@ public class UserController {
 			if(reslist.size()>0) {
 				for (ReservationDTO res : reslist) {
 					packagelist.add(service.getJoinPackage(res.getPackagenum()));
-					/* pthumblist.add(service.getPackThumbnail(res.getPackagenum())); */
+					pthumblist.add(service.getPackThumbnail(res.getPackagenum()));
 				}
 			}
 			datas.put("reslist", reslist);
 			datas.put("packagelist", packagelist);
+			datas.put("pthumblist", pthumblist);
 			
 		} else {
 			String keycode = req.getParameter("keycode");
 			System.out.println(keycode);
 			ReservationDTO res = service.getForeignerReservation(keycode);
 			PackageDTO pack = new PackageDTO();
+			PackageFileDTO pthumb = new PackageFileDTO();
 			if(res!=null) {
-				pack = service.getJoinPackage(res.getPackagenum());				
+				pack = service.getJoinPackage(res.getPackagenum());
+				pthumb = service.getPackThumbnail(res.getPackagenum());
 			}
 			
 			datas.put("reservation", res);
 			datas.put("pack", pack);
+			datas.put("pthumb", pthumb);
 		}
 		
 		return datas;

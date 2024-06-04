@@ -1,0 +1,124 @@
+* {
+    box-sizing: border-box;
+}
+
+#wrap {
+    width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+
+body {
+    background-color: aliceblue;
+}
+
+
+#reciptzone {
+    margin-top: 100px;
+    border: 1px solid #ddd;
+    background-color: white;
+    height: 650px;
+}
+
+#targetarea {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 2px solid lightgray;
+    margin-bottom: 20px;
+    background-color: rgb(58, 58, 58);
+    background-color: #e9e9e9;
+    color: black;
+    transition: background-color 0.5s;
+}
+
+
+
+#targetarea:hover {
+    background-color: aliceblue;
+}
+
+.packagethumb img {
+    width: 250px;
+    height: 150px;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-right: 60px;
+}
+
+.pname {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pduring, .pbtn {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+
+#infoarea {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 5px;
+    padding: 20px;  
+    height: 400px;
+}
+
+#infoarea li {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+    height: 60px;
+    border-bottom: 1px solid lightgray;
+}
+#infoarea li span{
+    width: 80px;
+    font-size: 15px;
+}
+
+
+.Btnzone {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.Btnzone1{
+    margin-left: 20px;
+}
+.Btnzone1 a{
+    text-decoration: none;
+    color:black;
+    font-size: 20px;
+}
+.Btnzone1 a:hover{
+    color: black;
+    border-bottom: 2px solid black;
+}
+
+.Btnzone2 a { 
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 18px;
+    color: white;
+    background-color: #007bff;
+    transition: background-color 0.3s;
+    margin-right: 10px;
+}
+
+.Btnzone2 a:hover {
+    background-color: #0056b3;
+}
+
+.Btnzone a#cansler {
+    background-color: #dc3545;
+}
+
+.Btnzone a#cansler:hover {
+    background-color: #c82333;
+}
