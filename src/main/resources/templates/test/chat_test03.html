@@ -626,6 +626,84 @@
 		}
 	}
 
+	//채팅리스트창 요소 클릭
+	/*
+		이벤트 버블링 사용
+	*/
+	async function chatListOTNElementClick(e) {
+		//oto/otm중 어디가 클릭되었는지 파악
+		let targetID;
+		if(e.currentTarget.id === "chat-list-oto-cont") {
+			targetID = "otoele";
+		} else {
+			targetID = "otmele";
+		}
+
+		//클릭된 요소 id 찾기
+		let targetEleId = null;
+
+		if(e.target.parentElement.parentElement.id.split("-")[0] === targetID) {
+			targetEleId = e.target.parentElement.parentElement.id;
+		} else if(e.target.parentElement.id.split("-")[0] === targetID) {
+			targetEleId = e.target.parentElement.id;
+		} else if(e.target.id.split("-")[0] === targetID) {
+			targetEleId = e.target.id;
+		}
+
+		//요소의 정보 가져오기
+		let targetInfo = null;
+
+		if(!!targetEleId) {
+			for(let objEle of (targetID === "otoele" ? CHAT_OTO_VD : CHAT_OTM_VD)) {
+				if(objEle.eleId === targetEleId) {
+					targetInfo = objEle.dataObj;
+					break;
+				}
+			}
+			//일단 targetEleId와 일치하는 CHAT_OT*_VD[n].eleId 가 없는 경우는 체크하지 않음
+			//웹소켓 연결 요청
+			WORKER.port.postMessage({
+				action: "chatRoomEnter",
+				payload: {
+					roomidx: targetInfo.roomidx
+				}
+			});
+			//응답 대기/처리
+			try {
+				const res = await promised_waitTillResponse("chatRoomEnter");
+				//모달 구성
+				/* 함수 호출 */
+			} catch(err) {
+				//채팅방 로딩 실패 출력
+				/*
+					각 페이즈? 별 페이지들을 열어주는 함수들이 있으면 좋을듯?
+					막 지금 chatListFooterBtnClick()이 하는걸
+					거 안에 classList 만지는 부분을 각각 독립시키면 좀 편할거같음
+				*/
+			}
+		}
+	}
+
+	/*================================================================================*/
+	/*연결*/
+	//비동기 응답 대기
+	async function promised_waitTillResponse(action, timeout = 3000) {
+		return new Promise((resolve, reject) => {
+			const receiver = (e) => {
+				if(e.data.action === action) {
+					resolve(e.data);
+					WORKER.port.removeEventListener("message", receiver);
+				}
+			};
+			WORKER.port.addEventListener("message", receiver);
+			setTimeout(() => {
+				if(!!WORKER)
+					WORKER.removeEventListener("message", receiver);
+				reject(new Error("timeout"));
+			}, timeout);
+		});
+	}
+
 	/*================================================================================*/
 	/*VD 처리*/
 
