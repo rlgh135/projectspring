@@ -202,7 +202,6 @@ public class UserController {
 					} else {
 						thumbnail.add(boardthumb);
 					}
-					System.out.println("보드:" +service.getMyBoardThumbnail(board.getBoardnum()));
 				}
 			}
 			datas.put("boardlist", boardlist);
@@ -295,11 +294,20 @@ public class UserController {
 		
 		List<PackageDTO> inglist = service.getMyIngPackages(guidenum, cri);
 		List<PackageFileDTO> ingthumblist = new ArrayList<>();
-		
 		if(inglist.size()> 0) {
 			for (PackageDTO pack : inglist) {
+				
+				PackageFileDTO pthu = service.getPackThumbnail(pack.getPackagenum());
+				if(pthu == null) {
+					PackageFileDTO nopthu = new PackageFileDTO();
+					nopthu.setPackagenum(pack.getPackagenum());
+					nopthu.setPfSysname("no_img.jpg");
+					ingthumblist.add(nopthu);
+				} else {
+					ingthumblist.add(pthu);
+				}
+				
 				packagenums.add(pack.getPackagenum());
-				ingthumblist.add(service.getPackThumbnail(pack.getPackagenum()));
 			}
 		}
 		model.addAttribute("inglist", inglist);
@@ -325,7 +333,17 @@ public class UserController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				thumbnaillist.add(service.getPackThumbnail(pack.getPackagenum()));
+				
+				PackageFileDTO pthu = service.getPackThumbnail(pack.getPackagenum());
+				if(pthu == null) {
+					PackageFileDTO nopthu = new PackageFileDTO();
+					nopthu.setPackagenum(pack.getPackagenum());
+					nopthu.setPfSysname("no_img.jpg");
+					thumbnaillist.add(nopthu);
+				} else {
+					thumbnaillist.add(pthu);
+				}
+				
 			}
 		}
 		
