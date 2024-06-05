@@ -4,7 +4,7 @@ function showAlertModal(imgNum,text){
     $(".alertModal h3").text(text);
     let imgSrc = "";
     if(imgNum === 99){
-		imgSrc = '<textarea id="report_text"></textarea>'
+		imgSrc = '<textarea id="report_text" placeholder="신고내용을 적어주세요"></textarea>'
 		$('.alertModalClose').attr("id","reportSubmitBtn");
 		$('#reportSubmitBtn').text("신고하기");
 	}else{	

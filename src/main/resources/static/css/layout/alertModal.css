@@ -67,4 +67,5 @@
 #report_text{
 	width: 400px; height: 300px;
 	resize: none;
+	padding: 10px;
 }
