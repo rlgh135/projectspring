@@ -1,0 +1,33 @@
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-thumb {
+  	background-color: rgba(0, 0, 0, 0.23);
+  	background-clip: padding-box;
+  	border-radius: 15px;
+  	border-width: 4px;
+  	border-color: transparent;
+}
+::-webkit-scrollbar-track {
+	background-color: transparent;
+  	background:none;
+  	box-shadow: transparent 0 0 0 inset;
+  	border: 0;
+}
+@font-face {
+    font-family: 'NanumSquareRound';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+  font-family: 'Nanum Gothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/nanumgothic/v23/PN_3Rfi-oW3hYwmKDpxS7F_z-7rJxHVIsPV5MbNO2rV2_va-Nv6p.0.woff2) format('woff2');
+  unicode-range: U+f9ca-fa0b, U+ff03-ff05, U+ff07, U+ff0a-ff0b, U+ff0d-ff19, U+ff1b, U+ff1d, U+ff20-ff5b, U+ff5d, U+ffe0-ffe3, U+ffe5-ffe6;
+}
+* {
+    box-sizing: border-box;
+    font-family: 'NanumSquareRound';
+}

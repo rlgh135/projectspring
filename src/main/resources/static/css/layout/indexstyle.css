@@ -71,6 +71,7 @@ input[type]{
     height: 50px;
 }
 .ptntp:first-child{
+	margin-right: 20px;
 	margin-left: 10px;
 }
 .joinbtn{

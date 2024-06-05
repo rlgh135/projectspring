@@ -6,412 +6,9 @@
     <title>write</title>
 	<link rel="stylesheet" href="/css/summernote/summernote-lite.min.css">
 	<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+	<link rel="stylesheet" href="/css/board/boardwrite.css">
 </head>
-<style>
-    /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
-    * {margin: 0; padding: 0; box-sizing: border-box;}
-    
-    .wrap {
-        width: 1400px;
-        margin: 0 auto;
-        /* border: 1px solid red; */
-		margin-top: 130px;
-		position: relative;
-    }
-	
-	#writeForm {
-		margin-bottom: 60px;
-	}
 
-    [type=text] {
-        padding: 8px;
-        border: 1px solid #e0e0e0;
-        width: 220px;
-        outline: none;
-    }
-	
-	.b_place, #yes, #no, a.btn {
-		cursor: pointer;
-	}
-	
-	.place_detail td {
-		display: flex;
-	}
-	
-	.place_detail td div {
-		width: 70px; height: 35px;
-		line-height: 35px;
-		border-radius: 8px;
-		text-align: center;
-		font-size: 14px;
-		background-color: #64B5F6;
-		color: #fff;
-		margin-left: 10px;
-	}
-
-    .date1 [type=text] {
-        width: 100px;
-    }
-
-    .title [type=text] {
-        width: 780px;
-    }
-	
-	.place_detail [type=text] {
-		width: 650px;
-	}
-	
-	#writeForm {
-		margin-bottom: 50px;
-	}
-
-    .boardwrite {
-        margin: 0 auto;
-        padding: 30px;
-        /* border: 2px solid #42A5F5; */
-        border-collapse: collapse;
-    }
-    
-	.boardwrite caption {
-        font-weight: bold;
-        font-size: 30px;
-        margin-bottom: 30px;
-    }
-
-	.boardwrite th {
-        width: 220px; padding: 13px;
-        background-color: #fafafa;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-	.boardwrite th:first-of-type {
-        border-top: 1px solid #e0e0e0;
-    }
-
-    .boardwrite td {
-        width: 800px;
-        padding: 10px;
-        border-bottom: 1px dashed #e0e0e0;
-    }
-
-	.boardwrite td:first-of-type {
-        border-top: 1px dashed #e0e0e0;
-    }
-
-	.boardwrite textarea {
-        width: 780px; height: 400px;
-        resize: none;
-        border: 1px solid #e0e0e0;
-        outline: none;
-        padding: 10px;
-    }
-
-	.boardwrite th h4 {
-        font-size: 14px;
-        font-weight: bold;
-    }
-	
-	.place > td {
-		position: relative;
-	}
-	
-	.boardwrite th h4::after {
-	    content: " *";
-		color: red;
-	}
-
-	.startdate, .enddate, .startdate::placeholder, .enddate::placeholder {
-        text-align: center;
-    }
-	
-	.yesno td [type="radio"] + label {
-	    margin-right: 10px; 
-	}
-
-    .buttons {
-        margin: 0 auto;
-        width: 218px;
-        margin-top: 30px;
-        /* border: 1px solid red; */
-    }
-
-    .writeOk, .writeCancel {
-        width: 100px; height: 40px;
-        border: 1px solid #2196F3;
-        border-radius: 8px;
-        background-color: #2196F3;
-        color: #fff;
-        font-weight: bold;
-		font-size: 15px;
-		cursor: pointer;
-    }
-
-    .writeOk {margin-right: 10px;}
-	
-	.nation_select {
-	    position: absolute;
-	    width: 350px; height: 340px;
-	    background-color: #fff;
-	    border: 1px solid rgb(233, 233, 233);
-	    border-radius: 10px;
-	    top: 173px; left: 420px;
-	    z-index: 1;
-	    box-shadow: 0px 0px 3px rgba(30, 30, 30, 0.15);
-	}
-	
-	.nation_select .category {
-	    position: absolute;
-	    width: 100%; height: 280px;
-	    display: flex;
-	    padding: 5px;
-	    flex-wrap: nowrap;
-	    justify-content: space-between;
-	    /* display: none; */
-	}
-	
-	.nation_select .category > * {
-	    width: 33.3%;
-	    height: 280px;
-	}
-	
-	.nation_select .category .nation {
-	    border-radius: 10px 0 0 10px / 10px 0 0 10px;
-	    border: 1px solid rgb(233, 233, 233);
-	    padding: 3px;
-	}
-
-	.nation_select .category .c_region {
-	    border-top: 1px solid rgb(233, 233, 233);
-	    border-bottom: 1px solid rgb(233, 233, 233);
-		padding: 3px;
-		    position: relative;
-	}
-	
-	.nation_select .category .region_detail {
-	    border-radius: 0 10px 10px 0 / 0 10px 10px 0;
-	    border: 1px solid rgb(233, 233, 233);
-		    padding: 3px;
-		    position: relative;
-	}
-	
-	.nation_select .category .nation > div, .c_region > div, .region_detail > div {
-		width: 95%;
-		height: 280px;
-		overflow-y: auto;
-	}
-	
-	.nation_select .category .nation > div {
-		width: 100%;
-	}
-		
-	.c_region > div, .region_detail > div {
-	    /* border: 1px solid red; */
-	    position: absolute;
-	}
-	
-	.nation_select .category .nation > div > button, .c_region > div > button, .region_detail > div > button {
-	    display: block;
-	    width: 100%;
-	    padding: 8px;
-	    border: none;
-	    background-color: #fff;
-	}
-	
-	.nation_select .category .nation > div > button > p, 
-	.nation_select .category .c_region > div > button > p, 
-	.nation_select .category .region_detail > div > button > p {
-	    width: 100%;
-	    text-align: left;
-	    white-space: nowrap;
-	    overflow: hidden;
-	    text-overflow: ellipsis;
-	}
-	
-	.nation_select .n_btns {
-	   position: absolute;
-	   bottom: 9px; left: 24px;
-	}
-	
-	.n_btns button {
-	    background-color: #fff;
-	    border: 1px solid red;
-	    border-radius: 5px;
-	    height: 35px;
-	    font-size: 12px;
-	    font-weight: bold;
-	}
-	
-	.n_btns button:nth-child(1) {
-	    width: 90px;
-	    margin-right: 5px;
-	    color: #2196F3;
-	    background-color: #F5F5F5;
-	    border: 1px solid #F5F5F5;
-	}
-	
-	.n_btns button:nth-child(1) img {
-	    width: 18px;
-	    height: 18px;
-	    position: absolute;
-	    left: 16px;
-	}
-	
-	.n_btns button:nth-child(1) span {
-	    margin-left: 18px;
-	}
-	
-	.n_btns button:nth-child(2) {
-	    width: 200px;
-	    color: #fff;
-	    background-color: #2196F3;
-	    border: 1px solid #2196F3;
-	}
-	
-	.x img {
-		width: 20px; height: 20px;
-		position: absolute;
-		top: 17px; left: 203px;
-	}
-    
-	.file > td div:first-of-type {
-		float: left;
-	}
-	
-	.file > td div:last-of-type {
-		float: right;
-	}
-	
-	.file span {
-		font-size: 14px;
-	}
-	
-	.file a.btn {
-		display: inline-block;
-		font-size: 14px;
-		width: 100px; height: 30px;
-		background-color: #64B5F6;
-		text-align: center;
-		line-height: 30px;
-		border-radius: 5px;
-		color: #fff;
-		margin-right: 5px;
-	}
-	
-	.file th h4::after, .content th h4::after {
-		content: "";
-	}
-	
-	img.thumbnail {
-		display: block;
-		width:200px;
-		clear:both;
-	}
-	/*모달 디자인*/
-	.mapmodal {
-	    display: none;
-	    position: fixed;
-	    z-index: 1500;
-	    left: 0;
-	    top: 0;
-	    width: 100%;
-	    height: 100%;
-	    overflow: auto;
-	    background-color: rgb(0,0,0);
-	    background-color: rgba(0,0,0,0.4);
-	    padding-top: 60px;
-	}
-
-	.modal-content {
-	    background-color: #fefefe;
-	    margin: 5% auto;
-	    padding: 20px;
-	    border: 1px solid #888;
-	    width: 80%;
-	    border-radius: 10px;
-	    position: relative;
-	    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	    animation-name: animatetop;
-	    animation-duration: 0.4s;
-	}
-	.modal_title{
-	    text-align: center;
-	    color: #64B5F6;
-	    font-weight: bold;
-	}
-
-	@keyframes animatetop {
-	    from {top:-300px; opacity:0}
-	    to {top:0; opacity:1}
-	}
-
-	.close {
-	    color: #aaa;
-	    float: right;
-	    font-size: 28px;
-	    font-weight: bold;
-	}
-
-	.close:hover,
-	.close:focus {
-	    color: black;
-	    text-decoration: none;
-	    cursor: pointer;
-	}
-
-	#map {
-	    height: 600px;
-	    width: 100%;
-	    margin-top: 20px;
-	    margin-bottom: 20px;
-	}
-
-	#pac-input {
-	    margin-top: 10px;
-	    margin-bottom: 20px;
-	    padding: 10px;
-	    width: 40%;
-	    box-sizing: border-box;
-	    border: 1px solid #ccc;
-	    border-radius: 4px;
-	}
-
-	#description {
-	    text-align: center;
-	    margin-top: 20px;
-	    font-size: 16px;
-	    color: #333;
-	}
-	.modal-content .btn_area{
-	    width: 100%;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	}
-	.place_select_btn{
-	    width: 20%;
-	    height: 40px;
-	    background-color: rgb(248, 248, 248);
-	    color: #2196F3;
-	    font-weight: bold;
-	    border-radius: 20px;
-	    border: none;
-	    cursor: pointer;
-	    display: none;
-	    margin-top: 20px;
-	}
-	.place_select_btn:hover{
-	    background-color: #1976D2;
-	    color: #ffffff;
-	    border: 2px solid #ffffff;
-	    box-shadow: 0 0 0 2px #1976D2;
-	}
-	.place_select_btn.on{
-	    display: block;
-	}
-
-	/*모달 디자인끝*/
-	
-</style>
 <body>
 	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
 	
@@ -599,7 +196,7 @@
 		let loginUser = /*[[${session.loginUser}]]*/"";
 		
 		if(loginUser == null || loginUser == "") {
-			alert("로그인 후 이용하세요");
+			showAlertModal(2,"로그인 후 이용하세요");
 			location.replace("/");
 		}
 	})
@@ -889,12 +486,12 @@
 		//console.log("area_detail_select: " + area_detail_select.name)
 		
 		if(country_select == null) {
-			alert("국내/해외를 선택해주세요");
+			showAlertModal(2,"국내/해외를 선택해주세요");
 		}	
 		
 		else {
 			if(area_select == null) {
-				alert("지역을 선택해주세요");
+				showAlertModal(2,"지역을 선택해주세요");
 			}
 			
 			else {
@@ -906,7 +503,7 @@
 				
 				else {
 					if(area_detail_select == null) {
-						alert("세부 지역을 선택해주세요");
+						showAlertModal(2, "세부 지역을 선택해주세요");
 					}
 					
 					else {
@@ -985,30 +582,30 @@
 		const b_place_detail = document.querySelector(".b_place_detail");
 		
 		if(b_title.value == "") {
-			showAlertModal(2,"재붕재붕아");
+			showAlertModal(2,"제목을 입력해주세요");
 			b_title.focus();
 			return;
 		}
 		
 		if(!yes.checked && !no.checked) {
-			alert("동행 모집 여부를 체크해주세요");
+			showAlertModal(2,"동행 모집 여부를 체크해주세요");
 			return;
 		}	
 		
 		if(b_place.value == "") {
-			alert("위치를 입력해주세요");
+			showAlertModal(2,"위치를 입력해주세요");
 			return;
 		}
 			
 
 		if(yes.checked) {			
 			if(startdate.value == "" || enddate.value == "") {
-				alert("여행 기간을 입력해주세요");
+				showAlertModal(2,"여행 기간을 입력해주세요");
 				return;
 			}
 			
 			if(b_place_detail.value == ""){
-				alert("상세 지역 주소를 등록해주세요");
+				showAlertModal(2,"상세 지역 주소를 등록해주세요");
 				return;
 			}
 		}

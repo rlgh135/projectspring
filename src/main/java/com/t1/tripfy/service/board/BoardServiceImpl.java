@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.catalina.Manager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -42,6 +43,7 @@ import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
 import com.t1.tripfy.mapper.board.BoardReplyMapper;
+import com.t1.tripfy.mapper.manager.ManagerMapper;
 import com.t1.tripfy.mapper.user.UserMapper;
 
 @Service
@@ -61,6 +63,9 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private UserMapper umapper;
+	
+	@Autowired
+	private ManagerMapper mmapper;
 
 	//사진검사
 	public static boolean isImageFile(String extension) {
@@ -293,21 +298,28 @@ public class BoardServiceImpl implements BoardService {
 			}
 		}
 		
+		// 댓글 삭제
+		if(bmapper.getTotalBoardReply(boardnum).size() > 0) {
+			if(bmapper.deleteTotalBoardReply(boardnum) > 0) {
+				System.out.println("board의 댓글 삭제 완료");
+			}
+		}
+		
+		// board의 좋아요 삭제
+		if(bmapper.getTotalBoardLike(boardnum) != null) {
+			if(bmapper.deleteTotalBoardLike(boardnum) > 0) {
+				System.out.println("board의 좋아요 삭제 완료");
+			}
+		}
+		
+		// board 삭제
 		if(bmapper.deleteBoard(boardnum) == 1) {
-			// 댓글 삭제
-			if(bmapper.getTotalBoardReply(boardnum) != null) {
-				if(bmapper.deleteTotalBoardReply(boardnum) > 0) {
-					System.out.println("board의 댓글 삭제 완료");
-				}
-			}
-			
-			// board의 좋아요 삭제
-			if(bmapper.getTotalBoardLike(boardnum) != null) {
-				  if(bmapper.deleteTotalBoardLike(boardnum) > 0) {
-					  System.out.println("board의 좋아요 삭제 완료");
-				  }
-			}
 			System.out.println("게시글 삭제 완료");
+			
+			if(mmapper.getTaskMessageByNum(boardnum).size() > 0) {
+			 	String num = Long.toString(boardnum);
+				mmapper.updateTaskMessageNum(num);
+			}
 		}
 		
 		else {

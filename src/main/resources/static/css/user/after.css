@@ -1,0 +1,192 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+ul,
+ol,
+li {
+	list-style: none;
+}
+
+#hgwrap{
+	width: fit-content;
+	margin: 0 auto;
+	margin-top: 100px;	
+	padding: 30px 20px 30px 20px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.afterli{
+	display: flex;
+	gap: 20px;
+	height: 200px;
+	margin-top: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-top: 1px solid rgba(0, 0, 0, 0.15);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+	cursor: pointer;
+}
+.afterli:hover{
+	background-color: #e9e9e9;
+}
+.hgthumbox{
+	width: 350px;
+	height: 180px;
+}
+.hugitumb{
+	width: 350px;
+	height: 180px;
+}
+.afterli div:nth-child(2) > div:first-child{
+	font-size: 25px;
+}
+.afterli div:nth-child(2) > div:last-child{
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	padding-top: 10px;
+	margin-top: 20px;
+	font-size: 15px;
+}
+.stampzone{
+	width: 180px;
+	height: 180px;
+	margin-left: auto;
+}
+.stampzone > img{
+	width: 180px;
+	height: 180px;
+}
+
+/*모달베이스 히든토글*/
+.himo {
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: rgba(0,0,0,0.5);
+    z-index: 3000;
+}
+.himo .himo_body {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.609);
+}
+/*모달상세*/
+#gprofileimg{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-size: cover;
+}
+#gprofile{
+	display: flex;
+	gap: 20px;
+}
+#hg-glike{
+	line-height: 30px;
+}
+#likeClk{
+	display: inline-block;
+	width: 25px;
+	height: 25px;
+	line-height: 0;
+}
+#likeHeart{
+	position: absolute;
+	width: 25px;
+	height: 25px;
+	background-size: cover;
+	margin-top:7px;
+	line-height: 0;
+}
+.himo_body > form{
+	margin-top:20px;
+}
+.himo_body > form > textarea{
+	width: 395px;
+	resize: none;
+	height: 40px;
+    border: 1px solid #2196f3
+}
+.himo_body > form > textarea:focus{
+	outline: 1px solid #2196f3;
+}
+/*임티*/
+.grayback{
+	background-color: rgba(0, 0, 0, 0.05);
+}
+.grayback::before{
+	content: "";
+	opacity: 0.5;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: rgba(0, 0, 0, 0.15);
+}
+.nylllc{
+	margin-bottom: 10px;
+}
+.stickers{
+	width: 100px;
+	height: 100px;
+	background-size: cover;
+}
+.emclk{
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	right: 25px;
+    bottom: 52px;
+}
+.hugicont{
+	margin-top: 0px;
+}
+#stickerlist{
+	padding: 5px;
+	position: absolute;
+	width: 235px;
+	height: auto;
+	background-color: white;
+	opacity: 0.9;
+	z-index: 3001;
+	border-radius: 15px;
+	right: 10px;
+}
+#stickerlist > img{
+	width: 40px;
+	height: 40px;
+}
+.yetda{
+	background-color: aliceblue;
+	border: 1px solid #2196f3;
+	color: black;
+	cursor: pointer;
+	padding: 2px 5px 2px 5px;
+	border-radius: 10px;
+}
+.yetda:hover{
+	background: #2196f3;
+	color: azure;
+	
+}
+#theong{
+	width: 500px;
+    height: 500px;
+}
+.backbtse{
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+}
+.backbtse > a:hover{
+	border-bottom: 1px solid black;
+}

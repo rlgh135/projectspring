@@ -9,16 +9,17 @@
 		WHERE userid = #{userid}
 	</select>
 	<!--
-		채팅방에 가입해있는 상대방의 userid를 가져오기
-		1대1 채팅 전용
+		채팅방의 상대 유저 userid만 가져오기
+		요청자 제외
+		다대다 가능
 	-->
 	<select id="selectOpponentUserid">
 		SELECT userid
 		FROM chat_user
 		WHERE
-			chat_room_idx = #{chatRoomIdx}
-		AND
-			userid != #{userid}
+				chat_room_idx = #{chatRoomIdx}
+			AND
+				userid != #{userid}
 	</select>
 	
 	<!-- 
@@ -95,7 +96,7 @@
 	-->
 	<select id="selectAllByUserid">
 		SELECT 
-			cu.chat_room_idx, cu.chat_user_is_creator, cr.regdate, MAX(cd.regdate) as last_msg_date
+			cu.chat_room_idx, cr.chat_room_title, cr.packagenum, cu.chat_user_is_creator, cr.regdate, MAX(cd.regdate) as last_msg_date
 		FROM 
 			chat_user AS cu
 		INNER JOIN 
@@ -115,7 +116,14 @@
 		GROUP BY
 			cu.chat_room_idx
 		ORDER BY
-			last_msg_date DESC;
+			CASE
+				WHEN
+					last_msg_date IS NULL
+				THEN
+					cr.regdate
+				ELSE
+					last_msg_date
+			END DESC
 	</select>
 	
 	<!-- 

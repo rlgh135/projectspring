@@ -85,8 +85,7 @@ public class PackageServiceImpl implements PackageService{
 			return false;
 		}
         
-        if(file == null) {
-        	System.out.println("파일 널 체크 안됨요");
+        if(file == null || file.getSize() == 0) {
 			return true;
 		}else {
 			boolean flag = false;

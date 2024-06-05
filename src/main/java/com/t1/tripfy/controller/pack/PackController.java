@@ -136,7 +136,7 @@ public class PackController {
 		        allPreserves.addAll(reserve);
 		}
 	
-
+		model.addAttribute("recent", recent);
 	    model.addAttribute("cheap", cheap);
 	    model.addAttribute("pop", pop);
 	    model.addAttribute("rfile", allRfiles);
@@ -207,6 +207,7 @@ public class PackController {
 	    model.addAttribute("package", pack);
 	    model.addAttribute("files", service.getFiles(packagenum));
 	    String loginUser = (String) session.getAttribute("loginUser");
+	    System.out.println("로그인 유저 : "+loginUser);
 	    List<ReservationDTO> reserve = service.getReservationCntByPackagenum(packagenum); 
 	    System.out.println(reserve+"대체 왜 없는거야 슈우발 ");
 	    List<ReviewDTO> reviewlist = new ArrayList<>();
@@ -296,8 +297,8 @@ public class PackController {
 		long guidenum = (long)session.getAttribute("guideNum");
 		pack.setGuidenum(guidenum);
 		if(service.regist(pack, packageFile)) {	
-				long packagenum = service.getLastNum(pack.getGuidenum());
-				return "redirect:/package/tlwrite?packagenum="+packagenum;
+			long packagenum = service.getLastNum(pack.getGuidenum());
+			return "redirect:/package/tlwrite?packagenum="+packagenum;
 		}
 		//실패처리
 		else {

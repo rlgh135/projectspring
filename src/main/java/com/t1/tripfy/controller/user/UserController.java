@@ -1,8 +1,11 @@
 package com.t1.tripfy.controller.user;
 
 import java.net.http.HttpRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -107,8 +110,15 @@ public class UserController {
 		List<BoardFileDTO> bflist = new ArrayList<>();
 		if(mylist.size()>0) {
 			for (BoardDTO board : mylist) {
-				bflist.add(service.getMyBoardThumbnail(board.getBoardnum()));
-				System.out.println(service.getMyBoardThumbnail(board.getBoardnum()));
+				BoardFileDTO boardthumb = service.getMyBoardThumbnail(board.getBoardnum());
+				if(boardthumb == null) {
+					BoardFileDTO boardfile = new BoardFileDTO();
+					boardfile.setBoardnum(board.getBoardnum());
+					boardfile.setSysname("no_img.jpg");
+					bflist.add(boardfile);
+				} else {
+					bflist.add(boardthumb);
+				}
 			}
 		}
 		model.addAttribute("list",mylist);
@@ -183,8 +193,15 @@ public class UserController {
 			
 			if(boardlist.size()>0) {
 				for (BoardDTO board : boardlist) {
-					thumbnail.add(service.getMyBoardThumbnail(board.getBoardnum()));
-					System.out.println("보드:" +service.getMyBoardThumbnail(board.getBoardnum()));
+					BoardFileDTO boardthumb = service.getMyBoardThumbnail(board.getBoardnum());
+					if(boardthumb == null) {
+						BoardFileDTO boardfile = new BoardFileDTO();
+						boardfile.setBoardnum(board.getBoardnum());
+						boardfile.setSysname("no_img.jpg");
+						thumbnail.add(boardfile);
+					} else {
+						thumbnail.add(boardthumb);
+					}
 				}
 			}
 			datas.put("boardlist", boardlist);
@@ -277,11 +294,20 @@ public class UserController {
 		
 		List<PackageDTO> inglist = service.getMyIngPackages(guidenum, cri);
 		List<PackageFileDTO> ingthumblist = new ArrayList<>();
-		
 		if(inglist.size()> 0) {
 			for (PackageDTO pack : inglist) {
+				
+				PackageFileDTO pthu = service.getPackThumbnail(pack.getPackagenum());
+				if(pthu == null) {
+					PackageFileDTO nopthu = new PackageFileDTO();
+					nopthu.setPackagenum(pack.getPackagenum());
+					nopthu.setPfSysname("no_img.jpg");
+					ingthumblist.add(nopthu);
+				} else {
+					ingthumblist.add(pthu);
+				}
+				
 				packagenums.add(pack.getPackagenum());
-				ingthumblist.add(service.getPackThumbnail(pack.getPackagenum()));
 			}
 		}
 		model.addAttribute("inglist", inglist);
@@ -289,15 +315,41 @@ public class UserController {
 		
 		List<PackageDTO> packagelist = service.getMyPackages(guidenum, cri);
 		List<PackageFileDTO> thumbnaillist = new ArrayList<>();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		ArrayList<Integer> moreend = new ArrayList<>();
+		
 		if(packagelist.size()> 0) {
 			for (PackageDTO pack : packagelist) {
-				packagenums.add(pack.getPackagenum());
-				thumbnaillist.add(service.getPackThumbnail(pack.getPackagenum()));
+				try {
+					Date enddate = formatter.parse(pack.getEnddate());
+					Date today = new Date();
+					
+					if(today.compareTo(enddate)<=0) {
+						moreend.add(1);
+					} else {
+						moreend.add(0);
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				PackageFileDTO pthu = service.getPackThumbnail(pack.getPackagenum());
+				if(pthu == null) {
+					PackageFileDTO nopthu = new PackageFileDTO();
+					nopthu.setPackagenum(pack.getPackagenum());
+					nopthu.setPfSysname("no_img.jpg");
+					thumbnaillist.add(nopthu);
+				} else {
+					thumbnaillist.add(pthu);
+				}
+				
 			}
 		}
 		
 		model.addAttribute("thumbnaillist", thumbnaillist);
 		model.addAttribute("packagelist", packagelist);
+		model.addAttribute("moreend", moreend);
 		
 		return "/user/guide";
 	}
@@ -307,6 +359,12 @@ public class UserController {
 	public Map<String, Object> getReplyByPackagenum(HttpServletRequest req){
 		Map<String, Object> datas = new HashMap<>();
 		long packagenum = Long.parseLong(req.getParameter("packagenum"));
+		
+		PackageFileDTO ptum = service.getPackThumbnail(packagenum);
+		datas.put("ptum", ptum);
+		
+		PackageDTO pack = service.getJoinPackage(packagenum);
+		datas.put("pack", pack);
 		
 		List<ReviewDTO> reviewlist = service.getReviewByPackagenum(packagenum);
 		datas.put("reviewlist", reviewlist);
@@ -346,6 +404,7 @@ public class UserController {
 		List<ReservationDTO> reslist = service.getMyReservation(cri, userid);
 		ArrayList<PackageDTO> rpacklist = new ArrayList<>();
 		ArrayList<ReviewDTO> reviewlist = new ArrayList<>();
+		ArrayList<PackageFileDTO> thumbnaillist = new ArrayList<>();
 		HashMap<Long, String> guideimgmap = new HashMap<>();
 		HashMap<Long, String> guideids = new HashMap<>();
 		
@@ -353,6 +412,7 @@ public class UserController {
 			for (ReservationDTO reservation : reslist) {
 				PackageDTO pack = service.getMyPackageTwoWeek(reservation.getPackagenum());
 				if(pack!=null) {
+					thumbnaillist.add(service.getPackThumbnail(reservation.getPackagenum()));
 					reviewlist.add(service.getMyReviewByPackagenum(reservation.getPackagenum(), userid));
 					rpacklist.add(pack);
 					UserImgDTO guideimg = service.getGuideAndImg(reservation.getPackagenum());
@@ -361,10 +421,11 @@ public class UserController {
 				}
 			}
 		}
-		
+		System.out.println(rpacklist);
 		model.addAttribute("guideimg", guideimgmap);
 		model.addAttribute("guideids", guideids);
 		model.addAttribute("packagelist", rpacklist);
+		model.addAttribute("thumbnaillist", thumbnaillist);
 		model.addAttribute("reviewlist", reviewlist);
 		
 		return "/user/after";
@@ -547,23 +608,27 @@ public class UserController {
 			if(reslist.size()>0) {
 				for (ReservationDTO res : reslist) {
 					packagelist.add(service.getJoinPackage(res.getPackagenum()));
-					/* pthumblist.add(service.getPackThumbnail(res.getPackagenum())); */
+					pthumblist.add(service.getPackThumbnail(res.getPackagenum()));
 				}
 			}
 			datas.put("reslist", reslist);
 			datas.put("packagelist", packagelist);
+			datas.put("pthumblist", pthumblist);
 			
 		} else {
 			String keycode = req.getParameter("keycode");
 			System.out.println(keycode);
 			ReservationDTO res = service.getForeignerReservation(keycode);
 			PackageDTO pack = new PackageDTO();
+			PackageFileDTO pthumb = new PackageFileDTO();
 			if(res!=null) {
-				pack = service.getJoinPackage(res.getPackagenum());				
+				pack = service.getJoinPackage(res.getPackagenum());
+				pthumb = service.getPackThumbnail(res.getPackagenum());
 			}
 			
 			datas.put("reservation", res);
 			datas.put("pack", pack);
+			datas.put("pthumb", pthumb);
 		}
 		
 		return datas;

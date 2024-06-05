@@ -9,19 +9,35 @@
 			margin: 0 auto;
 			margin-top:120px;
 		}
+		.redalert{
+			color: red;
+		}
+		.greenalert{
+			color: green;
+		}
+		.hidden{
+			display: none;
+		}
+		
 		/*
 		.shmodal{
 			position: absolute;
 		}
 		*/
 	</style>
+	<link rel="stylesheet" href="/css/user/nuinfo.css">
 </head>
 <body>
     <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
-    <div class="shmodal">
+    <div class="shmodal hidden">
         <div class="shmodal-body">
+			<div class="ggumimthumb">
+				<div class="ggumimgwrap">
+					<img src="/images/layoutimg/glasslogo.png">
+				</div>
+			</div>
             <div class="shmodal-content">
-                <div id="shparent-info"><!--OOO님이 제출해주신 정보로 O개의 내역을 찾았습니다--></div>
+                <div id="shparent-info"></div>
                 <ul id="shparent">
                 </ul>
                 <div class="closediv">닫기</div>
@@ -37,35 +53,39 @@
                         <ul class="shuraud">
                             <li class="li-tit">키코드로 조회하기</li>
                             <li>
-                                <div>
-                                    <input type="text" value="" name="keycode" id="kekk">
-                                    <a href="javascript:checkkey()">조회</a>
-                                </div>
+								<div class="keyinput">
+								    <input type="text" value="" name="keycode" id="kekk" placeholder="패키지의 키코드를 입력하세요">
+								    <a href="javascript:checkkey()">조회</a>
+								</div>
                             </li>
                         </ul>
                     </div>
                 </form>
             </div>
-            <form action="/user/nonu" method="post" name="nonuform">
-                <div>
-                    <ul class="shuraud">
-                        <li class="li-tit">개인정보로 조회하기</li>
-                        <li>
-                            <input type="text" value="" name="phone" id="pchk">
-                            <input type="button" value="인증번호발송" onclick="checkphone()"> 
-                        </li>
-                        <li>
-                            <input type="text" value="" name="name">
-                        </li>
-                        <li></li>
-                    </ul>
-                </div>
-                <div>
-                    <a href="javascript:sendnonu()">조회하기</a>
-                </div>
-            </form>
+			<div id="perinjung">
+	            <form action="/user/nonu" method="post" name="nonuform">
+	                <div>
+	                    <ul class="shuraud">
+	                        <li class="li-tit">개인정보로 조회하기</li>
+							<li class="perinput">
+							    <div>
+							        <input type="text" value="" name="phone" id="pchk" placeholder="휴대전화번호 입력('-'제외)">
+							        <input type="button" value="인증번호발송" onclick="checkphone()"> 
+							    </div>
+							    <div>
+							        <input type="text" value="" name="secure" id="schk" placeholder="인증번호"><span id="injungalert"></span>
+							    </div>
+							    <div>
+							        <input type="text" value="" name="name" class="nmck" placeholder="이름">
+				                    <a href="javascript:sendnonu()">조회</a>
+							    </div>
+							</li>
+	                    </ul>
+	                </div>
+	            </form>
+			</div>
         </div>
-		<div>
+		<div class="awapeiske">
         	<a href="/package/pmain">나가기</a>			
 		</div>
     </div>
@@ -87,8 +107,10 @@
             method: "POST",
 
             success:function(datas){
+				$(".shmodal").toggleClass("hidden");
                 $("#shparent-info").html(name+"님이 제출해주신 정보로 "+datas.packagelist.length+"개의 내역을 찾았습니다.");
                 const shparent = document.getElementById("shparent");
+				shparent.innerHTML ="";
 
                 console.log(datas);
 
@@ -107,7 +129,7 @@
                     var packagethumbDiv = document.createElement('div');
                     packagethumbDiv.className = 'packagethumb';
                     var imgElement = document.createElement('img');
-                    imgElement.src = '';
+                    imgElement.src = '/package/thumbnail?systemname='+datas.pthumblist[i].pfSysname;;
                     imgElement.alt = '';
                     packagethumbDiv.appendChild(imgElement);
 
@@ -119,22 +141,34 @@
                     packagenameDiv.textContent = datas.packagelist[i].packageTitle; // 패키지 이름 설정
                     var packagelowinfoDiv = document.createElement('div');
                     packagelowinfoDiv.className = 'packagelowinfo';
-                    packagelowinfoDiv.textContent = '어른 ' + datas.reslist[i].adultCount + ' 명, 어린이 ' + datas.reslist[i].childCount + ' 명 ￦' + datas.reslist[i].price;
+                    packagelowinfoDiv.textContent = '어른 ' + datas.reslist[i].adultCnt + ' 명, 어린이 ' + datas.reslist[i].childCnt + ' 명 ￦' + datas.reslist[i].price;
                     var packagestartdateDiv = document.createElement('div');
                     packagestartdateDiv.className = 'packagestartdate';
-                    packagestartdateDiv.textContent = datas.packagelist[i].startdate; // 출발일 설정
-                    contareaDiv.appendChild(packagenameDiv);
-                    contareaDiv.appendChild(packagelowinfoDiv);
-                    contareaDiv.appendChild(packagestartdateDiv);
+                    packagestartdateDiv.textContent = "출발일: "+datas.packagelist[i].startdate; // 출발일 설정
+					
+					//현재일보다 시작일 비교해서 취소불가, 취소가능
+					var today = new Date();
+					var targetdate = new Date(datas.packagelist[i].startdate);
+					var lastWeek = new Date(targetdate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
                     // 세 번째 div 요소 (packagestatus) 생성
                     var packagestatusDiv = document.createElement('div');
                     packagestatusDiv.className = 'packagestatus';
+					if(targetdate>today){
+						packagestatusDiv.innerHTML="<span style='color:green;'>취소가능</span>"
+					} else {
+						packagestatusDiv.innerHTML="<span style='color:red;'>취소불가</span>"
+					}
+					
+                    contareaDiv.appendChild(packagenameDiv);
+                    contareaDiv.appendChild(packagelowinfoDiv);
+                    contareaDiv.appendChild(packagestartdateDiv);
+                    contareaDiv.appendChild(packagestatusDiv);
 
+					
                     // li 요소에 모든 div 요소 추가
                     liElement.appendChild(packagethumbDiv);
                     liElement.appendChild(contareaDiv);
-                    liElement.appendChild(packagestatusDiv);
 
                     // 생성된 li 요소를 ul 요소에 추가
                     shparent.appendChild(liElement);
@@ -150,63 +184,79 @@
 		var keycode = $("#kekk").val();
 		console.log(keycode);
 		$.ajax({
-		            url: "/user/foreigner?keycode="+keycode,
-		            method: "POST",
+		    url: "/user/foreigner?keycode="+keycode,
+		    method: "POST",
 
-		            success:function(datas){
-						console.log(datas)
-						if(datas.reservation==null){
-							console.log("데이터 없음")
-							return;
-						}
-		                $("shparent-info").html(datas.reservation.name+"님이 제출해주신 정보로 1개의 내역을 찾았습니다.");
-		                const shparent = document.getElementById("shparent");
+		    success:function(datas){
+				console.log(datas)
+				
+				if(datas.reservation==null){
+					console.log("데이터 없음")
+					return;
+				}
+				
+				$(".shmodal").toggleClass("hidden");
+				$("#shparent-info").html(datas.reservation.name+"님이 제출해주신 정보로 1개의 내역을 찾았습니다.");
+			    const shparent = document.getElementById("shparent");
+				shparent.innerHTML ="";
+			
+		        // li 요소 생성
+		        var liElement = document.createElement('li');
+				liElement.setAttribute("onclick", `location.href = '/user/receipt?packagenum=${datas.pack.packagenum}&keycode=${datas.reservation.keycode}'`);
 
-		                // li 요소 생성
-		                var liElement = document.createElement('li');
-						liElement.setAttribute("onclick", `location.href = '/user/receipt?packagenum=${datas.pack.packagenum}&keycode=${datas.reservation.keycode}'`);
+		        // 첫 번째 div 요소 (packagethumb) 생성
+		        var packagethumbDiv = document.createElement('div');
+		        packagethumbDiv.className = 'packagethumb';
+		        var imgElement = document.createElement('img');
+		        imgElement.src = '/package/thumbnail?systemname='+datas.pthumb.pfSysname;
+		        imgElement.alt = '';
+		        packagethumbDiv.appendChild(imgElement);
 
-		                // 첫 번째 div 요소 (packagethumb) 생성
-		                var packagethumbDiv = document.createElement('div');
-		                packagethumbDiv.className = 'packagethumb';
-		                var imgElement = document.createElement('img');
-		                imgElement.src = '';
-		                imgElement.alt = '';
-		                packagethumbDiv.appendChild(imgElement);
+		        // 두 번째 div 요소 (contarea) 생성
+		        var contareaDiv = document.createElement('div');
+		        contareaDiv.className = 'contarea';
+		        var packagenameDiv = document.createElement('div');
+		        packagenameDiv.className = 'packagename';
+		        packagenameDiv.textContent = datas.pack.packageTitle; // 패키지 이름 설정
+		        var packagelowinfoDiv = document.createElement('div');
+		        packagelowinfoDiv.className = 'packagelowinfo';
+		        packagelowinfoDiv.textContent = '어른 ' + datas.reservation.adultCnt + ' 명, 어린이 ' + datas.reservation.childCnt + ' 명 ￦' + datas.reservation.price;
+		        var packagestartdateDiv = document.createElement('div');
+		        packagestartdateDiv.className = 'packagestartdate';
+		        packagestartdateDiv.textContent = "출발일: "+datas.pack.startdate; // 출발일 설정
+				
+				//현재일보다 시작일 비교해서 취소불가, 취소가능
+				var today = new Date();
+				var targetdate = new Date(datas.pack.startdate);
+				var lastWeek = new Date(targetdate.getTime() - 7 * 24 * 60 * 60 * 1000);
+					
+				// 세 번째 div 요소 (packagestatus) 생성
+				var packagestatusDiv = document.createElement('div');
+				packagestatusDiv.className = 'packagestatus';
+				if(targetdate>today){
+					packagestatusDiv.innerHTML="상태: <span style='color:green;'>취소가능</span>"
+				} else {
+					packagestatusDiv.innerHTML="상태: <span style='color:red;'>취소불가</span>"
+				}
+				
+		        contareaDiv.appendChild(packagenameDiv);
+		        contareaDiv.appendChild(packagelowinfoDiv);
+		        contareaDiv.appendChild(packagestartdateDiv);
+		        contareaDiv.appendChild(packagestatusDiv);
 
-		                // 두 번째 div 요소 (contarea) 생성
-		                var contareaDiv = document.createElement('div');
-		                contareaDiv.className = 'contarea';
-		                var packagenameDiv = document.createElement('div');
-		                packagenameDiv.className = 'packagename';
-		                packagenameDiv.textContent = datas.pack.packageTitle; // 패키지 이름 설정
-		                var packagelowinfoDiv = document.createElement('div');
-		                packagelowinfoDiv.className = 'packagelowinfo';
-		                packagelowinfoDiv.textContent = '어른 ' + datas.reservation.adultCount + ' 명, 어린이 ' + datas.reservation.childCount + ' 명 ￦' + datas.reservation.price;
-		                var packagestartdateDiv = document.createElement('div');
-		                packagestartdateDiv.className = 'packagestartdate';
-		                packagestartdateDiv.textContent = datas.pack.startdate; // 출발일 설정
-		                contareaDiv.appendChild(packagenameDiv);
-		                contareaDiv.appendChild(packagelowinfoDiv);
-		                contareaDiv.appendChild(packagestartdateDiv);
 
-		                // 세 번째 div 요소 (packagestatus) 생성
-		                var packagestatusDiv = document.createElement('div');
-		                packagestatusDiv.className = 'packagestatus';
+		        // li 요소에 모든 div 요소 추가
+		        liElement.appendChild(packagethumbDiv);
+		        liElement.appendChild(contareaDiv);
 
-		                // li 요소에 모든 div 요소 추가
-		                liElement.appendChild(packagethumbDiv);
-		                liElement.appendChild(contareaDiv);
-		                liElement.appendChild(packagestatusDiv);
+		        // 생성된 li 요소를 ul 요소에 추가
+		        shparent.appendChild(liElement);
+		    },
 
-		                // 생성된 li 요소를 ul 요소에 추가
-		                shparent.appendChild(liElement);
-		            },
-
-		            error:function(){
-		                console.log("통신에러");
-		            }
-		        })
+		    error:function(){
+		        console.log("통신에러");
+		    }
+		})
     }
 
     let targetletter = "";

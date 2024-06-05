@@ -4,530 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>get</title>
-<style>
-    /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
-    * {margin: 0; padding: 0; box-sizing: border-box;}
-	
-    .wrap {
-        width: 1400px;
-        margin: 0 auto;
-		margin-top: 80px;
-    }
-	
-		
-    .main_photo img {
-        width: 100%;
-        height: 470px;
-		object-fit: contain;
-	
-    }
-	
-    .info {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        margin-top: 30px;
-        margin-bottom: 50px;
-    }
-	
-    .info > div:nth-child(2) {
-        border-left: 1px solid #f0f0f0;
-    }
-	
-    .info > div:first-child {
-        width: 970px;
-    }
-	
-    .info > div:last-child {
-        width: 370px;
-    }
-	
-	.title_info {
-	    display: inline;
-	}
-	
-	.changebtn {
-	    display: inline;
-	    float: right;
-	}
-	
-	.changebtn button {
-		width: 50px; height: 33px;
-		border-radius: 8px;
-		border: none;
-		background-color: #64B5F6;
-		color: #fff;
-		font-size: 14px;
-		cursor: pointer;
-	}
-	
-	.changebtn button:first-of-type {
-		margin-right: 3px;
-	}
-	
-	.cnt_info {
-	    margin-top: 10px;
-	    position: relative;
-	}
-	
-	.cnt_info span {
-	    font-size: 13px;
-	    margin-right: 10px;
-	    color: #9a9a9a;
-	}
-	
-	.cnt_info span:nth-child(1)::after, .cnt_info span:nth-child(2)::after {
-	    content: "";
-	    position: absolute;
-	    top: 50%;
-	    width: 2px;
-	    height: 2px;
-	    background-color: #9a9a9a;
-	    display: inline-block;
-	    border-radius: 50%;
-	    transform: translateX(300%);
-	}
-	
-	.trip_schedule {
-	    margin-top: 40px;
-	}  
-	
-	.schedule_detail {
-	    margin-top: 10px;
-	    background-color: #90caf99a;
-	    width: 100%;
-	    height: 70px;
-	    border-radius: 8px;
-	    padding: 11px;
-	    padding-left: 38px;
-	}
-	
-	.schedule_detail > p {
-	    position: relative;
-	    font-weight: bold;
-	    color: #333;
-	}
-	
-	.schedule_detail > p:first-child {
-	    margin-bottom: 6px;
-	}
-	
-	.schedule_detail > p.trip_day::before {
-	    position: absolute;
-	    top: 2px;
-	    content: "";
-	    display: inline-block;
-	    background: url("/images/boardimg/schedule.png") no-repeat center/contain;
-	    width: 16px;
-	    height: 16px;
-	    transform: translateX(-150%);
-	}
-	
-	.schedule_detail > p.trip_location::before {
-	    position: absolute;
-	    top: 3px;
-	    content: "";
-	    display: inline-block;
-	    background: url("/images/boardimg/location.png") no-repeat center/contain;
-	    width: 16px;
-	    height: 16px;
-	    transform: translateX(-150%);
-	}
-	
-	.trip_introduction, .file {
-	    margin-top: 60px;
-	}
-
-	.file {
-		margin-top: 100px;
-	}
-		
-	.trip_introduction > div {
-	    margin-top: 13px;
-	    color: #333;
-	    font-size: 14px;
-	width: 100%;
-	}
-
-	.file table {
-		border: 1px solid #42A5F5;
-		border-collapse: collapse;
-	}
-
-	.file table th {
-		border: 1px solid #cecece;
-		width: 150px;
-		padding: 10px;
-		font-size: 14px;
-	}
-	
-	.file table td {
-		border: 1px solid #cecece;
-		width: 820px;
-		padding: 10px;
-		font-size: 14px;
-	}
-	
-	.addfile a {
-		display: block;
-		margin-bottom: 5px;
-	}
-	
-	.addfile a > .downloadImg {
-		width: 15px; height: 15px;
-		margin-right: 4px;
-	}
-	
-	.line {
-		margin-top: 45px;
-		border-bottom: 1px solid #f0f0f0;
-	}
-	
-	.reply_area {
-		margin-top: 30px;
-	}
-	
-	.reply_area > div, .reply > .replyModifyForm{
-		width: 100%;
-	    margin-top: 8px;
-	    position: relative;
-		border:1px solid #2196F3;
-		border-radius: 10px;
-	}
-	.reply_area > div > div, .reply > div > div{
-		margin-left: 10px;
-		margin-bottom: 10px;
-	}
-	
-	.reply_area > div > textarea, .reply > div > textarea {
-	    overflow: auto;
-	    resize: none;
-	    width: 91.3%;
-	    outline: none;
-	    border: 1px solid #2196F3;
-	    border-radius: 10px;
-	    padding: 11px;
-	    font-size: 13px;
-	    height: 80px;
-	    caret-color: #2196F3;
-		border: none;
-	}
-	
-	.reply_area > div > textarea::placeholder, .reply > div > textarea::placeholder{
-	    font-size: 13px;
-	    color: #aaaaaa;
-	}
-	
-	.reply_area > div > [type="button"],  .reply > div > [type="button"]{
-	 	position: absolute;
-	     top: 55%; right: 1.3%;
-	     font-size: 14px;
-	     border: none;
-	     border-radius: 6px;
-	     background-color: #2196F3;
-	     width: 60px;
-	     height: 35px;
-	     color: #fff;
-	 }
-	 .reply .replyModifyForm input:nth-of-type(1){
-		top:55%;
-		right:9%;
-	 }
-	
-	 .guide_profile {
-	     margin-top: 10px;
-	     border-radius: 10px;
-	     padding: 8px;
-	     position: relative;
-	     background-color: #f5f5f5;
-	     /*padding-bottom: 15px;*/
-	 }
-	
-	 .guide_profile img {
-	     width: 35px;
-	     height: 35px;
-	     margin-right: 9px;
-		margin-top: 7px;
-		
-	 }
-	
-	 .guide_profile span {
-	     position: absolute;
-	     top: 16px;
-	     font-size: 18px;
-	 }
-	 
-	 
-	 .guide_profile img.guidebadge {
-		position: absolute;
-		top: -3px;
-	 	width: 20px; height: 20px;
-	 	margin-left: 5px;
-	 }
-	 
-	/*
-	 .guide_profile p {
-	     margin-top: 5px;
-	     font-size: 13px;
-	 }
-	*/
-	 .location {
-	     margin-top: 60px;
-	 }
-	
-	.location_detail {
-	    margin-top: 10px;
-	    border-radius: 10px;
-	    border: 1px solid #64B5F6;
-	    height: 300px;
-	}
-	
-	.chatting {
-	    margin-top: 60px;
-	    text-align: center;
-	    background-color: #2196F3;
-	    padding: 15px;
-	    border-radius: 10px;
-	    color: #fff;
-	    font-weight: bold;
-	    font-size: 14px;
-    margin-bottom: 30px;
-	}
-	
-	input[type="button"] {
-	    cursor: pointer;
-	}
-	
-	#map{
-		width:100%;
-		height: 100%;
-		border-radius: 10px;
-	}
-	.location p{
-		margin-top:5px;
-		font-weight: 400;
-		color: #9a9a9a;
-	}
-	
-	.info > div {
-		position: relative;
-	}
-	
-	#like {
-		display: inline-block;
-		width: 23px; height: 23px;
-		cursor: pointer;
-	}
-	
-	.contour {
-		display: inline-block;
-		border-right: 1px solid #c5c5c5;
-		height: 20px;
-		width: 1px;
-		margin-left: 2px;
-	}
-
-	
-	#like_area {
-		position: relative;
-		top: 2px;
-		display: inline-block;
-		margin-left: 6px;
-		width: 23px; height: 23px;
-		padding-top: 10px;
-		/* border: 1px solid red; */
-	}
-
-	/*댓글 디자인*/
-	.replies{
-		width: 100%;
-		padding:0;
-		margin-top:15px;
-		border-top: 1px solid gray;
-	}
-	.reply{
-		width: 100%;
-		margin-top: 10px;
-		display:flex;
-		border-bottom: 1px solid #f2f2f2;
-	}
-	.reply .reply_userThumnail{
-		margin-right:5px;
-	}
-	.reply .reply_userThumnail img{
-		width:50px; height:50px;
-		border-radius: 10px;
-	}
-	.reply .reply_box{
-		width: 96%;
-	}
-	.reply .reply_box .reply_userid{
-		width:100%;
-		font-size:20px;
-		font-weight:bold;
-		margin-bottom: 5px;
-	}
-	.reply .reply_box .reply_content{
-		margin-left:15px;
-		margin-bottom: 5px;
-		max-height:200px;
-		overflow-y: auto;
-		word-wrap: break-word;
-		word-break: break-all;
-		white-space: normal;
-	}
-	.reply .reply_box .reply_sticker img{
-		width:100px;
-		height:100px;
-	}
-	.reply .reply_box .reply_regdate{
-		font-size:12px;
-		color:#979797;
-	}
-	.reply .reply_tool{
-		position: relative;
-	}
-	.reply .tool-menu {
-	    position: absolute;
-		width: 100px;
-	    top: 30px;
-	    right: 0;
-	    background-color: white;
-	    border: 1px solid #ccc;
-	    border-radius: 5px;
-	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-	    padding: 10px;
-	    z-index: 10;
-	}
-	.comment_attach{
-		position: relative;
-	}
-	.reply_area .comment_attach img, .reply .modify_comment_attach img{
-		width:100px; height:100px;
-	}
-	.reply_area .comment_attach .emoticon-close-btn{
-		position: absolute;
-		left: 80px;
-		top:1px;
-	    background: rgba(255, 255, 255, 0.7); 
-	    border: none;
-	    color: #ff0000;
-	    font-size: 16px;
-	    font-weight: bold;
-	    cursor: pointer;
-	    border-radius: 50%;
-	    width: 20px;
-	    height: 20px;
-	    display: flex;
-	    align-items: center;
-	    justify-content: center;
-	    padding: 0;
-	}
-	.reply .modify_comment_attach .modify_emoticon-close-btn{
-		position: absolute;
-		left: 85px;
-		top:90px;
-	    background: rgba(255, 255, 255, 0.7); 
-	    border: none;
-	    color: #ff0000;
-	    font-size: 16px;
-	    font-weight: bold;
-	    cursor: pointer;
-	    border-radius: 50%;
-	    width: 20px;
-	    height: 20px;
-	    display: flex;
-	    align-items: center;
-	    justify-content: center;
-	    padding: 0;
-	}
-	.reply_area .comment_attach .emoticon-close-btn:hover{
-		background: rgba(255, 255, 255, 1);
-	}
-	.reply .tool-menu button {
-	    display: block;
-	    width: 100%;
-	    background: none;
-	    border: none;
-	    padding: 10px 15px;
-	    text-align: left;
-	    color: #333;
-	    cursor: pointer;
-	    font-size: 14px;
-	}
-
-	.reply .tool-menu button:hover {
-	    background-color: #f0f0f0;
-	}
-
-	.reply .tool-menu button:focus {
-	    outline: none;
-	}
-	.emoji-picker, .modify-emoji-picker{
-        position: absolute;
-        border: 1px solid #ccc;
-        background: #fff;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        margin-top: 5px;
-        z-index: 100;
-    }
-    .emoji-picker span, .modify-emoji-picker span{
-        cursor: pointer;
-        font-size: 20px;
-        margin: 5px;
-    }
-	.emoji-picker span img, .modify-emoji-picker span img{
-		width:100px; height:100px;
-	}
-	.reply .reply_tool svg{
-		cursor:pointer;
-	}
-	.replies-page{
-		margin-top: 30px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	.replies-page *{
-		text-align: center;
-		margin:0 2px;
-	}
-	.replies-page .page-btn{
-	    padding: 8px;
-	    width: 40px; height: 40px;
-	    display: flex;
-		justify-content: center;
-		align-items: center;
-	    background-color:#2196F3;
-	    color: #fff;
-	    font-weight: bold;
-		border-radius: 20px;
-	}
-	.replies-page .page-btn:hover{
-		background-color: rgb(198, 175, 245);
-	}
-	
-	.nowPage {
-		padding: 5px;
-		width: 40px;
-		height: 40px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		border-radius: 20px;
-		background-color: rgb(198, 175, 245);
-		color: #fff;
-		font-weight: bold;
-	}
-	
-	.no-reply{
-		text-align:center;
-		margin-top: 30px;
-		margin-bottom: 30px;
-	}
-
-</style>
+	<link rel="stylesheet" href="/css/layout/fontscroll.css">
+	<link rel="stylesheet" href="/css/board/boardget.css">
 </head>
 <body>
 	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
@@ -558,7 +36,7 @@
                 <div class="cnt_info">
                     <span>조회수 [[${board.viewcnt}]]</span>
 					<span id="likecnt">좋아요 [[${board.likecnt}]]</span>
-                    <span>댓글 [[${replyCnt}]]</span>
+                    <span id="replycnt">댓글 [[${board.replycnt}]]</span>
                 </div>
 
                 <div class="trip_schedule">
@@ -596,49 +74,10 @@
 								  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
 								</svg>
 							</div>
-                            <input type="button" value="등록" onclick="replySubmit();">
+							<input type="button" value="등록" onclick="replySubmit();">
                         </div>
                     </div>
 					<div class="replies">
-						<!--<div class="reply">				
-							<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
-							<div class="reply_box">
-								<div class="reply_userid">123</div>
-								<div class="reply_content">12412442112412414241241242141224141241242124424122141214214124</div>
-								<div class="reply_regdate">2024.06.02 15:24</div>
-							</div>
-							<div class="reply_tool">
-								<svg class="tool_btn" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<circle cx="12" cy="5" r="2.25" transform="rotate(90 12 5)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
-									<circle cx="12" cy="12" r="2.25" transform="rotate(90 12 12)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
-									<circle cx="12" cy="19" r="2.25" transform="rotate(90 12 19)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
-								</svg>
-							</div>
-						</div>
-						<div class="reply">				
-							<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
-							<div class="reply_box">
-								<div class="reply_userid">123</div>
-								<div class="reply_content">1241244211241241424124124214122414124124212442412214121asdfasfdfdsaasdfsfadsfasfdsaasdffsadsadfsfadsfadsdafsadfasfdadfsadfsdasafdsafd4214124</div>
-								<div class="reply_sticker"><img src="/images/layoutimg/logo_long.png" alt></div>
-								<div class="reply_regdate">2024.06.02 15:24</div>
-							</div>
-							<div class="reply_tool">
-								<svg class="tool_btn" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<circle cx="12" cy="5" r="2.25" transform="rotate(90 12 5)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
-									<circle cx="12" cy="12" r="2.25" transform="rotate(90 12 12)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
-									<circle cx="12" cy="19" r="2.25" transform="rotate(90 12 19)" stroke="#1F2023" stroke-width="1.5" stroke-linecap="round"/>
-								</svg>
-							</div>
-						</div>
-						<div class="reply">				
-							<div class="reply_userThumnail"><img src="/images/layoutimg/logo_long.png" alt></div>
-							<div class="reply_box">
-								<div class="reply_userid">123</div>
-								<div class="reply_content">12412442112412414241241242141224141241242124424122141214214124</div>
-								<div class="reply_regdate">2024.06.02 15:24</div>
-							</div>
-						</div>-->
 					</div>
 					<div class="replies-page"></div>
                 </div>
@@ -649,7 +88,28 @@
 
             <div class="">
                 <div class="guide_info">
-                    <h4>작성자</h4>
+					<div style="display: flex; justify-content: space-between;">
+		                <h4>작성자</h4>
+						<div class="report_button" style="cursor: pointer;" th:if="${board.userid != session.loginUser}">
+							<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="30" height="30" viewBox="0 0 256 256" xml:space="preserve">						
+							<defs>
+							</defs>
+							<g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
+								<path d="M 50.619 30.076 C 39.471 32.628 27.781 42.6 27.781 54.522 l 3.371 18.432 h 38.934 V 54.522 C 70.086 42.6 61.766 32.628 50.619 30.076 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(251,66,57); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 50.619 30.076 c -1.807 -0.414 -3.686 -0.64 -5.619 -0.64 c -13.854 0 -25.086 11.231 -25.086 25.086 v 18.432 h 11.237 V 54.522 C 31.152 42.6 39.471 32.628 50.619 30.076 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(226,23,23); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 73.61 72.954 H 28.824 v 13.916 h 48.618 V 76.786 C 77.442 74.669 75.727 72.954 73.61 72.954 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(202,237,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 31.072 78.637 v -5.683 H 16.39 c -2.116 0 -3.832 1.716 -3.832 3.832 v 8.382 c 0 2.116 1.716 3.832 3.832 3.832 h 57.22 c 2.116 0 3.832 -1.716 3.832 -3.832 v -0.546 H 37.057 C 33.752 84.622 31.072 81.942 31.072 78.637 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(118,194,224); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 70.086 73.954 H 19.915 c -0.552 0 -1 -0.447 -1 -1 V 54.521 c 0 -14.384 11.702 -26.085 26.085 -26.085 s 26.086 11.702 26.086 26.085 v 18.433 C 71.086 73.507 70.639 73.954 70.086 73.954 z M 20.915 71.954 h 48.171 V 54.521 c 0 -13.281 -10.805 -24.085 -24.086 -24.085 c -13.281 0 -24.085 10.805 -24.085 24.085 V 71.954 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 73.61 90 H 16.39 c -2.665 0 -4.833 -2.168 -4.833 -4.832 v -8.382 c 0 -2.664 2.168 -4.832 4.833 -4.832 h 57.22 c 2.664 0 4.832 2.168 4.832 4.832 v 8.382 C 78.442 87.832 76.274 90 73.61 90 z M 16.39 73.954 c -1.562 0 -2.833 1.271 -2.833 2.832 v 8.382 c 0 1.562 1.271 2.832 2.833 2.832 h 57.22 c 1.562 0 2.832 -1.271 2.832 -2.832 v -8.382 c 0 -1.562 -1.271 -2.832 -2.832 -2.832 H 16.39 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 45 16.246 c -0.552 0 -1 -0.448 -1 -1 V 1 c 0 -0.552 0.448 -1 1 -1 s 1 0.448 1 1 v 14.246 C 46 15.798 45.552 16.246 45 16.246 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 20.111 26.555 c -0.256 0 -0.512 -0.098 -0.707 -0.293 L 9.331 16.189 c -0.391 -0.391 -0.391 -1.023 0 -1.414 s 1.023 -0.391 1.414 0 l 10.073 10.073 c 0.391 0.391 0.391 1.023 0 1.414 C 20.623 26.458 20.367 26.555 20.111 26.555 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 69.889 26.555 c -0.256 0 -0.512 -0.098 -0.707 -0.293 c -0.391 -0.391 -0.391 -1.023 0 -1.414 l 10.073 -10.073 c 0.391 -0.391 1.023 -0.391 1.414 0 s 0.391 1.023 0 1.414 L 70.596 26.262 C 70.4 26.458 70.145 26.555 69.889 26.555 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 45 51.515 L 45 51.515 c -3.297 0 -5.969 2.673 -5.969 5.969 v 15.47 h 11.939 v -15.47 C 50.969 54.187 48.297 51.515 45 51.515 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(254,192,7); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+								<path d="M 50.97 73.954 H 39.031 c -0.552 0 -1 -0.447 -1 -1 v -15.47 c 0 -3.843 3.126 -6.97 6.969 -6.97 s 6.97 3.127 6.97 6.97 v 15.47 C 51.97 73.507 51.522 73.954 50.97 73.954 z M 40.031 71.954 h 9.939 v -14.47 c 0 -2.74 -2.229 -4.97 -4.97 -4.97 s -4.969 2.229 -4.969 4.97 V 71.954 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+							</g>
+							</svg>
+						</div>
+					</div>
                     <div class="guide_profile">
                         <img th:src="'/user/thumbnail?sysname=' + ${userprofile.sysname}" alt="">
 						<span>[[${board.userid}]]<img th:if="${guide}" src="/images/userimg/guidebadge.png" alt="" class="guidebadge"></span>
@@ -669,6 +129,7 @@
             </div>
         </div>
     </div>
+	<th:block th:include="~{layout/alertModal::alertModal}"></th:block>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
@@ -731,14 +192,22 @@ let thispage = 1;
        });
 	   
 	   $(document).on('click', '#emoji_toggle', function() {
+		if(loginUser == null) {
+			showAlertModal(2, "로그인 후 이용 가능합니다");
+			$("#emoji-picker").css("display", none);
+		}
+		
+		
 	       var $emojiPicker = $('#emoji-picker');
 	       if ($emojiPicker.length) {
 	           $emojiPicker.remove();
 	       } else {
 	           const emojiPickerHtml = `
 	               <div class="emoji-picker" id="emoji-picker">
-	                   <span class="emoticon" id="et1"><img src="/images/emoticon/1.jpg" alt></span>
-	                   <span class="emoticon" id="et2"><img src="/images/emoticon/2.jpg" alt></span>
+	                   <span class="emoticon" id="et1"><img src="/images/emoticon/1.png" alt></span>
+	                   <span class="emoticon" id="et2"><img src="/images/emoticon/2.png" alt></span>
+					   <span class="emoticon" id="et3"><img src="/images/emoticon/3.png" alt></span>
+					   <span class="emoticon" id="et4"><img src="/images/emoticon/4.png" alt></span>
 	               </div>
 	           `;
 	           $('.comment_attach').append(emojiPickerHtml);
@@ -751,7 +220,7 @@ let thispage = 1;
 	       $('.comment_attach').empty();
 	       
 	       let newContent = `
-	           <img src="/images/emoticon/${emojiId}.jpg" alt>
+	           <img src="/images/emoticon/${emojiId}.png" alt>
 	           <button class="emoticon-close-btn">&times;</button>
 	       `;
 	       $('.comment_attach').append(newContent);
@@ -770,6 +239,7 @@ let thispage = 1;
 	            {"replynum": replyId},
 	            function(result) {
 	                showReplyList(thispage);
+					updateReplyCnt(boardnum);
 	            }
 	        );
 	   })
@@ -783,28 +253,28 @@ let thispage = 1;
 			const hasSticker = replyBox.find('.reply_sticker').length > 0;
 			const stickerSrc = hasSticker ? replyBox.find('.reply_sticker img').attr('src') : '';
 			if(hasSticker){
-				modifyStickerNum = stickerSrc.match(/\/images\/emoticon\/(\d+)\.jpg/)[1];;
+				modifyStickerNum = stickerSrc.match(/\/images\/emoticon\/(\d+)\.png/)[1];;
 			}else{
 				modifyStickerNum = 0;
 			}
 			replyBox.empty();
 			const modifyBoardForm = `
-			        <div class="replyModifyForm">
-			            <textarea name="replyModifyContent" class="replyModifyContent" placeholder="댓글을 입력해주세요.">${thisContent}</textarea>
-			            <div class="modify_comment_attach">
-			                ${hasSticker ? `
-								<img src="${stickerSrc}" alt="">
-								<button class="modify_emoticon-close-btn">×</button>
-			                ` : `
-								<svg id="modify_emoji_toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-smile-fill" viewBox="0 0 16 16" style="cursor:pointer;">
-					               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
-					           </svg>
-			                `}
-			            </div>
-			            <input type="button" value="수정" id="replyModify">
-			            <input type="button" value="취소" onclick="replyModifyCancel();">
+			    <div class="replyModifyForm">
+			        <textarea name="replyModifyContent" class="replyModifyContent" placeholder="댓글을 입력해주세요.">${thisContent}</textarea>
+			        <div class="modify_comment_attach">
+			            ${hasSticker ? `
+			           <img src="${stickerSrc}" alt="">
+			           <button class="modify_emoticon-close-btn">×</button>
+			            ` : `
+			           <svg id="modify_emoji_toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-smile-fill" viewBox="0 0 16 16" style="cursor:pointer;">
+			                 <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+			             </svg>
+			            `}
 			        </div>
-			    `;
+			        <input type="button" value="수정" id="replyModify">
+			        <input type="button" value="취소" onclick="replyModifyCancel();">
+			    </div>
+			`;
 			replyBox.append(modifyBoardForm);
 			$(document).on('click', '#modify_emoji_toggle', function() {
 		        var $emojiPicker = $('#modify-emoji-picker');
@@ -813,8 +283,10 @@ let thispage = 1;
 		        } else {
 		            const emojiPickerHtml = `
 		                <div class="modify-emoji-picker" id="modify_emoji_picker">
-		                    <span class="emoticon" id="et1"><img src="/images/emoticon/1.jpg" alt></span>
-		                    <span class="emoticon" id="et2"><img src="/images/emoticon/2.jpg" alt></span>
+		                    <span class="emoticon" id="et1"><img src="/images/emoticon/1.png" alt></span>
+		                    <span class="emoticon" id="et2"><img src="/images/emoticon/2.png" alt></span>
+							<span class="emoticon" id="et3"><img src="/images/emoticon/3.png" alt></span>
+							<span class="emoticon" id="et4"><img src="/images/emoticon/4.png" alt></span>
 		                </div>
 		            `;
 		            $('.modify_comment_attach').append(emojiPickerHtml);
@@ -826,7 +298,7 @@ let thispage = 1;
 		       $('.modify_comment_attach').empty();
 		       
 		       let newContent = `
-		           <img src="/images/emoticon/${emojiId}.jpg" alt>
+		           <img src="/images/emoticon/${emojiId}.png" alt>
 		           <button class="modify_emoticon-close-btn">&times;</button>
 		       `;
 		       $('.modify_comment_attach').append(newContent);
@@ -852,6 +324,33 @@ let thispage = 1;
 			$('.modify_comment_attach').empty();
 	        $('.modify_comment_attach').append(modifyEmojiContent);
 	   })
+	   
+	   $(document).on('click','.report_button', function(){
+			if(loginUser == null) {
+				showAlertModal(2, "로그인 후 이용 가능합니다");
+				return;
+			}
+			showAlertModal(99,"");
+	   })
+	   
+	   $(document).on('click','#reportSubmitBtn', function(){
+			let reportContent = $('#report_text').val();
+			if(reportContent == ""){
+				alert("신고내역을 작성해주세요");
+				return;
+			}else{
+				if(confirm("정말로 신고하시겠습니까?")){
+		            let taskType = "1";
+		            taksService.insert(
+		                {"taskType": taskType, "detailNum": boardnum, "sendid": loginUser, "contents": reportContent},
+		                function(result){
+							$('.alertModalClose').removeAttr("id");
+		                    showAlertModal(2,"신고가 접수됐습니다")
+		                }
+		            );
+		        }
+			}
+	   })
    });
    function replyModifyCancel(){
 		showReplyList(thispage);
@@ -867,7 +366,16 @@ let thispage = 1;
 			}
 		)
    }
-	
+   
+   
+   const replycontent = document.querySelector(".replycontent");
+   
+   replycontent.addEventListener("click", function() {
+	if(loginUser == null) {
+		showAlertModal(2, "로그인 후 이용 가능합니다");
+	}
+   })
+   
 	// 댓글
 	function replySubmit() {
 	    const replycontent = $(".replycontent");
@@ -875,13 +383,15 @@ let thispage = 1;
 		console.log(boardnum+loginUser+stickerNum+content+"asdasdasd")
 	    
 	    if(replycontent.val() == "" && stickerNum == 0) {
-	        alert("댓글을 입력해주세요.");
+			showAlertModal(2, "댓글을 입력해주세요");
 	        replycontent.focus();
 	    } else {
 	        boardReplyService.insert(
 	            {"boardnum": boardnum, "userid": loginUser, "emSysname": stickerNum, "contents": content},
 	            function(result) {
 	                showReplyList(thispage);
+					
+					
 	            }
 	        );
 			stickerNum = 0;
@@ -913,7 +423,7 @@ let thispage = 1;
 			            <div class="reply_content">${reply.contents}</div>
 					`;
 					if(reply.emSysname !== "0"){
-						str += `<div class="reply_sticker"><img src="/images/emoticon/${reply.emSysname}.jpg" alt></div>`;
+						str += `<div class="reply_sticker"><img src="/images/emoticon/${reply.emSysname}.png" alt></div>`;
 					}
 					if(reply.updatecheck == 0){
 						str += `<div class="reply_regdate">${formatDateTime(reply.regdate)}</div>`;						
@@ -938,6 +448,8 @@ let thispage = 1;
 				showReplyPages(replyCnt, pagenum);
 			}
 		)
+		updateReplyCnt(boardnum);
+		
 	}
 	
 	function showReplyPages(replyCnt, pagenum) {
@@ -950,7 +462,7 @@ let thispage = 1;
 	
 	    // 이전 페이지 링크 추가
 	    if (prevPage >= 1) {
-	        str += `<a class="changePage page-btn" href="${prevPage}">&lt;</a>`;
+	        str += `<a class="changePage page-btn prevbtn" href="${prevPage}"></a>`;
 	    }
 	
 	    // 페이지 번호 링크 추가
@@ -964,7 +476,7 @@ let thispage = 1;
 	
 	    // 다음 페이지 링크 추가
 	    if (nextPage <= totalPages) {
-	        str += `<a class="changePage page-btn" href="${nextPage}">&gt;</a>`;
+	        str += `<a class="changePage page-btn nextbtn" href="${nextPage}"></a>`;
 	    }
 	
 	    repliesPage.html(str);
@@ -999,12 +511,12 @@ let thispage = 1;
 		console.log("boardnum: " + boardnum)	
 		
 		if(loginUser == null) {
-			alert("로그인 후 이용 가능합니다.");
+			showAlertModal(2, "로그인 후 이용 가능합니다");
 			return;
 		}
 		
 		if(loginUser == userid) {
-			alert("본인 게시글에는 좋아요를 클릭할 수 없습니다.");
+			showAlertModal(2, "본인 게시글에는 좋아요를 클릭할 수 없습니다");
 			return;
 		}
 		
@@ -1031,12 +543,29 @@ let thispage = 1;
 				},
 				
 				error:function(data) {
-					alert("잠시 후에 다시 시도해주세요.");
+					showAlertModal(1, "잠시 후에 다시 시도해주세요");
 				}
 				
 			});
 		}
 	})
+	
+	const taksService = {
+		insert:function(data,callback){
+			$.ajax({
+				type:"POST",
+				url:"/manager/insertTask",
+				data:JSON.stringify(data),
+				contentType:"application/json;charset=utf-8",
+				success:function(result,status,xhr){
+					callback(result)
+				},
+				error:function(result,status,xhr){
+					
+				}
+			})
+		}
+	}
 
 	const boardReplyService = {
 		insert:function(data,callback){
@@ -1047,6 +576,7 @@ let thispage = 1;
 				contentType:"application/json;charset=utf-8",
 				success:function(result,status,xhr){
 					callback(result)
+					
 				},
 				error:function(result,status,xhr){
 					
@@ -1094,8 +624,31 @@ let thispage = 1;
 					 console.error("AJAX Error:", xhr.status, status);
 				}
 			})
+		},
+		
+		getreplycnt:function(boardnum, callback) {
+			$.ajax({
+				url: "/board/getReplyCnt?boardnum=" + boardnum,
+				type: "PUT",
+				success:function(result) {
+					callback(result);
+				}, 
+				error:function(status, xhr) {
+					console.error("AJAX Error:", xhr.status, status);
+				}
+			})
+			
 		}
 	}
+	
+	
+	
+	function updateReplyCnt(boardnum) {
+		boardReplyService.getreplycnt(boardnum, function(cnt) {
+			$("#replycnt").html("댓글 " + cnt);
+		});
+	}
+	
 	
 	function formatDateTime(dateTimeStr) {
 	    const dateTime = new Date(dateTimeStr);

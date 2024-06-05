@@ -12,7 +12,7 @@ ul{
     padding: 0;
     font-size: 23px;
 }
-li{
+.pakcage_agreeTab li, .package_scrollTab li{
     width: 25%;
     height: 50px;
     list-style: none;

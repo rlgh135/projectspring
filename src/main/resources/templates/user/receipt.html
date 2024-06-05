@@ -4,34 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>결제 내역</title>
+	<link rel="stylesheet" href="/css/layout/fontscroll.css">
+	<link rel="stylesheet" href="/css/user/receipt.css">
 </head>
 <body>
-    <div id="wrap">
-        <th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
-        <section id="reciptzone">
-            <div id="targetarea" th:onclick="|location.href='/package/pget?packagenum=${pack.packagenum}'|">
-                <div class="packagethumb">
-                    <img src="">
-                </div>
-                <div>
-                    <div class="pname">[[${pack.packageTitle}]]</div>
-                    <div class="pduring">[[${pack.startdate}]] ~ [[${pack.enddate}]]</div>
-                    <div class="pbtn">클릭 시 해당 패키지로 이동</div>
-                </div>
-            </div>
-            <ul id="infoarea">
-                <li id="startdate"></li>
-                <li th:if="${reservation.name=='회원'}" id="inone">[[${reservation.userid}]]님 포함 [[${reservation.adultCnt+reservation.childCnt}]]명</li>
-                <li th:unless="${reservation.name=='회원'}" id="inone">[[${reservation.name}]]님 포함 [[${reservation.adultCnt+reservation.childCnt}]]명</li>
-                <li id="sudan">결제금액: [[${reservation.price}]]￦ 결제수단: [[${reservation.payMethod}]] 상태: <span th:if="${reservation.isDelete==1}" id="canslestatus" style="color: red;">취소신청</span><span th:unless="${reservation.isDelete==1}" id="canslestatus" style="color: green;">여행준비</span></li>
-            </ul>
-        </section>
-        <div class="Btnzone">
-            <a th:if="${reservation.isDelete==0}" href="javascript:cansler()" id="cansler" data-type="apply">예약취소신청</a>
-            <a th:unless="${reservation.isDelete==0}" href="javascript:cansler()" id="cansler" data-type="apply">신청취소</a>
-            <a href="/">나가기</a>
-        </div>
-    </div>
+	<div id="wrap">
+	    <section id="reciptzone">
+	        <div id="targetarea" th:onclick="|location.href='/package/pget?packagenum=${pack.packagenum}'|">
+	            <div class="packagethumb">
+	                <img th:src="${'/package/thumbnail?systemname='+thumbnail.pfSysname}">
+	            </div>
+	            <div>
+	                <div class="pname">[[${pack.packageTitle}]]</div>
+	                <div class="pduring">[[${pack.startdate}]] ~ [[${pack.enddate}]]</div>
+	                <div class="pbtn">클릭 시 해당 패키지로 이동</div>
+	            </div>
+	        </div>
+	        <ul id="infoarea">
+	            <li id="startdate"></li>
+	            <li th:if="${reservation.name=='회원'}" id="inone">[[${reservation.userid}]]님 포함 [[${reservation.adultCnt+reservation.childCnt}]]명</li>
+	            <li th:unless="${reservation.name=='회원'}" id="inone">[[${reservation.name}]]님 포함 [[${reservation.adultCnt+reservation.childCnt}]]명</li>
+	            <li id="sudan">결제금액: [[${reservation.price}]]￦ 결제수단: [[${reservation.payMethod}]] 상태: <span th:if="${reservation.isDelete==1}" id="canslestatus" style="color: red;">취소신청</span><span th:unless="${reservation.isDelete==1}" id="canslestatus" style="color: green;">여행준비</span></li>
+	        </ul>
+	    
+	    <div class="Btnzone">
+	        <div class="Btnzone1">
+	            <a href="/">나가기</a>
+	        </div>
+	        <div class="Btnzone2">
+	            <a th:if="${reservation.isDelete==0}" href="javascript:cansler()" id="cansler" data-type="apply">예약취소신청</a>
+	            <a th:unless="${reservation.isDelete==0}" href="javascript:cansler()" id="cansler" data-type="apply">신청취소</a>
+	        </div>
+	        
+	    </div>
+	    </section>
+	</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script th:inline="javascript">

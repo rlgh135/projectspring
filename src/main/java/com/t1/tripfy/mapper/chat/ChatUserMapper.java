@@ -12,11 +12,14 @@ import com.t1.tripfy.domain.dto.chat.ChatUserDTO;
 public interface ChatUserMapper {
 	//userid로 chat_user 테이블 행 긁어오기
 	ArrayList<ChatUserDTO> selectSpecificChatUserByUserid(String userid);
-	//채팅방에 가입해있는 상대방의 userid를 가져오기
-	/*1대1 채팅 전용*/
-	String selectOpponentUserid(Long chatRoomIdx, String userid);
 	/**
-	 * <p><strong>SELECT</strong> : chatRoomIdx로 채팅방 사용자 정보 가져오기
+	 * <p><strong>SELECT</strong> : chatRoomIdx, userid로 채팅방의 상대 사용자 userid 가져오기
+	 * <p>요청자를 제외하고 가져옴
+	 * <p><strong>다대다 가능</strong>
+	 * */
+	List<String> selectOpponentUserid(Long chatRoomIdx, String userid);
+	/**
+	 * <p><strong>SELECT</strong> : chatRoomIdx, userid로 채팅방의 상대 사용자 chat_user 행 가져오기
 	 * <p>요청자를 제외하고 가져옴
 	 * <p><strong>다대다 가능</strong>
 	 * */
@@ -33,7 +36,8 @@ public interface ChatUserMapper {
 	/**
 	 * <p><strong>SELECT</strong> : userid로 채팅방 가져오기
 	 * <p>다만 닫힌 채팅방(chat_user.chat_user_is_quit = true, chat_room.chat_room_is_terminated)은 가져오지 않음
-	 * <p>반환값은 각각 <br>chat_room_idx, chat_user_is_creator, last_msg_date(chat_room_idx의 제일 최신 메시지 regdate)<br>로 이루어져 있음
+	 * <p>반환값은 각각 <br>chat_room_idx, chat_room_title, packagenum, chat_user_is_creator, regdate(채팅방 개설일), last_msg_date(chat_room_idx의 제일 최신 메시지 regdate)<br>로 이루어져 있음
+	 * <p><strong>최신 내림차순 정렬</strong>
 	 * */
 	List<Map<String, Object>> selectAllByUserid(String userid);
 	

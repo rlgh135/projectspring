@@ -21,5 +21,6 @@ public class ChatDetailBulkMessagePayload implements MessagePayload {
 	private Long startChatDetailIdx;
 	private Long endChatDetailIdx;
 	private Boolean isFirst;
+	private String requestUserid;
 	private List<ChatDetailDTO> chatDetails;
 }
