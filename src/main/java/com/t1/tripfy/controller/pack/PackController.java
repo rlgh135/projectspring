@@ -136,7 +136,7 @@ public class PackController {
 		        allPreserves.addAll(reserve);
 		}
 	
-
+		model.addAttribute("recent", recent);
 	    model.addAttribute("cheap", cheap);
 	    model.addAttribute("pop", pop);
 	    model.addAttribute("rfile", allRfiles);
