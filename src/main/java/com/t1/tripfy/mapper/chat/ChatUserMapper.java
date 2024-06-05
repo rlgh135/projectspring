@@ -12,11 +12,14 @@ import com.t1.tripfy.domain.dto.chat.ChatUserDTO;
 public interface ChatUserMapper {
 	//userid로 chat_user 테이블 행 긁어오기
 	ArrayList<ChatUserDTO> selectSpecificChatUserByUserid(String userid);
-	//채팅방에 가입해있는 상대방의 userid를 가져오기
-	/*1대1 채팅 전용*/
-	String selectOpponentUserid(Long chatRoomIdx, String userid);
 	/**
-	 * <p><strong>SELECT</strong> : chatRoomIdx로 채팅방 사용자 정보 가져오기
+	 * <p><strong>SELECT</strong> : chatRoomIdx, userid로 채팅방의 상대 사용자 userid 가져오기
+	 * <p>요청자를 제외하고 가져옴
+	 * <p><strong>다대다 가능</strong>
+	 * */
+	List<String> selectOpponentUserid(Long chatRoomIdx, String userid);
+	/**
+	 * <p><strong>SELECT</strong> : chatRoomIdx, userid로 채팅방의 상대 사용자 chat_user 행 가져오기
 	 * <p>요청자를 제외하고 가져옴
 	 * <p><strong>다대다 가능</strong>
 	 * */

@@ -2,6 +2,7 @@ package com.t1.tripfy.config.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +29,27 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
 	
-	//임마는 유저 <-> 서버간 1대1 세션(WebSocketSession 객체)를 저장하는 친구
-	// 최소한 내가 이해하기로는 WebSocketSession 객체는 HttpSession처럼 각 유저별로 따로 존재함
-	// WebSocketSession 임마로 sendMessage()등을 할 수 있으니 이렇게 따로 모아놓았다가
-	// 메시지 전달(handleTextMessage) 시 임마를 기준으로 뿌려준다
-	// 또한 ping/pong 시에도 임마를 순회하면서 쏴준다
-	private static final HashMap<String, WebSocketSession> WEBSOCKET_SESSIONS = new HashMap<>();
 	
-	// userid - WebsocketSession
-	// chatRoomIdx - userid
+	// userid - WebSocketSession
+	// chatRoomIdx < userid
+	// userid < chatRoomIdx
+	/*
+	 * 일단 WEBSOCKET_SESSIONS는 동시로그인 처리는 안하게 할 거임
+	 * 이건 로그인쪽이랑 얘기해봐야되서 보류 
+	 * */
+	//웹소켓 접속 유저 목록
+	private static final HashMap<String, WebSocketSession> WEBSOCKET_SESSIONS = new HashMap<>();
+	//채팅방 유저 목록
 	private static final HashMap<Long, ArrayList<String>> OPENED_CHAT_INFO = new HashMap<>();
-//	private static final HashMap<Long, ArrayList<String>> 이런_방식으로_해서_WEBSOCKET_SESSIONS랑_비교해서_afterConnectionEstablished_처리하면_될듯 = new HashMap<>();
+	//유저의 채팅방 접속 상태 목록
+	private static final HashMap<String, ArrayList<Long>> OPENED_CHAT_REV = new HashMap<>();
+	/*
+	 * !!!!주의
+	 * OPENED_CHAT_INFO 는 연결상태를 정의하지 않음
+	 * 단순히 채팅방 유저 목록을 저장하는 목적만 가진 변수임
+	 * 
+	 * OPENED_CHAT_REV 가 연결 상태를 정의함
+	 * */
 	
 	//jackson 직렬/역직렬화용
 	@Autowired
@@ -90,83 +101,121 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-//		//우선 역직렬화
-//		/* domain.dto.MessagePayload, Message 참조*/
-//		MessageDTO<?> receivedMsg = objectMapper.readValue(message.getPayload(), 
-//				objectMapper.getTypeFactory()
-//						.constructParametricType(MessageDTO.class, MessagePayload.class));
-//
-//		//발송자를 파악해 receivedMsg에 삽입
-//		String userid = (String) session.getAttributes().get("loginUser");
-//		receivedMsg.setSenderId(userid);
-//
-//		if(log.isDebugEnabled()) {
-//			log.debug("msg received, WebSocket, userid={}, msg={}", receivedMsg.getSenderId(), receivedMsg);
-//			log.debug("msg ACT={}", receivedMsg.getAct());
-//			log.debug("msg value={}", receivedMsg);
-//		}
-//		
-//		//송신용 객체 생성
-//		MessageDTO<? extends MessagePayload> sendingMsg;
-//		
-//		//receivedMsg.act 값을 기준으로 분기
-//		switch(receivedMsg.getAct()) {
-//		case "chatRoomEnter": //  -> MessageDTO<ChatRoomEnterMessagePayload>
-//			//채팅방 진입 요청
-//			
-//			Long creRoomIdx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
-//			
-//			//진입하려는 채팅방이 이미 열린(OPENED_CHAT_INFO에 있는지) 채팅방인지 확인
-//			if(!OPENED_CHAT_INFO.containsKey(creRoomIdx)) {
-//				//닫혀있는 경우 키밸류 생성 후 senderId 삽입
-//				OPENED_CHAT_INFO.put(creRoomIdx, createValueObjectOfOPENED_CHAT_INFO());
-//				OPENED_CHAT_INFO.get(creRoomIdx).get("USER").add(userid);
-//				OPENED_CHAT_INFO.get(creRoomIdx).get("CONN_USER").add(userid);
-//				//서비스 찍기
-//				if(null == (sendingMsg = chatServiceImpl.chatRoomEnterHandling(receivedMsg))) {
-//					//조회 실패시 처리
-//					// 이거 좀 정리하자 -240531
-//					session.sendMessage(new TextMessage(
-//							objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
-//					));
-//					OPENED_CHAT_INFO.remove(creRoomIdx);
-//					return;
-//				}
-//				//receiverId 삽입
-//				OPENED_CHAT_INFO.get(creRoomIdx).get("USER").add(sendingMsg.getReceiverId());
-//			} else {
-//				//열려있는 경우
-//				if(null == (sendingMsg = chatServiceImpl.chatRoomEnterHandling(receivedMsg))) {
-//					//조회 실패시 처리
-//					session.sendMessage(new TextMessage(
-//							objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
-//					));
-//					return;
-//				}
-//				//OCI 삽입
-//				OPENED_CHAT_INFO.get(creRoomIdx).get("CONN_USER").add(userid);
-//			}
-//			
-//			//채팅방 진입 요청자에게 값 전달
-//			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg)));
-//			break;
-//		case "chatRoomLeave":
-//			//채팅방 이탈 요청
-//			/*이거 여기(정상적 이탈)만이 아니라 afterConnClosed 쪽(비정상적 이탈) 시에도 처리해줘야할지도
-//			 * 이탈자 userid로 존재하는 모든 캐시 날리기 정도?*/
-//			/*여기서는 요청받은 채팅방만 처리, afterConnClosed에서는 해당 세션의 모든 채팅방 처리*/
-//			Long crlRoomidx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
-//			
-//			//접속유저목록에서 삭제
-//			OPENED_CHAT_INFO.get(crlRoomidx).get("CONN_USER").remove(userid);
-//			if(OPENED_CHAT_INFO.get(crlRoomidx).get("CONN_USER").isEmpty()) {
-//				//해당 채팅방의 마지막 접속 유저였다면 저장소도 날린다
-//				OPENED_CHAT_INFO.remove(crlRoomidx);
-//			}
-//			
-//			//응답
-//			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(receivedMsg)));
-//			break;
+		//우선 역직렬화
+		/* domain.dto.MessagePayload, Message 참조*/
+		MessageDTO<?> receivedMsg = objectMapper.readValue(message.getPayload(), 
+				objectMapper.getTypeFactory()
+						.constructParametricType(MessageDTO.class, MessagePayload.class));
+
+		//발송자를 파악해 receivedMsg에 삽입
+		String userid = (String) session.getAttributes().get("loginUser");
+		receivedMsg.setSenderId(userid);
+
+		if(log.isDebugEnabled()) {
+			log.debug("msg received, WebSocket, userid={}, msg={}", receivedMsg.getSenderId(), receivedMsg);
+			log.debug("msg ACT={}", receivedMsg.getAct());
+			log.debug("msg value={}", receivedMsg);
+		}
+		
+		//송신용 객체 생성
+		MessageDTO<? extends MessagePayload> sendingMsg;
+		
+		//receivedMsg.act 값을 기준으로 분기
+		switch(receivedMsg.getAct()) {
+		case "chatRoomEnter": //  -> MessageDTO<ChatRoomEnterMessagePayload>
+			//채팅방 진입 요청
+			
+			Long creRoomIdx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
+			
+			/*
+			 * 기존에는 우선 맵에 저장 후 처리 -> 실패시 삭제의 구조였는데
+			 * 갈아엎을거임
+			 * 이제는 처리를 먼저 하고 결과에 따라 삽입하게 한다
+			 * */
+			
+			//열린 채팅방인지 확인
+			if(!OPENED_CHAT_INFO.containsKey(creRoomIdx)) {
+				//닫힌 경우 사용자 정보를 가져와야 함
+				
+				//서비스 조회
+				if(null == (sendingMsg = chatServiceImpl.chatRoomEnterHandling(receivedMsg.setSenderId(userid), true))) {
+					//조회 실패
+					session.sendMessage(new TextMessage(
+							objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
+					));
+					return;
+				}
+				
+				//채팅방 정보 맵에 저장
+				//맵 키밸류 생성
+				OPENED_CHAT_INFO.put(creRoomIdx, createHashMapValue());
+				//상대 유저 저장
+				for(String id : sendingMsg.getReceiverId()) {
+					OPENED_CHAT_INFO.get(creRoomIdx).add(id);
+				}
+				//요청자 저장
+				OPENED_CHAT_INFO.get(creRoomIdx).add(userid);
+				//채팅방 접속 상태 저장
+				if(!OPENED_CHAT_REV.containsKey(userid)) {
+					OPENED_CHAT_REV.put(userid, createHashMapValue());
+					OPENED_CHAT_REV.get(userid).add(creRoomIdx);
+				} else {
+					OPENED_CHAT_REV.get(userid).add(creRoomIdx);
+				}
+			} else {
+				//열린 경우
+				//서비스 조회
+				if(null == (sendingMsg = chatServiceImpl.chatRoomEnterHandling(receivedMsg.setSenderId(userid), false))) {
+					//조회 실패
+					session.sendMessage(new TextMessage(
+							objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
+					));
+					return;
+				}
+				//채팅방 접속 상태 저장
+				if(!OPENED_CHAT_REV.containsKey(userid)) {
+					OPENED_CHAT_REV.put(userid, createHashMapValue());
+					OPENED_CHAT_REV.get(userid).add(creRoomIdx);
+				} else {
+					OPENED_CHAT_REV.get(userid).add(creRoomIdx);
+				}
+			}
+			
+			//채팅방 진입 요청자에게 값 전달
+			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg)));
+			break;
+		case "chatRoomLeave":
+			//채팅방 이탈 요청
+			/*여기서는 요청받은 채팅방만 처리, afterConnClosed에서는 해당 세션의 모든 채팅방 처리
+			 * 
+			 * 웹소켓 연결 해제 여부는 SharedWorker에서 판단함
+			 * */
+			Long crlRoomidx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
+			
+			//우선 요청자 삭제
+			OPENED_CHAT_REV.get(userid).remove(crlRoomidx);
+			//해당 채팅방의 유저 중 요청자 제외 접속해있는 유저가 존재하는지 확인
+			boolean shouldDelete = true;
+			for(String id : OPENED_CHAT_INFO.get(crlRoomidx)) {
+				if(OPENED_CHAT_REV.containsKey(id) && OPENED_CHAT_REV.get(id).contains(crlRoomidx)) {
+					shouldDelete = false;
+					break;
+				}
+			}
+			//요청자 제외 접속자가 없으면 키밸류 삭제
+			/* 나중에 채팅 캐시 만들면 여기서 DB로 insert */
+			if(shouldDelete) {
+				OPENED_CHAT_INFO.remove(crlRoomidx);
+			}
+			//해당 채팅방이 요청자가 접속해있었던 마지막 채팅방이면
+			// 접속맵에서도 삭제
+			if(OPENED_CHAT_REV.get(userid).isEmpty()) {
+				OPENED_CHAT_REV.remove(userid);
+			}
+			
+			//응답
+			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(receivedMsg)));
+			break;
 //		case "sendChat":
 //			//메시지 전송 요청
 //			/*
@@ -243,7 +292,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 //			//오류 처리 등?
 //			// 필요 없는 로직일 수도
 //			break;
-//		}
+		}
 //		테스트를 위해 주석처리 - 240603
 	}
 
@@ -253,27 +302,54 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	 * */
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-//		//세션 저장 객체에서 삭제해준다
-//		//채팅세션 저장 객체에서도 삭제
-//		//이거 사용자 로그아웃 시에도 우선적으로 호출하게 해야 함
-//		String userid = (String)session.getAttributes().get("loginUser");
-//		
-//		if(WEBSOCKET_SESSIONS.containsValue(session)) {
-//			WEBSOCKET_SESSIONS.remove(userid);
-//		}
-//		for(Map.Entry<Long, HashMap<String, ArrayList<String>>> target : OPENED_CHAT_INFO.entrySet()) {
-//			if(target.getValue().get("CONN_USER").contains(userid)) {
-//				OPENED_CHAT_INFO.get(target.getKey()).get("CONN_USER").remove(userid);
-//				if(OPENED_CHAT_INFO.get(target.getKey()).get("CONN_USER").isEmpty()) {
-//					OPENED_CHAT_INFO.remove(target.getKey());
-//				}
-//			}
-//		}
-//		테스트를 위해 주석처리 - 240603
+		//세션 저장 객체에서 삭제해준다
+		//채팅세션 저장 객체에서도 삭제
+		//이거 사용자 로그아웃 시에도 우선적으로 호출하게 해야 함
+		String userid = (String)session.getAttributes().get("loginUser");
+		
+		//채팅 접속 맵에서 삭제 - 마지막 접속자였으면 OCI에서도 삭제
+		//해야할거
+		// OCR에서 요청자 삭제
+		// OCR에서 userid가 접속해있던 채팅방 목록 꺼내오기
+		// OCI에서 꺼내온 roomidx들 순회하면서 접근해 각 채팅방의 유저 파악
+		// 다시 OCR로 가서 각 채팅방별로 연결 유지중인 유저 수 파악
+		//  연결 유지중인 유저가 없는 채팅방은 OCI에서 삭제
+		//  각 유저들도 체크해 해
+		//근데 이 모든건 OCR에 userid 가 있는 경우에만 해주면 됨(비정상적 연결해제 아마 사용자가 브라우저를 통째로 닫는다던가)
+		if(OPENED_CHAT_REV.containsKey(userid)) {
+			List<Long> roomList = OPENED_CHAT_REV.remove(userid);
+			for(long keyIdx : roomList) {
+				List<String> userList = OPENED_CHAT_INFO.get(keyIdx);
+				boolean shouldDelete = true;
+				for(String keyId : userList) {
+					if(!keyId.equals(userid)) {
+						if(OPENED_CHAT_REV.containsKey(keyId) && OPENED_CHAT_REV.get(keyId).contains(keyIdx)) {
+							shouldDelete = false;
+							break;
+						}
+					}
+				}
+				if(shouldDelete) {
+					OPENED_CHAT_INFO.remove(keyIdx);
+				}
+			}
+		}
+		
+		//웹소켓 맵에서 삭제
+		if(WEBSOCKET_SESSIONS.containsValue(session)) {
+			WEBSOCKET_SESSIONS.remove(userid);
+		}
+		
+		if(log.isDebugEnabled())
+			log.debug("disconnect, WebSocket, userid={}", userid);
 	}
 	
 	//==========================================================================================
 	//== AOP ===================================================================================
+	private <T> ArrayList<T> createHashMapValue() {
+		return new ArrayList<T>();
+	}
+	
 	private HashMap<String, ArrayList<String>> createValueObjectOfOPENED_CHAT_INFO() {
 		HashMap<String, ArrayList<String>> temp = new HashMap<>();
 		temp.put("USER", new ArrayList<>());

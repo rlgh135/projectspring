@@ -48,18 +48,20 @@ self.onconnect = function(e) {
 				}
 				break;
 			case "chatRoomEnter":
-				if(chatRoomEnter(e.data, port)) {
+				if(chatRoomEnter(e.data, port).result) {
 					for(let key in PORT_LIST) {
 						if(PORT_LIST[key].port == port) {
 							PORT_LIST[key].chatRoomIdx = e.data.payload.roomidx;
 						}
 					}
 				} else {
+					//실패시 웹소켓을 끊는다
+					disconnectWebSocket();
 					connectSSE();
 				}
 				break;
 			case "chatRoomLeave":
-				if(chatRoomLeave(e.data, port)) {
+				if(chatRoomLeave(e.data, port).result) {
 					let crlFlag = true;
 					for(let key in PORT_LIST) {
 						if(PORT_LIST[key].port == port) {
@@ -71,6 +73,7 @@ self.onconnect = function(e) {
 					}
 					//접속중인 채팅방이 없으면 연결을 내린다
 					if(crlFlag) {
+						console.log("why");
 						disconnectWebSocket();
 						connectSSE();
 					}
@@ -243,17 +246,18 @@ async function promised_WebSocketReceiver(act) {
 	return new Promise((resolve, reject) => {
 		const receiver = (e) => {
 			const data = JSON.parse(e.data);
+			console.log(e.data);
 			if(data.act === act) {
 				resolve(data);
 				WEBSOCKET.removeEventListener("message", receiver);
 			}
 		}
-		WEBSOCKET.addEventListener("message", receiver);
 		setTimeout(() => {
 			if(!!WEBSOCKET)
 				WEBSOCKET.removeEventListener("message", receiver);
 			reject(new Error("timeout"));
 		}, 3000);
+		WEBSOCKET.addEventListener("message", receiver);
 	});
 }
 //연결 종료
@@ -296,6 +300,8 @@ function connectSSE() {
 }
 //웹소켓 연결
 async function connectWebSocket() {
+	console.log("connWS");
+
 	WEBSOCKET = new WebSocket("ws://localhost:8080/wschat");
 	
 	WEBSOCKET.onopen = (e) => {
@@ -322,10 +328,10 @@ async function connectWebSocket() {
 			resolve();
 			WEBSOCKET.removeEventListener("open", dcs);
 		};
-		WEBSOCKET.addEventListener("open", dcs);
 		setTimeout(() => {
 			WEBSOCKET.removeEventListener("open", dcs);
 			reject(new Error("timeout"));
 		}, 3000);
+		WEBSOCKET.addEventListener("open", dcs);
 	});
 }

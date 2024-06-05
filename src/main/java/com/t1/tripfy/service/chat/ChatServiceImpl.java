@@ -49,20 +49,18 @@ public class ChatServiceImpl implements ChatService {
 	// !!채팅방 진입시 chat_user.chat_detail_idx 수정해야함
 	@Override
 	@Transactional
-	public MessageDTO<ChatDetailBulkMessagePayload> chatRoomEnterHandling(MessageDTO<? extends MessagePayload> receiveMsg) {
+	public MessageDTO<ChatDetailBulkMessagePayload> chatRoomEnterHandling(MessageDTO<? extends MessagePayload> receiveMsg, boolean doesNeedToLoadUser) {
+		//payload 초기화
 		ChatDetailBulkMessagePayload bulk = new ChatDetailBulkMessagePayload();
-		String opperUserid;
 		
-		//상대 유저의 이름이 오지 않았으면 DB서 가져온다
-//		if(null == (opperUserid = receiveMsg.getReceiverId())) {
-//			if(null == (opperUserid = chatUserMapper.selectOpponentUserid(((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx()
-//					, receiveMsg.getSenderId()))) {
-//				//조회 실패시 처리
-//				return null;
-//			}
-//		}
-//		테스트를 위해 주석처리 - 240603
-		
+		//최초 채팅방 진입시 가입자들의 userid를 가져온다
+		if(doesNeedToLoadUser) {
+			//대충 receiverMsg.receiverId에 DB서 긁어온 값을 대입, 그 후 receiverId 값이 null인지 체크
+			if(null == (receiveMsg.setReceiverId( chatUserMapper.selectOpponentUserid( ((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(), receiveMsg.getSenderId() ) ).getReceiverId())) {
+				//조회 실패
+				return null;
+			}
+		}
 		
 		//chat_user.chat_detail_idx 최신화
 		if(1 != chatUserMapper.updateChatDetailIdxToEnd(
@@ -95,7 +93,8 @@ public class ChatServiceImpl implements ChatService {
 					bulk.getChatDetails().isEmpty()
 					? null
 					: bulk.getChatDetails().get(0).getChatDetailIdx())
-			.setIsFirst(bulk.getChatDetails().size() < 30 ? true : false);
+			.setIsFirst(bulk.getChatDetails().size() < 30 ? true : false)
+			.setRequestUserid(receiveMsg.getSenderId());
 		
 		//MessageDTO 구성후 반환
 		MessageDTO<ChatDetailBulkMessagePayload> msg = new MessageDTO<>();
@@ -103,9 +102,8 @@ public class ChatServiceImpl implements ChatService {
 			.setAct(receiveMsg.getAct())
 			.setPayload(bulk)
 			.setSenderId(receiveMsg.getSenderId())
-//			.setReceiverId(opperUserid);
-			;
-//		테스트를 위해 주석처리 - 240603
+			//!!매개변수 doesNeedToLoadUser가 false인 경우 null이 대입됨
+			.setReceiverId(receiveMsg.getReceiverId());
 	}
 	
 	//채팅 수신 처리

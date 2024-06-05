@@ -25,7 +25,7 @@ public interface ChatService {
 	// + 여기서 DB 조회를 통해 유저 - 유저 매칭을 서버 메모리에 저장함 - 최소한 꺼내옴
 	//   매번 메시지 수신시마다 DB를 찍을 수는 없으니까..
 	// 일단 메서드는 그대로 분리하고 chatRoomIdx < userid 매핑을 WebSocket쪽에 추가함 <-이거 ChatServiceImpl로 옮길까?
-	MessageDTO<ChatDetailBulkMessagePayload> chatRoomEnterHandling(MessageDTO<? extends MessagePayload> receivedMsg);
+	MessageDTO<ChatDetailBulkMessagePayload> chatRoomEnterHandling(MessageDTO<? extends MessagePayload> receivedMsg, boolean doesNeedToLoadUser);
 	
 	// 채팅 수신 처리
 	MessageDTO<ChatContentDetailMessagePayload> chatReceiveHandling(MessageDTO<? extends MessagePayload> receivedMsg);

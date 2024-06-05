@@ -9,16 +9,17 @@
 		WHERE userid = #{userid}
 	</select>
 	<!--
-		채팅방에 가입해있는 상대방의 userid를 가져오기
-		1대1 채팅 전용
+		채팅방의 상대 유저 userid만 가져오기
+		요청자 제외
+		다대다 가능
 	-->
 	<select id="selectOpponentUserid">
 		SELECT userid
 		FROM chat_user
 		WHERE
-			chat_room_idx = #{chatRoomIdx}
-		AND
-			userid != #{userid}
+				chat_room_idx = #{chatRoomIdx}
+			AND
+				userid != #{userid}
 	</select>
 	
 	<!-- 
