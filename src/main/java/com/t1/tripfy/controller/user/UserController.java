@@ -110,8 +110,15 @@ public class UserController {
 		List<BoardFileDTO> bflist = new ArrayList<>();
 		if(mylist.size()>0) {
 			for (BoardDTO board : mylist) {
-				bflist.add(service.getMyBoardThumbnail(board.getBoardnum()));
-				System.out.println(service.getMyBoardThumbnail(board.getBoardnum()));
+				BoardFileDTO boardthumb = service.getMyBoardThumbnail(board.getBoardnum());
+				if(boardthumb == null) {
+					BoardFileDTO boardfile = new BoardFileDTO();
+					boardfile.setBoardnum(board.getBoardnum());
+					boardfile.setSysname("no_img.jpg");
+					bflist.add(boardfile);
+				} else {
+					bflist.add(boardthumb);
+				}
 			}
 		}
 		model.addAttribute("list",mylist);
@@ -186,7 +193,15 @@ public class UserController {
 			
 			if(boardlist.size()>0) {
 				for (BoardDTO board : boardlist) {
-					thumbnail.add(service.getMyBoardThumbnail(board.getBoardnum()));
+					BoardFileDTO boardthumb = service.getMyBoardThumbnail(board.getBoardnum());
+					if(boardthumb == null) {
+						BoardFileDTO boardfile = new BoardFileDTO();
+						boardfile.setBoardnum(board.getBoardnum());
+						boardfile.setSysname("no_img.jpg");
+						thumbnail.add(boardfile);
+					} else {
+						thumbnail.add(boardthumb);
+					}
 					System.out.println("보드:" +service.getMyBoardThumbnail(board.getBoardnum()));
 				}
 			}
