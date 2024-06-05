@@ -90,7 +90,7 @@
                 <div class="guide_info">
 					<div style="display: flex; justify-content: space-between;">
 		                <h4>작성자</h4>
-						<div class="report_button" style="cursor: pointer;">
+						<div class="report_button" style="cursor: pointer;" th:if="${board.userid != session.loginUser}">
 							<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="30" height="30" viewBox="0 0 256 256" xml:space="preserve">						
 							<defs>
 							</defs>
