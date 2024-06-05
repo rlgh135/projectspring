@@ -129,7 +129,7 @@
                 <a th:if="${list != null and list.size > 0}" th:each="board, i:${list}" th:href="@{/board/get(boardnum=${board.boardnum})}">
                     <div class="post">
                         <div class="guide">
-                            <img th:src="'/BoardThumnail/' + ${profiles[i.index].sysname}" alt="">
+                            <img th:src="'/user/thumbnail?sysname=' + ${profiles[i.index].sysname}" alt="">
                             <span>[[${board.userid}]]<img th:if="${guides[i.index]}"  src="/images/userimg/guidebadge.png" alt="" class="guidebadge"></span>
 							
 							<div class="cnts">
