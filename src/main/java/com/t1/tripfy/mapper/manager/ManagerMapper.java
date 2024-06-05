@@ -12,4 +12,10 @@ public interface ManagerMapper {
 	ManagerDTO checkKey(String managerKey);
 
 	ArrayList<TaskMessageDTO> getTaskMessageList(TaskMessageDTO task);
+
+	int updateAnswer(TaskMessageDTO task);
+
+	int insertTask(TaskMessageDTO task);
+
+	TaskMessageDTO getLastTaskByUserid(String sendid);
 }

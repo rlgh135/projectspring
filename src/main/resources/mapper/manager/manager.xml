@@ -4,9 +4,18 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.t1.tripfy.mapper.manager.ManagerMapper">
+	<insert id="insertTask">
+		insert into task_message(task_type,detail_num,sendid,contents)
+		values(#{taskType},#{detailNum},#{sendid},#{contents})
+	</insert>
 	<select id="checkKey">
 		select * from manager
 		where manage_key = #{managerKey}
+	</select>
+	<select id="getLastTaskByUserid">
+		select * from task_message
+		where sendid = #{sendid}
+		order by messagenum desc limit 1
 	</select>
 	<select id="getTaskMessageList">
 		select * from task_message
@@ -20,4 +29,9 @@
 		</where> 
 		order by regdate desc;
 	</select>
+	<update id="updateAnswer">
+		update task_message
+		set answer = #{answer}, task_status = 2
+		where messagenum = #{messagenum} 
+	</update>
 </mapper>

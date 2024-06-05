@@ -207,6 +207,7 @@ public class PackController {
 	    model.addAttribute("package", pack);
 	    model.addAttribute("files", service.getFiles(packagenum));
 	    String loginUser = (String) session.getAttribute("loginUser");
+	    System.out.println("로그인 유저 : "+loginUser);
 	    List<ReservationDTO> reserve = service.getReservationCntByPackagenum(packagenum); 
 	    System.out.println(reserve+"대체 왜 없는거야 슈우발 ");
 	    List<ReviewDTO> reviewlist = new ArrayList<>();

@@ -182,6 +182,8 @@
 $(document).ready(function(){	
 	let taskStatus = "0";
 	let taskType = "0";
+	let scrollPosition = 0;
+	
 	$(document).on("click", ".listType", function(){
 		$('.active').addClass("listType");
 		$('.listType').removeClass("active");
@@ -228,8 +230,17 @@ $(document).ready(function(){
 		$(this).next('.answer_area').toggle();	
 	})
 	$(document).on('click','.answerSubmit', function(){
+		scrollPosition = $('.content_area').scrollTop();
 		let answer = $(this).siblings('textarea').val();
-		let messageNum = (parseInt)(this).closest('.message').attr("id");
+		let messageNum = (parseInt)($(this).closest('.message').attr("id"));
+		console.log(answer, messageNum)
+		taskService.insert(
+			{"messagenum":messageNum,"answer":answer},
+			function(result){
+				getTaskList(taskType, taskStatus);
+				$('.content_area').scrollTop(scrollPosition);
+			}
+		)
 	})	
 })
 	
@@ -308,6 +319,20 @@ $(document).ready(function(){
 				type:"GET",
 				url:"/manager/taskListByType",
 				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(result){
+					callback(result)
+				},
+				error:function(status,xhr){
+					 console.error("AJAX Error:", xhr.status, status);
+				}
+			})
+		},
+		insert:function(data, callback){
+			$.ajax({
+				type:"POST",
+				url:"/manager/taskAnswer",
+				data:JSON.stringify(data),
 				contentType:"application/json;charset=utf-8",
 				success:function(result){
 					callback(result)

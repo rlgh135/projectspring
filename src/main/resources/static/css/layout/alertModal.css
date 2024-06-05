@@ -63,3 +63,8 @@
     border: 2px solid #ffffff;
     box-shadow: 0 0 0 2px #1976D2;
 }
+
+#report_text{
+	width: 400px; height: 300px;
+	resize: none;
+}

@@ -25,4 +25,18 @@ public class ManagerServiceImpl implements ManagerService{
 	public ArrayList<TaskMessageDTO> getTaskList(TaskMessageDTO task) {
 		return mmapper.getTaskMessageList(task);
 	}
+
+	@Override
+	public boolean taskUpdateAnswer(TaskMessageDTO task) {
+		return mmapper.updateAnswer(task) == 1;
+	}
+
+	@Override
+	public TaskMessageDTO taskRegist(TaskMessageDTO task) {
+		if(mmapper.insertTask(task) == 1) {
+			return mmapper.getLastTaskByUserid(task.getSendid());
+		}else {			
+			return null;
+		}
+	}
 }

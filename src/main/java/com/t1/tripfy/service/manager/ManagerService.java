@@ -9,4 +9,8 @@ public interface ManagerService {
 	ManagerDTO allowManager(String managerKey);
 
 	ArrayList<TaskMessageDTO> getTaskList(TaskMessageDTO task);
+
+	boolean taskUpdateAnswer(TaskMessageDTO task);
+
+	TaskMessageDTO taskRegist(TaskMessageDTO task);
 }
