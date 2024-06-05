@@ -93,7 +93,7 @@ public interface BoardMapper {
 	int deleteTotalBoardLike(long boardnum);
 
 	// boardnum으로 해당 게시글의 댓글 찾음
-	BoardReplyDTO getTotalBoardReply(long boardnum);
+	List<BoardReplyDTO> getTotalBoardReply(long boardnum);
 
 	// boardnum으로 해당 게시글의 댓글 삭제
 	int deleteTotalBoardReply(long boardnum);

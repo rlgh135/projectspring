@@ -297,7 +297,7 @@ public class BoardController {
 	    	userprofile.setSysname("profile.png");
 	    }
 	    
-	    int replyCnt = service.getReplyCnt(boardnum);
+	    // int replyCnt = service.getReplyCnt(boardnum);
 
 	    BoardaddrDTO boardaddr = service.getBoardAddr(boardnum);
 	    if (boardaddr != null) {
@@ -351,14 +351,14 @@ public class BoardController {
 	    
 	    if(requestURI.contains("modify")) {
 	    	model.addAttribute("board", board);
-	        model.addAttribute("replyCnt", replyCnt);
+	        //model.addAttribute("replyCnt", replyCnt);
 	        model.addAttribute("files", files);
 	        model.addAttribute("thumbnailImg", thumbnailImg);
 			return "board/modify";
 		}
 	    
 	    model.addAttribute("board", board);
-	    model.addAttribute("replyCnt", replyCnt);
+	    //model.addAttribute("replyCnt", replyCnt);
 	    model.addAttribute("files", files);
 	    model.addAttribute("thumbnailImg", thumbnailImg);
 	    model.addAttribute("userprofile", userprofile);
@@ -473,6 +473,7 @@ public class BoardController {
 
 	@PostMapping(value="replyRegist", consumes = "application/json", produces = "application/json;charset=utf-8")
 	public ResponseEntity<BoardReplyDTO> replyRegist(@RequestBody BoardReplyDTO reply){
+		
 		BoardReplyDTO result = service.replyRegist(reply);
 		if(result == null) {
 			return new ResponseEntity<BoardReplyDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -519,4 +520,11 @@ public class BoardController {
 		    }
 		}
 	}
+	
+	@PutMapping("getReplyCnt")
+	public ResponseEntity<Integer> getReplyCnt(@RequestParam long boardnum) {
+		int replycnt = service.getReplyCnt(boardnum);
+		return ResponseEntity.ok(replycnt);
+	}
+	
 }

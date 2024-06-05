@@ -36,7 +36,7 @@
                 <div class="cnt_info">
                     <span>조회수 [[${board.viewcnt}]]</span>
 					<span id="likecnt">좋아요 [[${board.likecnt}]]</span>
-                    <span>댓글 [[${replyCnt}]]</span>
+                    <span id="replycnt">댓글 [[${board.replycnt}]]</span>
                 </div>
 
                 <div class="trip_schedule">
@@ -192,14 +192,22 @@ let thispage = 1;
        });
 	   
 	   $(document).on('click', '#emoji_toggle', function() {
+		if(loginUser == null) {
+			showAlertModal(2, "로그인 후 이용 가능합니다");
+			$("#emoji-picker").css("display", none);
+		}
+		
+		
 	       var $emojiPicker = $('#emoji-picker');
 	       if ($emojiPicker.length) {
 	           $emojiPicker.remove();
 	       } else {
 	           const emojiPickerHtml = `
 	               <div class="emoji-picker" id="emoji-picker">
-	                   <span class="emoticon" id="et1"><img src="/images/emoticon/1.jpg" alt></span>
-	                   <span class="emoticon" id="et2"><img src="/images/emoticon/2.jpg" alt></span>
+	                   <span class="emoticon" id="et1"><img src="/images/emoticon/1.png" alt></span>
+	                   <span class="emoticon" id="et2"><img src="/images/emoticon/2.png" alt></span>
+					   <span class="emoticon" id="et3"><img src="/images/emoticon/3.png" alt></span>
+					   <span class="emoticon" id="et4"><img src="/images/emoticon/4.png" alt></span>
 	               </div>
 	           `;
 	           $('.comment_attach').append(emojiPickerHtml);
@@ -212,7 +220,7 @@ let thispage = 1;
 	       $('.comment_attach').empty();
 	       
 	       let newContent = `
-	           <img src="/images/emoticon/${emojiId}.jpg" alt>
+	           <img src="/images/emoticon/${emojiId}.png" alt>
 	           <button class="emoticon-close-btn">&times;</button>
 	       `;
 	       $('.comment_attach').append(newContent);
@@ -231,6 +239,7 @@ let thispage = 1;
 	            {"replynum": replyId},
 	            function(result) {
 	                showReplyList(thispage);
+					updateReplyCnt(boardnum);
 	            }
 	        );
 	   })
@@ -244,7 +253,7 @@ let thispage = 1;
 			const hasSticker = replyBox.find('.reply_sticker').length > 0;
 			const stickerSrc = hasSticker ? replyBox.find('.reply_sticker img').attr('src') : '';
 			if(hasSticker){
-				modifyStickerNum = stickerSrc.match(/\/images\/emoticon\/(\d+)\.jpg/)[1];;
+				modifyStickerNum = stickerSrc.match(/\/images\/emoticon\/(\d+)\.png/)[1];;
 			}else{
 				modifyStickerNum = 0;
 			}
@@ -274,8 +283,10 @@ let thispage = 1;
 		        } else {
 		            const emojiPickerHtml = `
 		                <div class="modify-emoji-picker" id="modify_emoji_picker">
-		                    <span class="emoticon" id="et1"><img src="/images/emoticon/1.jpg" alt></span>
-		                    <span class="emoticon" id="et2"><img src="/images/emoticon/2.jpg" alt></span>
+		                    <span class="emoticon" id="et1"><img src="/images/emoticon/1.png" alt></span>
+		                    <span class="emoticon" id="et2"><img src="/images/emoticon/2.png" alt></span>
+							<span class="emoticon" id="et3"><img src="/images/emoticon/3.png" alt></span>
+							<span class="emoticon" id="et4"><img src="/images/emoticon/4.png" alt></span>
 		                </div>
 		            `;
 		            $('.modify_comment_attach').append(emojiPickerHtml);
@@ -287,7 +298,7 @@ let thispage = 1;
 		       $('.modify_comment_attach').empty();
 		       
 		       let newContent = `
-		           <img src="/images/emoticon/${emojiId}.jpg" alt>
+		           <img src="/images/emoticon/${emojiId}.png" alt>
 		           <button class="modify_emoticon-close-btn">&times;</button>
 		       `;
 		       $('.modify_comment_attach').append(newContent);
@@ -355,7 +366,16 @@ let thispage = 1;
 			}
 		)
    }
-	
+   
+   
+   const replycontent = document.querySelector(".replycontent");
+   
+   replycontent.addEventListener("click", function() {
+	if(loginUser == null) {
+		showAlertModal(2, "로그인 후 이용 가능합니다");
+	}
+   })
+   
 	// 댓글
 	function replySubmit() {
 	    const replycontent = $(".replycontent");
@@ -370,6 +390,8 @@ let thispage = 1;
 	            {"boardnum": boardnum, "userid": loginUser, "emSysname": stickerNum, "contents": content},
 	            function(result) {
 	                showReplyList(thispage);
+					
+					
 	            }
 	        );
 			stickerNum = 0;
@@ -401,7 +423,7 @@ let thispage = 1;
 			            <div class="reply_content">${reply.contents}</div>
 					`;
 					if(reply.emSysname !== "0"){
-						str += `<div class="reply_sticker"><img src="/images/emoticon/${reply.emSysname}.jpg" alt></div>`;
+						str += `<div class="reply_sticker"><img src="/images/emoticon/${reply.emSysname}.png" alt></div>`;
 					}
 					if(reply.updatecheck == 0){
 						str += `<div class="reply_regdate">${formatDateTime(reply.regdate)}</div>`;						
@@ -426,6 +448,8 @@ let thispage = 1;
 				showReplyPages(replyCnt, pagenum);
 			}
 		)
+		updateReplyCnt(boardnum);
+		
 	}
 	
 	function showReplyPages(replyCnt, pagenum) {
@@ -552,6 +576,7 @@ let thispage = 1;
 				contentType:"application/json;charset=utf-8",
 				success:function(result,status,xhr){
 					callback(result)
+					
 				},
 				error:function(result,status,xhr){
 					
@@ -599,8 +624,31 @@ let thispage = 1;
 					 console.error("AJAX Error:", xhr.status, status);
 				}
 			})
+		},
+		
+		getreplycnt:function(boardnum, callback) {
+			$.ajax({
+				url: "/board/getReplyCnt?boardnum=" + boardnum,
+				type: "PUT",
+				success:function(result) {
+					callback(result);
+				}, 
+				error:function(status, xhr) {
+					console.error("AJAX Error:", xhr.status, status);
+				}
+			})
+			
 		}
 	}
+	
+	
+	
+	function updateReplyCnt(boardnum) {
+		boardReplyService.getreplycnt(boardnum, function(cnt) {
+			$("#replycnt").html("댓글 " + cnt);
+		});
+	}
+	
 	
 	function formatDateTime(dateTimeStr) {
 	    const dateTime = new Date(dateTimeStr);

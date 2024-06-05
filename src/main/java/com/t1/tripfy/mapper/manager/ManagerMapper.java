@@ -18,4 +18,8 @@ public interface ManagerMapper {
 	int insertTask(TaskMessageDTO task);
 
 	TaskMessageDTO getLastTaskByUserid(String sendid);
+
+	ArrayList<TaskMessageDTO> getTaskMessageByNum(long boardnum);
+
+	int updateTaskMessageNum(String num);
 }

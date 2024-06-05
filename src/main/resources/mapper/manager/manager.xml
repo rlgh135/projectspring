@@ -29,6 +29,18 @@
 		</where> 
 		order by regdate desc;
 	</select>
+	
+	<select id="getTaskMessageByNum">
+		select * from task_message
+		where task_type = 1 and detail_num = #{boardnum}
+	</select>
+	
+	<update id="updateTaskMessageNum">
+		update task_message
+		set detail_num = '삭제' where detail_num = #{boardnum}
+		
+	</update>
+	
 	<update id="updateAnswer">
 		update task_message
 		set answer = #{answer}, task_status = 2

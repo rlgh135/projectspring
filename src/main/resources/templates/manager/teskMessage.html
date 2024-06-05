@@ -149,7 +149,8 @@
                     <p><strong>내용 :</strong> [[${msg.contents}]]</p>
 					<p><strong>관련주소 :</strong>
 			            <span th:if="${msg.taskType == '1'}">
-			                <a th:href="'http://localhost:8080/board/get?boardnum=' + ${msg.detailNum}">[[${msg.detailNum}]]번 게시판 바로가기</a>
+			                <a th:if="${msg.detailNum} != '삭제'" th:href="'http://localhost:8080/board/get?boardnum=' + ${msg.detailNum}">[[${msg.detailNum}]]번 게시판 바로가기</a>
+							<a th:if="${msg.detailNum} == '삭제'">게시글이 삭제됨</a>
 			            </span>
 			            <span th:if="${msg.taskType == '2'}">
 			                <a th:href="'http://localhost:8080/package/pget?packagenum=' + ${msg.detailNum}">[[${msg.detailNum}]]번 패키지 바로가기</a>
@@ -268,7 +269,7 @@ $(document).ready(function(){
 				            // taskType에 따른 텍스트 설정
 				            if (msg.taskType === '1') {
 				                taskTypeText = "게시판";
-				                taskTypeLink = `<a href="http://localhost:8080/board/get?boardnum=${msg.detailNum}">${msg.detailNum}번 게시판 바로가기</a>`;
+				                taskTypeLink = msg.detailNum == "삭제" ? `<a>게시글이 삭제됨</a>` : `<a href="http://localhost:8080/board/get?boardnum=${msg.detailNum}">${msg.detailNum}번 게시판 바로가기</a>`;
 				            } else if (msg.taskType === '2') {
 				                taskTypeText = "패키지";
 				                taskTypeLink = `<a href="http://localhost:8080/package/pget?packagenum=${msg.detailNum}">${msg.detailNum}번 패키지 바로가기</a>`;
