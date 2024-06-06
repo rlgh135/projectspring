@@ -395,7 +395,7 @@ button{
     border: none;
 }
 #perlist > .pr_choice{
-    border-top: 1px solid gray;
+    
     display:flex;
     overflow: scroll;
     width: 300px;

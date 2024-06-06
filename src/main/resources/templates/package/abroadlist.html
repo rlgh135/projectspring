@@ -23,7 +23,7 @@
 							    <div class="dl_header">
 							        <span onclick="opendes()">x</span>
 							    </div>
-							    <hr>
+							    
 							    <div class="dl_choice">
 							        <ul class="choiceTableLeft">
 							            <li><button type="button" class="leftDepth1">동남아</button></li>
@@ -261,19 +261,30 @@
 	        openper();
 	    });
 	});
+	document.querySelectorAll('.leftDepth1').forEach((button, index) => {
+		           button.addEventListener('click', () => {
+		               document.querySelectorAll('.leftDepth1').forEach(btn => {
+		                   btn.classList.remove('active');
+		               });
+		               button.classList.add('active');
+		
+		               document.querySelectorAll('.choiceTableRight').forEach((ul, ulIndex) => {
+		                   ul.classList.toggle('active', ulIndex === index);
+		               });
+		           });
+		       });
 	
-	const dlButtons = document.querySelectorAll(".dl");
-	dlButtons.forEach(function(button) {
-	    button.addEventListener("click", function() {
-	        const destination = this.textContent.trim();
-	        const desChoiceSpan = document.getElementById("desChoice");
-	        desChoiceSpan.textContent = destination;
-	        document.getElementById("destinationInput").value = destination;
-	        document.getElementById("destinationInputForm").value = destination;
-	        console.log("Destination Set:", destination); // 디버그 메시지
-	        opendes();
-	    });
-	});
+	const dlButtons = document.querySelectorAll(".RightDepth1");
+			dlButtons.forEach(function(button) {
+			    button.addEventListener("click", function() {
+			        const destination = this.textContent.replace(/\s+/g, ''); // 버튼의 텍스트를 가져와서 모든 공백을 제거
+			        const desChoiceSpan = document.getElementById("desChoice");
+			        desChoiceSpan.textContent = destination; // 목적지 텍스트 업데이트
+			        document.getElementById("destinationInput").value = destination; // 폼에 목적지 업데이트
+			        document.getElementById("destinationInputForm").value = destination; // 검색 폼에 목적지 업데이트
+			        opendes(); // deslist 닫기
+			    });
+			});
 	
 	// 검색 버튼 클릭 시 검색 조건을 세션 스토리지에 저장하는 함수 추가
 	document.querySelector("#searchForm").addEventListener("submit", function(event) {
