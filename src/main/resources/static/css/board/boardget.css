@@ -141,7 +141,7 @@
 	    margin-top: 60px;
 	}
 	
-	.trip_introduction h4 {		
+	.trip_introduction h4, .trip_introduction p  {		
 		font-family: 'Nanum Gothic';
 	}
 	

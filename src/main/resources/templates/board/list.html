@@ -475,6 +475,8 @@
 	
 	// 정렬 버튼(최신순, 좋아요순, 인기순) 클릭 시 리스트
 	function listsort(e) {
+		document.querySelector(".nation_select").style.display = "none";
+		flag = false;
 		console.log(e.target);
 		
 		for(let i = 0; i < sort.length; i++) {
@@ -728,6 +730,9 @@
 	}
 	
 	function search(keyword) {
+		document.querySelector(".nation_select").style.display = "none";
+		flag = false;
+		
 		
 		if(keyword == "") {
 			showAlertModal(2,"검색어를 입력해주세요");
