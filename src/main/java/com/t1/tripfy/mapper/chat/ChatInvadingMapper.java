@@ -11,4 +11,6 @@ public interface ChatInvadingMapper {
 	Map<String, Object> selectPackageInfoByChatRoomIdx(Long chatRoomIdx);
 	//패키지명만 가져오기
 	String selectPackageNameByChatRoomIdx(Long chatRoomIdx);
+	//packagenum으로 패키지 판매자 userid 가져오기
+	String selectGuideUseridByPackagenum(Long packagenum);
 }

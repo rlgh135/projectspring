@@ -158,4 +158,22 @@
 		AND
 			userid = #{userid}
 	</update>
+	
+	<!-- 
+		유저 추가
+	-->
+	<insert id="insertRow">
+		INSERT INTO
+			chat_user
+		VALUES
+		<foreach collection="userList" item="dto" separator=",">
+			(
+				#{dto.chatRoomIdx}, 
+				#{dto.userid}, 
+				#{dto.chatUserIsCreator}, 
+				false,
+				null
+			)
+		</foreach>
+	</insert>
 </mapper>

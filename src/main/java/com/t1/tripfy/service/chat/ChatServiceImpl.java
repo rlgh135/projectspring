@@ -42,7 +42,66 @@ public class ChatServiceImpl implements ChatService {
 	*/
 	
 	@Override
-	public Boolean createChat(String userid, Long packagenum) {
+	@Transactional
+	public ChatListPayloadDTO createChat(String userid, Long packagenum) {
+		//chat_room insert, PK(chat_room_idx) 가져오기
+		LocalDateTime current = LocalDateTime.now();
+		ChatRoomDTO crDTO = new ChatRoomDTO()
+				.setChatRoomTitle(null)
+				.setPackagenum(packagenum)
+				.setRegdate(current);
+		
+		if(1 != chatRoomMapper.createRoom(crDTO)) {
+			return null;
+		}
+		Long crPK = crDTO.getChatRoomIdx();
+		
+		//패키지 판매자 userid 가져오기
+		String guideUserid;
+		if(null == (guideUserid = chatInvadingMapper.selectGuideUseridByPackagenum(packagenum))) {
+			return null;
+		}
+		
+		//chat_user 삽입하기
+		List<ChatUserDTO> userList = new ArrayList<>();
+		userList.add(new ChatUserDTO()
+				.setChatRoomIdx(crPK)
+				.setUserid(guideUserid)
+				.setChatUserIsCreator(true)
+				.setChatUserIsQuit(false)
+				.setChatDetailIdx(null));
+		userList.add(new ChatUserDTO()
+				.setChatRoomIdx(crPK)
+				.setUserid(userid)
+				.setChatUserIsCreator(false)
+				.setChatUserIsQuit(false)
+				.setChatDetailIdx(null));
+		
+		if(1 != chatUserMapper.insertRow(userList)) {
+			return null;
+		}
+		
+		//전송값 꾸리기
+		String pkgTitle;
+		if(null == (pkgTitle = chatInvadingMapper.selectPackageNameByChatRoomIdx(crPK))) {
+			return null;
+		}
+		
+		return new ChatListPayloadDTO()
+				.setRoomidx(crPK)
+				.setPkgnum(packagenum)
+				.setTitle(pkgTitle)
+				.setChatRegdate(current)
+				.setIsCreator(false)
+				.setUserList(userList)
+				.setChatContent(null)
+				.setChatContentRegdate(null)
+				.setUncheckedmsg(0);
+	}
+	
+	@Override
+	@Transactional
+	public ChatListPayloadDTO createChat(String userid, String title, List<String> invitee) {
 		//chat_room
 		
 		//chat_user

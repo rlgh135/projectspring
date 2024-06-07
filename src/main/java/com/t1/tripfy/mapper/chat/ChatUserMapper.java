@@ -49,4 +49,13 @@ public interface ChatUserMapper {
 	 * <p><strong>UPDATE</strong> : 메시지 전부 확인처리
 	 * */
 	Integer updateChatDetailIdxToEnd(Long chatRoomIdx, String userid);
+	
+	//c
+	
+	/**
+	 * <p><strong>INSERT</strong> : 유저 추가
+	 * <p>userList의 각 요소들은 chatRoomIdx, userid, chatUserIsCreator가 초기화되어있어야 함
+	 * @param userList : 삽입할 정보 리스트
+	 * */
+	Integer insertRow(List<ChatUserDTO> userList);
 }

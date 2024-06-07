@@ -28,4 +28,18 @@
 			WHERE chat_room_idx = #{chatRoomIdx}
 		)
 	</select>
+	
+	<!-- 
+		packagenum으로 가이드 userid 가져오기
+	-->
+	<select id="selectGuideUseridByPackagenum">
+		SELECT userid
+		FROM guide
+		WHERE
+			guidenum = (
+				SELECT guidenum
+				FROM package
+				WHERE packagenum = #{packagenum}
+			)
+	</select>
 </mapper>

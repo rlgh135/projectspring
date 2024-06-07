@@ -10,5 +10,13 @@ public interface ChatRoomMapper {
 	ChatRoomDTO selectRowByChatRoomIdx(Long chatRoomIdx);
 	
 	//c
-//	Integer createRow()
+
+	/**
+	 * <p><strong>INSERT</strong> : chat_room insert, PK 가져오기
+	 * <p>인수 ChatRoomDTO는 chatRoomTitle, packagenum, regdate이 초기화돼있어야 함
+	 * <br>null로 초기화 가능
+	 * <p>생성된 PK는 인수로 넘겨진 ChatRoomDTO 객체에 담겨옴
+	 * @param dto : chatRoomTitle, packagenum, regdate을 넘기고 PK를 받아오는 역할
+	 * */
+	Integer createRoom(ChatRoomDTO dto);
 }

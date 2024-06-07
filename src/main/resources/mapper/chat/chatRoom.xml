@@ -12,4 +12,13 @@
 		WHERE
 			chat_room_idx = #{chatRoomIdx}
 	</select>
+	
+	<!-- 
+		create
+	-->
+	<insert id="createRoom" useGeneratedKeys="true" keyProperty="chatRoomIdx">
+		INSERT INTO chat_room
+		VALUES
+			(null, #{chatRoomTitle}, #{packagenum}, false, #{regdate})
+	</insert>
 </mapper>

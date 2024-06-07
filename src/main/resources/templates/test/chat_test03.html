@@ -619,10 +619,11 @@
 		const packagenum = 0; /*초기화 필요*/
 
 		ajaxPost("localhost:8080", "/chat", {
+			isPackageChat: true,
 			packagenum: packagenum
 		})
 		.then((data) => {
-
+			//ChatListPayloadDTO 받아옴
 		})
 		.catch((err) => {
 

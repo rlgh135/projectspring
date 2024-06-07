@@ -18,7 +18,8 @@ public interface ChatService {
 	 * https://jangjjolkit.tistory.com/62
 	 * */
 	
-	Boolean createChat(String userid, Long packagenum);
+	ChatListPayloadDTO createChat(String userid, Long packagenum);
+	ChatListPayloadDTO createChat(String userid, String title, List<String> invitee);
 	
 	// 채팅방 진입
 	// 나중에 캐시 추가하는 경우를 생각해 채팅방 진입과 채팅방 내용 가져오는 메서드를 분리함

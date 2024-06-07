@@ -26,21 +26,54 @@ public class ChatRestController {
 	
 	//채팅 생성
 	@PostMapping
-	public ResponseEntity<Object> createChat(
+	public ResponseEntity<ChatListPayloadDTO> createChat(
 			@SessionAttribute(name="loginUser", required=false) String loginUserId,
-			@RequestParam Long packagenum
+			@RequestParam(required=true) Boolean isPackageChat,
+			@RequestParam(required=false) Long packagenum,
+			@RequestParam(required=false) String title,
+			@RequestParam(required=false) List<String> invitee
 			) {
 		
+		//로그인 검증
 		if(loginUserId == null) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		if(packagenum == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		
+		//반환값 생성
+		ChatListPayloadDTO respondDTO;
+		
+		//패키지챗
+		if(isPackageChat) {
+			if(packagenum == null) {
+				//400
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			} else {
+				//sv
+				if(null == (respondDTO = chatSV.createChat(loginUserId, packagenum))) {
+					//500
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				} else {
+					//생성 성공
+					return ResponseEntity.ok(respondDTO);
+				}
+			}
+		//일반챗
+		} else {
+			/*일반/일반 챗의 경우 초대자를 명시해야 함*/
+			if(invitee == null || invitee.isEmpty()) {
+				//400
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			} else {
+				//sv
+				/* wip */
+			}
 		}
 		
-		chatSV.createChat(loginUserId, packagenum);
+//		if(chatSV.createChat(loginUserId, packagenum)) {
+//			return ResponseEntity.status(HttpStatus.CREATED).build();
+//		}
 		
-		return null;
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
 	//채팅방 리스트 요청
