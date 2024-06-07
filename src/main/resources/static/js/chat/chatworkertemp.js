@@ -48,36 +48,42 @@ self.onconnect = function(e) {
 				}
 				break;
 			case "chatRoomEnter":
-				if(chatRoomEnter(e.data, port).result) {
-					for(let key in PORT_LIST) {
-						if(PORT_LIST[key].port == port) {
-							PORT_LIST[key].chatRoomIdx = e.data.payload.roomidx;
+				chatRoomEnter(e.data, port)
+				.then((result) => {
+					if(result) {
+						for(let key in PORT_LIST) {
+							if(PORT_LIST[key].port == port) {
+								PORT_LIST[key].chatRoomIdx = e.data.payload.roomidx;
+							}
 						}
-					}
-				} else {
-					//실패시 웹소켓을 끊는다
-					disconnectWebSocket();
-					connectSSE();
-				}
-				break;
-			case "chatRoomLeave":
-				if(chatRoomLeave(e.data, port).result) {
-					let crlFlag = true;
-					for(let key in PORT_LIST) {
-						if(PORT_LIST[key].port == port) {
-							PORT_LIST[key].chatRoomIdx = null;
-						} else if(!!PORT_LIST[key].chatRoomIdx) {
-							//채팅방 접속중인 다른 탭이 있는지 확인
-							crlFlag = false;
-						}
-					}
-					//접속중인 채팅방이 없으면 연결을 내린다
-					if(crlFlag) {
-						console.log("why");
+					} else {
+						//실패시 웹소켓을 끊는다
 						disconnectWebSocket();
 						connectSSE();
 					}
-				}
+				});
+				break;
+			case "chatRoomLeave":
+				chatRoomLeave(e.data, port)
+				.then((result) => {
+					if(result) {
+						let crlFlag = true;
+						for(let key in PORT_LIST) {
+							if(PORT_LIST[key].port == port) {
+								PORT_LIST[key].chatRoomIdx = null;
+							} else if(!!PORT_LIST[key].chatRoomIdx) {
+								//채팅방 접속중인 다른 탭이 있는지 확인
+								crlFlag = false;
+							}
+						}
+						//접속중인 채팅방이 없으면 연결을 내린다
+						if(crlFlag) {
+							console.log("why");
+							disconnectWebSocket();
+							connectSSE();
+						}
+					}
+				});
 				break;
 			case "loadChat":
 				loadChat(e.data, port);
@@ -91,8 +97,13 @@ self.onconnect = function(e) {
 
 //broadcast
 function broadcastMsg(by, data) {
+	console.log("broadcast, SharedWorker, by=" + by);
+	console.log(data);
 	PORT_LIST.forEach((val) => {
-		val.port.postMessage(data);
+		val.port.postMessage({
+			action: data.act,
+			payload: data.payload
+		});
 	});
 }
 
@@ -219,6 +230,7 @@ async function sendChat(data, port) {
 
 	try {
 		const res = await promised_WebSocketReceiver("sendChat");
+		console.log(res);
 		if(!!res.payload.reason) {
 			port.postMessage({
 				action: "sendChat",
@@ -242,23 +254,28 @@ async function sendChat(data, port) {
 }
 
 //1회성 수신 함수
-async function promised_WebSocketReceiver(act) {
+async function promised_WebSocketReceiver(act, millisec = 3000) {
 	return new Promise((resolve, reject) => {
-		const receiver = (e) => {
-			const data = JSON.parse(e.data);
-			console.log(e.data);
-			if(data.act === act) {
-				resolve(data);
-				WEBSOCKET.removeEventListener("message", receiver);
-			}
-		}
-		setTimeout(() => {
+        const receiver = (e) => {
+            const data = JSON.parse(e.data);
+            if (data.act === act) {
+				console.log("promised_WebSocketReceiver resolved");
+				console.log(data);
+                WEBSOCKET.removeEventListener("message", receiver);
+                clearTimeout(timeoutId); // 타임아웃 중단
+                resolve(data);
+            }
+        };
+
+        const timeoutId = setTimeout(() => {
+            console.log("promised_WebSocketReceiver timeout call");
 			if(!!WEBSOCKET)
-				WEBSOCKET.removeEventListener("message", receiver);
-			reject(new Error("timeout"));
-		}, 3000);
-		WEBSOCKET.addEventListener("message", receiver);
-	});
+            	WEBSOCKET.removeEventListener("message", receiver);
+            reject(new Error("timeout"));
+        }, millisec);
+
+        WEBSOCKET.addEventListener("message", receiver);
+    });
 }
 //연결 종료
 function disconnectSSE() {
@@ -283,11 +300,11 @@ function connectSSE() {
 	EVENTSOURCE.addEventListener("connected", (e) => {
 		console.log("SSE received msg=connected");
 	});
-	EVENTSOURCE.addEventListener("broadcast", (e) => {
+	EVENTSOURCE.addEventListener("broadcastChat", (e) => {
 		console.log("SSE received msg=broadcast");
 		const data = JSON.parse(e.data);
 		if(data.act === "broadcastChat")
-			broadcastMsg("SSE", e.data);
+			broadcastMsg("SSE", data);
 	});
 	EVENTSOURCE.onerror = (err) => {
 		console.log("SSE onerror=" + err);
@@ -313,7 +330,7 @@ async function connectWebSocket() {
 		console.log(JSON.parse(e.data));
 		const data = JSON.parse(e.data);
 		if(data.act === "broadcastChat")
-			broadcastMsg("WebSocket", e.data);
+			broadcastMsg("WebSocket", data);
 	};
 	WEBSOCKET.onerror = (e) => {
 		WEBSOCKET.close();
@@ -325,11 +342,13 @@ async function connectWebSocket() {
 
 	return new Promise((resolve, reject) => {
 		const dcs = (e) => {
+			WEBSOCKET.removeEventListener("open", dcs);
+			clearTimeout(timeoutId);
 			resolve();
-			WEBSOCKET.removeEventListener("open", dcs);
 		};
-		setTimeout(() => {
-			WEBSOCKET.removeEventListener("open", dcs);
+		const timeoutId = setTimeout(() => {
+			if(!!WEBSOCKET)
+				WEBSOCKET.removeEventListener("open", dcs);
 			reject(new Error("timeout"));
 		}, 3000);
 		WEBSOCKET.addEventListener("open", dcs);

@@ -26,9 +26,9 @@
 			/*background-color: lightblue;*/
 		}
 		#chat-window {
-			position: absolute;
+			/* position: absolute;
 			bottom: 100px;
-			right: 0px;
+			right: 0px; */
 			
 			height: 600px;
 			width: 400px;
@@ -247,6 +247,58 @@
             /* background-color: transparent; */
         }
 
+        .ccbody-loading {
+            position: relative;
+        }
+        .ccbody-loading::after {
+            content: "";
+            background: url(../../static/images/chatimg/loading-gif.gif) no-repeat 0px 0px;
+            background-size: 18px 18px;
+            display: block;
+            height: 18px;
+            width: 18px;
+            position: absolute;
+            left: -25px;
+            bottom: 1px;
+        }
+
+        #chat-alert-cont {
+            position: absolute;
+
+            right: 0;
+            top: -80px;
+
+            /* width: 300px;
+            min-height: 0; */
+
+            background-color: lightcoral;
+        }
+        .cc-alert {
+            height: 50px;
+            min-width: 100px;
+            max-width: 300px;
+			border-radius: 15px/15px;
+
+            padding: 2px 10px 0 10px;
+
+            /* overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; */
+
+            background-color: lightblue;
+        }
+        .cc-alert>h4, .cc-alert>p {
+            max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #chat-inner-wrapper {
+            position: absolute;
+            bottom: 100px;
+            right: 0px;
+        }
+
 		.cc-hidden {
 			display: none!important;
 		}
@@ -254,170 +306,96 @@
 </head>
 <body>
 	<div id="chat-wrapper">
-		<div id="chat-window-btn">채팅<br>이미지 여기에</div>
-		<div id="chat-window">
-			<div id="chat-list-empty" class="cc-hidden">
-				<!-- 이미지 바꿔라 -->
-				<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
-				<p>현재 입장해있는 채팅방이 없습니다</p>
-			</div>
-			<div id="chat-list-cont">
-				<!-- 아래와 같은 양식으로 채팅방 리스트 요소를 추가/수정한다
-					CSS도 아래 양식대로 묶여있으니 꼭 지켜줘야 함 -->
-				<div id="cclistele-1" class="cc-list-oto-ele">
-					<div>
-						<img src="../../static/images/layoutimg/logo.png" alt="img001">
-					</div>
-					<div>
-						<h4>패키지명 팔라우 바다여행</h4>
-						<p>qwerty1234</p>
-						<p>네 5박 6일 맞습니다</p>
-						<p>5월 28일</p>
-						<div>99..</div>
-					</div>
-				</div>
-				<div id="cclistele-2" class="cc-list-oto-ele">
-					<div>
-						<img src="../../static/images/layoutimg/logo.png" alt="img002">
-					</div>
-					<div>
-						<h4>팔라우 6박7일 하루빼고 바다만</h4>
-						<p>qwerty1234</p>
-						<p>진짜 6일동안 바다만 다녀요?</p>
-						<p>5월 28일</p>
-						<div class="cc-hidden">0</div>
-					</div>
-				</div>
-				<div id="cclistele-3" class="cc-list-otm-ele">
-					<div>
-						<!-- <img src="../../static/images/layoutimg/logo.png" alt="img002"> -->
-                        
-					</div>
-					<div>
-						<h4>팔라우 6박7일 하루빼고 바다만</h4>
-						<p>qwerty1234</p>
-						<p>진짜 6일동안 바다만 다녀요?</p>
-						<p>5월 28일</p>
-						<div class="cc-hidden">0</div>
-					</div>
-				</div>
-				
-			</div>
-			<div id="chat-body-cont" class="cc-hidden">
-                <div id="chat-body-header">
-                    <input type="submit" value="나가기" id="quit-chat" class="ccbody-btn">
-                    <h4>팔라우 바다만 5박 6일</h4>
+        <div id="chat-window-btn">채팅<br>이미지 여기에</div>
+        <div id="chat-inner-wrapper">
+            <div id="chat-alert-cont">
+                <div class="cc-alert">
+                    <h4>타1이틀</h4>
+                    <p>본문aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
                 </div>
-                <div id="chat-body-inner-cont">
-                    <div id="ccbodyele-33" class="ccbody-left">
-                        <p>네 5박 6일 맞습니다eeeeeeeeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfffff</p>
+                <div class="cc-alert">
+                    <h4>2타이틀</h4>
+                    <p>본문aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+                </div>
+                <div class="cc-alert">
+                    <h4>타3이틀</h4>
+                    <p>본문aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+                </div>
+            </div>
+            <div id="chat-window">
+                <div id="chat-list-empty" class="cc-hidden">
+                    <!-- 이미지 바꿔라 -->
+                    <img src="/images/layoutimg/logo.png" id="cc-logo-empty">
+                    <p>현재 입장해있는 채팅방이 없습니다</p>
+                </div>
+                <div id="chat-list-cont" class="cc-hidden">
+                    <!-- 아래와 같은 양식으로 채팅방 리스트 요소를 추가/수정한다
+                        CSS도 아래 양식대로 묶여있으니 꼭 지켜줘야 함 -->
+                    <div id="cclistele-1" class="cc-list-oto-ele">
+                        <div>
+                            <img src="../../static/images/layoutimg/logo.png" alt="img001">
+                        </div>
+                        <div>
+                            <h4>패키지명 팔라우 바다여행</h4>
+                            <p>qwerty1234</p>
+                            <p>네 5박 6일 맞습니다</p>
+                            <p>5월 28일</p>
+                            <div>99..</div>
+                        </div>
                     </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
+                    <div id="cclistele-2" class="cc-list-oto-ele">
+                        <div>
+                            <img src="../../static/images/layoutimg/logo.png" alt="img002">
+                        </div>
+                        <div>
+                            <h4>팔라우 6박7일 하루빼고 바다만</h4>
+                            <p>qwerty1234</p>
+                            <p>진짜 6일동안 바다만 다녀요?</p>
+                            <p>5월 28일</p>
+                            <div class="cc-hidden">0</div>
+                        </div>
                     </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
+                    <div id="cclistele-3" class="cc-list-otm-ele">
+                        <div>
+                            <!-- <img src="../../static/images/layoutimg/logo.png" alt="img002"> -->
+                            
+                        </div>
+                        <div>
+                            <h4>팔라우 6박7일 하루빼고 바다만</h4>
+                            <p>qwerty1234</p>
+                            <p>진짜 6일동안 바다만 다녀요?</p>
+                            <p>5월 28일</p>
+                            <div class="cc-hidden">0</div>
+                        </div>
                     </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
+                    
+                </div>
+                <div id="chat-body-cont" class="">
+                    <div id="chat-body-header">
+                        <input type="submit" value="나가기" id="quit-chat" class="ccbody-btn">
+                        <h4>팔라우 바다만 5박 6일</h4>
                     </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
+                    <div id="chat-body-inner-cont">
+                        <div id="ccbodyele-33" class="ccbody-left">
+                            <p>네 5박 6일 맞습니다eeeeeeeeddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfffff</p>
+                        </div>
+                        <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
+                            <p>알았습니다</p>
+                        </div>
+                        <div id="ccbodyele-34" class="ccbody-right ccbody-continue ccbody-loading">
+                            <p>ccbody-loading 예시</p>
+                        </div>
+                        <div id="ccbodyele-34" class="ccbody-right ccbody-continue ccbody-loading">
+                            <p>::after로 붙임 추가로 ccbody-left에는 안 맞춰져 있음</p>
+                        </div>
                     </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right ccbody-continue">
-                        <p>알았습니다</p>
-                    </div>
-                    <div id="ccbodyele-34" class="ccbody-right">
-                        <p>알았습니다ddddddddddddddddd</p>
-                    </div>
-                    <div id="ccbodyele-35" class="ccbody-left">
-                        <p>그만보내</p>
+                    <div id="chat-body-input-cont">
+                        <input type="text" id="input-chat">
+                        <input type="submit" value="전송" id="submit-chat" class="ccbody-btn">
                     </div>
                 </div>
-                <div id="chat-body-input-cont">
-                    <input type="text" id="input-chat">
-                    <input type="submit" value="전송" id="submit-chat" class="ccbody-btn">
-                </div>
-			</div>
-		</div>
+            </div>
+        </div>
 	</div>
 </body>
 </html>

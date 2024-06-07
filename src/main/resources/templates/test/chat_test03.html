@@ -26,9 +26,9 @@
 			/*background-color: lightblue;*/
 		}
 		#chat-window {
-			position: absolute;
+			/* position: absolute;
 			bottom: 100px;
-			right: 0px;
+			right: 0px; */
 			
 			height: 600px;
 			width: 400px;
@@ -130,9 +130,9 @@
             background-clip: padding-box;
             border: 2px solid transparent;
         }
-        #chat-list-oto-cont::-webkit-scrollbar-track {
-            /* background-color: lightcyan; */
-        }
+        /* #chat-list-oto-cont::-webkit-scrollbar-track {
+            background-color: lightcyan;
+        } */
 
         #chat-body-cont {
             width: 100%;
@@ -173,9 +173,9 @@
             background-clip: padding-box;
             border: 2px solid transparent;
         }
-        #chat-body-inner-cont::-webkit-scrollbar-track {
-            /* background-color: lightcyan; */
-        }
+        /* #chat-body-inner-cont::-webkit-scrollbar-track {
+            background-color: lightcyan;
+        } */
         #chat-body-input-cont {
             width: 100%;
             height: 50px;
@@ -243,9 +243,9 @@
 
 			object-fit: cover;
 		}
-		.cc-list-oto-ele>div:last-child>h4:first-child {
-			/* margin-bottom: 5px; */
-		}
+		/* .cc-list-oto-ele>div:last-child>h4:first-child {
+			margin-bottom: 5px;
+		} */
 		.cc-list-oto-ele>div:last-child>p:nth-child(2) {
 			font-size: 12px;
 			margin-bottom: 5px;
@@ -376,6 +376,45 @@
             border: 0;
             /* background-color: transparent; */
         }
+		.ccbody-loading {
+			position: relative;
+		}
+		.ccbody-loading::after {
+			content: "";
+			background: url(/images/chatimg/loading-gif.gif);
+			background-size: 18px 18px;
+			display: block;
+			height: 18px;
+			width: 18px;
+			position: absolute;
+			left: -25px;
+			bottom: 1px;
+		}
+
+		#chat-alert-cont {
+			position: absolute;
+			right: 0; top: -80px;
+		}
+		.cc-alert {
+			height: 50px;
+			min-width: 100px; max-width: 300px;
+
+			border-radius: 15px/15px;
+
+			padding: 2px 10px 0 10px;
+
+			background-color: rgb(216, 245, 255);
+		}
+		.cc-alert>h4, .cc-alert>p {
+			min-width: 280px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		#chat-inner-wrapper {
+			position: absolute;
+			bottom: 100px; right: 0px;
+		}
 		
 		.cc-hidden {
 			display: none!important;
@@ -385,86 +424,94 @@
 <body>
 	<div id="chat-wrapper">
 		<div id="chat-window-btn">채팅<br>이미지 여기에</div>
-		<div id="chat-window" class="cc-hidden">
-			<div id="chat-list-cont" class="">
-				<div id="chat-list-header"></div>
-				<div id="chat-list-inner-cont">
-					<div id="chat-list-empty" class="cc-hidden">
-						<!-- 이미지 바꿔라 -->
-						<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
-						<p>현재 입장해있는 채팅방이 없습니다</p>
-					</div>
-					<div id="chat-list-chatbot-cont" class="cc-hidden">
-						<!-- WIP -->
-					</div>
-					<div id="chat-list-oto-cont">
-						<!-- oto, otm 요소 예시 -->
-						<!-- <div id="otoele-1" class="cc-list-oto-ele">
-							<div>
-								<img src="../../static/images/layoutimg/logo.png" alt="img001">
-							</div>
-							<div>
-								<h4>패키지명 팔라우 바다여행</h4>
-								<p>qwerty1234</p>
-								<p>네 5박 6일 맞습니다</p>
-								<p>5월 28일</p>
-								<div>99..</div>
-							</div>
-						</div>
-						<div id="otoele-2" class="cc-list-oto-ele">
-							<div>
-								<img src="../../static/images/layoutimg/logo.png" alt="img002">
-							</div>
-							<div>
-								<h4>팔라우 6박7일 하루빼고 바다만</h4>
-								<p>qwerty1234</p>
-								<p>진짜 6일동안 바다만 다녀요?</p>
-								<p>5월 28일</p>
-								<div class="cc-hidden">0</div>
-							</div>
-						</div>
-						<div id="otoele-2" class="cc-list-otm-ele">
-							<div>
-								<img src="../../static/images/layoutimg/logo.png" alt="img002">
-								<img src="../../static/images/layoutimg/logo.png" alt="img002">
-								<img src="../../static/images/layoutimg/logo.png" alt="img002">
-								<img src="../../static/images/layoutimg/logo.png" alt="img002">
-							</div>
-							<div>
-								<h4>팔라우 6박7일 하루빼고 바다만</h4>
-								<p>qwerty1234</p>
-								<p>진짜 6일동안 바다만 다녀요?</p>
-								<p>5월 28일</p>
-								<div class="cc-hidden">0</div>
-							</div>
-						</div> -->
-					</div>
-					<div id="chat-list-otm-cont" class="cc-hidden"></div>
-				</div>
-				<div id="chat-list-footer">
-					<div id="chat-list-footer-chatbot-btn" class="cc-footer-btn">
-						<h4>채팅봇</h4>
-					</div>
-					<div id="chat-list-footer-oto-btn" class="cc-footer-btn">
-						<h4>일대일</h4>
-					</div>
-					<div id="chat-list-footer-otm-btn" class="cc-footer-btn">
-						<h4>일대다</h4>
-					</div>
-				</div>
+		<div id="chat-inner-wrapper">
+			<div id="chat-alert-cont">
+				<!-- <div class="cc-alert">
+					<h4>송신자</h4>
+					<p>본문aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+				</div> -->
 			</div>
-			<div id="chat-body-cont" class="cc-hidden">
-                <div id="chat-body-header">
-                    <input type="submit" value="나가기" id="quit-chat" class="ccbody-btn">
-                    <h4 id="chat-body-title"></h4>
-                </div>
-				<div id="chat-body-inner-cont">
+			<div id="chat-window" class="cc-hidden">
+				<div id="chat-list-cont" class="">
+					<div id="chat-list-header"></div>
+					<div id="chat-list-inner-cont">
+						<div id="chat-list-empty" class="cc-hidden">
+							<!-- 이미지 바꿔라 -->
+							<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
+							<p>현재 입장해있는 채팅방이 없습니다</p>
+						</div>
+						<div id="chat-list-chatbot-cont" class="cc-hidden">
+							<!-- WIP -->
+						</div>
+						<div id="chat-list-oto-cont">
+							<!-- oto, otm 요소 예시 -->
+							<!-- <div id="otoele-1" class="cc-list-oto-ele">
+								<div>
+									<img src="../../static/images/layoutimg/logo.png" alt="img001">
+								</div>
+								<div>
+									<h4>패키지명 팔라우 바다여행</h4>
+									<p>qwerty1234</p>
+									<p>네 5박 6일 맞습니다</p>
+									<p>5월 28일</p>
+									<div>99..</div>
+								</div>
+							</div>
+							<div id="otoele-2" class="cc-list-oto-ele">
+								<div>
+									<img src="../../static/images/layoutimg/logo.png" alt="img002">
+								</div>
+								<div>
+									<h4>팔라우 6박7일 하루빼고 바다만</h4>
+									<p>qwerty1234</p>
+									<p>진짜 6일동안 바다만 다녀요?</p>
+									<p>5월 28일</p>
+									<div class="cc-hidden">0</div>
+								</div>
+							</div>
+							<div id="otoele-2" class="cc-list-otm-ele">
+								<div>
+									<img src="../../static/images/layoutimg/logo.png" alt="img002">
+									<img src="../../static/images/layoutimg/logo.png" alt="img002">
+									<img src="../../static/images/layoutimg/logo.png" alt="img002">
+									<img src="../../static/images/layoutimg/logo.png" alt="img002">
+								</div>
+								<div>
+									<h4>팔라우 6박7일 하루빼고 바다만</h4>
+									<p>qwerty1234</p>
+									<p>진짜 6일동안 바다만 다녀요?</p>
+									<p>5월 28일</p>
+									<div class="cc-hidden">0</div>
+								</div>
+							</div> -->
+						</div>
+						<div id="chat-list-otm-cont" class="cc-hidden"></div>
+					</div>
+					<div id="chat-list-footer">
+						<div id="chat-list-footer-chatbot-btn" class="cc-footer-btn">
+							<h4>채팅봇</h4>
+						</div>
+						<div id="chat-list-footer-oto-btn" class="cc-footer-btn">
+							<h4>일대일</h4>
+						</div>
+						<div id="chat-list-footer-otm-btn" class="cc-footer-btn">
+							<h4>일대다</h4>
+						</div>
+					</div>
+				</div>
+				<div id="chat-body-cont" class="cc-hidden">
+					<div id="chat-body-header">
+						<input type="submit" value="나가기" id="quit-chat" class="ccbody-btn">
+						<h4 id="chat-body-title"></h4>
+					</div>
+					<div id="chat-body-inner-cont">
 
-                </div>
-                <div id="chat-body-input-cont">
-                    <input type="text" id="input-chat">
-                    <input type="submit" value="전송" id="submit-chat" class="ccbody-btn">
-                </div>
+					</div>
+					<div id="chat-body-input-cont">
+						<input type="text" id="input-chat">
+						<input type="submit" value="전송" id="submit-chat" class="ccbody-btn">
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -476,6 +523,9 @@
 	const CHAT_WINDOW_BTN = document.getElementById("chat-window-btn");
 	//채팅창
 	const CHAT_WINDOW = document.getElementById("chat-window");
+
+	//채팅 알림창
+	const CHAT_ALERT_CONT = document.getElementById("chat-alert-cont");
 	
 	//채팅방 목록창 container
 	const CHAT_LIST_CONT = document.getElementById("chat-list-cont");
@@ -502,20 +552,15 @@
 	const CHAT_BODY_TITLE = document.getElementById("chat-body-title");
 	//채팅창 나가기 버튼
 	const CHAT_BODY_QUIT_BTN = document.getElementById("quit-chat");
+	//채팅 전송 버튼
+	const CHAT_BODY_SUBMIT_BTN = document.getElementById("submit-chat");
+	//채팅 입력창
+	const CHAT_BODY_INPUT = document.getElementById("input-chat");
 
 	/*================================================================================*/
+	/*공유 워커 관련*/
 
 	let WORKER = null;
-
-	let CHAT_FIRST_DETAIL_IDX = null;
-
-	const CHAT_BODY_INFO = {
-		roomidx: null,
-		isEmpty: false,
-		firstDetailIdx: null,
-		isFirst: null,
-		userid: null
-	};
 
 	window.addEventListener("load", function(e) {
 		if(!!window.SharedWorker) {
@@ -527,6 +572,11 @@
 				//일단 콘솔로그만 해둠
 				console.log("SharedWorder broadcasted data=" + e.data);
 				console.log(e.data);
+				switch(e.data.action) {
+					case "broadcastChat":
+						broadcastChatHandler(e.data);
+						break;
+				}
 			};
 
 			window.addEventListener("beforeunload", (e) => {
@@ -538,13 +588,15 @@
 			WORKER.port.start();
 		} else {
 			//공유워커 미지원 브라우저
-			window.alert("아직도 IE를 쓰느냐");
 			window.close();
 		}
 	});
 	/*
 		!!!! 테스트
 	*/
+	// CHAT_BODY_INNER_CONT.addEventListener("scroll", (e) => {
+	// 	console.log(CHAT_BODY_INNER_CONT.scrollY);
+	// });
 
 	/*================================================================================*/
 	/*클릭이벤트 등록*/
@@ -558,9 +610,27 @@
 	CHAT_LIST_OTM.addEventListener("click", chatListOTNElementClick);
 	//채팅창 나가기 버튼 클릭
 	CHAT_BODY_QUIT_BTN.addEventListener("click", chatBodyQuitBtnClick);
+	//채팅 submit 버튼 클릭
+	CHAT_BODY_SUBMIT_BTN.addEventListener("click", chatBodySubmitBtnClick);
 
 	/*================================================================================*/
-	/*클릭이벤트와 관련 함수*/
+	/*채팅 생성*/
+	function createPackageChat(e) {
+		const packagenum = 0; /*초기화 필요*/
+
+		ajaxPost("localhost:8080", "/chat", {
+			packagenum: packagenum
+		})
+		.then((data) => {
+
+		})
+		.catch((err) => {
+
+		});
+	}
+
+	/*================================================================================*/
+	/*이벤트 관련 함수*/
 
 	//채팅창 버튼 클릭
 	/*
@@ -579,6 +649,7 @@
 				//Ajax 호출
 				ajaxGet("localhost:8080", "/chat")
 				.then((data) => {
+					console.log(data);
 					setChatListVD(data);
 					printChatList();
 				})
@@ -694,6 +765,21 @@
 				//모달 구성
 				setChatBodyInfo(res.payload);
 				printChatRoom(res.payload);
+				//UNCHECKED_MSG_COUNT 값과
+				//CHAT_OT*_VD uncheckedmsg 값 갱신
+				//대충 UNCHECKED_MSG_COUNT -= uncheckedmsg를 해준다
+				UNCHECKED_MSG_COUNT -= targetInfo.uncheckedmsg;
+				for(let key in (targetID === "otoele" ? CHAT_OTO_VD : CHAT_OTM_VD)) {
+					if((targetID === "otoele" ? CHAT_OTO_VD : CHAT_OTM_VD)[key].eleId === targetEleId) {
+						(targetID === "otoele" ? CHAT_OTO_VD : CHAT_OTM_VD)[key].dataObj.uncheckedmsg = 0;
+						break;
+					}
+				}
+				if(CHAT_BODY_INFO.isEmpty == false) {
+					scrollIntoLastChatElement();
+				}
+				/*미확인 채팅값 갱신 DOM에 적용*/
+
 			} catch(err) {
 				//채팅방 로딩 실패 출력
 				/*
@@ -703,6 +789,7 @@
 				*/
 				//임시
 				window.alert("채팅방 로딩을 실패했습니다");
+				console.log(err);
 			}
 		}
 	}
@@ -728,17 +815,118 @@
 			//임시
 			CHAT_BODY_CONT.classList.add("cc-hidden");
 			CHAT_LIST_CONT.classList.remove("cc-hidden");
-		} catch(e) {
+		} catch(err) {
 			//채팅방 이탈 실패 출력
 			//임시
 			window.alert("채팅방 나가기를 실패했습니다");
+			console.log(err);
+		}
+	}
+
+	//채팅창 입력 submit 클릭
+	/*
+		입력 로직
+		submit
+		-> 우선 DOM에 채팅(로딩) 올리기
+		-> 서버 찍턴
+		-> 성공시 채팅(로딩)을 채팅으로 변경
+			-> 실패시 채팅(로딩)을 채팅(실패)으로 변경
+			-> UI로 버튼 2개 제공, resubmit, cancelsubmit 정도
+				-> cancelsubmit 시 DOM서 삭제
+				-> resubmit 시 서버찍턴 goto
+
+		일단은 서버 찍턴 -> 성공/실패에 따라 처리 정도로만 함
+	*/
+	async function chatBodySubmitBtnClick(e) {
+		const inputContent = CHAT_BODY_INPUT.value;
+
+		if(inputContent != "") {
+			printChatElement("loading", inputContent, "ccbody-right", "ccbody-loading");
+			scrollIntoLastChatElement();
+
+			WORKER.port.postMessage({
+				action: "sendChat",
+				payload: {
+					roomidx: CHAT_BODY_INFO.roomidx,
+					chatContent: inputContent
+				}
+			});
+	
+			//응답 대기/처리
+			try {
+				const res = await promised_waitTillResponse("sendChat");
+				/*VD 조작 함수 호출*/
+				/*DOM 구현 함수 호출*/
+				adjustChatElementClass("ccbodyele-loading", "ccbody-right");
+				adjustChatElementId("ccbodyele-loading", "ccbody-" + res.chatDetailIdx);
+			} catch(e) {
+				//오류 처리
+			}
+		} else {
+			//공란 입력 불가능 알림
+		}
+	}
+
+	//broadcastChat 수신기
+	/*
+		채팅방이 닫혀있으면 팝업알림만,
+		열려있으면 채팅방 갱신도
+
+		두 경우 모두 채팅창이 열린 적이 있으면(CHAT_OT*_VD가 비어있지 않으면)
+		UNCHECKED_MSG_COUNT--과 CHAT_OT*_VD.uncheckedmsg--를 해준다
+
+		이거 좀 생각보다 복잡함
+	*/
+	function broadcastChatHandler(data) {
+		if(!!CHAT_BODY_INFO.roomidx) {
+			//채팅창이 열려있을 때
+			printChatElement(data.payload.chatDetailIdx, data.payload.chatContent, "ccbody-left");
+			scrollIntoLastChatElement();
+		} else {
+			//채팅창이 닫혀있을 때
+			UNCHECKED_MSG_COUNT++;
+			let chk = true;
+
+			for(let i = 0; i < CHAT_OTO_VD.length; i++) {
+				if(CHAT_OTO_VD[i].dataObj.roomidx === data.payload.roomidx) {
+					CHAT_OTO_VD[i].dataObj.uncheckedmsg++;
+					chk = false;
+					break;
+				}
+			}
+			if(chk) {
+				for(let i = 0; i < CHAT_OTM_VD.length; i++) {
+					if(CHAT_OTM_VD[i].dataObj.roomidx === data.payload.roomidx) {
+						CHAT_OTM_VD[i].dataObj.uncheckedmsg++;
+						break;
+					}
+				}
+			}
+
+			/*미확인 체팅 알림처리*/
+			console.log("미확인 채팅 알림처리");
+
+			const div = document.createElement("div");
+			div.classList.add("cc-alert");
+			const h4 = document.createElement("h4");
+			h4.innerHTML = data.payload.userid;
+			div.appendChild(h4);
+			const p = document.createElement("p");
+			p.innerHTML = data.payload.chatContent;
+			div.appendChild(p);
+			CHAT_ALERT_CONT.appendChild(div);
+			console.log(div);
+			setTimeout(() => {
+				div.remove();
+				console.log("div removed");
+			}, 3000);
 		}
 	}
 
 	/*================================================================================*/
 	/*연결*/
 	//비동기 응답 대기
-	async function promised_waitTillResponse(action, timeout = 3000) {
+	async function promised_waitTillResponse(action, millisec = 3000) {
 		return new Promise((resolve, reject) => {
 			const receiver = (e) => {
 				if(e.data.action === action) {
@@ -748,14 +936,17 @@
 						reject(new Error("reportFromWorker"));
 					}
 					WORKER.port.removeEventListener("message", receiver);
+					clearTimeout(timeoutId);
 				}
 			};
-			WORKER.port.addEventListener("message", receiver);
-			setTimeout(() => {
+
+			const timeoutId = setTimeout(() => {
+				console.log("promised_waitTillResponse timeout call");
 				if(!!WORKER)
 					WORKER.removeEventListener("message", receiver);
 				reject(new Error("timeout"));
-			}, timeout);
+			}, millisec);
+			WORKER.port.addEventListener("message", receiver);
 		});
 	}
 
@@ -797,6 +988,17 @@
 	}
 	//총 안 읽은 개수
 	let UNCHECKED_MSG_COUNT = 0;
+	
+	let CHAT_FIRST_DETAIL_IDX = null;
+
+	const CHAT_BODY_INFO = {
+		roomidx: null,
+		isEmpty: false,
+		firstDetailIdx: null,
+		isFirst: null,
+		userid: null,
+		chatRoomInfo: null
+	};
 
 	//VD 처리
 	//VD 초기화
@@ -840,6 +1042,24 @@
 		}
 		CHAT_BODY_INFO.roomidx = payload.roomidx;
 		CHAT_BODY_INFO.userid = payload.requestUserid;
+
+		let chk = true;
+
+		for(let temp of CHAT_OTO_VD) {
+			if(temp.dataObj.roomidx === payload.roomidx) {
+				CHAT_BODY_INFO.chatRoomInfo = temp.dataObj;
+				chk = false;
+				break;
+			}
+		}
+		if(chk) {
+			for(let temp of CHAT_OTM_VD) {
+				if(temp.dataObj.roomidx === payload.roomidx) {
+					CHAT_BODY_INFO.chatRoomInfo = temp.dataObj;
+					break;
+				}
+			}
+		}
 	}
 	//CHAT_BODY_INFO 초기화
 	function resetChatBodyInfo() {
@@ -848,10 +1068,52 @@
 		CHAT_BODY_INFO.firstDetailIdx = null;
 		CHAT_BODY_INFO.isFirst = null;
 		CHAT_BODY_INFO.userid = null;
+		CHAT_BODY_INFO.chatRoomInfo = null;
 	}
 
 	/*================================================================================*/
 	/*DOM 구현*/
+
+	//채팅창 요소 구현
+	//메시지(로딩)
+	function printChatElement(idValue, chatContent, ...classList) {
+		const div = document.createElement("div");
+		div.id = "ccbodyele-" + idValue;
+		if(classList.length > 0) {
+			classList.forEach((cls) => {
+				div.classList.add(cls);
+			});
+		}
+		const p = document.createElement("p");
+		p.innerHTML = chatContent;
+		div.appendChild(p);
+		CHAT_BODY_INNER_CONT.appendChild(div);
+	}
+	//특정 메시지 클래스 수정
+	/*
+		매개변수 classList[]의 값으로 덮어씌움
+	*/
+	function adjustChatElementClass(idValue, ...classList) {
+		const target = document.getElementById(idValue);
+		target.removeAttribute("class");
+		if(classList.length > 0)
+			classList.forEach((cls) => {
+				target.classList.add(cls);
+			});
+	}
+	//특정 메시지 id 수정
+	/*
+		수정된 id를 반환
+	*/
+	function adjustChatElementId(oldIdValue, newIdValue) {
+		document.getElementById(oldIdValue).id = newIdValue;
+		return newIdValue;
+	}
+
+	//마지막 요소 포커스
+	function scrollIntoLastChatElement() {
+		CHAT_BODY_INNER_CONT.lastChild.scrollIntoView(false);
+	}
 
 	//채팅창 DOM 구현
 	/*
@@ -862,11 +1124,42 @@
 	function printChatRoom(payload) {
 		//기존 채팅 초기화
 		CHAT_BODY_INNER_CONT.replaceChildren();
-		CHAT_FIRST_DETAIL_IDX = payload.chatDetails[payload.chatDetails.length - 1].chatDetailIdx;
+		if(CHAT_BODY_INFO.isEmpty) {
+			CHAT_FIRST_DETAIL_IDX = null;
+		} else {
+			CHAT_FIRST_DETAIL_IDX = payload.chatDetails[payload.chatDetails.length - 1].chatDetailIdx;
+		}
 
 		//채팅창 화면 변경
 		CHAT_LIST_CONT.classList.add("cc-hidden");
 		CHAT_BODY_CONT.classList.remove("cc-hidden");
+
+		//채팅창 제목
+		if(!!CHAT_BODY_INFO.chatRoomInfo.pkgnum) {
+			//패키지채팅
+			CHAT_BODY_TITLE.innerHTML = CHAT_BODY_INFO.chatRoomInfo.title;
+		} else {
+			//일반채팅
+			if(!!CHAT_BODY_INFO.chatRoomInfo.title) {
+				//방제 있음
+				CHAT_BODY_TITLE.innerHTML = CHAT_BODY_INFO.chatRoomInfo.title;
+			} else {
+				//방제 없음
+				//userid들 묶은 문자열 생성
+				let userids = "";
+				for(let dto of CHAT_BODY_INFO.chatRoomInfo.userList) {
+					userids += dto.userid + ",";
+				}
+				userids = userids.slice(0, -1);
+
+				CHAT_BODY_TITLE.innerHTML = userids;
+			}
+		}
+
+		//채팅 내역이 없으면 여기서 종료
+		if(CHAT_BODY_INFO.isEmpty) {
+			return;
+		}
 
 		//fragment
 		const chatFragment = document.createDocumentFragment();

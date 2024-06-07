@@ -3,4 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.t1.tripfy.mapper.chat.ChatRoomMapper">
+	<!-- 
+		chat_room_idx로 행 가져오기
+	-->
+	<select id="selectRowByChatRoomIdx">
+		SELECT *
+		FROM chat_room
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+	</select>
 </mapper>

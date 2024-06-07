@@ -216,59 +216,53 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			//응답
 			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(receivedMsg)));
 			break;
-//		case "sendChat":
-//			//메시지 전송 요청
-//			/*
-//			 * 일단 지금은 바로 DB 인서트하는걸ㄹ로
-//			 * */
-//			Long scRoomIdx = ((ChatContentMessagePayload)receivedMsg.getPayload()).getRoomidx();
-//			
-//			//OPENED_CHAT_INFO 에 채팅방 정보가 저장되어있는지 확인
-//			if(OPENED_CHAT_INFO.containsKey(scRoomIdx)) {
-//				//저장되어있는 경우
-//				
-//				for(String scTempUserid : OPENED_CHAT_INFO.get(scRoomIdx).get("USER")) {
-//					if(!scTempUserid.equals(userid)) {
-//						receivedMsg.setReceiverId(scTempUserid);
-//					}
-//				}
-//				
-//				//서비스로 값 넣고 결과값 받아오기
-//				if(null == (sendingMsg = chatServiceImpl.chatReceiveHandling(receivedMsg))) {
-//					//처리 실패시 처리
-//					session.sendMessage(new TextMessage(
-//							objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
-//					));
-//					return;
-//				}
-//				
-//				//채팅방 가입자들에게 전송, 송신자에게 알림
-//				HashMap<String, ArrayList<String>> scInfo = OPENED_CHAT_INFO.get(scRoomIdx);
-//				
-//				for(String target : scInfo.get("USER")) {
-//					if(target.equals(userid)) {
-//						//송신자
-//						session.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg)));
-//					} else {
-//						//그외
-//						if(WEBSOCKET_SESSIONS.containsKey(target)) {
-//							//웹소켓이 연결되어있는 경우
-//							WEBSOCKET_SESSIONS.get(target).sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg.setAct("broadcastChat"))));
-//						} else {
-//							//연결이 없으면 SSE로 넘긴다
-//							sseService.broadcast(target, objectMapper.writeValueAsString(sendingMsg.setAct("broadcastChat")));
-//						}
-//					}
-//				}
-//				
-//			} else {
-//				//저장되어있지 않은 경우?
-//				//에러
-//				session.sendMessage(new TextMessage(
-//						objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
-//				));
-//			}
-//			break;
+		case "sendChat":
+			//메시지 전송 요청
+			/*
+			 * 일단 지금은 바로 DB 인서트하는걸ㄹ로
+			 * */
+			Long scRoomIdx = ((ChatContentMessagePayload)receivedMsg.getPayload()).getRoomidx();
+			
+			//OPENED_CHAT_INFO 에 채팅방 정보가 저장되어있는지 확인
+			if(OPENED_CHAT_INFO.containsKey(scRoomIdx)) {
+				//저장되어있는 경우
+				
+				//서비스로 값 넣고 결과값 받아오기
+				if(null == (sendingMsg = chatServiceImpl.chatReceiveHandling(receivedMsg))) {
+					//처리 실패시 처리
+					session.sendMessage(new TextMessage(
+							objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
+					));
+					return;
+				}
+				
+				//채팅방 가입자들에게 전송, 송신자에게 알림
+				for(String id : OPENED_CHAT_INFO.get(scRoomIdx)) {
+					System.out.println("id = " + id + " userid=" + userid);
+					System.out.println(sendingMsg.getAct());
+					if(id.equals(userid)) {
+						//송신자에게 응답
+						System.out.println("equals");
+						session.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg.setAct("sendChat"))));
+					} else {
+						//그외 채팅 참여자에게 broadcast
+						if(WEBSOCKET_SESSIONS.containsKey(id)) {
+							//웹소켓 연결이 있으면
+							WEBSOCKET_SESSIONS.get(id).sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg.setAct("broadcastChat"))));
+						} else {
+							//없으면 SSE로
+							sseService.broadcast(id, objectMapper.writeValueAsString(sendingMsg.setAct("broadcastChat")));
+						}
+					}
+				}
+			} else {
+				//저장되어있지 않은 경우?
+				//에러
+				session.sendMessage(new TextMessage(
+						objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
+				));
+			}
+			break;
 //		case "loadChat":
 //			//메시지 로드 요청
 //			/*

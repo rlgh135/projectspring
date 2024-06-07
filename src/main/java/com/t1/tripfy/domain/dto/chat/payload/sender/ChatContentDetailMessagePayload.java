@@ -11,9 +11,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain=true)
 public class ChatContentDetailMessagePayload implements MessagePayload {
 	private Long roomidx;
-	private String pkgname;
+	private Long chatDetailIdx;
+	private String title;
 	private String userid;
 	private String chatContent;
 	private LocalDateTime regdate;
-	private Integer uncheckedmsg; //수신자 기준 미확인 메시지
+//	private Integer uncheckedmsg; //수신자 기준 미확인 메시지
 }

@@ -108,7 +108,7 @@
 		ON 
 			cu.chat_room_idx = cd.chat_room_idx
 		WHERE
-				cu.userid = "testUserId01"
+				cu.userid = #{userid}
 			AND
 				cu.chat_user_is_quit = false
 			AND

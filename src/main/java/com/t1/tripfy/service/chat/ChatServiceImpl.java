@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.t1.tripfy.domain.dto.chat.ChatDetailDTO;
 import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
+import com.t1.tripfy.domain.dto.chat.ChatRoomDTO;
 import com.t1.tripfy.domain.dto.chat.ChatUserDTO;
 import com.t1.tripfy.domain.dto.chat.MessageDTO;
 import com.t1.tripfy.domain.dto.chat.MessagePayload;
@@ -41,7 +42,11 @@ public class ChatServiceImpl implements ChatService {
 	*/
 	
 	@Override
-	public Long createChat(String userid, Long packagenum) {
+	public Boolean createChat(String userid, Long packagenum) {
+		//chat_room
+		
+		//chat_user
+		
 		return null;
 	}
 	
@@ -126,30 +131,33 @@ public class ChatServiceImpl implements ChatService {
 			return null;
 		}
 		
-		//채팅방 최신 메시지의 chat_detail_idx 가져오기
+		//채팅방 최신 메시지(방금 넣은 메시지)의 chat_detail_idx 가져오기
 		ChatDetailDTO temp;
 		if(null == (temp = chatDetailMapper.selectLastRowByChatRoomIdx(chatRoomIdx))) {
 			//조회 실패 처리
 			return null;
 		}
 		
-		//채팅방의 패키지명 가져오기
-		String pkgname;
-		if(null == (pkgname = chatInvadingMapper.selectPackageNameByChatRoomIdx(chatRoomIdx))) {
+		//title 처리
+		//chat_room 가져오기
+		ChatRoomDTO crdto;
+		String title;
+		if(null == (crdto = chatRoomMapper.selectRowByChatRoomIdx(chatRoomIdx))) {
 			//조회 실패 처리
 			return null;
 		}
 		
-		//수신자 기준 미확인 메시지 개수 가져오기
-//		Integer unchk;
-//		if(null == (unchk = chatDetailMapper.selectSpecificCountOfChatDetail(chatRoomIdx, receivedMsg.getReceiverId()))) {
-//			//조회 실패 처리
-//			return null;
-//		}
-		Integer unchk = null;
-//		테스트를 위해 주석처리 - 240603
-		
-		System.out.println(temp.getChatDetailIdx());
+		if(null == crdto.getPackagenum()) {
+			//일반 채팅방
+			title = crdto.getChatRoomTitle();
+		} else {
+			//패키지 채팅방
+			//채팅방의 패키지명 가져오기
+			if(null == (title = chatInvadingMapper.selectPackageNameByChatRoomIdx(chatRoomIdx))) {
+				//조회 실패 처리
+				return null;
+			}
+		}
 		
 		//메시지 송신자 chat_user.chat_detail_idx 최신화
 		if(1 != chatUserMapper.updateChatDetailIdx(chatRoomIdx, receivedMsg.getSenderId(), temp.getChatDetailIdx())) {
@@ -161,11 +169,11 @@ public class ChatServiceImpl implements ChatService {
 		ChatContentDetailMessagePayload sendPayload = new ChatContentDetailMessagePayload();
 		sendPayload
 			.setRoomidx(chatRoomIdx)
-			.setPkgname(pkgname)
+			.setChatDetailIdx(temp.getChatDetailIdx())
+			.setTitle(title)
 			.setUserid(receivedMsg.getSenderId())
 			.setChatContent(temp.getChatDetailContent())
-			.setRegdate(current)
-			.setUncheckedmsg(unchk);
+			.setRegdate(current);
 		
 		//MessageDTO 구성 후 반환
 		MessageDTO<ChatContentDetailMessagePayload> msg = new MessageDTO<>();

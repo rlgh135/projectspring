@@ -1,6 +1,7 @@
 package com.t1.tripfy.service.chat;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,6 @@ public class SseEmitterService {
 	
 	//이거 좀 생각해봐야됨 last-event-id로 들어가는, 해당 기능의 분별점이 되는 값이니까 이렇게 관리하면 안돼 - 240523
 	private static long connEventCount = 0L;
-	private static long broadcastEventCount = 0L;
 	
 	public SseEmitter subscribe(String lastEventID, String userid) {
 		SseEmitter emit = createEmitter();
@@ -190,19 +190,22 @@ public class SseEmitterService {
 		/*
 		 * 이거 상대 유저가 연결되어있지 않은 경우(null == sseSessions.get(userid)) 도 고려해야함
 		 * */
-		List<UUID> uuidList = sseSessions.get(userid);
-		
-		for(UUID uuid : uuidList) {
-			try {
-				emitterMap.get(uuid).send(SseEmitter.event()
-						.name("broadcastChat")
-						.id("bcc-" + broadcastEventCount++)
-						.data(msg, MediaType.TEXT_EVENT_STREAM)
-						.reconnectTime(RECONNECTION_AFTER_TIMEOUT)
-				);
-			} catch(IOException e) {
-				if(log.isDebugEnabled()) {
-					log.info("error whild sending broadcast message, SseEmitter, userid={}, UUID={}, e={}", userid, uuid, e);
+		if(sseSessions.containsKey(userid)) {
+			List<UUID> uuidList = sseSessions.get(userid);
+			
+			for(UUID uuid : uuidList) {
+				try {
+					emitterMap.get(uuid).send(SseEmitter.event()
+							.name("broadcastChat")
+							//일단 임시로 시간값을 보낸다
+							.id("bcc-" + LocalDateTime.now().toString())
+							.data(msg, MediaType.TEXT_EVENT_STREAM)
+							.reconnectTime(RECONNECTION_AFTER_TIMEOUT)
+					);
+				} catch(IOException e) {
+					if(log.isDebugEnabled()) {
+						log.info("error whild sending broadcast message, SseEmitter, userid={}, UUID={}, e={}", userid, uuid, e);
+					}
 				}
 			}
 		}
