@@ -1,156 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>myinfo</title>
-	<link rel="stylesheet" href="/css/layout/fontscroll.css">
-	<link rel="stylesheet" href="/css/user/myinfostyle.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/user/myinfostyle.css">
+    <style>
+        .hidden{
+            display: none;
+        }
+        .sogehide {
+	        display: none;
+        }
+    </style>
 </head>
 <body>
-	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
-	
-	<div class="pfmdform">
-		<form id="ptform" name="ptform" method="post" action="/user/changeimg" enctype="multipart/form-data">
-			<p>프로필 사진 변경</p>
-			<div id="profilecontainer">
-				<label for="uploadfileform">
-				<div id="profile">
-					<img id="formprofileimg"  th:src="${'/user/thumbnail?sysname='+thumbnail}">
-				</div>
-				</label>
-					
+    <div id="myinfobody">
+    </div>
+    <div class="pfmdform hidden">
+        <form id="ptform" name="ptform" method="post" action="/user/changeimg" enctype="multipart/form-data">
+            <p>프로필 사진 변경</p>
+            <div id="profilecontainer">
+                <label for="uploadfileform">
+                <div id="profile">
+                    <img id="formprofileimg" th:src="${'/user/thumbnail?sysname='+thumbnail}">
+                </div>
+                </label>
+                    
+            </div>
+            <div class="ptupload">
+                <input type="hidden" name="changedfilename" value="">
+                <input id="uploadfileform" type="file" name="thumbnail" onchange="chooseimg(this)" style="display: none;">
+            </div>
+            <div class="ptfaarea">
+                <a th:href="'javascript:profilechagne(\''+${session.loginUser}+'\', \''+${thumbnail}+'\')'">변경완료</a>
+                <a class="pfmdclose" href="javascript:closepfmdform()">나가기</a>
+            </div>
+        </form>
+    </div>
+    <div id="mycontmodal" class="hidden">
+        <div class="mycontmodal-body">
+            <div class="imgz"></div>
+            <div class="rlcontz">
+                <div class="sltbtns">
+                    <div id="sltcnt0" onclick="switchbtn(0)">내가 쓴 게시글</div>
+                    <div id="sltcnt1" class="sltselected" onclick="switchbtn(1)">내가 찜한 게시글</div>
+                </div>
+                <ul id="showctz">
+                    <li class="boct">
+                        <div onclick="location.href='/board/get?boardnum='">
+                            <div>
+                                <img src="2.jpg" alt="썸네일">
+                            </div>
+                            <div>
+                                <div class="innerpfz">
+                                    <img src="/defaultbadge.png" alt="" srcset="">
+                                    <p>작성자아이디</p>
+                                </div>
+                                <p class="innerpfpt">집에가고싶으면 개추 ㅋㅋ</p>
+                                <div class="innerpfpc">
+                                    <img src="fullheart.png" alt="좋">10&nbsp;
+                                    <img src="viewcnt.png" alt="조">20&nbsp;
+                                    <img src="comments.png" alt="댓">30&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="rlpagez">
+                    <div id="relprev" data-type="" class="rlprev" onclick="godiff(-1)">이전</div>
+                    <div id="relnext" data-btnidx="" class="rlnext" onclick="godiff(1)">다음</div>
+                </div>
+            </div>
+            <div id="clscontz">
+                <img src="cancel_10289710.png" alt="콘텐츠 나가기">
+            </div>
+        </div>
+    </div>
+    <section id="myinfowrap">
+        <nav class="mymenu">
+            <div id="sideWrap" class="">
+                <div class="sideTit">
+                    <div>퀵메뉴</div>
+                    <div id="closeside">
+                        <img src="/images/userimg/backward.png" alt="뒤로" srcset="">
+                    </div>
+                </div>
+                <ul class="linkUl">
+                    <li>내 정보</li>
+                    <li>게시판</li>
+                    <li>패키지</li>
+                </ul>
+                <ul class="writeUl">
+                    <li>새 게시글 작성</li>
+                    <li id="modalOpenButton" th:if="${session.guideNum!=0}">새 패키지 작성</li>
+                </ul>
+            </div>
+            <div id="sideOpenner" class="myinfo-f_l"></div>
+            <span style="font-size: 20px; line-height: 25px; font-weight: bold; color: #2196f3;">TRIPFY</span>
+            <div class="myinfo-f_r lgut" onclick="location.href='/user/logout'"></div>
+        </nav>
+        <div class="myprofile">
+            <div class="myeonsang pfmdopen">
+                <img th:src="${'/user/thumbnail?sysname='+thumbnail}" alt="유저섬네일">
+            </div>
+            <div class="myinfoid">
+				<p id="target-id">[[${session.loginUser}]]</p>
+				<p th:if="${session.guideNum!=0}" id="isguide"><img src="/images/userimg/guidebadge.png" alt="가이드뱃지"></p>
 			</div>
-			<div class="ptupload">
-				<input type="hidden" name="changedfilename" value="">
-				<input id="uploadfileform" type="file" name="thumbnail" onchange="chooseimg(this)" style="display: none;">
-			</div>
-			<div class="ptfaarea">
-				<a th:href="'javascript:profilechagne(\''+${session.loginUser}+'\', \''+${thumbnail}+'\')'">변경완료</a>
-				<a class="pfmdclose" href="javascript:closepfmdform()">나가기</a>
-			</div>
-		</form>
-	</div>
-	<section id="myinfowrap">
-		<div id="profilewrap">
-			<div id="profileupperwrap">
-				<div id="profilecontainer">
-					<div id="profile" class="pfmdopen">
-						<img th:src="${'/user/thumbnail?sysname='+thumbnail}">
-					</div>
-				</div>
-				<div id="infocontainer">
-					<div class="nameguide">
-						<p id="profname">[[${user.userid}]]</p>
-						<p th:if="${session.guideNum!=0}" id="isguide"><img src="/images/userimg/guidebadge.png" alt=""></p>
-						<div id="editbtn">
-							<th:block th:if="${session.guideNum!=0}">
-								<input type="button" value="여행후기작성" class="profmopenbtn" onclick="location.href='/user/after'">
-								<div id="redalert"></div>
-								<input type="button" value="가이드메뉴" class="profmopenbtn" onclick="location.href='/user/guide'">
-							</th:block>
-							<th:block th:unless="${session.guideNum!=0}">
-								<input type="button" value="여행후기작성" class="profmopenbtn" onclick="location.href='/user/after'">
-								<input type="button" value="가이드신청" class="profmopenbtn" onclick="location.href='/user/joinguide'">
-							</th:block>
-						</div>
-					</div>
-					<ul class="actcntlist">
-						<li>
-							<p>게시글</p>
-							<p th:if="${list.size()>0}">[[${list.size()}]]</p>
-							<p th:unless="${list.size()>0}">0</p>
-						</li>
-						<li>
-							<p>댓글</p>
-							<p>30</p>
-						</li>
-						<li>
-							<p>좋아요</p>
-							<p>3</p>
-						</li>
-					</ul>
-					
-					<div class="sogaebox">
-						<div>
-							<p>자기소개</p>
-							<input type="button" name="open" id="openSogeEdit" class="hiddens sogaetriger">
-							<input type="button" id="sogeWan" class="hiddens sogehide" onclick="sogesubmit()" value="완료">
-							<input type="button" id="sogeCansle" class="hiddens sogehide sogaetriger" value="취소">
-						</div>
-						<form action="/user/sogae" method="get" name="sogaeform">
-							<input type="hidden" name="_method" value="PUT"/>
-							<textarea name="introduce" readonly>[[${user.introduce}]]</textarea>
-						</form>
-					</div>
-				</div>
-			</div>
-			<div id="profilelowerwrap">
-				<ul id="choicebtns">
-					<li id="myboard" onclick="showMyBoards()" class="mypstselected-btn">내 게시글</li>
-					<li id="joinpackage" onclick="showJoinPacks()">참여한 여행</li>
-					<li style="display: none;"><input id="mypstshowtype" type="hidden" value="board"></li>
-				</ul>
-				<div id="mypostsection" class="mypstselected-body">
-					<div id="mainmypost">
-						<a th:if="${list != null and list.size > 0}" th:each="board, iterStats:${list}"
-							th:href="@{/board/get(boardnum=${board.boardnum})}">
-							<div class="mypost">
-								<div class="p_img">
-									<img th:src="${'/board/thumbnail?sysmname='+bflist[__${iterStats.index}__].sysname}" alt="">
-								</div>
-								<div class="post_write">
-									<div class="pstguide">
-										<img th:src="${'/user/thumbnail?sysname='+thumbnail}" alt="">
-										<span>[[${board.userid}]]</span>
-									</div>
-									<div class="line"></div>
-									<div class="post_title">[[${board.title}]]</div>
-									<div class="post_preview">
-										<ul class="showboardspecs">
-											<li>
-												<img src="/images/boardimg/viewcnt.png">
-												<span>[[${board.viewcnt}]]</span>
-											</li>
-											<li>
-												<img src="/images/layoutimg/redheart.webp">
-												<span>[[${board.likecnt}]]</span>
-											</li>
-											<li>
-												<img src="/images/boardimg/comments.png">
-												<span>[[${board.replycnt}]]</span>												
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div id="mypagesarea" class="b_pagenation">
-						<a class="" href="javascript:movepage(-1)">이전</a>
-						<a class="" href="javascript:movepage(1)">다음</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="backbtnarea">
-			<input type="button" value="돌아가기">
-		</div>
-	</section>
+            <div class="sogaebox">
+                <form action="/user/sogae" method="get" name="sogaeform">
+                    <input type="hidden" name="_method" value="PUT"/>
+                    <textarea name="introduce" readonly>[[${user.introduce}]]</textarea>
+                </form>
+                <div>
+                    <input type="button" name="open" id="openSogeEdit" class="hiddens sogaetriger" value="">
+                    <input type="button" id="sogeWan" class="hiddens sogehide" onclick="sogesubmit()" value="완료">
+                    <input type="button" id="sogeCansle" class="hiddens sogehide sogaetriger" value="취소">
+                </div>
+            </div>
+            <div class="bungi">
+                <div class="hugijak" onclick="location.href='/user/after'">여행후기작성</div>
+                <div th:if="${session.guideNum!=0}" class="myguidemenu" onclick="location.href='/user/guide'">패키지관리</div>
+                <div th:unless="${session.guideNum!=0}" class="myguidemenu" onclick="location.href='/user/joinguide'">가이드신청</div>
+            </div>
+        </div>
+        <div class="myinfoinfo">
+            <div class="myinfoinfotit"></div>
+            <ul class="myinfoinfoul">
+                <li>
+                    <p>게시글</p>
+					<p th:if="${list.size()>0}">[[${list.size()}]]</p>
+					<p th:unless="${list.size()>0}">0</p>
+                </li>
+                <li>
+                    <p>댓글</p>
+                    <p>2</p>
+                </li>
+                <li>
+                    <p>패키지</p>
+                    <p>3</p>
+                </li>
+                <li>
+                    <p>후기</p>
+                    <p>4</p>
+                </li>
+            </ul>
+        </div>
+        <nav class="details">
+            <div class="details-jb redbull" data-target="작성한 게시글" onclick="openCont('board', 'userid')">내 게시글</div>
+            <div class="details-jp greenbull" data-target="다녀온 여행" onclick="openCont('joinpack', 'userid')">내가 참여한 여행</div>
+            <div class="details-cp pinkbull" data-target="만든 패키지" onclick="openCont('mypack', 'userid')">내가 만든 패키지</div>
+            <div class="details-gr purplebull" data-target="받은 후기"onclick="openCont('review', 'userid')">받은 후기</div>
+        </nav>
+    </section>
 </body>
-
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script th:inline="javascript">
-	/*<![CDATA[*/
-		const userthumbnail = [[${thumbnail}]];
-		const userdir = [[${'/user/thumbnail?sysname='+thumbnail}]];
-	/*]]>*/
-</script>
+<th:block th:include="~{layout/packageModal::packageModal}"></th:block>
 <script>
-	
-	let orgval = $('textarea[name="introduce"]').val();
+    const targetId = document.getElementById('target-id').innerText;
+
+    //햄버거
+    $("#sideOpenner").on("click", function(){
+        $("#sideWrap").toggleClass('open');
+    })
+    $("#closeside").on("click", function() {
+        $("#sideWrap").toggleClass('open');
+    })
+
+    //소개
+    let orgval = $('textarea[name="introduce"]').val();
 	$(".sogaetriger").click(function (){
 		$(".hiddens").toggleClass("sogehide");
 		$('textarea[name="introduce"]').prop('readonly',!$('textarea[name="introduce"]').prop('readonly'));
@@ -165,6 +184,7 @@
 		sogaeform.submit();
 	}
 	
+    //프로필
 	const pfmdform = document.querySelector('.pfmdform');
 	const pfmdopen = document.querySelector('.pfmdopen');
 	const pfmdclose = document.querySelector('.pfmdclose');
@@ -175,93 +195,7 @@
 	pfmdclose.addEventListener('click', function () {
 		pfmdform.style.display = 'none';
 	});
-	
-	
-	
-    const myboard = document.getElementById("myboard");
-	const joinpackage = document.getElementById("joinpackage");
-	
-	const mypostsection = document.getElementById("mypostsection");
-	
-    function showMyBoards() {
-		if($("#mypstshowtype").val()=='board'){
-			console.log("이미 보드입니다");
-			return;
-		}
-		
-		let postsection = document.getElementById("mainmypost");
-		
-		$.ajax({
-			url: "/user/myboard",
-			method: "GET",
-			
-			success:function(datas){
-				myboard.classList.toggle("mypstselected-btn");
-				joinpackage.classList.toggle("mypstselected-btn");
-				mypostsection.classList.toggle("mypstselected-body");
-				$("#mypstshowtype").val("board");
-				curpage=1;
-				
-				console.log(datas);
-				
-				if(datas.length==0||datas==null){
-					postsection.innerHTML = "";
-					let emptysignnode = document.createElement('img');
-					emptysignnode.src = '/images/layoutimg/indeximg01.png';
-					emptysignnode.className = 'centered-mpimg';
-				} else {
-					postsection.innerHTML = "";
-					makeDOM("board", datas);
-				}
-			},
-			
-			error:function(){
-				console.log("board 통신에러");
-			}
-		})
-    }
-	
-	function showJoinPacks() {
-		if($("#mypstshowtype").val()=='package'){
-			console.log("이미 패키지입니다");
-			return;
-		}
-		
-		const postsection = document.getElementById("mainmypost");
-		
-		$.ajax({
-			url: "/user/mypackage",
-			method: "GET",
-			
-			success:function(datas){
-				myboard.classList.toggle("mypstselected-btn");
-				joinpackage.classList.toggle("mypstselected-btn");
-				mypostsection.classList.toggle("mypstselected-body");
-				$("#mypstshowtype").val("package");
-				curpage=1;
-				
-				console.log(datas);
-				
-				if(datas.joinpackage==null||datas.joinpackage.length===0){
-					postsection.innerHTML = "";
-					let emptysignnode = document.createElement('img');
-					emptysignnode.src = '/images/layoutimg/indeximg01.png';
-					emptysignnode.className = 'centered-mpimg';
-					
-					postsection.appendChild(emptysignnode);
-				} else {
-					postsection.innerHTML = "";
-					makeDOM("package", datas);
-				}
-			},
-			
-			error:function(){
-				console.log("package 통신에러");				
-			}
-		})
-	}
-	
-	function chooseimg(obj){
+    function chooseimg(obj){
 		console.log(obj.files[0]);
 		let file = obj.files[0];
 		if(!file.type.match("image.*")){
@@ -281,250 +215,394 @@
 		const ptform = document.ptform;
 		ptform.submit();
 	}
-	
-	let curpage = 1;
-	
-	function movepage(diff){
-		var movepage = curpage+diff;
-		var loadtype = $("#mypstshowtype").val()
-		
-		if(movepage===0){
-			alert("현재 1페이지 입니다.");
-			return;
-		}
-		
-		const postsection = document.getElementById("mainmypost");
-		
-		$.ajax({
-			url:"/user/movepage?targetpage="+movepage+"&loadtype="+loadtype,
-			method: "GET",
-			
-			success:function(datas) {
-				console.log(datas);
-				curpage = movepage;
-				console.log("현재 페이지:"+curpage);
-				
-				if(datas.length===0 || datas.nodata!=null){
-					postsection.innerHTML = "";
-					let emptysignnode = document.createElement('img');
-					emptysignnode.src = '/images/layoutimg/indeximg01.png';
-					emptysignnode.className = 'centered-mpimg';
-					
-					postsection.appendChild(emptysignnode);
-				} else {
-					postsection.innerHTML = "";
-					makeDOM(loadtype, datas);
-				}
-			},
-			
-			error:function(){
-				console.log("통신 실패");
-				alert("통신 실패");
-			}
-		});
-	}
-	
-	function makeDOM(type, datas){
-		var postsection = document.getElementById("mainmypost");
-		if(type == 'board'){
-			for(let i in datas.boardlist){
-				// <a> 요소 생성
-				const a = document.createElement('a');
-				a.href = '/board/get?boardnum='+datas.boardlist[i].boardnum;
-				
-				// <div class="mypost"> 요소 생성
-				const mypostDiv = document.createElement('div');
-				mypostDiv.className = 'mypost';
-				
-				// <div class="p_img"> 요소 생성 및 이미지 추가
-				const pImgDiv = document.createElement('div');
-				pImgDiv.className = 'p_img';
-				const img1 = document.createElement('img');
-				img1.src = '/board/thumbnail?systemname='+datas.thumbnail[i].sysname;;
-				img1.alt = '';
-				pImgDiv.appendChild(img1);
-				
-				// <div class="post_write"> 요소 생성
-				const postWriteDiv = document.createElement('div');
-				postWriteDiv.className = 'post_write';
-				
-				// <div class="pstguide"> 요소 생성 및 내용 추가
-				const pstGuideDiv = document.createElement('div');
-				pstGuideDiv.className = 'pstguide';
-				const img2 = document.createElement('img');
-				img2.src = userdir;
-				img2.alt = '';
-				const span1 = document.createElement('span');
-				span1.textContent = datas.boardlist[i].userid;
-				pstGuideDiv.appendChild(img2);
-				pstGuideDiv.appendChild(span1);
-				
-				// <div class="line"> 요소 생성
-				const lineDiv = document.createElement('div');
-				lineDiv.className = 'line';
-				
-				// <div class="post_title"> 요소 생성 및 내용 추가
-				const postTitleDiv = document.createElement('div');
-				postTitleDiv.className = 'post_title';
-				postTitleDiv.textContent = datas.boardlist[i].title;
-				
-				// <div class="post_preview"> 요소 생성
-				const postPreviewDiv = document.createElement('div');
-				postPreviewDiv.className = 'post_preview';
-				
-				// <ul class="showboardspecs"> 요소 생성 및 내용 추가
-				const ul = document.createElement('ul');
-				ul.className = 'showboardspecs';
-				
-				const createLi = (imgSrc, textContent) => {
-				    const li = document.createElement('li');
-				    const img = document.createElement('img');
-				    img.src = imgSrc;
-				    const span = document.createElement('span');
-				    span.textContent = textContent;
-				    li.appendChild(img);
-				    li.appendChild(span);
-				    return li;
-				};
-				
-				ul.appendChild(createLi('/images/boardimg/viewcnt.png', datas.boardlist[i].viewcnt));
-				ul.appendChild(createLi('/images/layoutimg/redheart.webp', datas.boardlist[i].likecnt));
-				ul.appendChild(createLi('/images/boardimg/comments.png', datas.boardlist[i].replycnt));
-				
-				postPreviewDiv.appendChild(ul);
-				
-				// 요소들을 조립
-				postWriteDiv.appendChild(pstGuideDiv);
-				postWriteDiv.appendChild(lineDiv);
-				postWriteDiv.appendChild(postTitleDiv);
-				postWriteDiv.appendChild(postPreviewDiv);
-				
-				mypostDiv.appendChild(pImgDiv);
-				mypostDiv.appendChild(postWriteDiv);
-				
-				a.appendChild(mypostDiv);
-				
-				// 부모 div에 최종 요소 추가
-				postsection.appendChild(a);
-			}
-		} else if(type=="package"){
-			for(let i in datas.joinpackage){
-				// 최상위 div 요소 생성
-				const packmyaDiv = document.createElement('div');
-				packmyaDiv.className = 'packmya';
-				
-				// package link wrap div 생성
-				const packagelinkwrapDiv = document.createElement('div');
-				packagelinkwrapDiv.className = 'packagelinkwrap';
-				packagelinkwrapDiv.setAttribute('onclick', "location.href='/package/pget?packagenum="+datas.joinpackage[i].packagenum+"'");
-				
-				// my package thu div 생성
-				const mypackagethuDiv = document.createElement('div');
-				mypackagethuDiv.className = 'mypackagethu';
-				
-				// 이미지 생성
-				const img = document.createElement('img');
-				img.src = '/package/thumbnail?systemname='+datas.thumbnail[i].pfSysname;
-				img.alt = '';
-				img.className = 'packstampimgwidth';
-				
-				// 이미지 div에 추가
-				mypackagethuDiv.appendChild(img);
-				
-				// my package content div 생성
-				const mypackagecontDiv = document.createElement('div');
-				mypackagecontDiv.className = 'mypackagecont';
-				
-				// package title div 생성
-				const mypacktitDiv = document.createElement('div');
-				mypacktitDiv.className = 'mypacktit';
-				
-				// 패키지 이름 p 요소 생성
-				const pTitle = document.createElement('p');
-				pTitle.textContent = datas.joinpackage[i].packageTitle;
-				
-				// span 요소 생성
-				const span = document.createElement('span');
-				span.id = 'ischiso';
-				if(datas.myreservation[i].isDelete == 1){
-					span.innerHTML = '&nbsp;&nbsp;취소진행중';
-				} else{
-					span.innerHTML = '&nbsp;&nbsp;취소진행중';
-					span.className = 'chisojungtoggle';
-				}
-				
-				// p 요소에 span 추가
-				pTitle.appendChild(span);
-				
-				// 링크 요소 생성
-				const aLink = document.createElement('a');
-				aLink.href = '/user/receipt?packagenum='+datas.joinpackage[i].packagenum;
-				aLink.textContent = '내역확인';
-				
-				// title div에 p와 링크 추가
-				mypacktitDiv.appendChild(pTitle);
-				mypacktitDiv.appendChild(aLink);
-				
-				// package information div 생성
-				const mypackinformationDiv = document.createElement('div');
-				mypackinformationDiv.className = 'mypackinformation';
-				
-				// 성인, 어린이 정보 p 요소 생성
-				const pInfo1 = document.createElement('p');
-				pInfo1.innerHTML = '성인: '+datas.myreservation[i].adultCnt+'명, 어린이: '+datas.myreservation[i].childCnt+'명 <span style="font-weight: bold;">￦'+datas	.myreservation[i].price+'</span>';
-				
-				// 날짜 정보 p 요소 생성
-				const pInfo2 = document.createElement('p');
-				pInfo2.textContent = datas.joinpackage[i].startdate+" ~ "+datas.joinpackage[i].enddate;
-				
-				// 정보 div에 p 요소 추가
-				mypackinformationDiv.appendChild(pInfo1);
-				mypackinformationDiv.appendChild(pInfo2);
-				
-				// content div에 title div와 information div 추가
-				mypackagecontDiv.appendChild(mypacktitDiv);
-				mypackagecontDiv.appendChild(mypackinformationDiv);
-				
-				// my package stamp div 생성
-				const mypackagestampDiv = document.createElement('div');
-				mypackagestampDiv.className = 'mypackagestamp';
-				
-				var today = new Date();
-				var startdate = new Date(datas.joinpackage[i].startdate);
-				var enddate = new Date(datas.joinpackage[i].enddate);
-				// 스탬프 이미지 생성
-				const stampImg = document.createElement('img');
-				stampImg.className = 'packstampimg';
-				if(datas.myreservation[i].isDelete == 2){
-					stampImg.src = '/images/userimg/packagecansle.png';					
-				} else if(datas.myreservation[i].isDelete == 1){
-					stampImg.src = '/images/userimg/packagecansleing.png'
-				} else {
-					if(today>=enddate){
-						stampImg.src = '/images/userimg/packagewan.png';						
-					} else {
-						stampImg.src = '/images/userimg/packageready.png';						
-					}
-				}
-				
-				// 스탬프 div에 이미지 추가
-				mypackagestampDiv.appendChild(stampImg);
-				
-				// link wrap div에 thu, content, stamp div 추가
-				packagelinkwrapDiv.appendChild(mypackagethuDiv);
-				packagelinkwrapDiv.appendChild(mypackagecontDiv);
-				packagelinkwrapDiv.appendChild(mypackagestampDiv);
-				
-				// 최상위 div에 link wrap div 추가
-				packmyaDiv.appendChild(packagelinkwrapDiv);
-				
-				// 포스트섹션에 추가
-				postsection.appendChild(packmyaDiv);
-			}
-		} else {
-			console.log("잘못된 타입입니다.");
-			return;
-		}
-	}	
+
+    //opencon
+    $("#clscontz").on('click', function(){
+        $("#mycontmodal").toggleClass('hidden');
+        $("#sltcnt0").removeClass();
+        $("#sltcnt1").removeClass();
+        $("#sltcnt1").toggleClass('sltselected');
+    });
+
+    let curpage = 1;
+    function openCont(contentType, userid) {
+        curpage = 1;
+        $("#mycontmodal").toggleClass('hidden');
+        $("#relprev").data("type", contentType);
+        $("#relnext").data('btnidx', 0);
+
+        var btnidx = $("#relnext").data('btnidx');
+        console.log('btnidx: '+btnidx);
+
+        $('#sltcnt0').toggleClass('sltselected');
+        $('#sltcnt1').toggleClass('sltselected');
+
+        switch (contentType) {
+            case "board":
+                console.log("타입: "+contentType);
+                $('#sltcnt0').text('내가 쓴 게시글');
+                $('#sltcnt1').text('내가 찜한 게시글');
+                makeBoard(btnidx, curpage);
+                break;
+                
+            case "joinpack":
+                console.log("타입: "+contentType);
+                $('#sltcnt0').text('신청한 패키지');
+                $('#sltcnt1').text('다녀온 패키지');
+                makeJoinPack(btnidx, curpage);
+                break;
+                
+            case "mypack":
+                console.log("타입: "+contentType);
+                $('#sltcnt0').text('출발 전 패키지');
+                $('#sltcnt1').text('다녀온 패키지');
+                makeMyPack(btnidx, curpage);
+                break;
+                
+            case "review":
+                console.log("타입: "+contentType);
+                $('#sltcnt0').text('내가 쓴 후기');
+                $('#sltcnt1').text('내가 받은 후기');  
+                makeMyReview(btnidx, curpage);          
+                break;
+        }
+    }
+
+    //페
+    function godiff(diff){
+        curpage = curpage + diff;
+        
+        if(curpage===0){
+            alert("첫페이지입니다!");
+            curpage=1;
+            return;
+        }
+        
+        var btnidx = $("#relnext").data('btnidx');
+        switch ($("#relprev").data("type")) {
+            case "board":
+                console.log("go to page: "+curpage);
+                makeBoard(btnidx, curpage);
+                break;
+                
+            case "joinpack":
+                console.log("go to page: "+curpage);
+                makeJoinPack(btnidx, curpage);
+                break;
+                
+                
+            case "mypack":
+                console.log("go to page: "+curpage);
+                makeMyPack(btnidx, curpage);
+                break;
+                
+            case "review":
+                console.log("go to page: "+curpage);
+                makeMyReview(btnidx, curpage);          
+                break;
+        }
+    }
+
+    function switchbtn(btnidx) {
+        if ($('#sltcnt'+btnidx).hasClass('sltselected')) {
+            alert("이미 거기에요");
+            return;
+        } else {
+            curpage = 1;
+            $('#sltcnt0').toggleClass('sltselected');
+            $('#sltcnt1').toggleClass('sltselected');
+
+            switch ($("#relprev").data("type")) {
+                case "board":
+                console.log("switch to : "+btnidx);
+                makeBoard(btnidx, curpage);
+                break;
+                
+            case "joinpack":
+                console.log("switch to : "+btnidx);
+                makeJoinPack(btnidx, curpage);
+                break;
+                
+            case "mypack":
+                console.log("switch to : "+btnidx);
+                makeMyPack(btnidx, curpage);
+                break;
+                
+            case "review":
+                console.log("switch to : "+btnidx);
+                makeMyReview(btnidx, curpage);          
+                break;
+            }
+        }
+    }
+</script>
+<script>
+    const parrentUlNode = document.getElementById("showctz");
+    //bb
+    function makeBoard(btnnum ,targetpage) {
+        if(btnnum===0){
+            $.ajax({
+                url: "/userdata/myboard?when=before&page="+targetpage+"&userid="+targetId,
+                method: "GET",
+    
+                success:function(datas){
+                    console.log(datas);
+                    parrentUlNode.innerHTML = "";
+                    if(datas.boardlist==null||datas.boardlist.length===0){
+    
+                    } else {
+                        makeDom('board', datas);
+                    }
+                },
+    
+                error:function(){
+                    console.log('통신 에러');
+                }
+            });
+        } else if(btnnum===1){
+            $.ajax({
+                url: "/userdata/myboard?when=after&page="+targetpage+"&userid="+targetId,
+                method: "GET",
+    
+                success:function(datas){
+                    console.log(datas);
+                    parrentUlNode.innerHTML = "";
+                    if(datas.boardlist==null||datas.boardlist.length===0){
+    
+                    } else {
+                        makeDom('board', datas);
+                    }
+                },
+    
+                error:function(){
+                    console.log('통신 에러');
+                }
+            });
+        } else {
+            alert("잘못된 값입니다 초비상!");
+        }
+    }
+
+    //gb
+    function makeJoinPack(btnnum ,targetpage) {
+        if(btnnum===0){
+            $.ajax({
+                url: "/userdata/joinpackage?when=before&page="+targetpage+"&userid="+targetId,
+                method: "GET",
+    
+                success:function(datas){
+                    console.log(datas);
+                    parrentUlNode.innerHTML = "";
+                    if(datas.reservationlist==null||datas.reservationlist.length===0){
+    
+                    } else {
+                        makeDom('joinpack', datas);
+                    }
+                },
+    
+                error:function(){
+                    console.log('통신 에러');
+                }
+            });
+        } else if(btnnum===1){
+            $.ajax({
+                url: "/userdata/joinpackage?when=after&page="+targetpage+"&userid="+targetId,
+                method: "GET",
+    
+                success:function(datas){
+                    console.log(datas);
+                    parrentUlNode.innerHTML = "";
+                    if(datas.reservationlist==null||datas.reservationlist.length===0){
+    
+                    } else {
+                        makeDom('joinpack', datas);
+                    }
+                },
+    
+                error:function(){
+                    console.log('통신 에러');
+                }
+            });
+        } else {
+            alert("잘못된 값입니다!");
+        }
+    }
+
+    //pib
+    function makeMyPack(btnnum ,targetpage) {
+        if(btnnum===0){
+            $.ajax({
+                url: "/user/mypackage?when=before&page="+targetpage+"&guideid="+targetId,
+                method: "GET",
+    
+                success:function(datas){
+                    console.log(datas);
+                    parrentUlNode.innerHTML = "";
+                    if(datas.packagelist==null||datas.packagelist.length===0){
+    
+                    } else {
+                        makeDom('mypack', datas);
+                    }
+                },
+    
+                error:function(){
+                    console.log('통신 에러');
+                }
+            });
+        } else if(btnnum===1){
+            $.ajax({
+                url: "/user/myboard?when=after&page="+targetpage+"&guideid="+targetId,
+                method: "GET",
+    
+                success:function(datas){
+                    console.log(datas);
+                    parrentUlNode.innerHTML = "";
+                    if(datas.packagelist==null||datas.packagelist.length===0){
+    
+                    } else {
+                        makeDom('mypack', datas);
+                    }
+                },
+    
+                error:function(){
+                    console.log('통신 에러');
+                }
+            });
+        } else {
+            alert("잘못된 값입니다!");
+        }
+    }
+
+    //pub
+    function makeMyReview(btnnum ,targetpage) {
+        if(btnnum===0){
+            $.ajax({
+                url: "/userdata/myreview?who=me&page="+targetpage+"&userid="+targetId,
+                method: "GET",
+    
+                success:function(datas){
+                    console.log(datas);
+                    parrentUlNode.innerHTML = "";
+                    if(datas.packagelist==null||datas.packagelist.length===0){
+    
+                    } else {
+                        makeDom('review', datas);
+                    }
+                },
+    
+                error:function(){
+                    console.log('통신 에러');
+                }
+            });
+        } else if(btnnum===1){
+            $.ajax({
+                url: "/userdata/myreview?who=ohters&page="+targetpage+"&userid="+targetId,
+                method: "GET",
+    
+                success:function(datas){
+                    console.log(datas);
+                    parrentUlNode.innerHTML = "";
+                    if(datas.packagelist==null||datas.packagelist.length===0){
+    
+                    } else {
+                        makeDom('review', datas);
+                    }
+                },
+    
+                error:function(){
+                    console.log('통신 에러');
+                }
+            });
+        } else {
+            alert("잘못된 값입니다!");
+        }
+    }
+
+    //돔
+    function makeDom(loadtype, datas) {
+        if (loadtype==='board') {
+            for (let i in datas.boardlist) {
+                // 새로운 li 요소를 만듭니다.
+                var newItem = document.createElement("li");
+                newItem.classList.add("boct");
+
+                // li 요소 내부에 div를 생성하고 이벤트를 추가합니다.
+                var divElement = document.createElement("div");
+                divElement.setAttribute("onclick", "location.href='/board/get?boardnum='");
+
+                // div 요소 내부에 이미지를 추가합니다.
+                var imgElement = document.createElement("img");
+                imgElement.setAttribute("src", "2.jpg");
+                imgElement.setAttribute("alt", "썸네일");
+                divElement.appendChild(imgElement);
+
+                // li 요소 내부에 div 요소를 추가합니다.
+                newItem.appendChild(divElement);
+
+                // div 요소 내부에 다른 요소들을 추가합니다.
+                var innerDiv1 = document.createElement("div");
+                var innerDiv2 = document.createElement("div");
+                innerDiv2.classList.add("innerpfz");
+
+                var imgBadge = document.createElement("img");
+                imgBadge.setAttribute("src", "/defaultbadge.png");
+                imgBadge.setAttribute("alt", "");
+
+                var pElement = document.createElement("p");
+                pElement.setAttribute("id", "target-id");
+                pElement.textContent = "작성자아이디";
+
+                var pElement2 = document.createElement("p");
+                pElement2.classList.add("innerpfpt");
+                pElement2.textContent = "집에가고싶으면 개추 ㅋㅋ";
+
+                var divElement2 = document.createElement("div");
+                divElement2.classList.add("innerpfpc");
+
+                var imgHeart = document.createElement("img");
+                imgHeart.setAttribute("src", "fullheart.png");
+                imgHeart.setAttribute("alt", "좋");
+                var text1 = document.createTextNode("10 ");
+                var imgView = document.createElement("img");
+                imgView.setAttribute("src", "viewcnt.png");
+                imgView.setAttribute("alt", "조");
+                var text2 = document.createTextNode("20 ");
+                var imgComment = document.createElement("img");
+                imgComment.setAttribute("src", "comments.png");
+                imgComment.setAttribute("alt", "댓");
+                var text3 = document.createTextNode("30 ");
+
+                divElement.appendChild(innerDiv1);
+                innerDiv1.appendChild(innerDiv2);
+                innerDiv2.appendChild(imgBadge);
+                innerDiv2.appendChild(pElement);
+                innerDiv1.appendChild(pElement2);
+                innerDiv1.appendChild(divElement2);
+                divElement2.appendChild(imgHeart);
+                divElement2.appendChild(text1);
+                divElement2.appendChild(imgView);
+                divElement2.appendChild(text2);
+                divElement2.appendChild(imgComment);
+                divElement2.appendChild(text3);
+
+                // ul 요소를 선택하고 새로운 li 요소를 추가합니다.
+                parrentUlNode.appendChild(newItem);
+            }
+        } else if(loadtype==='joinpack'){
+            for (let i in datas.reservationlist) {
+                
+            }
+        } else if(loadtype==='mypack'){
+            for (let i in datas.packagelist) {
+                
+            }
+        } else if(loadtype==='review'){
+            for (let i in datas.packagelist) {
+                
+            }
+        } else {
+            alert("잘못된 값입니다!");
+        }
+    }
 </script>
 </html>
