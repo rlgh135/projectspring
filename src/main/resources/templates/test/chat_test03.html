@@ -343,7 +343,7 @@
 		}
 
         .ccbody-left, .ccbody-right {
-            min-width: 50px;
+            min-width: 20px;
             max-width: 300px;
             min-height: 20px;
             max-height: fit-content;
@@ -614,20 +614,145 @@
 	CHAT_BODY_SUBMIT_BTN.addEventListener("click", chatBodySubmitBtnClick);
 
 	/*================================================================================*/
-	/*채팅 생성*/
-	function createPackageChat(e) {
+	/*패키지 채팅 생성*/
+	/*
+		해당 패키지의 채팅이 이미 존재한다면 채팅방을 생성하는 대신
+		존재하는 패키지 채팅을 띄워줌
+	*/
+	async function createPackageChat(e) {
 		const packagenum = 0; /*초기화 필요*/
 
-		ajaxPost("localhost:8080", "/chat", {
-			isPackageChat: true,
-			packagenum: packagenum
-		})
-		.then((data) => {
-			//ChatListPayloadDTO 받아옴
-		})
-		.catch((err) => {
+		console.log("createPackageChat(), packagenum=" + packagenum);
+		console.log("IS_VD_LOADED=" + IS_VD_LOADED);
 
-		});
+		//CHAT_OTO_VD 로드 확인
+		if(!IS_VD_LOADED) {
+			//로드되어있지 않으면(채팅창이 열린 적이 없으면) 로드해준다
+			try {
+				//List<ChatListPayloadDTO> 받기
+				const data = await ajaxGet("localhost:8080", "/chat");
+				console.log("ajaxGet('localhost:8080/chat') done, data=" + data);
+			} catch(e) {
+				//VD 로드 실패시
+				/*실패 처리*/
+				console.log("ajaxGet('localhost:8080/chat') fail");
+				return;
+			}
+
+			//VD, DOM 처리(chatWindowBtnClick() 참조)
+			setChatListVD(data);
+			printChatList(data);
+			IS_VD_LOADED = true;
+		}
+
+		//요청된 패키지 채팅이 이미 존재하는지 체크
+		let tgtRoomIdx = null;
+		let isOTOChat = true;
+		let tgtVDIdx = null;
+		if(CHAT_OTO_VD.length > 0 || CHAT_OTM_VD.length > 0) {
+			//가입된 채팅이 있는 경우
+			for(let i = 0; i < CHAT_OTO_VD.length; i++) {
+				if(CHAT_OTO_VD[i].dataObj.pkgnum === packagenum) {
+					tgtRoomIdx = CHAT_OTO_VD[i].dataObj.roomidx;
+					tgtVDIdx = i;
+					break;
+				}
+			}
+			if(!!!tgtRoomIdx) {
+				for(let j = 0; j < CHAT_OTM_VD.length; j++) {
+					if(CHAT_OTM_VD[j].dataObj.pkgnum === packagenum) {
+						tgtRoomIdx = CHAT_OTM_VD[j].dataObj.roomidx;
+						isOTOChat = false;
+						tgtVDIdx = j;
+						break;
+					}
+				}
+			}
+		}
+
+		//존재하는 채팅을 열지, 새 채팅을 생성할지 분기
+		if(!!!tgtRoomIdx) {
+			//채팅 생성
+			let res;
+			try {
+				res = await ajaxPost("localhost:8080", "/chat", {
+					isPackageChat: true,
+					packagenum: packagenum
+				});
+			} catch(err) {
+				//신규 채팅 생성 관련 실패
+				/*실패 처리*/
+				console.log("ajaxPost('localhost:8080/chat') fail");
+				return;
+			}
+			//받아온 ChatListPayloadDTO VD에 적용
+			insertChatListVD(res);
+			//VD로 DOM 수정
+			adjustChatList();
+
+			/*채팅 오픈 요청*/
+
+		} else {
+			//기존 채팅 오픈 요청
+			WORKER.port.postMessage({
+				action: "chatRoomEnter",
+				payload: {
+					roomidx: tgtRoomIdx
+				}
+			});
+			//응답 대기/처리
+			try {
+				const res = await promised_waitTillResponse("chatRoomEnter");
+				//모달 구성, 미확인 메시지 값 수정(chatListOTNElementClick() 참조)
+				setChatBodyInfo(res.payload);
+				printChatRoom(res.payload);
+				UNCHECKED_MSG_COUNT -= (isOTOChat ? CHAT_OTO_VD : CHAT_OTM_VD)[tgtVDIdx].uncheckedmsg;
+				(isOTOChat ? CHAT_OTO_VD : CHAT_OTM_VD)[tgtVDIdx].uncheckedmsg = 0;
+				//아래로 스크롤
+				if(CHAT_BODY_INFO.isEmpty == false) {
+					scrollIntoLastChatElement();
+				}
+			} catch(err) {
+				//기존 채팅 오픈 실패
+				/*실패 처리*/
+				console.log("action: chatRoomEnter fail");
+				return;
+			}
+		}
+
+		// ajaxPost("localhost:8080", "/chat", {
+		// 	isPackageChat: true,
+		// 	packagenum: packagenum
+		// })
+		// .then((data) => {
+		// 	//ChatListPayloadDTO 받아옴
+		// 	//CHAT_OTO_VD가 로딩되어 있는지 확인
+
+		// 	console.log("ajaxPost('localhost:8080/chat') done, data=" + data);
+		// 	console.log("IS_VD_LOADED=" + IS_VD_LOADED);
+
+		// 	if(!IS_VD_LOADED) {
+		// 		//로드되어있지 않으면 우선 모든 채팅방을 로드
+		// 		//이 경우 Ajax로 받아온 ChatListPayload는 버려지게 됨
+		// 		ajaxGet("localhost:8080", "/chat")
+		// 		.then((clData) => {
+		// 			console.log("")
+		// 		})
+		// 		.catch((error) => {
+		// 			//실패 처리
+		// 		});
+		// 	}
+		// 	//VD에 삽입
+		// 	insertChatListVD(data);
+		// })
+		// .catch((err) => {
+		// 	//실패 처리
+		// });
+	}
+
+	/*일반 채팅 생성*/
+	function createNormalChat(e) {
+
 	}
 
 	/*================================================================================*/
@@ -652,7 +777,10 @@
 				.then((data) => {
 					console.log(data);
 					setChatListVD(data);
-					printChatList();
+					// printChatList();
+					adjustChatList();
+					//채팅 로드 여부 true로 변경
+					IS_VD_LOADED = true;
 				})
 				.catch((error) => {
 					/*
@@ -978,6 +1106,13 @@
 		채팅방 ID는 정렬 순서가 아니라 roomidx로 준다
 	*/
 
+	//채팅 로드 여부 체크
+	/*
+		가입한 채팅방 개수와 관련 없이
+		VD가 로드된 적이 있는지(채팅창을 연 적이 있는지)를 체크
+	*/
+	let IS_VD_LOADED = false;
+
 	//일대일 VD
 	let CHAT_OTO_VD = [];
 	//일대다 VD
@@ -1026,6 +1161,16 @@
 	//VD 업데이트
 	function updateChatListVD(data) {
 		//data가 존재하는지 확인, 존재하면 순서를 바꾸고 없으면 제일 최상위에 삽입
+	}
+	function insertChatListVD(data) {
+		//ChatListPayloadDTO 객체 하나를 VD 최상위에 삽입
+		if(data.userList.length == 1) {
+			//oto
+			CHAT_OTO_VD.unshift(new ChatRoom("otoele-" + data.roomidx, data));
+		} else {
+			//otm
+			CHAT_OTM_VD.unshift(new ChatRoom("otoele-" + data.roomidx, data));
+		}
 	}
 
 	//CHAT_BODY_INFO 세팅
@@ -1365,36 +1510,239 @@
 		CHAT_LIST_OTM.appendChild(otmFragment);
 	}
 
-	//채팅방 요소 내부 수정 - 미수정 240604
-	function adjustChatList(targetEle, dataObj) {
-		const secInnerDiv = targetEle.children[1];
+	//VD기반 채팅방 리스트 수정
+	/*
+		VD를 기반으로 DOM을 수정하는 함수
+		oto -> otm의 경우 그냥 oto서 삭제시키고 otm에 추가하게 함
+	*/
+	function adjustChatList() {
+		let flag = 0;
+		if(CHAT_OTO_VD.length == 0) {
+			CHAT_LIST_OTO.replaceChildren();
+			flag++;
+		}
+		if(CHAT_OTM_VD.length == 0) {
+			CHAT_LIST_OTM.replaceChildren();
+			flag++;
+		}
+		if(flag == 2) {
+			return;
+		}
 
-		//title
-		if(secInnerDiv.children[0].innerHTML != dataObj.pkgname) {
-			secInnerDit.children[0].innerHTML = dataObj.pkgname;
+		const otoDom = CHAT_LIST_OTO.children;
+		const otmDom = CHAT_LIST_OTM.children;
+
+		//OTO
+		let i = 0;
+		for(; i < CHAT_OTO_VD.length; i++) {
+			//요소 순서 맞추기
+			if(otoDom.item(i) == null) {
+				//DOM에 i번째 요소~ 가 없음
+				//추가
+				const newEle = createChatListElement(CHAT_OTO_VD[i], true);
+				// otoDom.item(i).before(newEle);
+				CHAT_LIST_OTO.appendChild(newEle);
+				//요소 생성시 내부 값 수정을 스킵
+				continue;
+			}
+			else if(otoDom.item(i).id != CHAT_OTO_VD[i].eleId) {
+				//DOM의 i번째 자리에 VD와 다른 요소가 있음
+				//순회하면서 찾는다
+				let tgtEle = null
+				for(let ele of otoDom) {
+					if(ele.id === CHAT_OTO_VD[i].eleId) {
+						tgtEle = ele;
+						break;
+					}
+				}
+				if(!!!tgtEle) {
+					//없으면 새로 추가
+					const newEle = createChatListElement(CHAT_OTO_VD[i], true);
+					otoDom.item(i).before(newEle);
+					//요소 생성시 내부 값 수정은 스킵
+					continue;
+				} else {
+					//있으면 옮기기
+					otoDom.item(i).before(tgtEle);
+				}
+			}
+
+			//요소 내부 값 맞추기
+			//DOM 요소를 생성하지 않은 경우 내부 값을 체크, 수정사항을 적용한다
+			adjustChatListElement(CHAT_OTO_VD[i], otoDom.item(i), true);
 		}
-		//userid - 마지막 송신자
-		if(secInnerDiv.children[1].innerHTML != dataObj.userid) {
-			secInnerDiv.children[1].innerHTML = dataObj.userid;
+
+		//OTM
+		let j = 0;
+		for(; j < CHAT_OTM_VD.length; j++) {
+			//요소 순서 맞추기
+			if(otmDom.item(i) == null) {
+				//DOM에 i번째 요소~ 가 없음
+				//추가
+				const newEle = createChatListElement(CHAT_OTM_VD[i], false);
+				// otmDom.item(i).before(newEle);
+				CHAT_LIST_OTM.appendChild(newEle);
+				//요소 생성시 내부 값 수정을 스킵
+				continue;
+			}
+			else if(otmDom.item(i).id != CHAT_OTM_VD[i].eleId) {
+				//DOM의 i번째 자리에 VD와 다른 요소가 있음
+				//순회하면서 찾는다
+				let tgtEle = null
+				for(let ele of otmDom) {
+					if(ele.id === CHAT_OTM_VD[i].eleId) {
+						tgtEle = ele;
+						break;
+					}
+				}
+				if(!!!tgtEle) {
+					//없으면 새로 추가
+					const newEle = createChatListElement(CHAT_OTM_VD[i], false);
+					otmDom.item(i).before(newEle);
+					//요소 생성시 내부 값 수정은 스킵
+					continue;
+				} else {
+					//있으면 옮기기
+					otmDom.item(i).before(tgtEle);
+				}
+			}
+
+			//요소 내부 값 맞추기
+			//DOM 요소를 생성하지 않은 경우 내부 값을 체크, 수정사항을 적용한다
+			adjustChatListElement(CHAT_OTM_VD[i], otmDom.item(i), false);
 		}
-		// - 마지막 메시지 내용
-		if(secInnerDiv.children[2].innerHTML != dataObj.chatContent) {
-			secInnerDiv.children[2].innerHTML = dataObj.chatContent;
+
+		//VD에 없는 요소 삭제
+		while(otoDom.item(i) != null) {
+			otoDom.item(i).remove();
 		}
-		//regdate
-		if(secInnerDiv.children[3].innerHTML != dataObj.regdate) {
-			secInnerDiv.children[3].innerHTML != dataObj.regdate;
+		while(otmDom.item(i) != null) {
+			otmDom.item(i).remove();
 		}
-		//미수신 개수
-		//는 일단 미정
-		if(secInnerDiv.children[4].innerHTML != dataObj.uncheckedmsg) {
-			secInnerDiv.children[4].innerHTML = dataObj.uncheckedmsg;
+	}
+	function adjustChatListElement(cr, tgtEle, isOTO=true) {
+		//이미지
+		/*일단 지금은 체크 안함*/
+		const innerDivSec = tgtEle.children[1];
+		//title, p1(userid)
+		let userids = "";
+		for(let dto of cr.dataObj.userList) {
+			userids += dto.userid + ", ";
 		}
-		if(dataObj.uncheckedmsg == 0) {
-			secInnerDiv.children[4].classList.add("cc-hidden");
+		userids = userids.slice(0, -2);
+		if(!!cr.dataObj.pkgnum) {
+			//판매자/일반
+			innerDivSec.children[0].innerHTML = cr.dataObj.title;
+			innerDivSec.children[1].innerHTML = userids
 		} else {
-			secInnerDiv.children[4].classList.remove("cc-hidden");
+			//일반/일반
+			if(!!cr.dataObj.title) {
+				//title 존재시
+				innerDivSec.children[0].innerHTML = cr.dataObj.title;
+				innerDivSec.children[1].innerHTML = userids;
+			} else {
+				//title이 없을때
+				innerDivSec.children[0].innerHTML = userids;
+				innerDivSec.children[1].innerHTML = "";
+			}
 		}
+		//p2(chatContent)
+		innerDivSec.children[2].innerHTML = !!cr.dataObj.chatContent
+											? cr.dataObj.chatContent
+											: "아직 메시지가 없습니다";
+		//p3(chatContentRegdate 혹은 chatRegdate)
+		innerDivSec.children[3].innerHTML = !!cr.dataObj.chatContent
+											? cr.dataObj.chatContentRegdate
+											: cr.dataObj.chatRegdate;
+		//div(미확인 메시지 카운터)
+		if(cr.dataObj.uncheckedmsg > 0) {
+			innerDivSec.children[4].innerHTML = cr.dataObj.uncheckedmsg > 99 ? "99.." : cr.dataObj.uncheckedmsg;
+		} else {
+			innerDivSec.children[4].classList.add("cc-hidden");
+		}
+	}
+	function createChatListElement(cr, isOTO=true) {
+		//요소 틀
+		const div = document.createElement("div");
+		div.id = cr.eleId;
+		div.classList.add(isOTO ? "cc-list-oto-ele" : "cc-list-otm-ele");
+		//첫번째 자식 div
+		const innerDivFir = document.createElement("div");
+		div.appendChild(innerDivFir);
+		//이미지
+		/*
+			일단 지금은 임시 이미지 출력
+			나중에 이미지 링크를 List<String>으로 받아와 넣어줘야 함
+			+ 이미지 개수 > 4인 경우 4개까지만, 출력할 이미지가 2개일 때는
+			css도 4등분 대신 2등분으로 하게 짜줘야 함
+		*/
+		if(isOTO) {
+			const img = document.createElement("img");
+			img.src = "/images/layoutimg/logo.png";
+			img.alt = "Chat room image";
+			innerDivFir.appendChild(img);
+		} else {
+			for(let i = 0 ; i < 4; i++) {
+				const img = document.createElement("img");
+				img.src = "/images/layoutimg/logo.png";
+				img.alt = "Chat room image";
+				innerDivFir.appendChild(img);
+			}
+		}
+		//두번째 자식 div
+		const innerDivSec = document.createElement("div");
+		div.appendChild(innerDivSec);
+		//title, p1(userid) 생성
+		const h4 = document.createElement("h4");
+		const p1 = document.createElement("p");
+		//userid를 묶은 문자열 생성
+		let userids = "";
+		for(let dto of cr.dataObj.userList) {
+			userids += dto.userid + ", ";
+		}
+		userids = userids.slice(0, -2);
+		//title, userid 처리 관련 분기(일반/일반 <-> 판매자/일반)
+		if(!!cr.dataObj.pkgnum) {
+			//판매자/일반
+			h4.innerHTML = cr.dataObj.title;
+			p1.innerHTML = userids
+		} else {
+			//일반/일반
+			if(!!cr.dataObj.title) {
+				//title 존재시
+				h4.innerHTML = cr.dataObj.title;
+				p1.innerHTML = userids;
+			} else {
+				//title이 없을때
+				h4.innerHTML = userids;
+			}
+		}
+		//h4, p1(userid) 할당
+		innerDivSec.appendChild(h4);
+		innerDivSec.appendChild(p1);
+		//p2(chatContent)
+		const p2 = document.createElement("p");
+		p2.innerHTML = !!cr.dataObj.chatContent
+						? cr.dataObj.chatContent
+						: "아직 메시지가 없습니다";
+		innerDivSec.appendChild(p2);
+		//p3(chatContentRegdate 혹은 chatRegdate)
+		const p3 = document.createElement("p");
+		p3.innerHTML = !!cr.dataObj.chatContent
+						? cr.dataObj.chatContentRegdate
+						: cr.dataObj.chatRegdate;
+		innerDivSec.appendChild(p3);
+		//div(미확인 메시지 카운터)
+		const counterDiv = document.createElement("div");
+		if(cr.dataObj.uncheckedmsg > 0) {
+			counterDiv.innerHTML = cr.dataObj.uncheckedmsg > 99 ? "99.." : cr.dataObj.uncheckedmsg;
+		} else {
+			counterDiv.classList.add("cc-hidden");
+		}
+		innerDivSec.appendChild(counterDiv);
+
+		//반환
+		return div;
 	}
 
 	/*================================================================================*/
