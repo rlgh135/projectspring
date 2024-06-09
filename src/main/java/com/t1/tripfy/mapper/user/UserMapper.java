@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReviewDTO;
+import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
 import com.t1.tripfy.domain.dto.user.GuideUserDTO;
@@ -32,6 +35,13 @@ public interface UserMapper {
 	GuideUserDTO getLikeThisGuide(long guidenum, String userid);
 	List<UserImgDTO> getAllUserImg();
 	PackageFileDTO getMyPackThumb(long packagenum);
+	List<BoardDTO> getLikeBoards(Criteria cri, String userid);
+	List<PackageDTO> getReadyPack(Criteria cri, String userid);
+	List<PackageDTO> getDonePack(Criteria cri, String userid);
+	List<PackageDTO> getReadyGPack(Criteria cri, String userid);
+	List<PackageDTO> getDoneGPack(Criteria cri, String userid);
+	List<ReviewDTO> getMyReviews(Criteria cri, String userid);
+	List<ReviewDTO> getMineReviews(Criteria cri, String guideid);
 	
 	
 	//U
@@ -48,4 +58,5 @@ public interface UserMapper {
 	
 	// 유저 프로필
 	UserImgDTO getUserProfile(String userid);
+	
 }

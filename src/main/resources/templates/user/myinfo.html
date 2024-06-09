@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/css/user/myinfostyle.css">
+    <link rel="stylesheet" href="/css/user/myinfostyle.css?after">
     <style>
         .hidden{
             display: none;
@@ -59,9 +59,9 @@
                                 </div>
                                 <p class="innerpfpt">집에가고싶으면 개추 ㅋㅋ</p>
                                 <div class="innerpfpc">
-                                    <img src="fullheart.png" alt="좋">10&nbsp;
-                                    <img src="viewcnt.png" alt="조">20&nbsp;
-                                    <img src="comments.png" alt="댓">30&nbsp;
+                                    <img src="/images/boardimg/fullheart.png" alt="좋">10&nbsp;
+                                    <img src="/images/boardimg/viewcnt.png" alt="조">20&nbsp;
+                                    <img src="/images/boardimg/comments.png" alt="댓">30&nbsp;
                                 </div>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div id="clscontz">
-                <img src="cancel_10289710.png" alt="콘텐츠 나가기">
+                <img src="/images/userimg/cancel_10289710.png" alt="콘텐츠 나가기">
             </div>
         </div>
     </div>
@@ -342,7 +342,7 @@
     function makeBoard(btnnum ,targetpage) {
         if(btnnum===0){
             $.ajax({
-                url: "/userdata/myboard?when=before&page="+targetpage+"&userid="+targetId,
+                url: "/userdata/myboard?jjim=no&page="+targetpage+"&userid="+targetId,
                 method: "GET",
     
                 success:function(datas){
@@ -361,7 +361,7 @@
             });
         } else if(btnnum===1){
             $.ajax({
-                url: "/userdata/myboard?when=after&page="+targetpage+"&userid="+targetId,
+                url: "/userdata/myboard?jjim=yes&page="+targetpage+"&userid="+targetId,
                 method: "GET",
     
                 success:function(datas){
@@ -432,7 +432,7 @@
     function makeMyPack(btnnum ,targetpage) {
         if(btnnum===0){
             $.ajax({
-                url: "/user/mypackage?when=before&page="+targetpage+"&guideid="+targetId,
+                url: "/userdata/mypackage?when=before&page="+targetpage+"&guideid="+targetId,
                 method: "GET",
     
                 success:function(datas){
@@ -451,7 +451,7 @@
             });
         } else if(btnnum===1){
             $.ajax({
-                url: "/user/myboard?when=after&page="+targetpage+"&guideid="+targetId,
+                url: "/userdata/mypackage?when=after&page="+targetpage+"&guideid="+targetId,
                 method: "GET",
     
                 success:function(datas){

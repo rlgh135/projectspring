@@ -292,4 +292,37 @@ public class UserServiceImpl implements UserService{
 	public BoardLikeDTO getMyBoardLike(String userid, long boardnum) {
 		return bmapper.getBoardLike(userid, boardnum);
 	}
+	
+	@Override
+	public List<BoardDTO> getLikeBoardList(Criteria cri, String userid) {
+		return umapper.getLikeBoards(cri, userid);
+	}
+	@Override
+	public List<PackageDTO> getReadyPack(Criteria cri, String userid) {
+		return umapper.getReadyPack(cri, userid);
+	}
+	@Override
+	public List<PackageDTO> getDonePack(Criteria cri, String userid) {
+		return umapper.getDonePack(cri, userid);
+	}
+	@Override
+	public List<PackageDTO> getGuideDonePack(Criteria cri, String guideid) {
+		return umapper.getReadyGPack(cri, guideid);
+	}
+	@Override
+	public List<PackageDTO> getGuideReadyPack(Criteria cri, String guideid) {
+		return umapper.getDoneGPack(cri, guideid);
+	}
+	@Override
+	public Integer getTotalResCnt(long packagenum) {
+		return resmapper.getTotalResCnt(packagenum);
+	}
+	@Override
+	public List<ReviewDTO> getMyReviews(Criteria cri, String userid) {
+		return umapper.getMyReviews(cri, userid);
+	}
+	@Override
+	public List<ReviewDTO> getMineReviews(Criteria cri, String guideid) {
+		return umapper.getMineReviews(cri, guideid);
+	}
 }

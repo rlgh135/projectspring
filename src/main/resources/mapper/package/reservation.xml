@@ -59,4 +59,7 @@
 	   where packagenum = #{packagenum}
 	   group by packagenum;
 	</select>
+	<select id="getTotalResCnt">
+		select sum(adult_cnt + child_cnt) from reservation where packagenum = #{packagenum} and isdelete &lt; 2
+	</select>
 </mapper>

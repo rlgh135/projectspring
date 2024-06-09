@@ -82,4 +82,62 @@
 	<select id="getMyPackThumb">
 		select * from package_file where packagenum=#{packagenum}
 	</select>
+	
+	<select id="getLikeBoards">
+		select b.*
+		from board b
+		join (
+		    SELECT boardnum
+		    FROM board_like
+		    WHERE userid = #{userid}
+		    ORDER BY boardnum DESC
+		    LIMIT #{cri.startrow}, #{cri.amount}
+		) bl ON b.boardnum = bl.boardnum
+	</select>
+	<select id="getReadyPack">
+		select *
+		from (select * from package where startdate &gt; curdate()) p
+		join (
+		    SELECT packagenum
+		    FROM reservation
+		    WHERE userid = #{userid}
+		    ORDER BY packagenum DESC
+		) r ON p.packagenum = r.packagenum order by p.packagenum desc limit #{cri.startrow}, #{cri.amount}
+	</select>
+	<select id="getDonePack">
+		select *
+		from (select * from package where startdate &lt; curdate()) p
+		join (
+		    SELECT packagenum
+		    FROM reservation
+		    WHERE userid = #{userid}
+		    ORDER BY packagenum DESC
+		) r ON p.packagenum = r.packagenum order by p.packagenum desc limit #{cri.startrow}, #{cri.amount}
+	</select>
+	<select id="getReadyGPack">
+		SELECT *
+		FROM (select * from package where startdate &gt; curdate()) p
+		JOIN (
+		    SELECT guidenum
+		    FROM guide
+		    WHERE userid = 'banana'
+		) g ON p.guidenum = g.guidenum order by p.packagenum desc limit #{cri.startrow}, #{cri.amount}
+	</select>
+	<select id="getDoneGPack">
+		SELECT *
+		FROM (select * from package where startdate &lt; curdate()) p
+		JOIN (
+		    SELECT guidenum
+		    FROM guide
+		    WHERE userid = 'banana'
+		) g ON p.guidenum = g.guidenum order by p.packagenum desc limit #{cri.startrow}, #{cri.amount}
+	</select>
+	<select id="getMyReviews">
+		select * from review where userid = #{userid} order by packagenum limit #{cri.startrow}, #{cri.amount}
+	</select>
+	<select id="getMineReviews">
+		select * from review 
+		where guidenum = (select guidenum from guide where userid = #{userid}) 
+		order by packagenum limit #{cri.startrow}, #{cri.amount}
+	</select>
 </mapper>

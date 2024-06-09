@@ -58,4 +58,12 @@ public interface UserService {
 	ReservationDTO getResevationByIdPackagenum(String userid, long packagenum);
 	BoardFileDTO getMyBoardThumbnail(long boardnum);
 	BoardLikeDTO getMyBoardLike(String userid, long boardnum);
+	List<BoardDTO> getLikeBoardList(Criteria cri, String userid);
+	List<PackageDTO> getReadyPack(Criteria cri, String userid);
+	List<PackageDTO> getDonePack(Criteria cri, String userid);
+	List<PackageDTO> getGuideReadyPack(Criteria cri, String guideid);
+	List<PackageDTO> getGuideDonePack(Criteria cri, String guideid);
+	Integer getTotalResCnt(long packagenum);
+	List<ReviewDTO> getMyReviews(Criteria cri, String userid);
+	List<ReviewDTO> getMineReviews(Criteria cri, String guideid);
 }
