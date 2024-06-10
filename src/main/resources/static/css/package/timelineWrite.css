@@ -67,6 +67,9 @@ p{
     -webkit-box-pack: center;
     justify-content: center;
 }
+.back_home_btn a{
+	display: flex;
+}
 .header_title{
     overflow: hidden;
     width: 200px;

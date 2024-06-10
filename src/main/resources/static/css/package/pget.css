@@ -39,10 +39,11 @@ body{
 }
 .pinfo{
     width: 650px;
+    height: 430px;
     margin-left: 50px;
 }
 .p_info{
-    height: 300px;
+    height: 400px;
 }
 .p_header{
 	display: flex;

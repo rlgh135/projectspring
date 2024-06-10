@@ -47,6 +47,7 @@ body{
     width: 250px;
     border-radius: 20px;
     margin-top: 60px;
+    cursor: pointer;
     
 }  
 .destination{
@@ -423,6 +424,7 @@ body{
     background-color: dodgerblue;
     color: #fff;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .pagination a {
@@ -434,6 +436,7 @@ body{
     text-decoration: none;
     border-radius: 3px;
     color: black;
+    cursor: pointer;
 }
 
 .pagination a:hover {
@@ -451,11 +454,12 @@ body{
 	margin: 0 5px;
 	background-color: white;
 	border:none;
-	 font-size: 20px ;
+	font-size: 20px ;
 }
 .sbtn:hover{
 	background-color: rgb(139, 206, 255)!important;
 	border-radius: 10px!important;
 	color:white!important;
 	border:none;
+	cursor: pointer;
 }
