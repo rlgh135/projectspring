@@ -1,6 +1,7 @@
 package com.t1.tripfy.controller.chat;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,11 +29,12 @@ public class ChatRestController {
 	//채팅 생성
 	@PostMapping
 	public ResponseEntity<ChatListPayloadDTO> createChat(
-			@SessionAttribute(name="loginUser", required=false) String loginUserId,
-			@RequestParam(required=true) Boolean isPackageChat,
-			@RequestParam(required=false) Long packagenum,
-			@RequestParam(required=false) String title,
-			@RequestParam(required=false) List<String> invitee
+			@SessionAttribute(name="loginUser", required=false) String loginUserId,/*
+			@RequestBody(required=true) Boolean isPackageChat,
+			@RequestBody(required=false) Long packagenum,
+			@RequestBody(required=false) String title,
+			@RequestBody(required=false) List<String> invitee*/
+			@RequestBody Map<String, Object> data
 			) {
 		
 		//로그인 검증
@@ -42,6 +45,15 @@ public class ChatRestController {
 		//반환값 생성
 		ChatListPayloadDTO respondDTO;
 		
+		/*임시*/
+		//데이터 변환
+		Boolean isPackageChat = (Boolean)data.get("isPackageChat");
+		Long packagenum = Long.valueOf((Integer)data.get("packagenum"));
+		String title = (String)data.get("title");
+		List<String> invitee = (List<String>)data.get("invitee");
+		
+		System.out.println("========================================\n" + packagenum + "\n========================================");
+		
 		//패키지챗
 		if(isPackageChat) {
 			if(packagenum == null) {
@@ -51,6 +63,7 @@ public class ChatRestController {
 				//sv
 				if(null == (respondDTO = chatSV.createChat(loginUserId, packagenum))) {
 					//500
+					System.out.println("crccc-1");
 					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 				} else {
 					//생성 성공
@@ -72,6 +85,7 @@ public class ChatRestController {
 //		if(chatSV.createChat(loginUserId, packagenum)) {
 //			return ResponseEntity.status(HttpStatus.CREATED).build();
 //		}
+		System.out.println("crccc-2");
 		
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}

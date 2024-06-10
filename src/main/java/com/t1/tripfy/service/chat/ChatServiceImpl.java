@@ -52,6 +52,7 @@ public class ChatServiceImpl implements ChatService {
 				.setRegdate(current);
 		
 		if(1 != chatRoomMapper.createRoom(crDTO)) {
+			System.out.println("cc-1");
 			return null;
 		}
 		Long crPK = crDTO.getChatRoomIdx();
@@ -59,6 +60,7 @@ public class ChatServiceImpl implements ChatService {
 		//패키지 판매자 userid 가져오기
 		String guideUserid;
 		if(null == (guideUserid = chatInvadingMapper.selectGuideUseridByPackagenum(packagenum))) {
+			System.out.println("cc-2");
 			return null;
 		}
 		
@@ -77,15 +79,20 @@ public class ChatServiceImpl implements ChatService {
 				.setChatUserIsQuit(false)
 				.setChatDetailIdx(null));
 		
-		if(1 != chatUserMapper.insertRow(userList)) {
+		if(2 != chatUserMapper.insertRow(userList)) {
+			System.out.println("cc-3");
 			return null;
 		}
 		
 		//전송값 꾸리기
 		String pkgTitle;
 		if(null == (pkgTitle = chatInvadingMapper.selectPackageNameByChatRoomIdx(crPK))) {
+			System.out.println("cc-4");
 			return null;
 		}
+		
+		//userList에서 요청자(일반유저)를 뺀다
+		userList.remove(1);
 		
 		return new ChatListPayloadDTO()
 				.setRoomidx(crPK)

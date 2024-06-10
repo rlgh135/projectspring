@@ -98,7 +98,7 @@
 			text-align: center;
 			line-height: 50px;
 		}
-		#chat-list-footer-chatbot-btn {
+		#chat-list-footer-oto-btn {
 			border-radius: 0 0 0 20px;
 		}
 		#chat-list-footer-otm-btn {
@@ -422,6 +422,7 @@
 	</style>
 </head>
 <body>
+	<input type="button" value="test" id="testChatCreate">
 	<div id="chat-wrapper">
 		<div id="chat-window-btn">채팅<br>이미지 여기에</div>
 		<div id="chat-inner-wrapper">
@@ -488,9 +489,6 @@
 						<div id="chat-list-otm-cont" class="cc-hidden"></div>
 					</div>
 					<div id="chat-list-footer">
-						<div id="chat-list-footer-chatbot-btn" class="cc-footer-btn">
-							<h4>채팅봇</h4>
-						</div>
 						<div id="chat-list-footer-oto-btn" class="cc-footer-btn">
 							<h4>일대일</h4>
 						</div>
@@ -521,7 +519,7 @@
 	/*HTML 요소 전역변수*/
 	//채팅창 버튼
 	const CHAT_WINDOW_BTN = document.getElementById("chat-window-btn");
-	//채팅창
+	//채팅 컨텍스트
 	const CHAT_WINDOW = document.getElementById("chat-window");
 
 	//채팅 알림창
@@ -531,8 +529,6 @@
 	const CHAT_LIST_CONT = document.getElementById("chat-list-cont");
 	//빈 채팅방 목록
 	const CHAT_LIST_EMPTY = document.getElementById("chat-list-empty");
-	//챗봇창
-	const CHAT_LIST_CHATBOT = document.getElementById("chat-list-chatbot-cont");
 	//일대일 목록창
 	const CHAT_LIST_OTO = document.getElementById("chat-list-oto-cont");
 	//다대다 목록창
@@ -540,7 +536,6 @@
 	//채팅리스트창 푸터
 	const CHAT_LIST_FOOTER = document.getElementById("chat-list-footer");
 	//채팅방 목록창 푸터 버튼 <--이새끼들 필요없을거같은데
-	const CHAT_LIST_CHATBOT_BTN = document.getElementById("chat-list-footer-chatbot-btn");
 	const CHAT_LIST_OTO_BTN = document.getElementById("chat-list-footer-oto-btn");
 	const CHAT_LIST_OTM_BTN = document.getElementById("chat-list-footer-otm-btn");
 
@@ -613,6 +608,10 @@
 	//채팅 submit 버튼 클릭
 	CHAT_BODY_SUBMIT_BTN.addEventListener("click", chatBodySubmitBtnClick);
 
+
+	/*테스트*/
+	document.getElementById("testChatCreate").addEventListener("click", createPackageChat);
+
 	/*================================================================================*/
 	/*패키지 채팅 생성*/
 	/*
@@ -620,7 +619,7 @@
 		존재하는 패키지 채팅을 띄워줌
 	*/
 	async function createPackageChat(e) {
-		const packagenum = 0; /*초기화 필요*/
+		const packagenum = 5; /*초기화 필요*/
 
 		console.log("createPackageChat(), packagenum=" + packagenum);
 		console.log("IS_VD_LOADED=" + IS_VD_LOADED);
@@ -628,9 +627,10 @@
 		//CHAT_OTO_VD 로드 확인
 		if(!IS_VD_LOADED) {
 			//로드되어있지 않으면(채팅창이 열린 적이 없으면) 로드해준다
+			let data;
 			try {
 				//List<ChatListPayloadDTO> 받기
-				const data = await ajaxGet("localhost:8080", "/chat");
+				data = await ajaxGet("localhost:8080", "/chat");
 				console.log("ajaxGet('localhost:8080/chat') done, data=" + data);
 			} catch(e) {
 				//VD 로드 실패시
@@ -670,7 +670,7 @@
 			}
 		}
 
-		//존재하는 채팅을 열지, 새 채팅을 생성할지 분기
+		//새 채팅 생성 분기
 		if(!!!tgtRoomIdx) {
 			//채팅 생성
 			let res;
@@ -683,71 +683,49 @@
 				//신규 채팅 생성 관련 실패
 				/*실패 처리*/
 				console.log("ajaxPost('localhost:8080/chat') fail");
+				console.log(err);
 				return;
 			}
 			//받아온 ChatListPayloadDTO VD에 적용
 			insertChatListVD(res);
 			//VD로 DOM 수정
 			adjustChatList();
-
-			/*채팅 오픈 요청*/
-
-		} else {
-			//기존 채팅 오픈 요청
-			WORKER.port.postMessage({
-				action: "chatRoomEnter",
-				payload: {
-					roomidx: tgtRoomIdx
-				}
-			});
-			//응답 대기/처리
-			try {
-				const res = await promised_waitTillResponse("chatRoomEnter");
-				//모달 구성, 미확인 메시지 값 수정(chatListOTNElementClick() 참조)
-				setChatBodyInfo(res.payload);
-				printChatRoom(res.payload);
-				UNCHECKED_MSG_COUNT -= (isOTOChat ? CHAT_OTO_VD : CHAT_OTM_VD)[tgtVDIdx].uncheckedmsg;
-				(isOTOChat ? CHAT_OTO_VD : CHAT_OTM_VD)[tgtVDIdx].uncheckedmsg = 0;
-				//아래로 스크롤
-				if(CHAT_BODY_INFO.isEmpty == false) {
-					scrollIntoLastChatElement();
-				}
-			} catch(err) {
-				//기존 채팅 오픈 실패
-				/*실패 처리*/
-				console.log("action: chatRoomEnter fail");
-				return;
-			}
+			//roomidx 전달, VD 인덱스 초기화
+			tgtRoomIdx = res.roomidx;
+			tgtVDIdx = 0;
 		}
+		//채팅 오픈 요청
+		WORKER.port.postMessage({
+			action: "chatRoomEnter",
+			payload: {
+				roomidx: tgtRoomIdx
+			}
+		});
+		//응답 대기/처리
+		try {
+			const res = await promised_waitTillResponse("chatRoomEnter");
+			//모달 구성, 미확인 메시지 값 수정(chatListOTNElementClick() 참조)
+			setChatBodyInfo(res.payload);
+			printChatRoom(res.payload);
+			//cc-hidden 컨트롤
+			open_CHAT_WINDOW();
+			CHAT_BODY_INFO.chatRoomInfo.userList.length > 1 ? open_CHAT_LIST_OTM()
+															: open_CHAT_LIST_OTO();
+			close_CHAT_LIST_CONT();
+			open_CHAT_BODY_CONT();
 
-		// ajaxPost("localhost:8080", "/chat", {
-		// 	isPackageChat: true,
-		// 	packagenum: packagenum
-		// })
-		// .then((data) => {
-		// 	//ChatListPayloadDTO 받아옴
-		// 	//CHAT_OTO_VD가 로딩되어 있는지 확인
-
-		// 	console.log("ajaxPost('localhost:8080/chat') done, data=" + data);
-		// 	console.log("IS_VD_LOADED=" + IS_VD_LOADED);
-
-		// 	if(!IS_VD_LOADED) {
-		// 		//로드되어있지 않으면 우선 모든 채팅방을 로드
-		// 		//이 경우 Ajax로 받아온 ChatListPayload는 버려지게 됨
-		// 		ajaxGet("localhost:8080", "/chat")
-		// 		.then((clData) => {
-		// 			console.log("")
-		// 		})
-		// 		.catch((error) => {
-		// 			//실패 처리
-		// 		});
-		// 	}
-		// 	//VD에 삽입
-		// 	insertChatListVD(data);
-		// })
-		// .catch((err) => {
-		// 	//실패 처리
-		// });
+			UNCHECKED_MSG_COUNT -= (isOTOChat ? CHAT_OTO_VD : CHAT_OTM_VD)[tgtVDIdx].uncheckedmsg;
+			(isOTOChat ? CHAT_OTO_VD : CHAT_OTM_VD)[tgtVDIdx].uncheckedmsg = 0;
+			//아래로 스크롤
+			if(CHAT_BODY_INFO.isEmpty == false) {
+				scrollIntoLastChatElement();
+			}
+		} catch(err) {
+			//기존 채팅 오픈 실패
+			/*실패 처리*/
+			console.log("action: chatRoomEnter fail");
+			return;
+		}
 	}
 
 	/*일반 채팅 생성*/
@@ -806,41 +784,39 @@
 							? e.target.parentElement.id
 							: e.target.id;
 			switch(clickedId) {
-				case "chat-list-footer-chatbot-btn":
-					//채팅봇
-					//임마는 일단 안 적어둠
-					break;
 				case "chat-list-footer-oto-btn":
 					//일대일
-					if(CHAT_OTO_VD.length > 0) {
-						CHAT_LIST_EMPTY.classList.add("cc-hidden");
-						CHAT_LIST_CHATBOT.classList.add("cc-hidden");
-						CHAT_LIST_OTM.classList.add("cc-hidden");
+					// if(CHAT_OTO_VD.length > 0) {
+					// 	CHAT_LIST_EMPTY.classList.add("cc-hidden");
+					// 	CHAT_LIST_CHATBOT.classList.add("cc-hidden");
+					// 	CHAT_LIST_OTM.classList.add("cc-hidden");
 
-						CHAT_LIST_OTO.classList.remove("cc-hidden");
-					} else {
-						CHAT_LIST_CHATBOT.classList.add("cc-hidden");
-						CHAT_LIST_OTO.classList.add("cc-hidden");
-						CHAT_LIST_OTM.classList.add("cc-hidden");
+					// 	CHAT_LIST_OTO.classList.remove("cc-hidden");
+					// } else {
+					// 	CHAT_LIST_CHATBOT.classList.add("cc-hidden");
+					// 	CHAT_LIST_OTO.classList.add("cc-hidden");
+					// 	CHAT_LIST_OTM.classList.add("cc-hidden");
 
-						CHAT_LIST_EMPTY.classList.remove("cc-hidden");
-					}
+					// 	CHAT_LIST_EMPTY.classList.remove("cc-hidden");
+					// }
+					open_CHAT_LIST_OTO();
 					break;
 				case "chat-list-footer-otm-btn":
 					//다대다
-					if(CHAT_OTM_VD.length > 0) {
-						CHAT_LIST_EMPTY.classList.add("cc-hidden");
-						CHAT_LIST_CHATBOT.classList.add("cc-hidden");
-						CHAT_LIST_OTO.classList.add("cc-hidden");
+					// if(CHAT_OTM_VD.length > 0) {
+					// 	CHAT_LIST_EMPTY.classList.add("cc-hidden");
+					// 	CHAT_LIST_CHATBOT.classList.add("cc-hidden");
+					// 	CHAT_LIST_OTO.classList.add("cc-hidden");
 						
-						CHAT_LIST_OTM.classList.remove("cc-hidden");
-					} else {
-						CHAT_LIST_CHATBOT.classList.add("cc-hidden");
-						CHAT_LIST_OTO.classList.add("cc-hidden");
-						CHAT_LIST_OTM.classList.add("cc-hidden");
+					// 	CHAT_LIST_OTM.classList.remove("cc-hidden");
+					// } else {
+					// 	CHAT_LIST_CHATBOT.classList.add("cc-hidden");
+					// 	CHAT_LIST_OTO.classList.add("cc-hidden");
+					// 	CHAT_LIST_OTM.classList.add("cc-hidden");
 
-						CHAT_LIST_EMPTY.classList.remove("cc-hidden");
-					}
+					// 	CHAT_LIST_EMPTY.classList.remove("cc-hidden");
+					// }
+					open_CHAT_LIST_OTM();
 					break;
 			}
 		}
@@ -894,6 +870,9 @@
 				//모달 구성
 				setChatBodyInfo(res.payload);
 				printChatRoom(res.payload);
+				//cc-hidden 컨트롤
+				close_CHAT_LIST_CONT();
+				open_CHAT_BODY_CONT();
 				//UNCHECKED_MSG_COUNT 값과
 				//CHAT_OT*_VD uncheckedmsg 값 갱신
 				//대충 UNCHECKED_MSG_COUNT -= uncheckedmsg를 해준다
@@ -925,7 +904,8 @@
 
 	//채팅창 나가기 버튼 클릭
 	/*
-		웹소켓 연결을 끊는 것은 여기서 관여하지 않음
+		웹소켓 연결을 끊는 것은 SharedWorker가 맡음
+		여기서 결정하지 않음
 	*/
 	async function chatBodyQuitBtnClick(e) {
 		//SharedWorker에게 요청
@@ -1218,6 +1198,41 @@
 	}
 
 	/*================================================================================*/
+	/*cc-hidden 컨트롤*/
+	//채팅 컨텍스트
+	function open_CHAT_WINDOW() { CHAT_WINDOW.classList.remove("cc-hidden"); }
+	function close_CHAT_WINDOW() { CHAT_WINDOW.classList.add("cc-hidden"); }
+	//채팅방 목록창
+	function open_CHAT_LIST_CONT() { CHAT_LIST_CONT.classList.remove("cc-hidden"); }
+	function close_CHAT_LIST_CONT() { CHAT_LIST_CONT.classList.add("cc-hidden"); }
+	//채팅방 목록
+	function open_CHAT_LIST_OTO() {
+		if(CHAT_OTO_VD.length > 0) {
+			CHAT_LIST_OTO.classList.remove("cc-hidden");
+			CHAT_LIST_OTM.classList.add("cc-hidden");
+			CHAT_LIST_EMPTY.classList.add("cc-hidden");
+		} else {
+			CHAT_LIST_EMPTY.classList.remove("cc-hidden");
+			CHAT_LIST_OTO.classList.add("cc-hidden");
+			CHAT_LIST_OTM.classList.add("cc-hidden");
+		}
+	}
+	function open_CHAT_LIST_OTM() {
+		if(CHAT_OTM_VD.length > 0) {
+			CHAT_LIST_OTM.classList.remove("cc-hidden");
+			CHAT_LIST_OTO.classList.add("cc-hidden");
+			CHAT_LIST_EMPTY.classList.add("cc-hidden");
+		} else {
+			CHAT_LIST_EMPTY.classList.remove("cc-hidden");
+			CHAT_LIST_OTO.classList.add("cc-hidden");
+			CHAT_LIST_OTM.classList.add("cc-hidden");
+		}
+	}
+	//채팅창
+	function open_CHAT_BODY_CONT() { CHAT_BODY_CONT.classList.remove("cc-hidden"); }
+	function close_CHAT_BODY_CONT() { CHAT_BODY_CONT.classList.add("cc-hidden"); }
+
+	/*================================================================================*/
 	/*DOM 구현*/
 
 	//채팅창 요소 구현
@@ -1276,9 +1291,9 @@
 			CHAT_FIRST_DETAIL_IDX = payload.chatDetails[payload.chatDetails.length - 1].chatDetailIdx;
 		}
 
-		//채팅창 화면 변경
-		CHAT_LIST_CONT.classList.add("cc-hidden");
-		CHAT_BODY_CONT.classList.remove("cc-hidden");
+		// //채팅창 화면 변경
+		// CHAT_LIST_CONT.classList.add("cc-hidden");
+		// CHAT_BODY_CONT.classList.remove("cc-hidden");
 
 		//채팅창 제목
 		if(!!CHAT_BODY_INFO.chatRoomInfo.pkgnum) {
@@ -1576,48 +1591,48 @@
 		let j = 0;
 		for(; j < CHAT_OTM_VD.length; j++) {
 			//요소 순서 맞추기
-			if(otmDom.item(i) == null) {
+			if(otmDom.item(j) == null) {
 				//DOM에 i번째 요소~ 가 없음
 				//추가
-				const newEle = createChatListElement(CHAT_OTM_VD[i], false);
+				const newEle = createChatListElement(CHAT_OTM_VD[j], false);
 				// otmDom.item(i).before(newEle);
 				CHAT_LIST_OTM.appendChild(newEle);
 				//요소 생성시 내부 값 수정을 스킵
 				continue;
 			}
-			else if(otmDom.item(i).id != CHAT_OTM_VD[i].eleId) {
+			else if(otmDom.item(j).id != CHAT_OTM_VD[j].eleId) {
 				//DOM의 i번째 자리에 VD와 다른 요소가 있음
 				//순회하면서 찾는다
 				let tgtEle = null
 				for(let ele of otmDom) {
-					if(ele.id === CHAT_OTM_VD[i].eleId) {
+					if(ele.id === CHAT_OTM_VD[j].eleId) {
 						tgtEle = ele;
 						break;
 					}
 				}
 				if(!!!tgtEle) {
 					//없으면 새로 추가
-					const newEle = createChatListElement(CHAT_OTM_VD[i], false);
-					otmDom.item(i).before(newEle);
+					const newEle = createChatListElement(CHAT_OTM_VD[j], false);
+					otmDom.item(j).before(newEle);
 					//요소 생성시 내부 값 수정은 스킵
 					continue;
 				} else {
 					//있으면 옮기기
-					otmDom.item(i).before(tgtEle);
+					otmDom.item(j).before(tgtEle);
 				}
 			}
 
 			//요소 내부 값 맞추기
 			//DOM 요소를 생성하지 않은 경우 내부 값을 체크, 수정사항을 적용한다
-			adjustChatListElement(CHAT_OTM_VD[i], otmDom.item(i), false);
+			adjustChatListElement(CHAT_OTM_VD[j], otmDom.item(j), false);
 		}
 
 		//VD에 없는 요소 삭제
 		while(otoDom.item(i) != null) {
 			otoDom.item(i).remove();
 		}
-		while(otmDom.item(i) != null) {
-			otmDom.item(i).remove();
+		while(otmDom.item(j) != null) {
+			otmDom.item(j).remove();
 		}
 	}
 	function adjustChatListElement(cr, tgtEle, isOTO=true) {
@@ -1812,10 +1827,12 @@
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				...headers,
+				...header,
 			},
 			body: JSON.stringify(body)
 		};
+
+		console.log(options);
 
 		const res = await fetch(url, options);
 		const data = await res.json();
