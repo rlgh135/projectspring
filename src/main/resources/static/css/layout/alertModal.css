@@ -18,11 +18,11 @@
 /* 모달 콘텐츠 스타일 */
 .alertModal .alertModal_content {
     background-color: #fefefe;
+    width: 40%;
     margin: 5% auto;
     padding: 20px;
     margin-top: 150px;
     border: 1px solid #888;
-    width: 25%;
     border-radius: 10px;
     position: relative;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);

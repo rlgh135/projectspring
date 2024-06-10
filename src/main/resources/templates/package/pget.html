@@ -99,8 +99,16 @@
                             </div>
                         </div>
                     </div>
-					<div>
-						111
+					<div class="pget-util" style="display: flex; gap: 5%; justify-content: center;">
+						<div class="pget-like">
+							<img src="/images/boardimg/emptyheart.png" style="width: 30px; height: 30px; cursor: pointer;">
+						</div>
+						<div class="pget-copyUrl" id="urlCopyButton">
+							<img src="https://openimage.interpark.com/UI/tour/common/common/popups/share/icon_urlCopy.png" alt="" style="width: 30px; height: 30px; cursor: pointer;">
+						</div>
+						<div class="pget-print">
+							<img src="https://openimage.interpark.com/UI/tour/pages/package/detail/btnPrint.svg" alt="" style="width: 30px; height: 30px; cursor: pointer;">
+						</div>
 					</div>
                 </div> 
             </div>
@@ -162,6 +170,7 @@
 	const geocoder = new google.maps.Geocoder();
 	let loginUser = /*[[${session.loginUser}]]*/'';
 	let packagenum = [[${package.packagenum}]];
+	const copyButton = document.getElementById('urlCopyButton');
 	
 	document.addEventListener("DOMContentLoaded", function() {
 		console.log(loginUser);
@@ -220,7 +229,24 @@
 	            alert('Geocode was not successful for the following reason: ' + status);
 	        }
 	    });
+		
+		copyButton.addEventListener('click', function() {
+		    copyToClipboard(window.location.href);
+			showAlertModal(2, "URL이 복사되었습니다");
+			setTimeout(function() {
+		      alertModal.hide();
+		    }, 1500);
+		});
 	});
+	
+	function copyToClipboard(text) {
+	    var tempInput = document.createElement('input');
+	    tempInput.value = text;
+	    document.body.appendChild(tempInput);
+	    tempInput.select();
+	    document.execCommand('copy');
+	    document.body.removeChild(tempInput);
+	  }
 		
     function count(type) {
         const resultElement = document.getElementById('result');
