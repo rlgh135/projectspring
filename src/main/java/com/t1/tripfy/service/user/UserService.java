@@ -66,4 +66,7 @@ public interface UserService {
 	Integer getTotalResCnt(long packagenum);
 	List<ReviewDTO> getMyReviews(Criteria cri, String userid);
 	List<ReviewDTO> getMineReviews(Criteria cri, String guideid);
+	boolean insertDummy();
+	Integer getTotalBoardCnt(String userid);
+	Integer getTotalReplyCnt(String userid);
 }

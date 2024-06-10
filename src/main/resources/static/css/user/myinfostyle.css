@@ -575,7 +575,7 @@ body{
     height: 160px;
     width: 260px;
 }
-.boct > div > div:first-child > img {
+.boct > div:first-child > img {
     width: 258px;
     height: 160px;
     background-size: cover;
@@ -615,6 +615,51 @@ body{
     width: 15px;
     height: 15px;
 }
+
+/*댓*/
+.rplz{
+	width: 360px;
+	height: 180px;
+	margin-top: 10px;
+	border-top: 1px solid rgba(0, 0, 0, 0.15);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+	display: flex;
+	gap: 10px;
+}
+.rplpf{
+	padding: 5px;
+	padding-top: 20px;
+}
+.rplpf >img {
+	width: 60px;
+	height: 60px;
+	border: 1px solid black;
+	border-radius: 50%;
+}
+.rplrs{
+	padding-top: 15px;
+	width: 280px;
+}
+.rplrscont{
+	margin-top: 10px;
+}
+.rplemo > img {
+	width: 100px;
+	height: 100px;
+}
+.rplname{
+	position: relative;
+}
+.movetopthe{
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	cursor: pointer;
+}
+.movetopthe:hover{
+	background-color: rgba(0, 0, 0, 0.15);
+}
+
 /*페이징*/
 .rlpagez{
     margin-top: 20px;

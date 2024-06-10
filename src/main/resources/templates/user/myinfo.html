@@ -87,12 +87,12 @@
                     </div>
                 </div>
                 <ul class="linkUl">
-                    <li>내 정보</li>
-                    <li>게시판</li>
-                    <li>패키지</li>
+                    <li onclick="location.href='/user/myinfo'">내 정보</li>
+                    <li onclick ="location.href='/board/list'">게시판</li>
+                    <li onclick="location.href='/package/pmain'">패키지</li>
                 </ul>
                 <ul class="writeUl">
-                    <li>새 게시글 작성</li>
+                    <li onclick="location.href='/board/write'">새 게시글 작성</li>
                     <li id="modalOpenButton" th:if="${session.guideNum!=0}">새 패키지 작성</li>
                 </ul>
             </div>
@@ -130,20 +130,21 @@
             <ul class="myinfoinfoul">
                 <li>
                     <p>게시글</p>
-					<p th:if="${list.size()>0}">[[${list.size()}]]</p>
+					<p th:if="${list.size()>0}">[[${infomap.boardcnt}]]</p>
 					<p th:unless="${list.size()>0}">0</p>
                 </li>
                 <li>
                     <p>댓글</p>
-                    <p>2</p>
+					<p th:if="${list.size()>0}">[[${infomap.replycnt}]]</p>
+					<p th:unless="${list.size()>0}">0</p>
                 </li>
                 <li>
                     <p>패키지</p>
-                    <p>3</p>
+					<p th:if="${list.size()>0}">[[${infomap.packagecnt}]]</p>
                 </li>
                 <li>
                     <p>후기</p>
-                    <p>4</p>
+					<p th:if="${list.size()>0}">[[${infomap.reviewcnt}]]</p>
                 </li>
             </ul>
         </div>
@@ -528,11 +529,11 @@
 
                 // li 요소 내부에 div를 생성하고 이벤트를 추가합니다.
                 var divElement = document.createElement("div");
-                divElement.setAttribute("onclick", "location.href='/board/get?boardnum='");
+                divElement.setAttribute("onclick", "location.href='/board/get?boardnum="+datas.boardlist[i].boardnum+"'");
 
                 // div 요소 내부에 이미지를 추가합니다.
                 var imgElement = document.createElement("img");
-                imgElement.setAttribute("src", "2.jpg");
+                imgElement.setAttribute("src", "/BoardThumnail/"+datas.bflist[i].sysname);
                 imgElement.setAttribute("alt", "썸네일");
                 divElement.appendChild(imgElement);
 
@@ -545,32 +546,32 @@
                 innerDiv2.classList.add("innerpfz");
 
                 var imgBadge = document.createElement("img");
-                imgBadge.setAttribute("src", "/defaultbadge.png");
-                imgBadge.setAttribute("alt", "");
+                imgBadge.setAttribute("src", "/user/thumbnail?sysname="+datas.thumb);
+                imgBadge.setAttribute("alt", "유저썸네일");
 
                 var pElement = document.createElement("p");
                 pElement.setAttribute("id", "target-id");
-                pElement.textContent = "작성자아이디";
+                pElement.textContent = datas.boardlist[i].userid;
 
                 var pElement2 = document.createElement("p");
                 pElement2.classList.add("innerpfpt");
-                pElement2.textContent = "집에가고싶으면 개추 ㅋㅋ";
+                pElement2.textContent = datas.boardlist[i].title;
 
                 var divElement2 = document.createElement("div");
                 divElement2.classList.add("innerpfpc");
 
                 var imgHeart = document.createElement("img");
-                imgHeart.setAttribute("src", "fullheart.png");
+                imgHeart.setAttribute("src", "/images/boardimg/fullheart.png");
                 imgHeart.setAttribute("alt", "좋");
-                var text1 = document.createTextNode("10 ");
+                var text1 = document.createTextNode(datas.boardlist[i].likecnt+" ");
                 var imgView = document.createElement("img");
-                imgView.setAttribute("src", "viewcnt.png");
+                imgView.setAttribute("src", "/images/boardimg/viewcnt.png");
                 imgView.setAttribute("alt", "조");
-                var text2 = document.createTextNode("20 ");
+                var text2 = document.createTextNode(datas.boardlist[i].viewcnt+" ");
                 var imgComment = document.createElement("img");
-                imgComment.setAttribute("src", "comments.png");
+                imgComment.setAttribute("src", "/images/boardimg/comments.png");
                 imgComment.setAttribute("alt", "댓");
-                var text3 = document.createTextNode("30 ");
+                var text3 = document.createTextNode(datas.boardlist[i].replycnt+" ");
 
                 divElement.appendChild(innerDiv1);
                 innerDiv1.appendChild(innerDiv2);
@@ -598,7 +599,68 @@
             }
         } else if(loadtype==='review'){
             for (let i in datas.packagelist) {
-                
+				// Create the outermost 'li' element
+				const liElement = document.createElement('li');
+				liElement.classList.add('rplz');
+				
+				// Create the 'div' with class 'rplpf'
+				const divRplpf = document.createElement('div');
+				divRplpf.classList.add('rplpf');
+				
+				// Create the 'img' element inside 'rplpf'
+				const imgRplpf = document.createElement('img');
+				imgRplpf.src = '/user/thumbnail?sysname='+datas.thums[i];
+				imgRplpf.alt = '';
+				divRplpf.appendChild(imgRplpf);
+				
+				// Create the 'div' with class 'rplrs'
+				const divRplrs = document.createElement('div');
+				divRplrs.classList.add('rplrs');
+				
+				// Create the 'div' with class 'rplname'
+				const divRplname = document.createElement('div');
+				divRplname.classList.add('rplname');
+				divRplname.textContent = datas.reviews[i].userid;
+				
+				// Create the 'div' inside 'rplname' with class 'movetopthe'
+				const divMovetopthe = document.createElement('div');
+				divMovetopthe.classList.add('movetopthe');
+				divMovetopthe.textContent = '리뷰 패키지로 이동';
+				divMovetopthe.onclick = function() {
+				    location.href = '/package/pget?packagenum='+datas.reviews[i].packagenum;
+				};
+				divRplname.appendChild(divMovetopthe);
+				
+				// Create the 'div' with class 'rplrscont'
+				const divRplrscont = document.createElement('div');
+				divRplrscont.classList.add('rplrscont');
+				divRplrscont.textContent = datas.reviews[i].contents;
+				
+				// Create the 'div' with class 'rplemo'
+				const divRplemo = document.createElement('div');
+				divRplemo.classList.add('rplemo');
+				
+				// Create the 'img' element inside 'rplemo'
+				if(datas.reviews[i].emSysname==null||datas.reviews[i].emSysname===""){
+					console.log("no emo");
+				} else {
+					const imgRplemo = document.createElement('img');
+					imgRplemo.src = '/images/emoticon/'+datas.reviews[i].emSysname;
+					imgRplemo.alt = '';
+					divRplemo.appendChild(imgRplemo);					
+				}
+				
+				// Append all children to their respective parents
+				divRplrs.appendChild(divRplname);
+				divRplrs.appendChild(divRplrscont);
+				divRplrs.appendChild(divRplemo);
+				
+				liElement.appendChild(divRplpf);
+				liElement.appendChild(divRplrs);
+				
+				// Append the 'li' element to the desired parent element in the DOM
+				// Assuming 'ulElement' is the parent element where you want to append this 'li'
+				parrentUlNode.appendChild(liElement);
             }
         } else {
             alert("잘못된 값입니다!");

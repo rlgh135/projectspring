@@ -55,6 +55,9 @@
             <button id="keyChk">접속</button>
         </form>
     </div>
+	<div style="cursor: pointer; background-color: pink;" onclick="makedummy()">
+		☆★☆★더미데이터 만들기☆★☆★
+	</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>   
 <script>
@@ -63,5 +66,26 @@
             $('#managerAccess').submit();
         });
     })
+	
+	function makedummy(){
+		$.ajax({
+			url: "/userdata/insertdummy",
+			method: "GET",
+			
+			success:function(datas){
+				if(datas==="성공"){
+					alert("더미데이터 생성 성공!");
+				} else if(datas==="실패"){
+					alert("생성 실패");
+				} else {
+					console.log("wrong");
+				}
+			},
+			
+			error:function(){
+					console.log("통신 에러");
+			}
+		})
+	}
 </script>
 </html>

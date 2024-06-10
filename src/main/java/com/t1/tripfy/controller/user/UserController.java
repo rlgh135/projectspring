@@ -97,7 +97,7 @@ public class UserController {
 		//썸네일 가져오기
 		String loginUser = (String)session.getAttribute("loginUser");
 		String thumbnail = service.getProfileImgName(loginUser);
-		System.out.println(thumbnail);
+		long guidenum = (int) session.getAttribute("guideNum");
 		
 		model.addAttribute("thumbnail", thumbnail);
 		
@@ -105,6 +105,19 @@ public class UserController {
 		
 		model.addAttribute("user", user);
 		cri = new Criteria(1, 6);
+		
+		HashMap<String, Integer> infomap = new HashMap<>();
+		infomap.put("boardcnt", service.getTotalBoardCnt(loginUser));
+		infomap.put("replycnt", service.getTotalReplyCnt(loginUser));
+		if(guidenum!=0) {
+			infomap.put("packagecnt", service.getTotalPackageCnt(guidenum));
+			infomap.put("reviewcnt", service.getTotalReview(guidenum));			
+		} else {
+			infomap.put("packagecnt", 0);
+			infomap.put("reviewcnt", 0);			
+		}
+		
+		model.addAttribute("infomap", infomap);
 		
 		List<BoardDTO> mylist = service.getMyBoardList(cri, loginUser);
 		List<BoardFileDTO> bflist = new ArrayList<>();

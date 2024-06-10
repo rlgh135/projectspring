@@ -39,6 +39,9 @@ public class UserDataController {
 		cri = new Criteria(page, 6);
 		String jjim = req.getParameter("jjim");
 		
+		String userthumbnail = service.getProfileImgName(userid);
+		datas.put("thumb", userthumbnail);
+		
 		List<BoardFileDTO> bflist = new ArrayList<>();
 		if(jjim.equals("no")) {
 			List<BoardDTO> boardlist = service.getMyBoardList(cri, userid);
@@ -200,5 +203,13 @@ public class UserDataController {
 			System.out.println("wrong param");
 		}
 		return datas;
+	}
+	
+	@GetMapping("insertdummy")
+	public String insertDummy() {
+		if(service.insertDummy()) {
+			return "성공";
+		}
+		return "실패";
 	}
 }

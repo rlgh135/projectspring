@@ -42,6 +42,8 @@ public interface UserMapper {
 	List<PackageDTO> getDoneGPack(Criteria cri, String userid);
 	List<ReviewDTO> getMyReviews(Criteria cri, String userid);
 	List<ReviewDTO> getMineReviews(Criteria cri, String guideid);
+	Integer getTotalBoardCnt(String userid);
+	Integer getTotalReplyCnt(String userid);
 	
 	
 	//U

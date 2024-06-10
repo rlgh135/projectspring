@@ -140,4 +140,10 @@
 		where guidenum = (select guidenum from guide where userid = #{userid}) 
 		order by packagenum limit #{cri.startrow}, #{cri.amount}
 	</select>
+	<select id="getTotalBoardCnt">
+		select count(*) from board where userid = #{userid}
+	</select>
+	<select id="getTotalReplyCnt">
+		select count(*) from board_reply where userid = #{userid}
+	</select>
 </mapper>
