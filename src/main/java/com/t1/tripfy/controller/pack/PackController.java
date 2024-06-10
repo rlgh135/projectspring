@@ -323,15 +323,18 @@ public class PackController {
 	
 	@GetMapping("tlget")
 	public String tlget(@RequestParam long packagenum, Model model, HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		long guidenum = (long)session.getAttribute("guideNum");
-		PackageDTO pac =  service.getDetail(packagenum);
-		model.addAttribute("guideNum", guidenum);
-		model.addAttribute("pac",pac);
-		String[] dayMMdd = service.getDayMMdd(pac.getStartdate(),pac.getEnddate());
-		model.addAttribute("dayMMdd",dayMMdd);
-		return "/package/timelineGet";
+	    HttpSession session = req.getSession();
+	    Long guidenum = (Long) session.getAttribute("guideNum"); // Changed to Long to avoid casting issues if null
+	    PackageDTO pac = service.getDetail(packagenum);
+	    if (guidenum != null) {
+	        model.addAttribute("guideNum", guidenum);            
+	    }
+	    model.addAttribute("pac", pac);
+	    String[] dayMMdd = service.getDayMMdd(pac.getStartdate(), pac.getEnddate());
+	    model.addAttribute("dayMMdd", dayMMdd);
+	    return "/package/timelineGet";
 	}
+
 	
 	@PostMapping(value="timelineRegist", consumes = "application/json", produces = "application/json;charset=utf-8")
 	public ResponseEntity<TimelineDTO> tlRegist(@RequestBody TimelineDTO tl){

@@ -1,0 +1,39 @@
+<th:block th:fragment="chatBot">
+	<link rel="stylesheet" href="/css/layout/chatBot.css">
+	<div class="chatBotOn"></div>
+	    <div id="chatBot-window" class="cb-hidden">
+	        <div class="chatBot-content">
+	            <div class="chatBot-content-header">
+	                <div class="header-area">
+	                    <div class="header-area-logo"></div>
+	                    <div class="header-area-text">
+	                        <p>Tripfy</p>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="message-area">
+	                <div class="chatBot-notice-area">
+	                    <div class="cb-notice" style="display: flex;">
+	                        <div style="margin-left: 5px; margin-top: 5px;">
+	                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" foundation="[object Object]" class="Iconstyled__Icon-sc-1iqwu2g-0 dKyOtd" data-testid="bezier-react-icon" color="txt-black-dark" margintop="0" marginright="0" marginbottom="0" marginleft="0"><path fill="currentColor" fill-rule="evenodd" d="M20.138 2.018a.86.86 0 0 0-.427.115l-6.51 3.727a.86.86 0 0 1-.428.114H4a1 1 0 0 0-1 1V15a1 1 0 0 0 1 1h2.668l-.908 4.4a.5.5 0 0 0 .49.6h3.321a.8.8 0 0 0 .783-.638L11.255 16h1.518a.86.86 0 0 1 .428.114l6.51 3.727a.86.86 0 0 0 1.29-.747V2.88a.86.86 0 0 0-.863-.862" clip-rule="evenodd"></path></svg>
+	                        </div>
+	                        <div style="margin-left: 10px; overflow-wrap: break-word; width: 270px;">
+	                            다른 사람들에게 나의 
+	                            <br>여행코스를  공유하세요!                         
+	                        </div>                        
+	                    </div>
+	                </div>
+	                <div class="chatBot-channel-info">
+	                    <div class="info-box">
+	                        <div class="if-logo">
+	                            <img src="/images/emoticon/3.png" alt="">
+	                        </div>
+	                        <div class="if-text">트리피에 궁금한점이 있나요?</div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="/js/layout/chatBot.js"></script>
+</th:block>
