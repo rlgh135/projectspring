@@ -44,6 +44,7 @@ public interface UserMapper {
 	List<ReviewDTO> getMineReviews(Criteria cri, String guideid);
 	Integer getTotalBoardCnt(String userid);
 	Integer getTotalReplyCnt(String userid);
+	List<Long> getAllPackagenumInReservation(String userid, int pcount);
 	
 	
 	//U

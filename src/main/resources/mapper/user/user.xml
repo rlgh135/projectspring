@@ -146,4 +146,7 @@
 	<select id="getTotalReplyCnt">
 		select count(*) from board_reply where userid = #{userid}
 	</select>
+	<select id="getAllPackagenumInReservation">
+		select packagenum from reservation where userid=#{userid} limit 0, #{pcount};
+	</select>
 </mapper>

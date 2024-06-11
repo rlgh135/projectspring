@@ -29,6 +29,7 @@ import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.board.BoardDTO;
 import com.t1.tripfy.domain.dto.board.BoardFileDTO;
 import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
+import com.t1.tripfy.domain.dto.board.BoardReplyDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
 import com.t1.tripfy.domain.dto.user.GuideDTO;
@@ -36,6 +37,7 @@ import com.t1.tripfy.domain.dto.user.GuideUserDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.board.BoardMapper;
+import com.t1.tripfy.mapper.board.BoardReplyMapper;
 import com.t1.tripfy.mapper.pack.PackageFileMapper;
 import com.t1.tripfy.mapper.pack.PackageMapper;
 import com.t1.tripfy.mapper.pack.ReservationMapper;
@@ -61,6 +63,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private PackageFileMapper pfilemapper;
+	
+	@Autowired
+	private BoardReplyMapper brmapper;
 	
 	@Override
 	public boolean join(UserDTO user) {
@@ -407,7 +412,7 @@ public class UserServiceImpl implements UserService{
 //			pack.setGuidenum((random.nextInt(2)+1));
 //			pack.setPackageTitle((i+1)+"번째 패키지!");
 //			pack.setPackageContent(location[1]+"으로 떠나는 \n"+(i+1)+"번째 패키지 내용입니다. ");
-//			pack.setMaxcnt(random.nextInt(19)+1);
+//			pack.setMaxcnt(random.nextInt(9)+20);
 //			pack.setAdultPrice(100*(random.nextInt(4000)+1));
 //			pack.setChildPrice(100*(random.nextInt(4000)+1));
 //			int month = random.nextInt(12)+1;
@@ -452,6 +457,93 @@ public class UserServiceImpl implements UserService{
 //					pfile.setPfSysname("pakcagededummy"+coin+".jpg");
 //					pfile.setPfOrgname("pakcagededummy"+coin+".jpg");
 //					pfilemapper.insertFile(pfile);
+//				}
+//			}
+//		}
+		
+		//pcount = 데이터베이스의 총 패키지 갯수
+		int pcount = 4000;
+//		for (int i = 1; i<=4000; i++) {
+//			for (String id : userid) {
+//				int coin = random.nextInt(2);
+//				if(coin==0) {
+//					System.out.println("no reservation");
+//				} else {
+//					System.out.println(id+": apply package");
+//					ReservationDTO reservation = new ReservationDTO();
+//					reservation.setPackagenum(i);
+//					reservation.setUserid(id);
+//					reservation.setAdultCnt(random.nextInt(2)+1);
+//					reservation.setChildCnt(random.nextInt(3));
+//					reservation.setPhone("01012345678");
+//					reservation.setEmail(id+"1212@gmail.com");
+//					reservation.setKeycode("dummyKeycode");
+//					reservation.setIsDelete(0);
+//					reservation.setPrice("dummyPrice");
+//					reservation.setPayMethod("카드");
+//					reservation.setName("회원");
+//					
+//					pmapper.saveReservationForMember(reservation);
+//				}
+//			}			
+//		}
+		
+//		for (String id : userid) {
+//			List<Long> pnumlist = umapper.getAllPackagenumInReservation(id, pcount); 
+//			for (Long pnum : pnumlist) {
+//				int coin = random.nextInt(2);
+//				
+//				if(coin==0) {
+//					System.out.println(id+": no review");
+//					continue;
+//				} else {
+//					System.out.println(id:+": add review");
+//					PackageDTO pack = pmapper.getPackageByPackageNum(pnum);
+//					
+//					ReviewDTO review = new ReviewDTO();
+//					review.setPackagenum(pack.getPackagenum());
+//					review.setUserid(id);
+//					review.setGuidenum(pack.getGuidenum());
+//					review.setContents(id+"의 "+pack.getPackagenum()+"번 패키지 리뷰");
+//					
+//					int emcoin = random.nextInt(3);
+//					if(emcoin==0) {
+//						review.setEmSysname("");
+//					} else {
+//						review.setEmSysname((random.nextInt(20)+1)+".png");
+//					}
+//					
+//					umapper.addHugi(review);
+//				}
+//				
+//			}
+//		}
+		
+		//bcount = 보드의 갯수
+//		int bcount = 3000;
+//		for (int i=1; i<=3000; i++) {
+//			for (String id : userid) {
+//				int coin = random.nextInt(2);
+//				
+//				if(coin==0) {
+//					System.out.println(id+"는 "+i+"번 게시글에 댓글을 달지 않았습니다");
+//					continue;
+//				} else {
+//					System.out.println(id+"가 "+i+"번 게시글에 댓글을 달았습니다");
+//					BoardReplyDTO reply = new BoardReplyDTO();
+//					
+//					reply.setBoardnum(i);
+//					reply.setContents(id+"의 "+i+"번 게시글에 단 댓글");
+//					reply.setUserid(id);
+//					
+//					int emcoin = random.nextInt(3);
+//					if(emcoin==0) {
+//						reply.setEmSysname("");
+//					} else {
+//						reply.setEmSysname((random.nextInt(20)+1)+".png");
+//					} 
+//					
+//					brmapper.insertReply(reply);
 //				}
 //			}
 //		}
