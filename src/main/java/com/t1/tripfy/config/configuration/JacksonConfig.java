@@ -17,6 +17,12 @@ public class JacksonConfig {
 				.registerModule(new ParameterNamesModule())
 				.registerModule(new Jdk8Module())
 				.registerModule(new JavaTimeModule());
-//				.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
+//				.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE); //매핑 실패시 null 대입
 	}
 }
+
+/*
+ * jackson LocalDatetime 포맷 관련
+ * https://ksh-coding.tistory.com/107
+ * 일단 어노테이션 박아둠
+ * */

@@ -2,6 +2,8 @@ package com.t1.tripfy.domain.dto.chat;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,5 +14,6 @@ public class ChatDetailDTO {
 	private Long chatRoomIdx;
 	private String userid;
 	private String chatDetailContent;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
 	private LocalDateTime regdate;
 }
