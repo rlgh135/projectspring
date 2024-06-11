@@ -414,7 +414,7 @@ public class UserController {
 		model.addAttribute("likelist", service.getLikeGuides(userid));
 		
 		cri = new Criteria(1, 6);
-		List<ReservationDTO> reslist = service.getMyReservation(cri, userid);
+		List<ReservationDTO> reslist = service.getMyReservationRecentTwoWeek(cri, userid);
 		ArrayList<PackageDTO> rpacklist = new ArrayList<>();
 		ArrayList<ReviewDTO> reviewlist = new ArrayList<>();
 		ArrayList<PackageFileDTO> thumbnaillist = new ArrayList<>();
@@ -496,6 +496,41 @@ public class UserController {
 		}
 		return "/user/receipt";
 	}
+	
+	@GetMapping("yourinfo")
+	public String yourInfo(HttpServletRequest req, Model model, Criteria cri) {
+		HttpSession session = req.getSession();
+		//썸네일 가져오기
+		String loginUser = (String)session.getAttribute("loginUser");
+		String userid = req.getParameter("userid");
+		if(loginUser.equals(userid)) {
+			return "redirect:/user/myinfo";
+		}
+		String thumbnail = service.getProfileImgName(userid);
+		GuideDTO guide = service.getGuideNum(userid);
+		
+		model.addAttribute("thumbnail", thumbnail);
+		model.addAttribute("guide", guide);
+		
+		UserDTO user = service.getUser(userid);
+		model.addAttribute("user", user);
+		
+		HashMap<String, Integer> infomap = new HashMap<>();
+		infomap.put("boardcnt", service.getTotalBoardCnt(loginUser));
+		infomap.put("replycnt", service.getTotalReplyCnt(loginUser));
+		if(guide!=null) {
+			infomap.put("packagecnt", service.getTotalPackageCnt(guide.getGuidenum()));
+			infomap.put("reviewcnt", service.getTotalReview(guide.getGuidenum()));			
+		} else {
+			infomap.put("packagecnt", -1);
+			infomap.put("reviewcnt", -1);			
+		}
+		
+		model.addAttribute("infomap", infomap);
+		
+		return "/user/yourinfo";
+	}
+	
 	
 	//post
 	@PostMapping("join")

@@ -660,6 +660,17 @@ body{
 	background-color: rgba(0, 0, 0, 0.15);
 }
 
+/*패키지*/
+.packkhi{
+	position: relative;
+}
+.rcgnzstamp{
+	position: absolute;
+	width: 150px !important;
+	height: 150px !important;
+	top: -93px;
+    right: -35px;
+}
 /*페이징*/
 .rlpagez{
     margin-top: 20px;

@@ -62,4 +62,11 @@
 	<select id="getTotalResCnt">
 		select sum(adult_cnt + child_cnt) from reservation where packagenum = #{packagenum} and isdelete &lt; 2
 	</select>
+	<select id="getMyReservationRecentTwoWeek">
+		SELECT r.*
+		FROM reservation r
+		JOIN package p ON r.packagenum = p.packagenum
+		WHERE p.enddate BETWEEN DATE_SUB(CURDATE(), INTERVAL 14 DAY) AND CURDATE()
+		AND r.userid = #{userid} order by reservationnum desc limit #{cri.startrow}, #{cri.amount};
+	</select>
 </mapper>

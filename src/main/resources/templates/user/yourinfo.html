@@ -105,8 +105,8 @@
                 <img th:src="${'/user/thumbnail?sysname='+thumbnail}" alt="유저섬네일">
             </div>
             <div class="myinfoid">
-				<p id="target-id">[[${session.loginUser}]]</p>
-				<p th:if="${session.guideNum!=0}" id="isguide"><img src="/images/userimg/guidebadge.png" alt="가이드뱃지"></p>
+				<p id="target-id">[[${user.userid}]]</p>
+				<p th:if="${guide!=null}" id="isguide"><img src="/images/userimg/guidebadge.png" alt="가이드뱃지"></p>
 			</div>
             <div class="sogaebox">
                 <form action="/user/sogae" method="get" name="sogaeform">
@@ -114,15 +114,11 @@
                     <textarea name="introduce" readonly>[[${user.introduce}]]</textarea>
                 </form>
                 <div>
-                    <input type="button" name="open" id="openSogeEdit" class="hiddens sogaetriger" value="">
-                    <input type="button" id="sogeWan" class="hiddens sogehide" onclick="sogesubmit()" value="완료">
-                    <input type="button" id="sogeCansle" class="hiddens sogehide sogaetriger" value="취소">
+                    
                 </div>
             </div>
             <div class="bungi">
-                <div class="hugijak" onclick="location.href='/user/after'">여행후기작성</div>
-                <div th:if="${session.guideNum!=0}" class="myguidemenu" onclick="location.href='/user/guide'">패키지관리</div>
-                <div th:unless="${session.guideNum!=0}" class="myguidemenu" onclick="location.href='/user/joinguide'">가이드신청</div>
+                
             </div>
         </div>
         <div class="myinfoinfo">
@@ -130,21 +126,19 @@
             <ul class="myinfoinfoul">
                 <li>
                     <p>게시글</p>
-					<p th:if="${list.size()>0}">[[${infomap.boardcnt}]]</p>
-					<p th:unless="${list.size()>0}">0</p>
+					<p>[[${infomap.boardcnt}]]</p>
                 </li>
                 <li>
                     <p>댓글</p>
-					<p th:if="${list.size()>0}">[[${infomap.replycnt}]]</p>
-					<p th:unless="${list.size()>0}">0</p>
+					<p>[[${infomap.replycnt}]]</p>
                 </li>
-                <li>
+                <li th:if="${guide!=null}">
                     <p>패키지</p>
-					<p th:if="${list.size()>0}">[[${infomap.packagecnt}]]</p>
+					<p>[[${infomap.packagecnt}]]</p>
                 </li>
-                <li>
+                <li th:if="${guide!=null}">
                     <p>후기</p>
-					<p th:if="${list.size()>0}">[[${infomap.reviewcnt}]]</p>
+					<p>[[${infomap.reviewcnt}]]</p>
                 </li>
             </ul>
         </div>
@@ -361,7 +355,6 @@
 						nodataimg.setAttribute("src", "/images/alertimg/nodataimg.png");
 						nodataimg.setAttribute("alt", "노뎃");
 						parrentUlNode.appendChild(nodataimg);
-    
                     } else {
                         makeDom('board', datas);
                     }
@@ -384,7 +377,6 @@
 						nodataimg.setAttribute("src", "/images/alertimg/nodataimg.png");
 						nodataimg.setAttribute("alt", "노뎃");
 						parrentUlNode.appendChild(nodataimg);
-    
                     } else {
                         makeDom('board', datas);
                     }
@@ -414,7 +406,6 @@
 						nodataimg.setAttribute("src", "/images/alertimg/nodataimg.png");
 						nodataimg.setAttribute("alt", "노뎃");
 						parrentUlNode.appendChild(nodataimg);
-    
                     } else {
                         makeDom('joinpack', datas);
                     }

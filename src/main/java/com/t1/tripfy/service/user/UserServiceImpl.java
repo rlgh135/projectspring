@@ -342,6 +342,10 @@ public class UserServiceImpl implements UserService{
 	public Integer getTotalReplyCnt(String userid) {
 		return umapper.getTotalReplyCnt(userid);
 	}
+	@Override
+	public List<ReservationDTO> getMyReservationRecentTwoWeek(Criteria cri, String userid) {
+		return resmapper.getMyReservationRecentTwoWeek(cri, userid);
+	}
 	
 	@Override
 	public boolean insertDummy() {

@@ -140,7 +140,7 @@ public class UserDataController {
 		
 		List<PackageFileDTO> pflist = new ArrayList<>();
 		ArrayList<Integer> rescnt = new  ArrayList<>();
-		if(when.equals("before")) {
+		if(when.equals("after")) {
 			List<PackageDTO> packagelist = service.getGuideReadyPack(cri, guideid);
 			
 			if(packagelist.size()>0) {
@@ -149,6 +149,7 @@ public class UserDataController {
 					rescnt.add(service.getTotalResCnt(pack.getPackagenum()));
 				}
 			}
+			datas.put("packagelist", packagelist);
 		} else if (when.equals("before")) {
 			List<PackageDTO> packagelist = service.getGuideDonePack(cri, guideid);
 			
@@ -158,6 +159,7 @@ public class UserDataController {
 					rescnt.add(service.getTotalResCnt(pack.getPackagenum()));
 				}
 			}
+			datas.put("packagelist", packagelist);
 		} else {
 			System.out.println("wrong param");
 		}
@@ -174,21 +176,26 @@ public class UserDataController {
 		Map<String, Object> datas = new HashMap<>();
 		String userid = req.getParameter("userid");
 		int page = Integer.parseInt(req.getParameter("page"));
-		cri = new Criteria(page, 18);
+		cri = new Criteria(page, 6);
 		String who = req.getParameter("who");
 		
+		List<String> thums = new ArrayList<>();
 		if(who.equals("me")) {
 			List<ReviewDTO> reviews = service.getMyReviews(cri, userid);
+			if(reviews.size()>0) {
+				for(ReviewDTO review : reviews) {
+					thums.add(service.getProfileImgName(review.getUserid()));
+				}
+			}
 			datas.put("reviews", reviews);
+			datas.put("thums", thums);
 			
 		} else if (who.equals("others")) {
+			System.out.println(userid);
 			if(service.getGuideNum(userid)!=null) {
-				datas.put("isg", "no");
-				
-			} else {
 				datas.put("isg", "yes");
 				
-				List<String> thums = new ArrayList<>();
+				
 				List<ReviewDTO> reviews = service.getMineReviews(cri, userid);
 				if(reviews.size()>0) {
 					for(ReviewDTO review : reviews) {
@@ -198,6 +205,9 @@ public class UserDataController {
 				
 				datas.put("reviews", reviews);
 				datas.put("thums", thums);
+				
+			} else {
+				datas.put("isg", "no");
 			}
 		} else {
 			System.out.println("wrong param");

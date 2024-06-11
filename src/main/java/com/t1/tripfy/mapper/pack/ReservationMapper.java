@@ -20,6 +20,7 @@ public interface ReservationMapper {
 	List<ReservationDTO> getForignerReservations(String fname, String phone, Criteria cri);
 	ReservationDTO getMyRservationWithPackagenum(String userid, long packagenum);
 	Integer getTotalResCnt(long packagenum);
+	List<ReservationDTO> getMyReservationRecentTwoWeek(Criteria cri, String userid);
 	
 	List<ReservationDTO> getReservationCntByPackagenum(long packagenum);
 	//U

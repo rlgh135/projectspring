@@ -120,7 +120,7 @@
 		JOIN (
 		    SELECT guidenum
 		    FROM guide
-		    WHERE userid = 'banana'
+		    WHERE userid = #{guideid}
 		) g ON p.guidenum = g.guidenum order by p.packagenum desc limit #{cri.startrow}, #{cri.amount}
 	</select>
 	<select id="getDoneGPack">
@@ -129,7 +129,7 @@
 		JOIN (
 		    SELECT guidenum
 		    FROM guide
-		    WHERE userid = 'banana'
+		    WHERE userid = #{guideid}
 		) g ON p.guidenum = g.guidenum order by p.packagenum desc limit #{cri.startrow}, #{cri.amount}
 	</select>
 	<select id="getMyReviews">
@@ -137,7 +137,7 @@
 	</select>
 	<select id="getMineReviews">
 		select * from review 
-		where guidenum = (select guidenum from guide where userid = #{userid}) 
+		where guidenum = (select guidenum from guide where userid = #{guideid}) 
 		order by packagenum limit #{cri.startrow}, #{cri.amount}
 	</select>
 	<select id="getTotalBoardCnt">

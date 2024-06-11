@@ -38,8 +38,8 @@ public interface UserMapper {
 	List<BoardDTO> getLikeBoards(Criteria cri, String userid);
 	List<PackageDTO> getReadyPack(Criteria cri, String userid);
 	List<PackageDTO> getDonePack(Criteria cri, String userid);
-	List<PackageDTO> getReadyGPack(Criteria cri, String userid);
-	List<PackageDTO> getDoneGPack(Criteria cri, String userid);
+	List<PackageDTO> getReadyGPack(Criteria cri, String guideid);
+	List<PackageDTO> getDoneGPack(Criteria cri, String guideid);
 	List<ReviewDTO> getMyReviews(Criteria cri, String userid);
 	List<ReviewDTO> getMineReviews(Criteria cri, String guideid);
 	Integer getTotalBoardCnt(String userid);
