@@ -30,7 +30,10 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
+import com.t1.tripfy.domain.dto.pack.PackageLikeDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
+import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.mapper.pack.PackageFileMapper;
 import com.t1.tripfy.mapper.pack.PackageMapper;
@@ -424,6 +427,43 @@ public class PackageServiceImpl implements PackageService{
 		// TODO Auto-generated method stub
 		return pmapper.SortListByPrice(cri);
 	}
+	// 해당 userid가 해당 board에 좋아요 눌렀는지 찾음
+	@Override
+	public PackageLikeDTO getPackageLike(String userid, long packagenum) {
+		return pmapper.getPackageLike(userid, packagenum);
+	}
+	
+	// 좋아요 클릭
+		@Override
+		public boolean likeClick(String userid, long packagenum) {
+			PackageDTO pack = pmapper.getPackageByPackageNum(packagenum);
+			
+			if(pmapper.getPackageLike(userid, packagenum) == null) {
+				// 좋아요 등록
+				if(pmapper.likeRegist(userid, packagenum) == 1) {
+					System.out.println("좋아요 등록 성공");
+					return true;
+				}
+				
+				else {
+					System.out.println("좋아요 등록 실패");
+				}
+			}
+			
+			else {
+				// 좋아요 취소
+				if(pmapper.likeDelete(userid, packagenum) == 1) {
+					
+					System.out.println("좋아요 취소 성공");
+					return true;
+				}
+				
+				else {
+					System.out.println("좋아요 취소 실패");
+				}
+			}
+			return false;
+		}
 	
 	
 }

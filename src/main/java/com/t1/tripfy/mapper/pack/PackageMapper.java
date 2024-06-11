@@ -8,7 +8,9 @@ import org.apache.ibatis.annotations.Param;
 import com.t1.tripfy.domain.dto.Criteria;
 import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
+
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
+import com.t1.tripfy.domain.dto.pack.PackageLikeDTO;
 
 
 @Mapper
@@ -49,4 +51,15 @@ public interface PackageMapper {
 	List<PackageDTO> getMyPackages(long guidenum, Criteria cri);
 	List<PackageDTO> getMyIngPackages(long guidenum, Criteria cri);
 	int getMyPackageCnt(long guidenum);
+	
+	// 해당 userid가 해당 board에 좋아요 눌렀는지 찾음
+	PackageLikeDTO getPackageLike(@Param("userid") String userid, @Param("packagenum") long packagenum);
+
+	
+	// 좋아요 등록
+		int likeRegist(@Param("userid") String userid, @Param("packagenum") long packagenum);
+
+		// 좋아요 취소
+		int likeDelete(@Param("userid") String userid, @Param("packagenum") long packagenum);
+
 }

@@ -11,6 +11,7 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
+import com.t1.tripfy.domain.dto.pack.PackageLikeDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 
@@ -68,4 +69,10 @@ public interface PackageService {
 	boolean packageVisibility(long packagenum);
 	
 	List<ReviewDTO> getReviewByGuidenum(long guidenum);
+	// 해당 userid가 해당 board에 좋아요 눌렀는지 찾음
+	PackageLikeDTO getPackageLike(String userid, long packagenum);
+	// 좋아요 클릭
+	boolean likeClick(String userid, long packagenum);
+
+
 }

@@ -100,8 +100,9 @@
                         </div>
                     </div>
 					<div class="pget-util" style="display: flex; gap: 5%; justify-content: center;">
-						<div class="pget-like">
-							<img src="/images/boardimg/emptyheart.png" style="width: 30px; height: 30px; cursor: pointer;">
+						<div class="pget-like" id="p_like">
+							<img th:if="${packLike}" src="/images/boardimg/fullheart.png" id="like">
+							<img th:unless="${packLike}" src="/images/boardimg/emptyheart.png" id="like">
 						</div>
 						<div class="pget-copyUrl" id="urlCopyButton">
 							<img src="https://openimage.interpark.com/UI/tour/common/common/popups/share/icon_urlCopy.png" alt="" style="width: 30px; height: 30px; cursor: pointer;">
@@ -134,7 +135,7 @@
 					    <div th:if="${review != null and #lists.size(review) > 0 and review[0].guidenum == package.guidenum}">
 					        <div th:each="review : ${review}" class="review">
 					            <div class="userprofile">
-									<img src="/images/packageimg/30fe1a9df8f3aac93c34e5d2b80f694a.jpg" alt="">
+									<img th:src="'/user/thumbnail?sysname=' + ${review.userImages[0].sysname}">
 					                <p><strong>[[${review.userid}]]</strong></p>
 					            </div>
 					            <div class="reviewcontent">[[${review.contents}]]</div>
@@ -169,7 +170,7 @@
 	const zoomScope = 10;  // Replace with appropriate zoom level	
 	const geocoder = new google.maps.Geocoder();
 	let loginUser = /*[[${session.loginUser}]]*/'';
-	let packagenum = [[${package.packagenum}]];
+	let packagenum = /*[[${package.packagenum}]]*/'';
 	const copyButton = document.getElementById('urlCopyButton');
 	
 	document.addEventListener("DOMContentLoaded", function() {
@@ -401,5 +402,52 @@
 				})
 			}
 		}
+		$("#p_like").on("click", function() {
+					let loginUser = /*[[${session.loginUser}]]*/"";
+					let guidenum = 	[[${session.guideNum}]];
+					console.log(guidenum);
+					let pguidenum = [[${package.guidenum}]];
+					console.log(pguidenum);	
+					let packagenum = [[${package.packagenum}]];
+					
+					console.log("packagenum: " + packagenum);	
+					
+					if(loginUser == null) {
+						showAlertModal(2, "로그인 후 이용 가능합니다");
+						return;
+					}
+					
+					if(guidenum == pguidenum) {
+						showAlertModal(2, "본인 게시글에는 좋아요를 클릭할 수 없습니다");
+						return;
+					}
+					
+					else {			
+						$.ajax({
+							url: "/package/like?packagenum=" + packagenum,
+							method: "PUT",
+							
+							success:function(data) {
+								console.log(data)
+								
+								if(data.packlike == null) {  
+									$("#p_like").html('<img src="/images/boardimg/emptyheart.png" id="like">');
+								
+								}
+								else {
+									$("#p_like").html('<img src="/images/boardimg/fullheart.png" id="like">');
+									
+								}
+									
+							},
+							
+							error:function(data) {
+								showAlertModal(1, "잠시 후에 다시 시도해주세요");
+							}
+							
+						});
+					}
+				})	
+		
 </script>
 </html>

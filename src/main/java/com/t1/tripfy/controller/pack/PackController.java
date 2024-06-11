@@ -1,7 +1,9 @@
 package com.t1.tripfy.controller.pack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -26,7 +28,10 @@ import com.t1.tripfy.domain.dto.ReservationDTO;
 import com.t1.tripfy.domain.dto.ReviewDTO;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.pack.PackageFileDTO;
+import com.t1.tripfy.domain.dto.pack.PackageLikeDTO;
 import com.t1.tripfy.domain.dto.TimelineDTO;
+import com.t1.tripfy.domain.dto.board.BoardDTO;
+import com.t1.tripfy.domain.dto.board.BoardLikeDTO;
 import com.t1.tripfy.domain.dto.user.UserDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.service.pack.PackageService;
@@ -216,10 +221,16 @@ public class PackController {
 	    List<UserImgDTO> thumbnaillist = uservice.getAllUserImg();
 
 	    for (ReviewDTO rdto : review) {
-	        // 각 ReviewDTO에 thumbnailList를 설정
-	        rdto.setUserImages(thumbnaillist);
+	        List<UserImgDTO> userImages = new ArrayList<>();
+	        for (UserImgDTO thumbnail : thumbnaillist) {
+	            if (rdto.getUserid().equals(thumbnail.getUserid())) {
+	                userImages.add(thumbnail);
+	            }
+	        }
+	        rdto.setUserImages(userImages);
 	        reviewlist.add(rdto);
 	    }
+
 
 	    // model에 reviewlist 추가
 	    model.addAttribute("review", reviewlist);
@@ -449,5 +460,30 @@ public class PackController {
 			return "redirect:/package/tlwrite?packagenum="+packagenum;
 		}
 	}
+	
+	@PutMapping("like")
+	@ResponseBody
+	public Map<String, Object> packagelike(HttpServletRequest req, long packagenum) {
+		String userid = (String)req.getSession().getAttribute("loginUser");
+		System.out.println("packagenum: " + packagenum);
+		
+		PackageLikeDTO packlike = null;
+		PackageDTO pack = null;
+		
+		// 좋아요 클릭 혹은 취소 관련
+		if(service.likeClick(userid, packagenum)) {  // 성공
+			// 해당 게시글에 해당 유저가 좋아요 유무 -> 객체 O 또는 X
+			packlike = service.getPackageLike(userid, packagenum);
+			pack = service.getDetail(packagenum);
+			
+		}
+		
+		Map<String, Object> data = new HashMap<>();
+		data.put("packlike", packlike);
+		data.put("pack", pack);
+		
+		return data;
+	}
+
 
 }

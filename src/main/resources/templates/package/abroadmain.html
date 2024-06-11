@@ -178,7 +178,7 @@
 							    <div th:if="${pop != null and #lists.size(pop) > 0}" th:each="pop : ${pop}"class="ppackage">
 							        <a th:href="@{/package/pget(packagenum=${pop.packagenum})}" class="get">
 										<div class="pp_img">
-								    		<div class="imgbox" th:each="file : ${rfile}" th:if="${file.packagenum == pop.packagenum}">
+								    		<div class="imgbox" th:each="file : ${pfile}" th:if="${file.packagenum == pop.packagenum}">
 								        		<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
 								    		</div>
 								  		</div>
@@ -217,7 +217,7 @@
 							    <div th:if="${cheap != null and #lists.size(cheap) > 0}" th:each="cheap : ${cheap}" class="cpackage">
 						    		<a th:href="@{/package/pget(packagenum=${cheap.packagenum})}" class="get">
 										<div class="cp_img">
-											<div class="imgbox" th:each="file : ${rfile}" th:if="${file.packagenum == cheap.packagenum}">
+											<div class="imgbox" th:each="file : ${cfile}" th:if="${file.packagenum == cheap.packagenum}">
 												<img th:src="${'/package/thumbnail?systemname='+file.pfSysname}" alt="">
 											</div>
 										</div>

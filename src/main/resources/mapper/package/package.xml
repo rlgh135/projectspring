@@ -226,4 +226,14 @@
       <select id="getReviewByGuidenum">
 		select * from review where guidenum = #{guidenum};
 	</select>
+	<select id="getPackageLike">
+		select * from package_like where packagenum = #{packagenum} and userid = #{userid}
+	</select>	
+	<insert id="likeRegist">
+		insert into package_like values(#{packagenum}, #{userid})	
+	</insert>
+	<delete id="likeDelete">
+		delete from package_like where userid = #{userid} and packagenum = #{packagenum}
+	</delete>
+	
 </mapper>
