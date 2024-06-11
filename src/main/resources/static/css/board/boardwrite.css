@@ -1,23 +1,30 @@
 /* #90CAF9, #64B5F6, #42A5F5, #2196F3 */
-* {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nanum Gothic' !important;}
+* {margin: 0; padding: 0; box-sizing: border-box;}
+
+.line {
+	position: fixed;
+	z-index: 100;
+    width: 1400px;
+    border-top: 1px solid #90CAF9; /* border의 색상 */
+    left: 50%; /* 화면의 가운데 위치를 기준으로 */
+    transform: translateX(-50%); /* 요소의 너비의 절반만큼 왼쪽으로 이동하여 가운데 정렬 */
+}
 
 .wrap {
     width: 1400px;
     margin: 0 auto;
     /* border: 1px solid red; */
-	margin-top: 130px;
+	margin-top: 80px;
 	position: relative;
 }
-	
-#writeForm {
-	margin-bottom: 60px;
-}
+
 
 [type=text] {
     padding: 8px;
     border: 1px solid #e0e0e0;
     width: 220px;
     outline: none;
+    font-family: 'Nanum Gothic';
 }
 	
 .b_place, #yes, #no, a.btn {
@@ -57,21 +64,28 @@
 
 .boardwrite {
     margin: 0 auto;
+    margin-top: 50px;
     padding: 30px;
     /* border: 2px solid #42A5F5; */
     border-collapse: collapse;
 }
 
 .boardwrite caption {
+	margin-top: 50px;
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 30px;
+    font-family: 'Nanum Gothic';
 }
 
 .boardwrite th {
     width: 220px; padding: 13px;
     background-color: #fafafa;
     border-bottom: 1px solid #e0e0e0;
+}
+
+.boardwrite th h4 {
+	font-family: 'Nanum Gothic';
 }
 
 .boardwrite th:first-of-type {
@@ -115,7 +129,8 @@
 }
 	
 .yesno td [type="radio"] + label {
-    margin-right: 10px; 
+    margin-right: 10px;
+    font-family: 'Nanum Gothic'; 
 }
 
 .buttons {
@@ -134,6 +149,7 @@
     font-weight: bold;
 	font-size: 15px;
 	cursor: pointer;
+	font-family: 'Nanum Gothic';
 }
 
 .writeOk {margin-right: 10px;}
@@ -174,14 +190,14 @@
     border-top: 1px solid rgb(233, 233, 233);
     border-bottom: 1px solid rgb(233, 233, 233);
 	padding: 3px;
-	    position: relative;
+	position: relative;
 }
 	
 .nation_select .category .region_detail {
     border-radius: 0 10px 10px 0 / 0 10px 10px 0;
     border: 1px solid rgb(233, 233, 233);
-	    padding: 3px;
-	    position: relative;
+	padding: 3px;
+	position: relative;
 }
 	
 .nation_select .category .nation > div, .c_region > div, .region_detail > div {
@@ -273,6 +289,7 @@
 	
 .file span {
 	font-size: 14px;
+	font-family: 'Nanum Gothic';
 }
 	
 .file a.btn {
@@ -285,6 +302,15 @@
 	border-radius: 5px;
 	color: #fff;
 	margin-right: 5px;
+	font-family: 'Nanum Gothic';
+}
+
+.note-editable, .note-editable p, .note-placeholder {
+	font-family: 'Nanum Gothic';
+}
+
+.file th {
+	font-family: 'Nanum Gothic';
 }
 	
 .file th h4::after, .content th h4::after {
@@ -327,6 +353,7 @@ img.thumbnail {
     text-align: center;
     color: #64B5F6;
     font-weight: bold;
+    font-family: 'Nanum Gothic';
 }
 
 @keyframes animatetop {

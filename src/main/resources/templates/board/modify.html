@@ -13,6 +13,7 @@
 
 <body>
 	<th:block th:include="~{layout/header::header(${session.loginUser})}"></th:block>
+	<div class="line"></div>
 	
     <div class="wrap">
         <form action="/board/modify" method="post" name="modifyForm" id="modifyForm" enctype="multipart/form-data">
