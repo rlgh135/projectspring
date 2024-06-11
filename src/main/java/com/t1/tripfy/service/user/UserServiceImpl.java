@@ -349,204 +349,207 @@ public class UserServiceImpl implements UserService{
 		String[] userid = {"minsoo", "sanghyeon", "yeonghwan", "seonghwi", "kiho"};
 		
 		//회원
-//		for (String id : userid) {
-//			UserDTO user = new UserDTO();
-//			user.setUserid(id);
-//			user.setUserpw("Abcd!234");
-//			user.setPhone("01012345678");
-//			user.setEmail(id+"1212@gmail.com");
-//			user.setGender("M");
-//			user.setBirth("010203");
-//			user.setAddr("서울");
-//			user.setPlaceid("C230DVDE230DFES");
-//			user.setIntroduce("자기소개가 없어요.");
-//			
-//			if(umapper.insertUser(user)==1) {
-//				umapper.makeDefaultBadge(id);
-//			}
-//		}
+		for (String id : userid) {
+			UserDTO user = new UserDTO();
+			user.setUserid(id);
+			user.setUserpw("Abcd!234");
+			user.setPhone("01012345678");
+			user.setEmail(id+"1212@gmail.com");
+			user.setGender("M");
+			user.setBirth("010203");
+			user.setAddr("서울");
+			user.setPlaceid("C230DVDE230DFES");
+			user.setIntroduce("자기소개가 없어요.");
+			
+			if(umapper.insertUser(user)==1) {
+				umapper.makeDefaultBadge(id);
+			}
+		}
 		
 		String[] countrycodes = {"kr$mol", "ea$동남아시아", "gu$괌/사이판/호주/뉴질랜드", "jp$일본", "cn$중국", "eu$유럽", "us$미국"};
 		String[] krregions = {"서울", "제주도", "경기도", "강원도", "충청도", "경상도", "전라도", "인천광역시"};
 		//게시판
-//		for(int i=0; i<3000; i++) {
-//			BoardDTO board = new BoardDTO();
-//			board.setUserid(userid[random.nextInt(5)]);
-//			board.setTitle((i+1)+"번째 게시글!");
-//			board.setContent((i+1)+"번째 게시글의 내용!");
-//			int idx = random.nextInt(7);
-//			String[] location = countrycodes[idx].split("\\$");
-//			board.setCountrycode(location[0]);
-//			if(idx==0) {
-//				board.setRegionname(krregions[random.nextInt(8)]);
-//			} else {
-//				board.setRegionname(location[1]);
-//			}
-//			
-//			if(bmapper.insertBoard(board)==1) {
-//				int coin = random.nextInt(3);
-//				if(coin==0) {
-//					continue;
-//				} else {
-//					BoardFileDTO bfile = new BoardFileDTO();
-//					bfile.setBoardnum(i+1);
-//					bfile.setSysname("BoardThumnail"+(random.nextInt(4)+1)+".png");
-//					bfile.setOrgname("image"+i+".png");
-//					bmapper.insertFile(bfile);
-//				}
-//			}
-//		}
+		for(int i=0; i<3000; i++) {
+			BoardDTO board = new BoardDTO();
+			board.setUserid(userid[random.nextInt(5)]);
+			board.setTitle((i+1)+"번째 게시글!");
+			board.setContent((i+1)+"번째 게시글의 내용!");
+			int idx = random.nextInt(7);
+			String[] location = countrycodes[idx].split("\\$");
+			board.setCountrycode(location[0]);
+			if(idx==0) {
+				board.setRegionname(krregions[random.nextInt(8)]);
+			} else {
+				board.setRegionname(location[1]);
+			}
+			
+			if(bmapper.insertBoard(board)==1) {
+				int coin = random.nextInt(3);
+				if(coin==0) {
+					continue;
+				} else {
+					BoardFileDTO bfile = new BoardFileDTO();
+					bfile.setBoardnum(i+1);
+					bfile.setSysname("BoardThumnail"+(random.nextInt(4)+1)+".png");
+					bfile.setOrgname("image"+i+".png");
+					bmapper.insertFile(bfile);
+				}
+			}
+		}
 		
 		//패키지
 		//삽입 후에 update package set visibility='O' where packagenum>0; 수행
-//		for(int i=0; i<4000; i++) {
-//			PackageDTO pack = new PackageDTO();
-//			int idx = random.nextInt(7);
-//			String[] location = countrycodes[idx].split("\\$");
-//			pack.setCountrycode(location[0]);
-//			if(idx==0) {
-//				pack.setRegionname(krregions[random.nextInt(8)]);
-//			} else {
-//				pack.setRegionname(location[1]);
-//			}
-//			pack.setGuidenum((random.nextInt(2)+1));
-//			pack.setPackageTitle((i+1)+"번째 패키지!");
-//			pack.setPackageContent(location[1]+"으로 떠나는 \n"+(i+1)+"번째 패키지 내용입니다. ");
-//			pack.setMaxcnt(random.nextInt(9)+20);
-//			pack.setAdultPrice(100*(random.nextInt(4000)+1));
-//			pack.setChildPrice(100*(random.nextInt(4000)+1));
-//			int month = random.nextInt(12)+1;
-//			String monthstring = "";
-//			if(month<10) {
-//				monthstring="0"+month;
-//			} else {
-//				monthstring=""+month;
-//			}
-//			int day = random.nextInt(28)+1;
-//			String daystring = "";
-//			if(day<10) {
-//				daystring = "0"+day;
-//			} else {
-//				daystring = ""+day;
-//			}
-//			String startdate = "2024-"+monthstring+"-"+daystring;
-//			pack.setStartdate(startdate);
-//			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//			LocalDate date = LocalDate.parse(startdate, formatter);
-//			System.out.println(date);
-//			int tourdate = random.nextInt(20)+5;
-//			LocalDate localenddate = date.plus(tourdate, ChronoUnit.DAYS);
-//			String enddate = localenddate.format(formatter);
-//			LocalDate loocaldeadline = date.minus(7, ChronoUnit.DAYS);
-//			String deadline = loocaldeadline.format(formatter);
-//			pack.setEnddate(enddate);
-//			pack.setDeadline(deadline);
-//			pack.setVisibility("O");
-//			
-//			if(pmapper.insertPack(pack)==1) {
-//				int coin = random.nextInt(3);
-//				if(coin==0) {
-//					PackageFileDTO pfile = new PackageFileDTO();
-//					pfile.setPackagenum(i+1);
-//					pfile.setPfSysname("defaultimg.jpg");
-//					pfile.setPfOrgname("defaultimg.jpg");
-//					pfilemapper.insertFile(pfile);
-//				} else {
-//					PackageFileDTO pfile = new PackageFileDTO();
-//					pfile.setPackagenum(i+1);
-//					pfile.setPfSysname("pakcagededummy"+coin+".jpg");
-//					pfile.setPfOrgname("pakcagededummy"+coin+".jpg");
-//					pfilemapper.insertFile(pfile);
-//				}
-//			}
-//		}
+		for(int i=0; i<4000; i++) {
+			PackageDTO pack = new PackageDTO();
+			int idx = random.nextInt(7);
+			String[] location = countrycodes[idx].split("\\$");
+			pack.setCountrycode(location[0]);
+			if(idx==0) {
+				pack.setRegionname(krregions[random.nextInt(8)]);
+			} else {
+				pack.setRegionname(location[1]);
+			}
+			pack.setGuidenum((random.nextInt(2)+1));
+			pack.setPackageTitle((i+1)+"번째 패키지!");
+			pack.setPackageContent(location[1]+"으로 떠나는 \n"+(i+1)+"번째 패키지 내용입니다. ");
+			pack.setMaxcnt(random.nextInt(9)+20);
+			pack.setAdultPrice(100*(random.nextInt(4000)+1));
+			pack.setChildPrice(100*(random.nextInt(4000)+1));
+			int month = random.nextInt(12)+1;
+			String monthstring = "";
+			if(month<10) {
+				monthstring="0"+month;
+			} else {
+				monthstring=""+month;
+			}
+			int day = random.nextInt(28)+1;
+			String daystring = "";
+			if(day<10) {
+				daystring = "0"+day;
+			} else {
+				daystring = ""+day;
+			}
+			String startdate = "2024-"+monthstring+"-"+daystring;
+			pack.setStartdate(startdate);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate date = LocalDate.parse(startdate, formatter);
+			System.out.println(date);
+			int tourdate = random.nextInt(20)+5;
+			LocalDate localenddate = date.plus(tourdate, ChronoUnit.DAYS);
+			String enddate = localenddate.format(formatter);
+			LocalDate loocaldeadline = date.minus(7, ChronoUnit.DAYS);
+			String deadline = loocaldeadline.format(formatter);
+			pack.setEnddate(enddate);
+			pack.setDeadline(deadline);
+			pack.setVisibility("O");
+			
+			if(pmapper.insertPack(pack)==1) {
+				int coin = random.nextInt(3);
+				if(coin==0) {
+					PackageFileDTO pfile = new PackageFileDTO();
+					pfile.setPackagenum(i+1);
+					pfile.setPfSysname("defaultimg.jpg");
+					pfile.setPfOrgname("defaultimg.jpg");
+					pfilemapper.insertFile(pfile);
+				} else {
+					PackageFileDTO pfile = new PackageFileDTO();
+					pfile.setPackagenum(i+1);
+					pfile.setPfSysname("pakcagededummy"+coin+".jpg");
+					pfile.setPfOrgname("pakcagededummy"+coin+".jpg");
+					pfilemapper.insertFile(pfile);
+				}
+			}
+		}
 		
+		//reservation
 		//pcount = 데이터베이스의 총 패키지 갯수
 		int pcount = 4000;
-//		for (int i = 1; i<=4000; i++) {
-//			for (String id : userid) {
-//				int coin = random.nextInt(2);
-//				if(coin==0) {
-//					System.out.println("no reservation");
-//				} else {
-//					System.out.println(id+": apply package");
-//					ReservationDTO reservation = new ReservationDTO();
-//					reservation.setPackagenum(i);
-//					reservation.setUserid(id);
-//					reservation.setAdultCnt(random.nextInt(2)+1);
-//					reservation.setChildCnt(random.nextInt(3));
-//					reservation.setPhone("01012345678");
-//					reservation.setEmail(id+"1212@gmail.com");
-//					reservation.setKeycode("dummyKeycode");
-//					reservation.setIsDelete(0);
-//					reservation.setPrice("dummyPrice");
-//					reservation.setPayMethod("카드");
-//					reservation.setName("회원");
-//					
-//					pmapper.saveReservationForMember(reservation);
-//				}
-//			}			
-//		}
+		for (int i = 1; i<=4000; i++) {
+			for (String id : userid) {
+				int coin = random.nextInt(2);
+				if(coin==0) {
+					System.out.println("no reservation");
+				} else {
+					System.out.println(id+": apply package");
+					ReservationDTO reservation = new ReservationDTO();
+					reservation.setPackagenum(i);
+					reservation.setUserid(id);
+					reservation.setAdultCnt(random.nextInt(2)+1);
+					reservation.setChildCnt(random.nextInt(3));
+					reservation.setPhone("01012345678");
+					reservation.setEmail(id+"1212@gmail.com");
+					reservation.setKeycode("dummyKeycode");
+					reservation.setIsDelete(0);
+					reservation.setPrice("dummyPrice");
+					reservation.setPayMethod("카드");
+					reservation.setName("회원");
+					
+					pmapper.saveReservationForMember(reservation);
+				}
+			}			
+		}
 		
-//		for (String id : userid) {
-//			List<Long> pnumlist = umapper.getAllPackagenumInReservation(id, pcount); 
-//			for (Long pnum : pnumlist) {
-//				int coin = random.nextInt(2);
-//				
-//				if(coin==0) {
-//					System.out.println(id+": no review");
-//					continue;
-//				} else {
-//					System.out.println(id:+": add review");
-//					PackageDTO pack = pmapper.getPackageByPackageNum(pnum);
-//					
-//					ReviewDTO review = new ReviewDTO();
-//					review.setPackagenum(pack.getPackagenum());
-//					review.setUserid(id);
-//					review.setGuidenum(pack.getGuidenum());
-//					review.setContents(id+"의 "+pack.getPackagenum()+"번 패키지 리뷰");
-//					
-//					int emcoin = random.nextInt(3);
-//					if(emcoin==0) {
-//						review.setEmSysname("");
-//					} else {
-//						review.setEmSysname((random.nextInt(20)+1)+".png");
-//					}
-//					
-//					umapper.addHugi(review);
-//				}
-//				
-//			}
-//		}
+		//review
+		for (String id : userid) {
+			List<Long> pnumlist = umapper.getAllPackagenumInReservation(id, pcount); 
+			for (Long pnum : pnumlist) {
+				int coin = random.nextInt(2);
+				
+				if(coin==0) {
+					System.out.println(id+": no review");
+					continue;
+				} else {
+					System.out.println(id+": add review");
+					PackageDTO pack = pmapper.getPackageByPackageNum(pnum);
+					
+					ReviewDTO review = new ReviewDTO();
+					review.setPackagenum(pack.getPackagenum());
+					review.setUserid(id);
+					review.setGuidenum(pack.getGuidenum());
+					review.setContents(id+"의 "+pack.getPackagenum()+"번 패키지 리뷰");
+					
+					int emcoin = random.nextInt(3);
+					if(emcoin==0) {
+						review.setEmSysname("");
+					} else {
+						review.setEmSysname((random.nextInt(20)+1)+".png");
+					}
+					
+					umapper.addHugi(review);
+				}
+				
+			}
+		}
 		
+		//reply
 		//bcount = 보드의 갯수
-//		int bcount = 3000;
-//		for (int i=1; i<=3000; i++) {
-//			for (String id : userid) {
-//				int coin = random.nextInt(2);
-//				
-//				if(coin==0) {
-//					System.out.println(id+"는 "+i+"번 게시글에 댓글을 달지 않았습니다");
-//					continue;
-//				} else {
-//					System.out.println(id+"가 "+i+"번 게시글에 댓글을 달았습니다");
-//					BoardReplyDTO reply = new BoardReplyDTO();
-//					
-//					reply.setBoardnum(i);
-//					reply.setContents(id+"의 "+i+"번 게시글에 단 댓글");
-//					reply.setUserid(id);
-//					
-//					int emcoin = random.nextInt(3);
-//					if(emcoin==0) {
-//						reply.setEmSysname("");
-//					} else {
-//						reply.setEmSysname((random.nextInt(20)+1)+".png");
-//					} 
-//					
-//					brmapper.insertReply(reply);
-//				}
-//			}
-//		}
+		int bcount = 3000;
+		for (int i=1; i<=3000; i++) {
+			for (String id : userid) {
+				int coin = random.nextInt(2);
+				
+				if(coin==0) {
+					System.out.println(id+"는 "+i+"번 게시글에 댓글을 달지 않았습니다");
+					continue;
+				} else {
+					System.out.println(id+"가 "+i+"번 게시글에 댓글을 달았습니다");
+					BoardReplyDTO reply = new BoardReplyDTO();
+					
+					reply.setBoardnum(i);
+					reply.setContents(id+"의 "+i+"번 게시글에 단 댓글");
+					reply.setUserid(id);
+					
+					int emcoin = random.nextInt(3);
+					if(emcoin==0) {
+						reply.setEmSysname("");
+					} else {
+						reply.setEmSysname((random.nextInt(20)+1)+".png");
+					} 
+					
+					brmapper.insertReply(reply);
+				}
+			}
+		}
 		
 		return true;
 	}

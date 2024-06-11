@@ -97,7 +97,7 @@ public class UserController {
 		//썸네일 가져오기
 		String loginUser = (String)session.getAttribute("loginUser");
 		String thumbnail = service.getProfileImgName(loginUser);
-		long guidenum = (int) session.getAttribute("guideNum");
+		long guidenum = (long) session.getAttribute("guideNum");
 		
 		model.addAttribute("thumbnail", thumbnail);
 		
@@ -527,7 +527,7 @@ public class UserController {
 			if(guide!=null) {
 				session.setAttribute("guideNum", guide.getGuidenum());				
 			} else {
-				session.setAttribute("guideNum", 0);				
+				session.setAttribute("guideNum", (long)0);				
 			}
 			
 			System.out.println("login 가이드검사 : " +session.getAttribute("guideNum"));
