@@ -149,4 +149,8 @@
 	<select id="getAllPackagenumInReservation">
 		select packagenum from reservation where userid=#{userid} limit 0, #{pcount};
 	</select>
+	<delete id="deleteFutureReview">
+		DELETE FROM review
+		WHERE packagenum IN (SELECT packagenum FROM package WHERE enddate &gt; NOW());
+	</delete>
 </mapper>

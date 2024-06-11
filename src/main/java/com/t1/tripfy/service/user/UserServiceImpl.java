@@ -521,10 +521,13 @@ public class UserServiceImpl implements UserService{
 			}
 		}
 		
+		//미래의 리뷰 없애기
+		umapper.deleteFutureReview();
+		
 		//reply
 		//bcount = 보드의 갯수
 		int bcount = 3000;
-		for (int i=1; i<=3000; i++) {
+		for (int i=1; i<=bcount; i++) {
 			for (String id : userid) {
 				int coin = random.nextInt(2);
 				
@@ -547,6 +550,7 @@ public class UserServiceImpl implements UserService{
 					} 
 					
 					brmapper.insertReply(reply);
+					bmapper.addReplyCnt(i);
 				}
 			}
 		}
