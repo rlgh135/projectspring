@@ -203,11 +203,31 @@
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places&v=weekly"
 	defer></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/js/user/user.js"></script>
 <script>
 	const mapwrap = document.getElementById("mapwrap");
 	function openMap() {
 		mapwrap.classList.toggle("hidemap");
+	}
+	
+	let checker = "";
+	let pcheck = false;
+	function sendmsg(){
+		let phonenumber = $("#phone").val();
+		$.ajax({
+			url: "/sendsms/checker?phonenumber"+phonenumber,
+			method: "POST",
+			
+			success:function(responseString){
+				checker = responseString;
+				console.log("통신결과 문자열:"+responseString);
+			},
+			
+			error:function(){
+				console.log("통신에러");
+			}
+		})
 	}
 </script>
 
