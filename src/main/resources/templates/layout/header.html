@@ -109,7 +109,7 @@
 									<button id="" onclick="myinfog()">내 정보</button>
 								</div>
 								<div>
-									<button id="">게시글 작성</button>
+									<button id="" onclick="boardwrite();">게시글 작성</button>
 								</div>
 								<div th:if="${session.guideNum != 0}">
 									<button id="modalOpenButton">패키지 작성</button>
@@ -150,6 +150,19 @@
 		}
 		function myinfog(){
 			location.href="/user/myinfo";
+		}
+		
+		function boardwrite() {
+			let loginUser = /*[[${session.loginUser}]]*/"";  // 세션에 있는 loginUser
+			console.log(loginUser)
+		
+			if(loginUser == null) {
+				showAlertModal(2, "로그인 후 이용 가능합니다");
+			}
+			
+			else {
+				location.href = "/board/write";
+			}
 		}
 	</script>
 	

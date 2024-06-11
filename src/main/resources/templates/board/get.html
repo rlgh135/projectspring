@@ -496,11 +496,11 @@ let thispage = 1;
 
 	
 	function deleteBoard(boardnum) {
-		location.replace("/board/remove?boardnum=" + boardnum);
+		location.href = "/board/remove?boardnum=" + boardnum;
 	}
 	
 	function modifyBoard(boardnum) {	
-		location.replace("/board/modify?boardnum=" + boardnum);
+		location.href = "/board/modify?boardnum=" + boardnum;
 	}
 	
 	$("#like_area").on("click", function() {

@@ -175,11 +175,11 @@
 			-->
             <a class="changePage b_nextbtn" th:id="${pageMaker.cri.pagenum + 1}" th:href="${pageMaker.cri.pagenum + 1}"></a>
         </div>
-		
+		<!--
 		<div class="writebtn">
 		    <input type="button" value="" onclick="boardwrite();">
 		</div>
-		
+		-->
 		<input type="hidden" id="startPage" th:value="${pageMaker.startPage}">
 		<input type="hidden" id="realEndPage" th:value="${pageMaker.realEnd}">
 		<input type="hidden" id="pagenum" th:value="${pageMaker.cri.pagenum}">
@@ -1743,10 +1743,10 @@
 		
 	}
 
-	function boardwrite() {
-		let loginUser = /*[[${session.loginUser}]]*/"";  // 세션에 있는 loginUser
-		console.log(loginUser)
-		
+	// function boardwrite() {
+		// let loginUser = /*[[${session.loginUser}]]*/"";  // 세션에 있는 loginUser
+		// console.log(loginUser)
+		/*
 		if(loginUser == null) {
 			showAlertModal(2, "로그인 후 이용 가능합니다");
 		}
@@ -1755,7 +1755,7 @@
 			location.replace("/board/write")
 		}
 	}
-	
+	*/
 	
 	// function like(e) {
 		// let loginUser = /*[[${session.loginUser}]]*/"";

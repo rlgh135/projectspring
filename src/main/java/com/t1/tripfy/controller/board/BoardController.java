@@ -383,7 +383,7 @@ public class BoardController {
 	
 	
 	@GetMapping("write")
-	public void boardwrite() {}
+	public String boardwrite() {return "/board/write";}
 	
 	@PostMapping("write")
 	public String insertBoard(BoardDTO board, BoardaddrDTO boardaddr, MultipartFile[] files, Criteria cri) throws Exception {
