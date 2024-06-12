@@ -561,4 +561,8 @@ public class UserServiceImpl implements UserService{
 		
 		return true;
 	}
+	@Override
+	public List<PackageDTO> getLikePackageList(Criteria cri, String userid) {
+		return umapper.getLikePackage(cri, userid);
+	}
 }
