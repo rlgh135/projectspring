@@ -154,7 +154,7 @@
 		WHERE packagenum IN (SELECT packagenum FROM package WHERE enddate &gt; NOW());
 	</delete>
 	<!-- 찜 추가-->
-	<select id="getPackageLikes">
+	<select id="getLikePackage">
 		select p.*
 		from package p
 		join (
