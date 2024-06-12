@@ -97,76 +97,167 @@
 	</select>
 	
 	<select id="getDetailRegionList">
-    <![CDATA[
-    select * from package
-    where
-    startdate <= #{enddate}
-    and enddate >= #{startdate}
-    and maxcnt >= #{maxcnt}
-    and regionname = #{regionname}
-    and visibility = 'O'
-    AND startdate > CURDATE()
-    and (
-        startdate >= #{startdate} and enddate <= #{enddate}
-    )
-    limit #{startrow}, #{amount}
-    ]]>
+	    <![CDATA[
+	    select * from package
+	    where
+	    visibility = 'O'
+	    AND startdate > CURDATE()
+	    ]]>
+	    <if test="startdate != null and enddate != null">
+	        <![CDATA[
+	        and startdate <= #{enddate}
+	        and enddate >= #{startdate}
+	        and startdate >= #{startdate}
+	        and enddate <= #{enddate}
+	        ]]>
+	    </if>
+	    <if test="countrycode == 'kr'">
+        <![CDATA[
+        and countrycode = 'kr'
+        ]]>
+    	</if>
+    	<if test="countrycode != 'kr'">
+        <![CDATA[
+        and countrycode != 'kr'
+        ]]>
+    	</if>
+	    <if test="regionname != null">
+	        <![CDATA[
+	        and regionname = #{regionname}
+	        ]]>
+	    </if>
+	    <if test="maxcnt != null">
+	        <![CDATA[
+	        and maxcnt >= #{maxcnt}
+	        ]]>
+	    </if>
+	    <![CDATA[
+	    limit #{startrow}, #{amount}
+	    ]]>
 	</select>
+	
 	<select id="SortListByPrice">
-	<![CDATA[
-    select * from package
-    where
-    startdate <= #{enddate}
-    and enddate >= #{startdate}
-    and maxcnt >= #{maxcnt}
-    and regionname = #{regionname}
-    and visibility = 'O'
-    AND startdate > CURDATE()
-    and (
-        startdate >= #{startdate} and enddate <= #{enddate}
-    )
-    order by adult_price asc
-    limit #{startrow}, #{amount}
-    ]]>
+	    <![CDATA[
+	    select * from package
+	    where
+	    visibility = 'O'
+	    AND startdate > CURDATE()
+	    ]]>
+	    <if test="startdate != null and enddate != null">
+	        <![CDATA[
+	        and startdate <= #{enddate}
+	        and enddate >= #{startdate}
+	        and startdate >= #{startdate}
+	        and enddate <= #{enddate}
+	        ]]>
+	    </if>
+	    <if test="countrycode == 'kr'">
+        <![CDATA[
+        and countrycode = 'kr'
+        ]]>
+    	</if>
+    	<if test="countrycode != 'kr'">
+        <![CDATA[
+        and countrycode != 'kr'
+        ]]>
+    	</if>
+	    <if test="regionname != null">
+	        <![CDATA[
+	        and regionname = #{regionname}
+	        ]]>
+	    </if>
+	    <if test="maxcnt != null">
+	        <![CDATA[
+	        and maxcnt >= #{maxcnt}
+	        ]]>
+	    </if>
+	    <![CDATA[
+    	order by adult_price asc
+    	limit #{startrow}, #{amount}
+    	]]>
 	</select>
 
 
 	<select id="SortListByPop">
-	<![CDATA[
-    select * from package
-    where
-    startdate <= #{enddate}
-    and enddate >= #{startdate}
-    and maxcnt >= #{maxcnt}
-    and regionname = #{regionname}
-    and visibility = 'O'
-    AND startdate > CURDATE()
-    and (
-        startdate >= #{startdate} and enddate <= #{enddate}
-    )
-    order by viewcnt desc
-    limit #{startrow}, #{amount}
-    ]]>
+	    <![CDATA[
+	    select * from package
+	    where
+	    visibility = 'O'
+	    AND startdate > CURDATE()
+	    ]]>
+	    <if test="startdate != null and enddate != null">
+	        <![CDATA[
+	        and startdate <= #{enddate}
+	        and enddate >= #{startdate}
+	        and startdate >= #{startdate}
+	        and enddate <= #{enddate}
+	        ]]>
+	    </if>
+	    <if test="countrycode == 'kr'">
+        <![CDATA[
+        and countrycode = 'kr'
+        ]]>
+    	</if>
+    	<if test="countrycode != 'kr'">
+        <![CDATA[
+        and countrycode != 'kr'
+        ]]>
+    	</if>
+	    <if test="regionname != null">
+	        <![CDATA[
+	        and regionname = #{regionname}
+	        ]]>
+	    </if>
+	    <if test="maxcnt != null">
+	        <![CDATA[
+	        and maxcnt >= #{maxcnt}
+	        ]]>
+	    </if>
+	    <![CDATA[
+    	order by viewcnt desc
+    	limit #{startrow}, #{amount}
+    	]]>
 	</select>	
 	<!--여기까지-->
 	
 	<select id="getTotal">
-	<![CDATA[
-    select count(*) from package
-    where
-    startdate <= #{enddate}
-    and enddate >= #{startdate}
-    and maxcnt >= #{maxcnt}
-    and regionname = #{regionname}
-    and visibility = 'O'
-  	AND startdate > CURDATE()
-    and (
-        startdate >= #{startdate} and enddate <= #{enddate}
-    )
-	and packagenum > 0
-    ]]>
-		
+	    <![CDATA[
+	    select count(*) from package
+	    where visibility = 'O'
+	    AND startdate > CURDATE()
+	    ]]>
+	    <if test="startdate != null and enddate != null">
+	        <![CDATA[
+	        and startdate <= #{enddate}
+	        and enddate >= #{startdate}
+	        ]]>
+	    </if>
+	    <if test="countrycode == 'kr'">
+        <![CDATA[
+        and countrycode = 'kr'
+        ]]>
+    	</if>
+    	<if test="countrycode != 'kr'">
+        <![CDATA[
+        and countrycode != 'kr'
+        ]]>
+    	</if>
+	    <if test="regionname != null">
+	        <![CDATA[
+	        and regionname = #{regionname}
+	        ]]>
+	    </if>
+	    <if test="maxcnt != null">
+	        <![CDATA[
+	        and maxcnt >= #{maxcnt}
+	        ]]>
+	    </if>
+	    <![CDATA[
+	    and packagenum > 0
+	    ]]>
 	</select>
+
+
 	
 	<select id="getLastNum">
 		select max(packagenum) from package where guidenum=#{guidenum}

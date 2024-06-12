@@ -282,19 +282,22 @@
         target.classList.toggle("hide");
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const prButtons = document.querySelectorAll(".pr_list button");
-        prButtons.forEach(function(button) {
-            button.addEventListener("click", function() {
-                const countText = this.textContent.trim(); // 버튼의 텍스트를 가져옴
-                const count = parseInt(countText.match(/\d+/)[0]); // 숫자만 추출하여 정수로 변환
-                const personCountSpan = document.getElementById("personCount");
-                personCountSpan.textContent = count + "명"; // 인원 수 업데이트
-                document.getElementById("personInput").value = count; // 폼에 인원 수 업데이트
-                document.getElementById("personInputForm").value = count; // 검색 폼에 인원 수 업데이트
-                openper(); // perlist 닫기
-            });
-        });
+	document.addEventListener("DOMContentLoaded", function() {
+	        const prButtons = document.querySelectorAll(".pr_list button");
+	        prButtons.forEach(function(button) {
+	            button.addEventListener("click", function() {
+	                const countText = this.textContent.trim(); // 버튼의 텍스트를 가져옴
+	                const count = parseInt(countText.match(/\d+/)[0]); // 숫자만 추출하여 정수로 변환
+	                const personCountSpan = document.getElementById("personCount");
+	                personCountSpan.textContent = count + "명"; // 인원 수 업데이트
+					document.getElementById("personInput").value = count; // 폼에 인원 수 업데이트, 기본값 1
+					document.getElementById("personInputForm").value = count;
+					openper(); // perlist 닫기
+	            });
+	        });
+		const defaultPersonCount = 1;
+		document.getElementById("personInput").value = defaultPersonCount;
+		document.getElementById("personInputForm").value = defaultPersonCount;
 
 		const dlButtons = document.querySelectorAll(".RightDepth1");
 		dlButtons.forEach(function(button) {
@@ -329,15 +332,7 @@
         const endDate = document.getElementById("endDateInput").value;
         const personCount = document.getElementById("personInput").value;
 
-        if (!destination) {
-            alert("여행 목적지를 선택하세요.");
-            return false;
-        }
 
-        if (!startDate || !endDate) {
-            alert("여행 날짜를 선택하세요.");
-            return false;
-        }
 
         if (!personCount) {
             alert("인원 수를 선택하세요.");

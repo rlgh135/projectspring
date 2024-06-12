@@ -156,9 +156,13 @@ public class PackController {
 	
 	@GetMapping(value={"plist","abroadlist"})
 	public void list(Criteria cri, Model model) {
+	    cri.normalize(); // 빈 문자열을 null로 변환
+
 	    System.out.println(cri);
+	    
 	    List<PackageFileDTO> allfiles = new ArrayList<>();
 	    List<PackageDTO> list;
+
 	    // 페이지 정보 추가
 	    PageDTO pageMaker = new PageDTO(service.getTotal(cri), cri);
 
@@ -190,15 +194,15 @@ public class PackController {
 	        allfiles.addAll(lfile);
 	        allReserves.addAll(reserve);
 	    }
-	    
-
 
 	    // 모델에 추가
 	    model.addAttribute("file", allfiles);
 	    model.addAttribute("list", list);
+	    System.out.println(list);
 	    model.addAttribute("reserve", allReserves);
 	    model.addAttribute("pageMaker", pageMaker);
 	}
+
 
 	
 	@GetMapping(value={"pget", "pmodify"})
