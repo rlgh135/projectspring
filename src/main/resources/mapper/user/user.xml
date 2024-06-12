@@ -158,4 +158,16 @@
 		DELETE FROM review
 		WHERE packagenum IN (SELECT packagenum FROM package WHERE enddate &gt; NOW());
 	</delete>
+	<!-- 찜 추가-->
+	<select id="getLikePackage">
+		select p.*
+		from package p
+		join (
+		    SELECT packagenum
+		    FROM package_like
+		    WHERE userid = #{userid}
+		    ORDER BY packagenum DESC
+		    LIMIT #{cri.startrow}, #{cri.amount}
+		) pl ON p.packagenum = pl.packagenum
+	</select>
 </mapper>

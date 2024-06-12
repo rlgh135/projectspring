@@ -109,7 +109,7 @@ public class UserDataController {
 			datas.put("packagelist", packagelist);
 			
 		} else if(when.equals("after")) {
-			List<PackageDTO> packagelist = service.getDonePack(cri, userid);
+			List<PackageDTO> packagelist = service.getLikePackageList(cri, userid);
 			if(packagelist.size()>0) {
 				for (PackageDTO pack : packagelist) {
 					pflist.add(service.getPackThumbnail(pack.getPackagenum()));
@@ -128,6 +128,7 @@ public class UserDataController {
 		
 		return datas;
 	}
+	
 	
 	@GetMapping("mypackage")
 	@ResponseBody

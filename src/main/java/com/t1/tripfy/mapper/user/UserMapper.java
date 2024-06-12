@@ -46,7 +46,7 @@ public interface UserMapper {
 	Integer getTotalBoardCnt(String userid);
 	Integer getTotalReplyCnt(String userid);
 	List<Long> getAllPackagenumInReservation(String userid, int pcount);
-	
+	List<PackageDTO> getLikePackage(Criteria cri, String userid);
 	
 	//U
 	int updateUser(UserDTO user);

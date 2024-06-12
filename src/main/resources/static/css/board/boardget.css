@@ -431,7 +431,7 @@
 	   position: relative;
 	}
 	.reply_area .comment_attach img, .reply .modify_comment_attach img{
-	   width:100px; height:100px;
+	   width:80px; height:80px;
 	}
 	.reply_area .comment_attach .emoticon-close-btn{
 	   position: absolute;
@@ -492,6 +492,7 @@
 	    outline: none;
 	}
 	.emoji-picker, .modify-emoji-picker{
+		width: 400px;
 	     position: absolute;
 	     border: 1px solid #ccc;
 	     background: #fff;

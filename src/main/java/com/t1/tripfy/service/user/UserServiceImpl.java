@@ -448,6 +448,7 @@ public class UserServiceImpl implements UserService{
 			String enddate = localenddate.format(formatter);
 			LocalDate loocaldeadline = date.minus(7, ChronoUnit.DAYS);
 			String deadline = loocaldeadline.format(formatter);
+			pack.setTourdays(tourdate+1);
 			pack.setEnddate(enddate);
 			pack.setDeadline(deadline);
 			pack.setVisibility("O");
@@ -555,7 +556,7 @@ public class UserServiceImpl implements UserService{
 					if(emcoin==0) {
 						reply.setEmSysname("");
 					} else {
-						reply.setEmSysname((random.nextInt(20)+1)+".png");
+						reply.setEmSysname((random.nextInt(20)+1)+"");
 					} 
 					
 					brmapper.insertReply(reply);
@@ -565,5 +566,9 @@ public class UserServiceImpl implements UserService{
 		}
 		
 		return true;
+	}
+	@Override
+	public List<PackageDTO> getLikePackageList(Criteria cri, String userid) {
+		return umapper.getLikePackage(cri, userid);
 	}
 }

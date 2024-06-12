@@ -72,4 +72,5 @@ public interface UserService {
 	Integer getTotalBoardCnt(String userid);
 	Integer getTotalReplyCnt(String userid);
 	List<ReservationDTO> getMyReservationRecentTwoWeek(Criteria cri, String userid);
+	List<PackageDTO> getLikePackageList(Criteria cri, String userid);
 }

@@ -47,6 +47,30 @@ public class Criteria {
 		
 		return builder.toUriString();
 	}
+	 public void normalize() {
+	        if (startdate != null && startdate.isEmpty()) {
+	            startdate = null;
+	        }
+	        if (enddate != null && enddate.isEmpty()) {
+	            enddate = null;
+	        }
+	        if (regionname != null && regionname.isEmpty()) {
+	            regionname = null;
+	        }
+	        if (countrycode != null && countrycode.isEmpty()) {
+	            countrycode = null;
+	        }
+	        if (type != null && type.isEmpty()) {
+	            type = null;
+	        }
+	        if (keyword != null && keyword.isEmpty()) {
+	            keyword = null;
+	        }
+	        if (orderBy != null && orderBy.isEmpty()) {
+	            orderBy = null;
+	        }
+	     
+	    }
 }
 
 
