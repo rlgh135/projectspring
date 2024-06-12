@@ -129,6 +129,10 @@ CREATE TABLE `package` (
   /*아래 컬럼이O이면 패키지리스트에 띄우고 x면 안띄울겁니다*/
   `Visibility` varchar(3) default 'x'
 );
+create table package_like (
+	`packagenum` bigint,
+    `userid` varchar(300)
+);
 
 CREATE TABLE `timeline` (
   `timelinenum` bigint PRIMARY KEY AUTO_INCREMENT,
