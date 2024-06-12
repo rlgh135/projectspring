@@ -396,6 +396,7 @@
         }
 		.ccbody-loading {
 			position: relative;
+			margin-bottom: 20px;
 		}
 		.ccbody-loading::after {
 			content: "";
@@ -476,6 +477,9 @@
             position: relative;
         }
 
+		.ccbody-timestamp {
+			margin-bottom: 20px;
+		}
         .ccbody-timestamp.ccbody-left::after {
             content: attr(data-timestamp);
     
@@ -495,67 +499,63 @@
             bottom: 0px;
         }
 
-        /* 꼬리표 */
-        .ccbody-tail.ccbody-left::before {
-            content: "";
-            width: 0; height: 0;
+		/* 꼬리표, (ccbody-left의 경우)상대 사용자 이미지, userid */
+		/*ccbody-left 꼬리표*/
+		.ccbody-head.ccbody-left::before {
+			content: "";
+			width: 0; height: 0;
 
-            position: absolute;
-            top: -10px; left: -13px;
+			position: absolute;
+			top: -10px; left: -13px;
 
-            transform: rotate(45deg);
+			transform: rotate(45deg);
 
-            border-top: 10px solid transparent;
-            border-right: 17px solid lightsalmon;
-            border-bottom: 10px solid transparent;
-            border-left: 10px solid transparent;
-        }
-        .ccbody-tail.ccbody-right::before {
-            content: "";
-            width: 0; height: 0;
-            
-            position: absolute;
-            top: -10px; right: -13px;
+			border-top: 10px solid transparent;
+			border-right: 17px solid lightsalmon;
+			border-bottom: 10px solid transparent;
+			border-left: 10px solid transparent;
+		}
+		/*ccbody-right 꼬리표*/
+		.ccbody-head.ccbody-right::before {
+			content: "";
+			width: 0; height: 0;
+			
+			position: absolute;
+			top: -10px; right: -13px;
 
-            transform: rotate(-45deg);
-                
-            border-top: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-left: 17px solid lightsalmon;
-        }
-
-        /* 상대 사용자 이미지, userid */
-		.ccbody-head {
+			transform: rotate(-45deg);
+				
+			border-top: 10px solid transparent;
+			border-right: 10px solid transparent;
+			border-bottom: 10px solid transparent;
+			border-left: 17px solid lightsalmon;
+		}
+		/*ccbody-left 최상단 띄우기*/
+		.ccbody-left.ccbody-head {
 			margin-top: 40px;
 		}
-        /*이미지*/
-        .ccbody-left.ccbody-head>div:first-child {
-            position: absolute;
-            top: -22px; left: -42.5px;
+		/*ccbody-left 최상단 이미지*/
+		.ccbody-left.ccbody-head>div:first-child {
+			position: absolute;
+			top: -22px; left: -42.5px;
 
-            width: 35px; height: 35px;
+			width: 35px; height: 35px;
 
-            border-radius: 10px/10px;
+			border-radius: 10px/10px;
 
-            /* background-image: url("../../static/images/layoutimg/logo.png"); */
-            background-size: cover;
-            background-color: lightsalmon;
-        }
-        /*유저아이디*/
-        .ccbody-left.ccbody-head>div:nth-child(2) {
-            width: max-content;
+			/* background-image: url("../../static/images/layoutimg/logo.png"); */
+			background-size: cover;
+			background-color: lightsalmon;
+		}
+		/*ccbody-left 최상단 유저아이디*/
+		.ccbody-left.ccbody-head>div:nth-child(2) {
+			width: max-content;
 
-            position: absolute;
-            top: -25px; left: 0px;
+			position: absolute;
+			top: -25px; left: 0px;
 
-            font-size: 12px;
-        }
-
-        /* 채팅 마지막 끊기 */
-        .ccbody-lastchat {
-            margin-bottom: 20px;
-        }
+			font-size: 12px;
+		}
         
 
         /* 요소 숨기기 */
@@ -672,12 +672,12 @@
                                 <p>2024년 06월 11일 화요일</p>
                             </div>
 
-                            <div id="ccbodyele-12" class="ccbody-left ccbody-timestamp ccbody-tail ccbody-head ccbody-lastchat" data-timestamp="14:53">
+                            <div id="ccbodyele-12" class="ccbody-left ccbody-timestamp ccbody-head ccbody-lastchat" data-timestamp="14:53">
                                 <div></div>
                                 <div>qwertaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay</div>
                                 <p>쀍bcd</p>
                             </div>
-                            <div id="ccbodyele-13" class="ccbody-right ccbody-tail" data-timestamp="15:30">
+                            <div id="ccbodyele-13" class="ccbody-right ccbody-head" data-timestamp="15:30">
                                 <p>가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하</p>
                             </div>
                             <div id="ccbodyele-13" class="ccbody-right" data-timestamp="15:30">
@@ -689,7 +689,7 @@
                             <div class="ccbody-date">
                                 <p>2024년 12월 12일 땡요일</p>
                             </div>
-                            <div id="ccbodyele-13" class="ccbody-right" data-timestamp="15:30">
+                            <div id="ccbodyele-13" class="ccbody-right ccbody-head" data-timestamp="15:30">
                                 <p>가나다라마바사아자차카타파하</p>
                             </div>
                             <div id="ccbodyele-13" class="ccbody-right" data-timestamp="15:30">
@@ -698,7 +698,7 @@
                             <div id="ccbodyele-13" class="ccbody-right ccbody-timestamp ccbody-lastchat" data-timestamp="15:30">
                                 <p>가나다라마바사아자차카타파하</p>
                             </div>
-                            <div id="ccbodyele-50" class="ccbody-left ccbody-tail ccbody-head" data-timestamp="15:40">
+                            <div id="ccbodyele-50" class="ccbody-left ccbody-head" data-timestamp="15:40">
                                 <div></div>
                                 <div>qwertaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay</div>
                                 <p>ㅇㅇ</p>
@@ -720,4 +720,26 @@
 		</div>
 	</div>
 </body>
+<script>
+	const CBIC = document.getElementById("chat-body-inner-cont");
+	const CHAT_BODY_MORE_INNER_CONT = document.getElementById("chat-body-more-inner-cont");
+
+	let SCROLL_TIMEOUT;
+
+	CBIC.addEventListener("scroll", function(e) {
+		console.log(CBIC.scrollTop + " 25%?=" + (CBIC.scrollTop / CBIC.offsetHeight <= 0.25 ? "yes" : "no"));
+
+		if(SCROLL_TIMEOUT) {
+			clearTimeout(SCROLL_TIMEOUT);
+		}
+
+		SCROLL_TIMEOUT = setTimeout(function() {
+			console.log("scroll done");
+		}, 100);
+	});
+
+	// CHAT_BODY_MORE_INNER_CONT.addEventListener("scroll", function(e) {
+	// 	console.log(CHAT_BODY_MORE_INNER_CONT.scrollTop);
+	// });
+</script>
 </html>

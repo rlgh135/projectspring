@@ -26,6 +26,7 @@ public interface UserMapper {
 	//R
 	UserDTO getUserById(String userid);
 	String getUserProfileName(String userid);
+	UserImgDTO getUserProfileDTO(String userid);
 	GuideDTO getGuideNum(String userid);
 	int getTotalReviewCnt(long guidenum);
 	List<ReviewDTO> getReviews(long packagenum);

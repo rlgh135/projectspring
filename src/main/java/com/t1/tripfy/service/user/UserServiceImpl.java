@@ -135,6 +135,11 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
+	public UserImgDTO getProfileImgDTO(String userid) {
+		return umapper.getUserProfileDTO(userid);
+	}
+	
+	@Override
 	public GuideDTO getGuideNum(String userid) {
 		return umapper.getGuideNum(userid);
 	}

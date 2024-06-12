@@ -20,10 +20,12 @@ import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatLoadMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatContentDetailMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatDetailBulkMessagePayload;
+import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.chat.ChatDetailMapper;
 import com.t1.tripfy.mapper.chat.ChatInvadingMapper;
 import com.t1.tripfy.mapper.chat.ChatRoomMapper;
 import com.t1.tripfy.mapper.chat.ChatUserMapper;
+import com.t1.tripfy.service.user.UserService;
 
 @Service
 public class ChatServiceImpl implements ChatService {
@@ -35,6 +37,9 @@ public class ChatServiceImpl implements ChatService {
 	private ChatDetailMapper chatDetailMapper;
 	@Autowired
 	private ChatInvadingMapper chatInvadingMapper;
+	
+	@Autowired
+	private UserService userServiceImpl;
 	
 	/*
 	 	중요!!
@@ -343,6 +348,13 @@ public class ChatServiceImpl implements ChatService {
 			//채팅방의 상대 유저 userid 가져오기
 			/*상대 유저 "들" 가져오기로 변경 - 240603*/
 			clplDTO.setUserList(chatUserMapper.selectOpponentUserInfo(crIdx, userid));
+			
+			//상대 유저들 이미지 가져오기
+			List<UserImgDTO> imgList = new ArrayList<>();
+			for(ChatUserDTO dto : clplDTO.getUserList()) {
+				imgList.add(userServiceImpl.getProfileImgDTO(dto.getUserid()));
+			}
+			clplDTO.setUserImage(imgList);
 			
 			//채팅방의 마지막 메시지 정보(chat_detail_content, regdate 가져오기)
 			/*채팅방에 메시지가 없는 경우도 고려해야함*/

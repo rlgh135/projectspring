@@ -29,6 +29,8 @@ public interface UserService {
 	UserDTO getUser(String userid);
 	GuideDTO getGuideNum(String userid);
 	String getProfileImgName(String userid);
+	//userid로 UserImgDTO 받아오기
+	UserImgDTO getProfileImgDTO(String userid);
 	ResponseEntity<Resource> getThumbnailResource(String systemname) throws Exception;
 	long getMyTotal(Criteria cri);
 	List<BoardDTO> getMyBoardList(Criteria cri, String userid);

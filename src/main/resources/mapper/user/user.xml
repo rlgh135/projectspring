@@ -21,6 +21,11 @@
 		select sysname from user_img where userid=#{userid}
 	</select>
 	
+	<select id="getUserProfileDTO">
+		SELECT * FROM user_img
+		WHERE userid = #{userid}
+	</select>
+	
 	<select id="getUserProfile">
 		select * from user_img where userid = #{userid}
 	</select>

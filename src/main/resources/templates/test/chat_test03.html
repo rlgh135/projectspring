@@ -476,6 +476,9 @@
             position: relative;
         }
 
+		/* .ccbody-timestamp {
+			margin-bottom: 20px;
+		} */
         .ccbody-timestamp.ccbody-left::after {
             content: attr(data-timestamp);
     
@@ -495,67 +498,62 @@
             bottom: 0px;
         }
 
-        /* 꼬리표 */
-        .ccbody-tail.ccbody-left::before {
-            content: "";
-            width: 0; height: 0;
+		/* 꼬리표, (ccbody-left의 경우)상대 사용자 이미지, userid */
+		/*ccbody-left 꼬리표*/
+		.ccbody-head.ccbody-left::before {
+			content: "";
+			width: 0; height: 0;
 
-            position: absolute;
-            top: -10px; left: -13px;
+			position: absolute;
+			top: -10px; left: -13px;
 
-            transform: rotate(45deg);
+			transform: rotate(45deg);
 
-            border-top: 10px solid transparent;
-            border-right: 17px solid lightsalmon;
-            border-bottom: 10px solid transparent;
-            border-left: 10px solid transparent;
-        }
-        .ccbody-tail.ccbody-right::before {
-            content: "";
-            width: 0; height: 0;
-            
-            position: absolute;
-            top: -10px; right: -13px;
+			border-top: 10px solid transparent;
+			border-right: 17px solid lightsalmon;
+			border-bottom: 10px solid transparent;
+			border-left: 10px solid transparent;
+		}
+		/*ccbody-right 꼬리표*/
+		.ccbody-head.ccbody-right::before {
+			content: "";
+			width: 0; height: 0;
+			
+			position: absolute;
+			top: -10px; right: -13px;
 
-            transform: rotate(-45deg);
-                
-            border-top: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-left: 17px solid lightsalmon;
-        }
-
-        /* 상대 사용자 이미지, userid */
-		.ccbody-head {
+			transform: rotate(-45deg);
+				
+			border-top: 10px solid transparent;
+			border-right: 10px solid transparent;
+			border-bottom: 10px solid transparent;
+			border-left: 17px solid lightsalmon;
+		}
+		/*ccbody-left 최상단 띄우기*/
+		.ccbody-left.ccbody-head {
 			margin-top: 40px;
 		}
-        /*이미지*/
-        .ccbody-left.ccbody-head>div:first-child {
-            position: absolute;
-            top: -22px; left: -42.5px;
+		/*ccbody-left 최상단 이미지*/
+		.ccbody-left.ccbody-head>div:first-child {
+			position: absolute;
+			top: -22px; left: -42.5px;
 
-            width: 35px; height: 35px;
+			width: 35px; height: 35px;
 
-            border-radius: 10px/10px;
+			border-radius: 10px/10px;
 
-            /* background-image: url("../../static/images/layoutimg/logo.png"); */
-            background-size: cover;
-            background-color: lightsalmon;
-        }
-        /*유저아이디*/
-        .ccbody-left.ccbody-head>div:nth-child(2) {
-            width: max-content;
+			background-size: cover;
+			background-color: lightsalmon;
+		}
+		/*ccbody-left 최상단 유저아이디*/
+		.ccbody-left.ccbody-head>div:nth-child(2) {
+			width: max-content;
 
-            position: absolute;
-            top: -25px; left: 0px;
+			position: absolute;
+			top: -25px; left: 0px;
 
-            font-size: 12px;
-        }
-
-        /* 채팅 마지막 끊기 */
-        .ccbody-lastchat {
-            margin-bottom: 20px;
-        }
+			font-size: 12px;
+		}
         
 
         /* 요소 숨기기 */
@@ -579,6 +577,7 @@
             메모
             지금 ccbody-left.ccbody-head 마진탑 관련해서 문제있음
             자식 pos를 absolute로 줬더니 위쪽 채팅이랑 간격 조절이 안된다
+			-> .ccbody-left.ccbody-head에 mt40 줘서 해결함
         */
 	</style>
 </head>
@@ -716,6 +715,11 @@
 	const CHAT_BODY_SUBMIT_BTN = document.getElementById("submit-chat");
 	//채팅 입력창
 	const CHAT_BODY_INPUT = document.getElementById("input-chat");
+
+	/*================================================================================*/
+	/*기타 전역변수*/
+	//요일 배열
+	const day = ["일", "월", "화", "수", "목", "금", "토"];
 
 	/*================================================================================*/
 	/*공유 워커 관련*/
@@ -1115,6 +1119,7 @@
 		const inputContent = CHAT_BODY_INPUT.value;
 
 		if(inputContent != "") {
+			/*여기서도 이전 채팅을 체크해서 ccbody-head를 붙여줄 지 판별해야 함*/
 			printChatElement("loading", inputContent, "ccbody-right", "ccbody-loading");
 			scrollIntoLastChatElement();
 
@@ -1131,10 +1136,13 @@
 				const res = await promised_waitTillResponse("sendChat");
 				/*VD 조작 함수 호출*/
 				/*DOM 구현 함수 호출*/
-				adjustChatElementClass("ccbodyele-loading", "ccbody-right");
-				adjustChatElementId("ccbodyele-loading", "ccbody-" + res.chatDetailIdx);
+				// adjustChatElementClass("ccbodyele-loading", "ccbody-right");
+				// adjustChatElementId("ccbodyele-loading", "ccbody-" + res.chatDetailIdx);
+				console.log(res);
+				sendChatReceiveHandler(res.payload);
 			} catch(e) {
 				//오류 처리
+				console.log(e);
 			}
 		} else {
 			//공란 입력 불가능 알림
@@ -1150,52 +1158,175 @@
 		UNCHECKED_MSG_COUNT--과 CHAT_OT*_VD.uncheckedmsg--를 해준다
 
 		이거 좀 생각보다 복잡함
+
+		대충 경우의 수
+		*broadcastChat은 무조건 상대방 채팅*
+		채팅창 열려있음
+			
+		채팅방목록 로드된 적이 있음
+		채팅방목록 로드된 적이 없음
 	*/
-	function broadcastChatHandler(data) {
+	function broadcastChatHandler(payload) {
 		if(!!CHAT_BODY_INFO.roomidx) {
-			//채팅창이 열려있을 때
-			printChatElement(data.payload.chatDetailIdx, data.payload.chatContent, "ccbody-left");
-			scrollIntoLastChatElement();
+			//채팅방이 열려있을때
+
 		} else {
-			//채팅창이 닫혀있을 때
-			UNCHECKED_MSG_COUNT++;
-			let chk = true;
-
-			for(let i = 0; i < CHAT_OTO_VD.length; i++) {
-				if(CHAT_OTO_VD[i].dataObj.roomidx === data.payload.roomidx) {
-					CHAT_OTO_VD[i].dataObj.uncheckedmsg++;
-					chk = false;
-					break;
-				}
-			}
-			if(chk) {
-				for(let i = 0; i < CHAT_OTM_VD.length; i++) {
-					if(CHAT_OTM_VD[i].dataObj.roomidx === data.payload.roomidx) {
-						CHAT_OTM_VD[i].dataObj.uncheckedmsg++;
-						break;
-					}
-				}
-			}
-
-			/*미확인 체팅 알림처리*/
-			console.log("미확인 채팅 알림처리");
-
-			const div = document.createElement("div");
-			div.classList.add("cc-alert");
-			const h4 = document.createElement("h4");
-			h4.innerHTML = data.payload.userid;
-			div.appendChild(h4);
-			const p = document.createElement("p");
-			p.innerHTML = data.payload.chatContent;
-			div.appendChild(p);
-			CHAT_ALERT_CONT.appendChild(div);
-			console.log(div);
-			setTimeout(() => {
-				div.remove();
-				console.log("div removed");
-			}, 3000);
+			//채팅방이 닫혀있을떄
 		}
 	}
+	// function broadcastChatHandler(data) {
+	// 	if(!!CHAT_BODY_INFO.roomidx) {
+	// 		//채팅창이 열려있을 때
+	// 		printChatElement(data.payload.chatDetailIdx, data.payload.chatContent, "ccbody-left");
+	// 		scrollIntoLastChatElement();
+	// 	} else {
+	// 		//채팅창이 닫혀있을 때
+	// 		UNCHECKED_MSG_COUNT++;
+	// 		let chk = true;
+
+	// 		for(let i = 0; i < CHAT_OTO_VD.length; i++) {
+	// 			if(CHAT_OTO_VD[i].dataObj.roomidx === data.payload.roomidx) {
+	// 				CHAT_OTO_VD[i].dataObj.uncheckedmsg++;
+	// 				chk = false;
+	// 				break;
+	// 			}
+	// 		}
+	// 		if(chk) {
+	// 			for(let i = 0; i < CHAT_OTM_VD.length; i++) {
+	// 				if(CHAT_OTM_VD[i].dataObj.roomidx === data.payload.roomidx) {
+	// 					CHAT_OTM_VD[i].dataObj.uncheckedmsg++;
+	// 					break;
+	// 				}
+	// 			}
+	// 		}
+
+	// 		/*미확인 체팅 알림처리*/
+	// 		console.log("미확인 채팅 알림처리");
+
+	// 		const div = document.createElement("div");
+	// 		div.classList.add("cc-alert");
+	// 		const h4 = document.createElement("h4");
+	// 		h4.innerHTML = data.payload.userid;
+	// 		div.appendChild(h4);
+	// 		const p = document.createElement("p");
+	// 		p.innerHTML = data.payload.chatContent;
+	// 		div.appendChild(p);
+	// 		CHAT_ALERT_CONT.appendChild(div);
+	// 		console.log(div);
+	// 		setTimeout(() => {
+	// 			div.remove();
+	// 			console.log("div removed");
+	// 		}, 3000);
+	// 	}
+	// }
+	//sendChat 수신 처리 함수
+	/*
+		대충 해야하는거
+		이전 채팅 확인, sendChat 채팅에 ccbody-head 부여 결정, ccbody-date 삽입 결정
+			ccbody-head
+				이전 채팅이 있는 경우
+					이전 채팅이 상대 채팅인 경우 ccbody-head 부여
+					이전 채팅이 내 채팅인 경우
+						이전 메시지와 1분 초과 차이가 나는 경우 ccbody-head 추가
+						1분 이내 차이인 경우 추가하지 않음
+				이전 채팅이 없는 경우
+					ccbody-head 부여
+			ccbody-date
+				이전 채팅이 있는 경우
+					*송신자 상관없이* 이전 채팅과 1일 이상 차이가 나는 경우 ccbody-date 삽입
+					1일 이하면 삽입하지 않음
+				이전 채팅이 없는 경우
+					ccbody-date 삽입
+		id 수정
+			ㅇㅇ
+		ccbody-loading 제거
+			dd
+		이전 채팅에서 ccbody-timestamp 제거
+			상대 채팅인 경우 지우지 않는다
+			내 채팅이여도 1분 초과 차이인 경우 지우지 않는다
+		ccbody-timestamp 부여
+			dd
+		data-timestamp 속성 부여
+			dd
+		data-fulltimestamp 속성 부여
+			ㅇㅇ
+		CHAT_BODY_INFO 수정
+			isEmpty -> false(true였으면)
+
+		!!중요한거는 sendChat는 요소를 새로 만드는게 아니라 submit시 생성된 .ccbody-loading 요소를 가져다 쓴다는거임
+		
+		얘네들은 여기 말고 위에서 할 수도 있음
+		UNCHECKED_MSG_COUNT 갱신
+		CHAT_OT*_VD[n].uncheckedmsg 갱신
+	*/
+	function sendChatReceiveHandler(payload) {
+		let dateFlag = false;
+		let headFlag = false;
+		let timestampRemoveFlag = false;
+	
+		//시간 비교용
+		//sendChat *상대적 미래*
+		const timestamp = new Date(payload.regdate);
+		//기존 채팅 *상대적 과거*
+		const tgtstamp = new Date(CHAT_BODY_MORE_INNER_CONT.lastChild.previousSibling.dataset.fulltimestamp);
+
+		if(CHAT_BODY_INFO.isEmpty) {
+			//이전 채팅이 없는 경우
+			//ccbody-date 삽입, sendChat .ccbody-head 부여, CBI.isEmpty=true 할당
+			dateFlag = true;
+			headFlag = true;
+			CHAT_BODY_INFO.isEmpty = false;
+		} else {
+			//이전 채팅이 있는 경우
+			if(CHAT_BODY_MORE_INNER_CONT.lastChild.previousSibling.classList.contains("ccbody-left")) {
+				//이전 채팅이 있으며 상대 채팅인 경우
+				headFlag = true;
+			} else {
+				//이전 채팅이 있으며 내 채팅인 경우
+				if(tgtstamp.getTime() - timestamp.getTime() < 0) {
+					//1분 이상 차이나는 경우
+					headFlag = true;
+				} else {
+					//1분 이하 차이
+					timestampRemoveFlag = true;
+				}
+			}
+			if((timestamp.getFullYear() == tgtstamp.getFullYear() && getDiffOfDate(tgtstamp.getTime(), timestamp.getTime()) < 0) || timestamp.getFullYear() > tgtstamp.getFullYear()) {
+				//1일 이상 차이나는 경우
+				dateFlag = true;
+			}
+		}
+		
+		console.log("dateFlag=" + dateFlag + " headFlag=" + headFlag + " timestampRemoveFlag=" + timestampRemoveFlag);
+
+		//DOM 구현
+		//1분 미만 차이나는 내 채팅의 ccbody-timestamp 제거
+		if(timestampRemoveFlag) {
+			CHAT_BODY_MORE_INNER_CONT.lastChild.previousSibling.classList.remove("ccbody-timestamp");
+		}
+		if(dateFlag) {
+			//ccbody-date(날짜 블럭) 삽입
+			const dateDiv = document.createElement("div");
+			dateDiv.classList.add("ccbody-date");
+			dateDiv.innerHTML = timestamp.getFullYear() + "년 "
+							+ (timestamp.getMonth() + 1) + "월 "
+							+ timestamp.getDate() + "일 "
+							+ day[timestamp.getDay()] + "요일";
+			CHAT_BODY_MORE_INNER_CONT.appendChild(dateDiv);
+		}
+		//메시지 본문 구성
+		const lastChat = CHAT_BODY_MORE_INNER_CONT.lastChild;
+		lastChat.id = "ccbodyele-" + payload.chatDetailIdx;
+		lastChat.classList.remove("ccbody-loading");
+		if(headFlag)
+			lastChat.classList.add("ccbody-head");
+		lastChat.dataset.timestamp = new Date(payload.regdate).getHours() + ":" + (new Date(payload.regdate).getMinutes() < 10 ? "0" + new Date(payload.regdate).getMinutes() : new Date(payload.regdate).getMinutes());
+		lastChat.dataset.fulltimestamp = payload.regdate;
+		lastChat.classList.add("ccbody-timestamp");
+	}
+
+	//스크롤 감지기
+	/**/
 
 	/*================================================================================*/
 	/*연결*/
@@ -1422,7 +1553,7 @@
 		const p = document.createElement("p");
 		p.innerHTML = chatContent;
 		div.appendChild(p);
-		CHAT_BODY_INNER_CONT.appendChild(div);
+		CHAT_BODY_MORE_INNER_CONT.appendChild(div);
 	}
 	//특정 메시지 클래스 수정
 	/*
@@ -1447,7 +1578,7 @@
 
 	//마지막 요소 포커스
 	function scrollIntoLastChatElement() {
-		CHAT_BODY_INNER_CONT.lastChild.scrollIntoView(false);
+		CHAT_BODY_MORE_INNER_CONT.lastChild.scrollIntoView(false);
 	}
 
 	//채팅창 DOM 구현
@@ -1487,8 +1618,21 @@
 			}
 		}
 
+		//채팅방에 채팅이 없으면(CHAT_BODY_INFO.isEmpty==true) 여기서 끝낸다
+		if(CHAT_BODY_INFO.isEmpty) {
+			//시작 메시지 삽입
+			const startDiv = document.createElement("div");
+			startDiv.classList.add("ccbody-start");
+			const startP = document.createElement("p");
+			startP.innerHTML = "대충 시작메시지 - 채팅방에 메시지가 없을 경우";
+			startDiv.appendChild(startP);
+			CHAT_BODY_MORE_INNER_CONT.appendChild(startDiv);
+			return;
+		}
+		
 		//fragment
 		const chatFragment = document.createDocumentFragment();
+		
 
 		/*
 			서버서 가져온 메시지는 regdate 내림차순 정렬이긴 한데
@@ -1501,94 +1645,133 @@
 			//채팅 컨테이너 생성, 초기화
 			const div = document.createElement("div");
 			div.id = "ccbodyele-" + payload.chatDetails[i].chatDetailIdx;
-			div.dataset.timestamp = timestamp.getHours() + ":" + timestamp.getMinutes();
+			div.dataset.timestamp = timestamp.getHours() + ":" + (timestamp.getMinutes() < 10 ? "0" + timestamp.getMinutes() : timestamp.getMinutes());
+			div.dataset.fulltimestamp = payload.chatDetails[i].regdate;
 
 			//채팅 좌우 분기
 			if(payload.chatDetails[i].userid != CHAT_BODY_INFO.userid) {
 				//좌
-				//클래스 삽입
+				//기본 클래스 삽입
 				div.classList.add("ccbody-left");
-				//일단 ccbody-head 삽입 - 추후 로딩시 체크 필요
-				div.classList.add("ccbody-head");
+				//구현상 첫 메시지인 경우나 이전 메시지의 송신자가 다르거나 이전 메시지와 분단위 이상의 차이가 나면 ccbody-head 삽입
+				if(i + 1 == payload.chatDetails.length || payload.chatDetails[i+1].userid != payload.chatDetails[i].userid || timestamp.getTime() - (new Date(payload.chatDetails[i+1].regdate)).getTime() > 0) {
+					div.classList.add("ccbody-head");
 
-				const imgDiv = document.createElement("div");
-				/*일단 임시로 로고 삽입*/
-				imgDiv.style.backgroundImage = "/images/layoutimg/logo.png";
+					//이미지
+					const imgDiv = document.createElement("div");
+					/*일단 임시로 로고 삽입*/
+					imgDiv.style.backgroundImage = "url('" + "/images/layoutimg/logo.png" + "')";
+					/*이미지 존재시 삽입*/
+					for(let ui of CHAT_BODY_INFO.chatRoomInfo.userImage) {
+						if(payload.chatDetails[i].userid == ui.userid) {
+							imgDiv.style.backgroundImage = "url('" + "/user/thumbnail?sysname=" + ui.sysname + "')";
+						}
+					}
+					
+					//userid
+					const useridDiv = document.createElement("div");
+					useridDiv.innerHTML = payload.chatDetails[i].userid;
 
+					div.appendChild(imgDiv);
+					div.appendChild(useridDiv);
+				}
 			} else {
 				//우
 				//클래스 삽입
-
+				div.classList.add("ccbody-right");
+				//ccbody-head 삽입, 조건은 위와 같음
+				if(i + 1 == payload.chatDetails.length || payload.chatDetails[i+1].userid != payload.chatDetails[i].userid || timestamp.getTime() - (new Date(payload.chatDetails[i+1].regdate)).getTime() > 0) {
+					div.classList.add("ccbody-head");
+				}
 			}
+
+			//메시지 본문 삽입
+			const p = document.createElement("p");
+			p.innerHTML = payload.chatDetails[i].chatDetailContent;
+			div.appendChild(p);
 
 			//타임스탬프 클래스(.ccbody-timestamp) 삽입
+			//다음 메시지가 없거나 송신자가 다르거나 분단위 이상 차이가 나면 삽입
+			if(i == 0 || payload.chatDetails[i-1].userid != payload.chatDetails[i].userid || timestamp.getTime() - (new Date(payload.chatDetails[i-1].regdate)).getTime() < 0) {
+				div.classList.add("ccbody-timestamp");
+			}
+
+			//chatFragment에 추가
+			chatFragment.appendChild(div);
 
 			//날짜 블럭(.ccbody-date) 삽입
-			if(i - 1 > -1 && timestamp.getDate - (new Date(payload.chatDetails[i-1])).getDate < 0) {
-				//다음 채팅과 1일 이상 차이가 날 경우 ccbody-date 블럭 삽입
+			if(
+				i > 0 && 
+				(
+					(
+						timestamp.getFullYear() == new Date(payload.chatDetails[i-1].regdate).getFullYear() 
+						&& 
+						getDiffOfDate(timestamp.getTime(), new Date(payload.chatDetails[i-1].regdate).getTime()) < 0
+					) 
+					||
+					(
+						timestamp.getFullYear() < new Date(payload.chatDetails[i-1].regdate).getFullYear()
+					)
+				)
+			) {
+				//마지막 블럭이 아니면서 일 차이가 나는 경우 날짜 블럭 삽입
+				const tgtDate = new Date(payload.chatDetails[i-1].regdate);
+
+				const dateDiv = document.createElement("div");
+				dateDiv.classList.add("ccbody-date");
+				dateDiv.innerHTML = tgtDate.getFullYear() + "년 " 
+								+ (tgtDate.getMonth() + 1) + "월 "
+								+ tgtDate.getDate() + "일 "
+								+ day[tgtDate.getDay()] + "요일";
+				
+				//chatFragment에 삽입
+				chatFragment.appendChild(dateDiv);
 			}
 		}
+
+		//해당 채팅방의 마지막 로딩이면(CHAT_BODY_INFO.isFirst==true&&notnull) 상단에 시작메시지와 날짜블럭 삽입
+		if(CHAT_BODY_INFO.isFirst) {
+			const startDiv = document.createElement("div");
+			startDiv.classList.add("ccbody-start");
+			const startP = document.createElement("p");
+			startP.innerHTML = "시작메시지 뭐... 대충 뭐 일단 이거 위치는 printChatRoom() 제일 밑 이거 뭐라적야아할지 모르겠네";
+			startDiv.appendChild(startP);
+			const startDateDiv = document.createElement("div");
+			startDateDiv.classList.add("ccbody-date");
+			const startDateP = document.createElement("p");
+			const tgtStartDate = new Date(payload.chatDetails[payload.chatDetails.length-1].regdate);
+			startDateP.innerHTML = tgtStartDate.getFullYear() + "년 " 
+								+ (tgtStartDate.getMonth() + 1) + "월 "
+								+ tgtStartDate.getDate() + "일 "
+								+ day[tgtStartDate.getDay()] + "요일";
+			startDateDiv.appendChild(startDateP);
+
+			chatFragment.prepend(startDateDiv);
+			chatFragment.prepend(startDiv);
+		}
+
+		//DOM에 추가
+		CHAT_BODY_MORE_INNER_CONT.appendChild(chatFragment);
 	}
-	// function printChatRoom(payload) {
-	// 	//기존 채팅 초기화
-	// 	CHAT_BODY_INNER_CONT.replaceChildren();
-	// 	if(CHAT_BODY_INFO.isEmpty) {
-	// 		CHAT_FIRST_DETAIL_IDX = null;
-	// 	} else {
-	// 		CHAT_FIRST_DETAIL_IDX = payload.chatDetails[payload.chatDetails.length - 1].chatDetailIdx;
-	// 	}
 
-	// 	// //채팅창 화면 변경
-	// 	// CHAT_LIST_CONT.classList.add("cc-hidden");
-	// 	// CHAT_BODY_CONT.classList.remove("cc-hidden");
+	//날짜 차이 계산 메서드
+	//위치 바꿔라
+	/*
+		년도가 차이나는 경우는 잡아주지 않음
+		오로지 동일년도 + 다른 일자인 경우만 잡음
 
-	// 	//채팅창 제목
-	// 	if(!!CHAT_BODY_INFO.chatRoomInfo.pkgnum) {
-	// 		//패키지채팅
-	// 		CHAT_BODY_TITLE.innerHTML = CHAT_BODY_INFO.chatRoomInfo.title;
-	// 	} else {
-	// 		//일반채팅
-	// 		if(!!CHAT_BODY_INFO.chatRoomInfo.title) {
-	// 			//방제 있음
-	// 			CHAT_BODY_TITLE.innerHTML = CHAT_BODY_INFO.chatRoomInfo.title;
-	// 		} else {
-	// 			//방제 없음
-	// 			//userid들 묶은 문자열 생성
-	// 			let userids = "";
-	// 			for(let dto of CHAT_BODY_INFO.chatRoomInfo.userList) {
-	// 				userids += dto.userid + ",";
-	// 			}
-	// 			userids = userids.slice(0, -1);
+		인수는 Date.prototype.getTime()을 넣을 것
+		
+		결과값이 0이면 동일 날짜
+		음수면 tgtTime이 하루 이상 미래
+		양수면 tgtTime이 하루 이상 과거
+	*/
+	function getDiffOfDate(nowTime, afterTime) {
+		const oneDay = 1000 * 60 * 60 * 24;
+		const thisYear = new Date(new Date().getFullYear(), 0, 0).getTime();
 
-	// 			CHAT_BODY_TITLE.innerHTML = userids;
-	// 		}
-	// 	}
-
-	// 	//채팅 내역이 없으면 여기서 종료
-	// 	if(CHAT_BODY_INFO.isEmpty) {
-	// 		return;
-	// 	}
-
-	// 	//fragment
-	// 	const chatFragment = document.createDocumentFragment();
-
-	// 	//채팅 요소 생성
-	// 	for(let cd of payload.chatDetails) {
-	// 		const div = document.createElement("div");
-	// 		div.id = "ccbodyele-" + cd.chatDetailIdx;
-	// 		if(cd.userid === payload.requestUserid) {
-	// 			div.classList.add("ccbody-right");
-	// 		} else {
-	// 			div.classList.add("ccbody-left");
-	// 		}
-	// 		const p = document.createElement("p");
-	// 		p.innerHTML = cd.chatDetailContent;
-	// 		div.appendChild(p);
-	// 		chatFragment.prepend(div);
-	// 	}
-
-	// 	CHAT_BODY_INNER_CONT.appendChild(chatFragment);
-	// }
+		return Math.floor((nowTime - thisYear) / oneDay) - Math.floor((afterTime - thisYear) / oneDay);
+	}
 
 	//채팅방 DOM 구현
 	//단순히 채팅창 목록에 요소를 채워넣기만 하는 메서드임 추가적인(cc-hidden 등)조작은 안함
@@ -1627,7 +1810,13 @@
 				추후 서버에서 이미지 링크를 받아 실제로 출력하게끔 수정해야함
 			*/
 			const img = document.createElement("img");
-			img.src = "/images/layoutimg/logo.png";
+			if(!!arrEle.userImage[0].sysname) {
+				//실제 이미지
+				img.src = "/user/thumbnail?sysname=" + arrEle.userImage[0].sysname;
+			} else {
+				//임시 이미지
+				img.src = "/images/layoutimg/logo.png";
+			}
 			img.alt = "Chat room image";
 			innerDivFir.appendChild(img);
 			//두번째 자식 div
@@ -1704,7 +1893,9 @@
 			*/
 			for(let i = 0 ; i < 4; i++) {
 				const img = document.createElement("img");
-				img.src = "/images/layoutimg/logo.png";
+				if(!!arrEle.userImage[i].sysname) {
+					img.src = "/user/thumbnail?sysname=" + arrEle.userImage[i].sysname;
+				}
 				img.alt = "Chat room image";
 				innerDivFir.appendChild(img);
 			}
@@ -1884,7 +2075,46 @@
 	}
 	function adjustChatListElement(cr, tgtEle, isOTO=true) {
 		//이미지
-		/*일단 지금은 체크 안함*/
+		// if(isOTO) {
+		// 	const img = document.createElement("img");
+		// 	if(!!cr.dataObj.userImage[0].sysname) {
+		// 		img.src = "/user/thumbnail?sysname=" + cr.dataObj.userImage[0].sysname;
+		// 	} else {
+		// 		img.src = "/images/layoutimg/logo.png";
+		// 	}
+		// 	img.alt = "Chat room image";
+		// 	innerDivFir.appendChild(img);
+		// } else {
+		// 	for(let i = 0 ; i < 4; i++) {
+		// 		const img = document.createElement("img");
+		// 		if(!!cr.dataObj.userImage[i].sysname) {
+		// 			img.src = "/user/thumbnail?sysname=" + cr.dataObj.userImage[i].sysname;
+		// 		}
+		// 		img.alt = "Chat room image";
+		// 		innerDivFir.appendChild(img);
+		// 	}
+		// }
+		const innerDivFir = tgtEle.children[0];
+		innerDivFir.replaceChildren();
+		if(isOTO) {
+			const img = document.createElement("img");
+			if(!!cr.dataObj.userImage[0].sysname) {
+				img.src = "/user/thumbnail?sysname=" + cr.dataObj.userImage[0].sysname;
+			} else {
+				img.src = "/images/layoutimg/logo.png";
+			}
+			img.alt = "Chat room image";
+			innerDivFir.appendChild(img);
+		} else {
+			for(let i = 0 ; i < 4; i++) {
+				const img = document.createElement("img");
+				if(!!cr.dataObj.userImage[i].sysname) {
+					img.src = "/user/thumbnail?sysname=" + cr.dataObj.userImage[i].sysname;
+				}
+				img.alt = "Chat room image";
+				innerDivFir.appendChild(img);
+			}
+		}
 		const innerDivSec = tgtEle.children[1];
 		//title, p1(userid)
 		let userids = "";
@@ -1937,16 +2167,24 @@
 			나중에 이미지 링크를 List<String>으로 받아와 넣어줘야 함
 			+ 이미지 개수 > 4인 경우 4개까지만, 출력할 이미지가 2개일 때는
 			css도 4등분 대신 2등분으로 하게 짜줘야 함
+
+			UserImgDTO 사용함 인제
 		*/
 		if(isOTO) {
 			const img = document.createElement("img");
-			img.src = "/images/layoutimg/logo.png";
+			if(!!cr.dataObj.userImage[0].sysname) {
+				img.src = "/user/thumbnail?sysname=" + cr.dataObj.userImage[0].sysname;
+			} else {
+				img.src = "/images/layoutimg/logo.png";
+			}
 			img.alt = "Chat room image";
 			innerDivFir.appendChild(img);
 		} else {
 			for(let i = 0 ; i < 4; i++) {
 				const img = document.createElement("img");
-				img.src = "/images/layoutimg/logo.png";
+				if(!!cr.dataObj.userImage[i].sysname) {
+					img.src = "/user/thumbnail?sysname=" + cr.dataObj.userImage[i].sysname;
+				}
 				img.alt = "Chat room image";
 				innerDivFir.appendChild(img);
 			}

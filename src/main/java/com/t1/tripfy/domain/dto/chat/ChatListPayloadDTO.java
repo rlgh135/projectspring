@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.t1.tripfy.domain.dto.user.UserImgDTO;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -18,6 +19,7 @@ public class ChatListPayloadDTO {
 	private LocalDateTime chatRegdate; //채팅방 개설 시간
 	private Boolean isCreator;
 	private List<ChatUserDTO> userList; //상대 유저 userid(chat_user.userid) !!중요 - 마지막 메시지 송신자가 아님
+	private List<UserImgDTO> userImage; //상대 유저 이미지
 	private String chatContent; //제일 최신의 챗
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
 	private LocalDateTime chatContentRegdate; //위 chat의 전송일
