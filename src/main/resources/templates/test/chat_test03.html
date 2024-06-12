@@ -441,7 +441,7 @@
             max-height: fit-content;
 
             /* margin: 0 auto; */
-            margin: 0 0 20px 25px;
+            margin: 0 0 8px 25px;
             padding: 6px 15px 6px 15px;
 
             border-radius: 10px/10px;
@@ -459,8 +459,7 @@
             width: 160px;
             height: 20px;
 
-            /* margin: 0 auto; */
-            margin: 0 0 20px 70px;
+            margin: 12px 0 20px 70px;
             padding: 2px 0 2px 0;
 
             border-radius: 10px/10px;
@@ -476,9 +475,6 @@
             position: relative;
         }
 
-		/* .ccbody-timestamp {
-			margin-bottom: 20px;
-		} */
         .ccbody-timestamp.ccbody-left::after {
             content: attr(data-timestamp);
     
@@ -738,7 +734,7 @@
 				console.log(e.data);
 				switch(e.data.action) {
 					case "broadcastChat":
-						broadcastChatHandler(e.data);
+						broadcastChatHandler(e.data.payload);
 						break;
 				}
 			};
@@ -1162,17 +1158,134 @@
 		대충 경우의 수
 		*broadcastChat은 무조건 상대방 채팅*
 		채팅창 열려있음
-			
+			마지막 채팅이
+				없으면
+					ccbody-date 삽입
+					ccbody-head 부여
+					CBI.isEmpty=false 할당
+				내꺼
+					ccbody-head 부여
+					마지막 채팅 ccbody-timestamp 유지
+					1일 이상 차이나면
+						ccbody-date 삽입
+				송신자와 다른 사람
+					ccbody-head 부여
+					마지막 채팅 ccbody-timestamp 유지
+					1일 이상 차이나면
+						ccbody-date 삽입
+				송신자
+					x
+					마지막 채팅과 1분 이하 차이면
+						마지막 채팅에서 ccbody-timestamp 제거
+					1분 이상이면
+						ccbody-timestamp 유지
+					1일 이상이면
+						ccbody-timestamp 유지
+						ccbody-date 삽입
+			CBI.lastSender 갱신
 		채팅방목록 로드된 적이 있음
 		채팅방목록 로드된 적이 없음
+
+		UNCHECKED_MSG_COUNT, CHAT_OT*_VD[n].uncheckedmsg 처리는 handler에서
 	*/
 	function broadcastChatHandler(payload) {
 		if(!!CHAT_BODY_INFO.roomidx) {
 			//채팅방이 열려있을때
-
+			createBroadcastChatElement(payload);
 		} else {
 			//채팅방이 닫혀있을떄
+			/*wip*/
 		}
+	}
+
+	//broadcastChat 채팅방 요소 처리
+	function createBroadcastChatElement(payload) {
+		//플래그
+		let dateFlag = false;
+		let headFlag = false;
+		let timestampRemoveFlag = false;
+
+		//시간 비교값
+		/*broadcastChat *상대적 미래**/
+		const timestamp = new Date(payload.regdate);
+		/*기존 채팅 *상대적 과거*/
+		const tgtstamp = new Date(CHAT_BODY_MORE_INNER_CONT.lastChild.dataset.fulltimestamp);
+
+		//플래그 설정
+		if(CHAT_BODY_INFO.isEmpty) {
+			//이전 채팅이 없는 경우
+			dateFlag = true;
+			headFlag = true;
+			CHAT_BODY_INFO.isEmpty = false;
+		} else {
+			//이전 채팅이 있는 경우
+			if(CHAT_BODY_INFO.lastSender === CHAT_BODY_INFO.userid) {
+				//사용자 채팅이 마지막
+				headFlag = true;
+			} else if(CHAT_BODY_INFO.lastSender === payload.userid) {
+				//송신자 채팅이 마지막
+				//ccbody-timestamp 유지 체크
+				if(timestamp.getTime() - tgtstamp.getTime() == 0) {
+					timestampRemoveFlag = true;
+				}
+			} else {
+				//그외 사용자 채팅이 마지막
+				headFlag = true;
+			}
+
+			//ccbody-date 체크
+			if((timestamp.getFullYear() == tgtstamp.getFullYear() && getDiffOfDate(tgtstamp.getTime(), timestamp.getTime()) < 0) || timestamp.getFullYear() > tgtstamp.getFullYear()) {
+				dateFlag = true;
+			}
+		}
+
+		//DOM 구현
+		/*기존 채팅 timestamp 제거*/
+		if(timestampRemoveFlag) {
+			CHAT_BODY_MORE_INNER_CONT.lastChild.classList.remove("ccbody-timestamp");
+		}
+		/*날짜 블럭(ccbody-date) 삽입*/
+		if(dateFlag) {
+			const dateDiv = document.createElement("div");
+			dateDiv.classList.add("ccbody-date");
+			dateDiv.innerHTML = timestamp.getFullYear() + "년 "
+							+ (timestamp.getMonth() + 1) + "월 "
+							+ timestamp.getDate() + "일 "
+							+ day[timestamp.getDay()] + "요일 ";
+			CHAT_BODY_MORE_INNER_CONT.appendChild(dateDiv);
+		}
+		/*메시지 블럭 생성, 추가*/
+		const lastChat = document.createElement("div");
+		lastChat.id = "ccbodyele-" + payload.chatDetailIdx;
+		lastChat.classList.add("ccbody-left");
+		lastChat.classList.add("ccbody-timestamp");
+		lastChat.dataset.timestamp = timestamp.getHours() 
+								+ ":" 
+								+ (timestamp.getMinutes() < 10 ? "0" + timestamp.getMinutes()
+																: timestamp.getMinutes());
+		lastChat.dataset.fulltimestamp = payload.regdate;
+		if(headFlag) {
+			lastChat.classList.add("ccbody-head");
+			const imgDiv = document.createElement("div");
+			const useridDiv = document.createElement("div");
+			/*임시 이미지 삽입*/
+			imgDiv.style.backgroundImage = "url('" + "/images/layoutimg/logo.png" + "')";
+			/*이미지 존재시 삽입*/
+			for(let ui of CHAT_BODY_INFO.chatRoomInfo.userImage) {
+				if(payload.userid == ui.userid) {
+					imgDiv.style.backgroundImage = "url('" + "/user/thumbnail?sysname=" + ui.sysname + "')";
+					break;
+				}
+			}
+			/*userid 삽입*/
+			useridDiv.innerHTML = payload.userid;
+			lastChat.appendChild(imgDiv);
+			lastChat.appendChild(useridDiv);
+		}
+		const p = document.createElement("p");
+		p.innerHTML = payload.chatContent;
+		lastChat.appendChild(p);
+		CHAT_BODY_MORE_INNER_CONT.appendChild(lastChat);
 	}
 	// function broadcastChatHandler(data) {
 	// 	if(!!CHAT_BODY_INFO.roomidx) {
@@ -1263,6 +1376,9 @@
 		let dateFlag = false;
 		let headFlag = false;
 		let timestampRemoveFlag = false;
+
+		/*CBI.lastSender 초기화*/
+		CHAT_BODY_INFO.lastSender = CHAT_BODY_INFO.userid;
 	
 		//시간 비교용
 		//sendChat *상대적 미래*
@@ -1272,7 +1388,7 @@
 
 		if(CHAT_BODY_INFO.isEmpty) {
 			//이전 채팅이 없는 경우
-			//ccbody-date 삽입, sendChat .ccbody-head 부여, CBI.isEmpty=true 할당
+			//ccbody-date 삽입, sendChat .ccbody-head 부여, CBI.isEmpty=false 할당
 			dateFlag = true;
 			headFlag = true;
 			CHAT_BODY_INFO.isEmpty = false;
@@ -1312,7 +1428,7 @@
 							+ (timestamp.getMonth() + 1) + "월 "
 							+ timestamp.getDate() + "일 "
 							+ day[timestamp.getDay()] + "요일";
-			CHAT_BODY_MORE_INNER_CONT.appendChild(dateDiv);
+			CHAT_BODY_MORE_INNER_CONT.lastChild.before(dateDiv);
 		}
 		//메시지 본문 구성
 		const lastChat = CHAT_BODY_MORE_INNER_CONT.lastChild;
@@ -1411,6 +1527,7 @@
 		userid: null,
 		isPkgChat: null,
 		isOTO: null,
+		lastSender: null,
 		chatRoomInfo: null
 	};
 
@@ -1460,10 +1577,12 @@
 			CHAT_BODY_INFO.isEmpty = true;
 			CHAT_BODY_INFO.firstDetailIdx = null;
 			CHAT_BODY_INFO.isFirst = null;
+			CHAT_BODY_INFO.lastSender = null;
 		} else {
 			CHAT_BODY_INFO.isEmpty = false;
 			CHAT_BODY_INFO.firstDetailIdx = payload.startChatDetailIdx;
 			CHAT_BODY_INFO.isFirst = payload.isFirst;
+			CHAT_BODY_INFO.lastSender = payload.chatDetails[0].userid;
 		}
 		CHAT_BODY_INFO.roomidx = payload.roomidx;
 		CHAT_BODY_INFO.userid = payload.requestUserid;
@@ -1499,6 +1618,7 @@
 		CHAT_BODY_INFO.userid = null;
 		CHAT_BODY_INFO.isPkgChat = null;
 		CHAT_BODY_INFO.isOTO = null;
+		CHAT_BODY_INFO.lastSender = null;
 		CHAT_BODY_INFO.chatRoomInfo = null;
 	}
 
@@ -1665,6 +1785,7 @@
 					for(let ui of CHAT_BODY_INFO.chatRoomInfo.userImage) {
 						if(payload.chatDetails[i].userid == ui.userid) {
 							imgDiv.style.backgroundImage = "url('" + "/user/thumbnail?sysname=" + ui.sysname + "')";
+							break;
 						}
 					}
 					
