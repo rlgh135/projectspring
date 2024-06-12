@@ -249,7 +249,7 @@
             case "joinpack":
                 console.log("타입: "+contentType);
                 $('#sltcnt0').text('신청한 패키지');
-                $('#sltcnt1').text('다녀온 패키지');
+                $('#sltcnt1').text('찜한 패키지');
                 makeJoinPack(btnidx, curpage);
                 break;
                 
@@ -661,20 +661,23 @@
 				const day = String(tdate.getDate()).padStart(2, '0');
 				let today = year+"-"+month+"-"+day;
                 var imgBadge = document.createElement("img");
-				//if(datas.packagelist[i].startdate>today){
-				//	if(datas.reslist[i].isdelete===1){
-		        //        imgBadge.setAttribute("src", "/images/userimg/cansleapply.png");
-				//	} else if(datas.reslist[i].isdelete===2) {
-		        //        imgBadge.setAttribute("src", "/images/userimg/packagecansle.png");
-				//	} else {
-		        //        imgBadge.setAttribute("src", "/images/userimg/packageready.png");											
-				//	}
-				//} else if(datas.packagelist[i].enddate<=today){
-		        //        imgBadge.setAttribute("src", "/images/userimg/packagewan.png");					
-				//} else {
-		        //        imgBadge.setAttribute("src", "/images/userimg/packageready.png");					
-				//}
-                imgBadge.setAttribute("alt", "스탬프");
+				if(datas.reslist[i]!=null){
+					if(datas.packagelist[i].startdate>today){
+						if(datas.reslist[i].isdelete===1){
+			                imgBadge.setAttribute("src", "/images/userimg/cansleapply.png");
+						} else if(datas.reslist[i].isdelete===2) {
+			                imgBadge.setAttribute("src", "/images/userimg/packagecansle.png");
+						} else {
+			                imgBadge.setAttribute("src", "/images/userimg/packageready.png");											
+						}
+					} else if(datas.packagelist[i].enddate<=today){
+			                imgBadge.setAttribute("src", "/images/userimg/packagewan.png");					
+					} else {
+			                imgBadge.setAttribute("src", "/images/userimg/packageready.png");					
+					}
+					
+	                imgBadge.setAttribute("alt", "스탬프");
+				}
                 imgBadge.classList.add("rcgnzstamp");
 
                 var pElement = document.createElement("p");
@@ -693,7 +696,9 @@
                 imgHeart.setAttribute("alt", "좋");
                 var text1 = document.createTextNode(datas.packagelist[i].regionname+" ");
                 
-                //var text2 = document.createTextNode((datas.reslist[i].adultCnt+datas.reslist[i].adultCnt)+"명");
+				if(datas.reslist[i]!=null){
+	                var text2 = document.createTextNode((datas.reslist[i].adultCnt+datas.reslist[i].adultCnt)+"명");
+				}
                 
 
                 divElement.appendChild(innerDiv1);
@@ -704,7 +709,10 @@
                 innerDiv1.appendChild(divElement2);
                 divElement2.appendChild(imgHeart);
                 divElement2.appendChild(text1);
-                //divElement2.appendChild(text2);
+				
+				if(datas.reslist[i]!=null){
+					divElement2.appendChild(text2);
+				}
 
                 // ul 요소를 선택하고 새로운 li 요소를 추가합니다.
                 parrentUlNode.appendChild(newItem);
