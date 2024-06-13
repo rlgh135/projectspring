@@ -1215,6 +1215,8 @@
 			//채팅방이 닫혀있을떄
 			/*UNCHECKED_MSG_COUNT는 VD 구현 시점에서 초기화*/
 			unchkmsgFlag = true;
+			/*알림 띄우기*/
+			createBroadcastChatAlertElement(payload);
 		}
 
 		//공통 처리(채팅리스트에서 수신 채팅방 최상위로 올리기 등)
@@ -1317,6 +1319,20 @@
 
 		/*CBI.lastSender 갱신*/
 		CHAT_BODY_INFO.lastSender = payload.userid;
+	}
+
+	//broadcastChat 미확인 채팅 알림처리
+	function createBroadcastChatAlertElement(payload) {
+		const div = document.createElement("div");
+		div.classList.add("cc-alert");
+		const h4 = document.createElement("h4");
+		h4.innerHTML = payload.userid;
+		div.appendChild(h4);
+		const p = document.createElement("p");
+		p.innerHTML = payload.chatContent;
+		div.appendChild(p);
+		CHAT_ALERT_CONT.appendChild(div);
+		setTimeout(() => div.remove(), 5000);
 	}
 	// function broadcastChatHandler(data) {
 	// 	if(!!CHAT_BODY_INFO.roomidx) {
@@ -1484,7 +1500,7 @@
 	async function chatRoomScrollEventReceiver(e) {
 		console.log("cRSER CBIC.scrollTop=" + CHAT_BODY_INNER_CONT.scrollTop);
 		if(CHAT_BODY_INFO.isEmpty === false && CHAT_BODY_INFO.isFirst === false) {
-			if(CHAT_BODY_INNER_CONT.scrollTop / CHAT_BODY_INNER_CONT.offsetHeight <= 0.25) {
+			if(CHAT_BODY_INNER_CONT.scrollTop / CHAT_BODY_INNER_CONT.offsetHeight <= 0.1) {
 				if(isChatLoadProcessDone) {
 					isChatLoadProcessDone = false;
 
@@ -1501,7 +1517,7 @@
 
 						console.log(res);
 						/*DOM 구현 함수 호출*/
-
+						chatLoadHandler(res.payload);
 						/*모든 과정 완료 후 스크롤 로딩 허용*/
 						isChatLoadProcessDone = true;
 					} catch(err) {
@@ -1533,14 +1549,143 @@
 			chatDetails 삽입 완료 후 날짜 블럭(ccbody-date)과 시작 블럭(ccbody-start)를 삽입
 			CBI.isFirst를 true로 갱신한다
 		*/
-		for(let key in payload.chatDetails) {
+
+		//chatFragment
+		const chatFragment = document.createDocumentFragment();
+
+		for(let i in payload.chatDetails) {
 			//플래그
+			/*날짜블럭(ccbody-date) 삽입 구분*/
 			let dateFlag = false;
-			let headFlag = false;
+			/*채팅 좌우 구분*/
+			let isLeftFlag = false;
+			/*기존 채팅과 이을지 여부*/
+			let isChatContinued = false;
 
 			//현재 요소
-			const cdDTO = payload.chatDetails[key];
+			const cdDTO = payload.chatDetails[i];
+			//현재 요소 시간
+			const reg = new Date(cdDTO.regdate);
+
+			//ccbody-left/right 판별
+			if(cdDTO.userid != CHAT_BODY_INFO.userid) {
+				isLeftFlag = true;
+			}
+
+			//기존 채팅과 이을지 판별 - 이전 채팅 ccbody-head 유지/제거-부여/미부여, 타겟 채팅 ccbody-timestamp 부여 여부
+			//또한 날짜블럭 삽입여부도 판별
+			if(i == 0) {
+				//로드된 채팅중 첫 번째는 마지막 기존 채팅과 비교
+				if(cdDTO.userid == CHAT_BODY_INFO.lastSender) {
+					if(reg.getTime() - (new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)).getTime() == 0) {
+						//동일송신자 && 1분이내 차이인 경우 isChatContinued = true
+						isChatContinued = true;
+					}
+				}
+				if(!isChatContinued && getDiffOfDate(reg.getTime(), (new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)).getTime()) < 0) {
+					//1일 이상 차이가 나면 dateFlag = true
+					dateFlag = true;
+				}
+			} else {
+				//나머지는 기존 삽입된 요소와 비교
+				if(cdDTO.userid == payload.chatDetails[i-1].userid) {
+					if(reg.getTime() - (new Date(chatFragment.firstElementChild.dataset.fulltimestamp)).getTime() == 0) {
+						isChatContinued = true;
+					}
+				}
+				if(!isChatContinued && getDiffOfDate(reg.getTime(), (new Date(chatFragment.firstElementChild.dataset.fulltimestamp)).getTime()) < 0) {
+					//1일 이상 차이가 나면 dateFlag = true
+					dateFlag = true;
+				}
+			}
+
+			//구현
+			const div = document.createElement("div");
+			div.id = "ccbodyele-" + cdDTO.chatDetailIdx;
+			div.classList.add(isLeftFlag ? "ccbody-left" : "ccbody-right");
+			div.dataset.timestamp = reg.getHours() + ":" 
+												+ (reg.getMinutes() < 10 ? "0" + reg.getMinutes()
+																		: reg.getMinutes());
+			div.dataset.fulltimestamp = cdDTO.regdate;
+			const p = document.createElement("p");
+			p.innerHTML = cdDTO.chatDetailContent;
+			div.appendChild(p);
+			if(isChatContinued) {
+				if(i == 0) {
+					if(CHAT_BODY_MORE_INNER_CONT.firstChild.classList.contains("ccbody-left")) {
+						CHAT_BODY_MORE_INNER_CONT.firstChild.firstChild.remove();
+						CHAT_BODY_MORE_INNER_CONT.firstChild.firstChild.remove();
+					}
+					CHAT_BODY_MORE_INNER_CONT.firstChild.classList.remove("ccbody-head");
+				} else {
+					if(chatFragment.firstChild.classList.contains("ccbody-left")) {
+						chatFragment.firstChild.firstChild.remove();
+						chatFragment.firstChild.firstChild.remove();
+					}
+					chatFragment.firstChild.classList.remove("ccbody-head");
+				}
+			} else {
+				chatFragment.firstChild.classList.add("ccbody-head");
+				
+				if(chatFragment.firstChild.classList.contains("ccbody-left")) {
+					const imgDiv = document.createElement("div");
+					imgDiv.style.backgroundImage = "url('" + "/images/layoutimg/logo.png" + "')";
+					for(let ui of CHAT_BODY_INFO.chatRoomInfo.userImage) {
+						if(cdDTO.userid == ui.userid) {
+							imgDiv.style.backgroundImage = "url('" + "/user/thumbnail?sysname=" + ui.sysname + "')";
+							break;
+						}
+					}
+					
+					const useridDiv = document.createElement("div");
+					useridDiv.innerHTML = cdDTO.userid;
+
+					chatFragment.firstChild.prepend(useridDiv);
+					chatFragment.firstChild.prepend(imgDiv);
+				}
+
+				div.classList.add("ccbody-timestamp");
+			}
+			if(dateFlag) {
+				const tgtDate = new Date(
+					i == 0 ? new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)
+							: new Date(chatFragment.firstChild.dataset.fulltimestamp)
+				);
+				const dateDiv = document.createElement("div");
+				dateDiv.classList.add("ccbody-date");
+				dateDiv.innerHTML = tgtDate.getFullYear() + "년 " 
+								+ (tgtDate.getMonth() + 1) + "월 "
+								+ tgtDate.getDate() + "일 "
+								+ day[tgtDate.getDay()] + "요일";
+
+				chatFragment.prepend(dateDiv);
+			}
+
+			chatFragment.prepend(div);
+
 		}
+
+		if(CHAT_BODY_INFO.isFirst) {
+			const tgtDate = new Date(new Date(chatFragment.firstChild.dataset.fulltimestamp));
+			const dateDiv = document.createElement("div");
+			dateDiv.classList.add("ccbody-date");
+			dateDiv.innerHTML = tgtDate.getFullYear() + "년 " 
+							+ (tgtDate.getMonth() + 1) + "월 "
+							+ tgtDate.getDate() + "일 "
+							+ day[tgtDate.getDay()] + "요일";
+
+			chatFragment.prepend(dateDiv);
+
+			const startDiv = document.createElement("div");
+			startDiv.classList.add("ccbody-start");
+			const startP = document.createElement("p");
+			startP.innerHTML = "시작메시지 chatLoadHandler";
+			startDiv.appendChild(startP);
+
+			chatFragment.prepend(startDiv);
+		}
+
+		CHAT_BODY_MORE_INNER_CONT.prepend(chatFragment);
 	}
 
 	/*================================================================================*/
