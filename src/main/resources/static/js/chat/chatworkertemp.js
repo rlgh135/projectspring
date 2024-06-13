@@ -195,7 +195,7 @@ async function loadChat(data, port) {
 		}
 	}));
 	try {
-		const res = await promised_WebSocketReceiver("loadChat");
+		const res = await promised_WebSocketReceiver("loadChat", 500);
 		if(!!res.payload.reason) {
 			port.postMessage({
 				action: "loadChat",

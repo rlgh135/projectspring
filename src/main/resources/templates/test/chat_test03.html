@@ -772,6 +772,8 @@
 	CHAT_BODY_QUIT_BTN.addEventListener("click", chatBodyQuitBtnClick);
 	//채팅 submit 버튼 클릭
 	CHAT_BODY_SUBMIT_BTN.addEventListener("click", chatBodySubmitBtnClick);
+	//채팅창 스크롤 감지 - 채팅 로딩
+	CHAT_BODY_INNER_CONT.addEventListener("scroll", chatRoomScrollEventReceiver);
 
 
 	/*테스트*/
@@ -1048,11 +1050,15 @@
 						break;
 					}
 				}
+				//채팅방 목록 DOM 갱신
+				printChatList();
 				if(CHAT_BODY_INFO.isEmpty == false) {
 					scrollIntoLastChatElement();
 				}
 				/*미확인 채팅값 갱신 DOM에 적용*/
 
+				/*스크롤 감지 허용*/
+				isChatLoadProcessDone = true;
 			} catch(err) {
 				//채팅방 로딩 실패 출력
 				/*
@@ -1073,6 +1079,9 @@
 		여기서 결정하지 않음
 	*/
 	async function chatBodyQuitBtnClick(e) {
+		//스크롤 감지 금지
+		isChatLoadProcessDone = false;
+
 		//SharedWorker에게 요청
 		WORKER.port.postMessage({
 			action: "chatRoomLeave",
@@ -1094,6 +1103,9 @@
 			//임시
 			window.alert("채팅방 나가기를 실패했습니다");
 			console.log(err);
+
+			//스크롤 감지 롤백
+			isChatLoadProcessDone = true;
 		}
 	}
 
@@ -1136,6 +1148,8 @@
 				// adjustChatElementId("ccbodyele-loading", "ccbody-" + res.chatDetailIdx);
 				console.log(res);
 				sendChatReceiveHandler(res.payload);
+				//채팅방 목록 갱신
+				chatListControlForChatReceive(res.payload, false);
 			} catch(e) {
 				//오류 처리
 				console.log(e);
@@ -1178,8 +1192,10 @@
 					마지막 채팅과 1분 이하 차이면
 						마지막 채팅에서 ccbody-timestamp 제거
 					1분 이상이면
+						ccbody-head 부여
 						ccbody-timestamp 유지
 					1일 이상이면
+						ccbody-head 부여
 						ccbody-timestamp 유지
 						ccbody-date 삽입
 			CBI.lastSender 갱신
@@ -1189,13 +1205,20 @@
 		UNCHECKED_MSG_COUNT, CHAT_OT*_VD[n].uncheckedmsg 처리는 handler에서
 	*/
 	function broadcastChatHandler(payload) {
+		let unchkmsgFlag = false;
+
 		if(!!CHAT_BODY_INFO.roomidx) {
 			//채팅방이 열려있을때
 			createBroadcastChatElement(payload);
+			scrollIntoLastChatElement();
 		} else {
 			//채팅방이 닫혀있을떄
-			/*wip*/
+			/*UNCHECKED_MSG_COUNT는 VD 구현 시점에서 초기화*/
+			unchkmsgFlag = true;
 		}
+
+		//공통 처리(채팅리스트에서 수신 채팅방 최상위로 올리기 등)
+		chatListControlForChatReceive(payload, unchkmsgFlag);
 	}
 
 	//broadcastChat 채팅방 요소 처리
@@ -1204,6 +1227,7 @@
 		let dateFlag = false;
 		let headFlag = false;
 		let timestampRemoveFlag = false;
+
 
 		//시간 비교값
 		/*broadcastChat *상대적 미래**/
@@ -1227,6 +1251,8 @@
 				//ccbody-timestamp 유지 체크
 				if(timestamp.getTime() - tgtstamp.getTime() == 0) {
 					timestampRemoveFlag = true;
+				} else {
+					headFlag = true;
 				}
 			} else {
 				//그외 사용자 채팅이 마지막
@@ -1238,6 +1264,8 @@
 				dateFlag = true;
 			}
 		}
+
+		console.log("createBroadcastChatElement() dateFlag=" + dateFlag + " headFlag=" + headFlag + " tsRemoveFlag=" + timestampRemoveFlag);
 
 		//DOM 구현
 		/*기존 채팅 timestamp 제거*/
@@ -1286,6 +1314,9 @@
 		p.innerHTML = payload.chatContent;
 		lastChat.appendChild(p);
 		CHAT_BODY_MORE_INNER_CONT.appendChild(lastChat);
+
+		/*CBI.lastSender 갱신*/
+		CHAT_BODY_INFO.lastSender = payload.userid;
 	}
 	// function broadcastChatHandler(data) {
 	// 	if(!!CHAT_BODY_INFO.roomidx) {
@@ -1441,8 +1472,76 @@
 		lastChat.classList.add("ccbody-timestamp");
 	}
 
-	//스크롤 감지기
-	/**/
+	//스크롤 감지 허용 전역변수
+	/*위치 바꿔라*/
+	let isChatLoadProcessDone = false;
+
+	//스크롤 감지기(로딩)
+	/*
+		스크롤 지연시간 넣기?
+		넣는다면 chat_test05.html 참조
+	*/
+	async function chatRoomScrollEventReceiver(e) {
+		console.log("cRSER CBIC.scrollTop=" + CHAT_BODY_INNER_CONT.scrollTop);
+		if(CHAT_BODY_INFO.isEmpty === false && CHAT_BODY_INFO.isFirst === false) {
+			if(CHAT_BODY_INNER_CONT.scrollTop / CHAT_BODY_INNER_CONT.offsetHeight <= 0.25) {
+				if(isChatLoadProcessDone) {
+					isChatLoadProcessDone = false;
+
+					WORKER.port.postMessage({
+						action: "loadChat",
+						payload: {
+							roomidx: CHAT_BODY_INFO.roomidx,
+							startChatDetailIdx: CHAT_BODY_INFO.firstDetailIdx
+						}
+					});
+
+					try {
+						const res = await promised_waitTillResponse("loadChat", 1000);
+
+						console.log(res);
+						/*DOM 구현 함수 호출*/
+
+						/*모든 과정 완료 후 스크롤 로딩 허용*/
+						isChatLoadProcessDone = true;
+					} catch(err) {
+						console.error(err);
+						console.log(err);
+
+						isChatLoadProcessDone = true;
+					}
+				}
+			}
+		}
+	}
+
+	//스크롤 출력
+	function chatLoadHandler(payload) {
+		//CBI 갱신
+		CHAT_BODY_INFO.isFirst = payload.isFirst;
+		CHAT_BODY_INFO.firstDetailIdx = payload.startChatDetailIdx;
+
+		//DOM 구현
+		/*
+			인덱스 0 ~ length-1 순으로 순회
+			실제 구현은 최신순부터 내림차순
+			즉 가져온 리스트의 최신부터 기존 채팅 위에 appendChild를 한다
+
+			완료 후 CBI.firstDetailIdx를 payload.startDetailIdx로 초기화
+
+			payload.isFirst 가 true면
+			chatDetails 삽입 완료 후 날짜 블럭(ccbody-date)과 시작 블럭(ccbody-start)를 삽입
+			CBI.isFirst를 true로 갱신한다
+		*/
+		for(let key in payload.chatDetails) {
+			//플래그
+			let dateFlag = false;
+			let headFlag = false;
+
+			//현재 요소
+			const cdDTO = payload.chatDetails[key];
+		}
+	}
 
 	/*================================================================================*/
 	/*연결*/
@@ -1566,6 +1665,52 @@
 			//otm
 			CHAT_OTM_VD.unshift(new ChatRoom("otoele-" + data.roomidx, data));
 		}
+	}
+
+	//sendChat, broadcastChat 시 채팅방 리스트 VD 컨트롤
+	function chatListControlForChatReceive(payload, unchkmsgFlag) {
+		let isOTO = false;
+		let i = 0;
+
+		//찾기
+		for(; i < CHAT_OTO_VD.length; i++) {
+			if(CHAT_OTO_VD[i].dataObj.roomidx === payload.roomidx) {
+				if(unchkmsgFlag) {
+					CHAT_OTO_VD[i].dataObj.uncheckedmsg++;
+				}
+				isOTO = true;
+				break;
+			}
+		}
+		if(!isOTO) {
+			for(i = 0; i < CHAT_OTM_VD.length; i++) {
+				if(CHAT_OTM_VD[i].dataObj.roomidx === payload.roomidx) {
+					if(unchkmsgFlag) {
+						CHAT_OTM_VD[i].dataObj.uncheckedmsg++;
+					}
+					break;
+				}
+			}
+		}
+
+		console.log("cc=" + payload.chatContent + " ccr=" + payload.chatContentRegdate);
+		console.log("i=" + i);
+
+		//VD 조작
+		if(isOTO) {
+			CHAT_OTO_VD.unshift(CHAT_OTO_VD.splice(i, 1)[0]);
+			CHAT_OTO_VD[0].dataObj.chatContent = payload.chatContent;
+			CHAT_OTO_VD[0].dataObj.chatContentRegdate = payload.regdate;
+		} else {
+			CHAT_OTM_VD.unshift(CHAT_OTM_VD.splice(i, 1)[0]);
+			CHAT_OTM_VD[0].dataObj.chatContent = payload.chatContent;
+			CHAT_OTM_VD[0].dataObj.chatContentRegdate = payload.regdate;
+		}
+
+		console.log("VD control done");
+
+		//VD 구현 호출
+		printChatList();
 	}
 
 	//CHAT_BODY_INFO 세팅
@@ -1698,7 +1843,15 @@
 
 	//마지막 요소 포커스
 	function scrollIntoLastChatElement() {
-		CHAT_BODY_MORE_INNER_CONT.lastChild.scrollIntoView(false);
+		CHAT_BODY_MORE_INNER_CONT.lastChild.scrollIntoView({
+			behavior: "instant",
+			block: "end"
+		});
+		/*scrollBy(x, y) 의 y 값은 ccbody-timestamp의 마진바텀과 동일해야 함*/
+		CHAT_BODY_MORE_INNER_CONT.scrollBy({
+			top: 8,
+			behavior: "instant"
+		});
 	}
 
 	//채팅창 DOM 구현
@@ -1908,6 +2061,8 @@
 		//우선 기존 DOM 초기화
 		CHAT_LIST_OTO.replaceChildren();
 		CHAT_LIST_OTM.replaceChildren();
+		//미확인 채팅 총합 초기화
+		UNCHECKED_MSG_COUNT = 0;
 
 		//oto
 		const otoFragment = document.createDocumentFragment();
@@ -1917,7 +2072,9 @@
 		//oto 요소 생성
 		for(let arrEle of CHAT_OTO_VD) {
 			//안 읽은 챗 개수 합산
-			UNCHECKED_MSG_COUNT += arrEle.uncheckedmsg;
+			UNCHECKED_MSG_COUNT += arrEle.dataObj.uncheckedmsg;
+
+			console.log(arrEle);
 
 			//요소 틀
 			const div = document.createElement("div");
@@ -1931,9 +2088,9 @@
 				추후 서버에서 이미지 링크를 받아 실제로 출력하게끔 수정해야함
 			*/
 			const img = document.createElement("img");
-			if(!!arrEle.userImage[0].sysname) {
+			if(!!arrEle.dataObj.userImage[0].sysname) {
 				//실제 이미지
-				img.src = "/user/thumbnail?sysname=" + arrEle.userImage[0].sysname;
+				img.src = "/user/thumbnail?sysname=" + arrEle.dataObj.userImage[0].sysname;
 			} else {
 				//임시 이미지
 				img.src = "/images/layoutimg/logo.png";
@@ -1949,13 +2106,13 @@
 			const p1 = document.createElement("p");
 
 			//title, userid 처리 관련 분기(일반/일반 <-> 판매자/일반)
-			if(!!arrEle.pkgnum) {
+			if(!!arrEle.dataObj.pkgnum) {
 				//판매자/일반
 				h4.innerHTML = arrEle.dataObj.title;
 				p1.innerHTML = arrEle.dataObj.userList[0].userid;
 			} else {
 				//일반/일반
-				if(!!arrEle.title) {
+				if(!!arrEle.dataObj.title) {
 					h4.innerHTML = arrEle.dataObj.title;
 					p1.innerHTML = arrEle.dataObj.userList[0].userid;
 				} else {
@@ -1995,7 +2152,7 @@
 		//otm 요소 생성
 		for(let arrEle of CHAT_OTM_VD) {
 			//안 읽은 챗 개수 합산
-			UNCHECKED_MSG_COUNT += arrEle.uncheckedmsg;
+			UNCHECKED_MSG_COUNT += arrEle.dataObj.uncheckedmsg;
 
 			//요소 틀
 			const div = document.createElement("div");
@@ -2014,8 +2171,8 @@
 			*/
 			for(let i = 0 ; i < 4; i++) {
 				const img = document.createElement("img");
-				if(!!arrEle.userImage[i].sysname) {
-					img.src = "/user/thumbnail?sysname=" + arrEle.userImage[i].sysname;
+				if(!!arrEle.dataObj.userImage[i].sysname) {
+					img.src = "/user/thumbnail?sysname=" + arrEle.dataObj.userImage[i].sysname;
 				}
 				img.alt = "Chat room image";
 				innerDivFir.appendChild(img);
@@ -2036,13 +2193,13 @@
 			userids = userids.slice(0, -1);
 
 			//title, userid 처리 관련 분기(일반/일반 <-> 판매자/일반)
-			if(!!arrEle.pkgnum) {
+			if(!!arrEle.dataObj.pkgnum) {
 				//판매자/일반
 				h4.innerHTML = arrEle.dataObj.title;
 				p1.innerHTML = userids;
 			} else {
 				//일반/일반
-				if(!!arrEle.title) {
+				if(!!arrEle.dataObj.title) {
 					h4.innerHTML = arrEle.dataObj.title;
 					p1.innerHTML = userids;
 				} else {

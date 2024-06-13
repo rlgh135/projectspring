@@ -267,29 +267,29 @@ public class WebSocketHandler extends TextWebSocketHandler {
 				));
 			}
 			break;
-//		case "loadChat":
-//			//메시지 로드 요청
-//			/*
-//			 * 채팅방 진입시의 최초 로드와는 별개임
-//			 * 
-//			 * 일단 지금은 바로 DB 조회하는걸로
-//			 * */
-//			//서비스에서 값 가져오기
-//			if(null == (sendingMsg = chatServiceImpl.chatLoadHandling(receivedMsg))) {
-//				//조회 실패시 처리
-//				session.sendMessage(new TextMessage(
-//						objectMapper.writeValueAsString(failMessageBuilder("loadChat", ChatFailReason.SERVER_FAIL))
-//				));
-//				return;
-//			}
-//			
-//			//전송
-//			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg)));
-//			break;
-//		default:
-//			//오류 처리 등?
-//			// 필요 없는 로직일 수도
-//			break;
+		case "loadChat":
+			//메시지 로드 요청
+			/*
+			 * 채팅방 진입시의 최초 로드와는 별개임
+			 * 
+			 * 일단 지금은 바로 DB 조회하는걸로
+			 * */
+			//서비스에서 값 가져오기
+			if(null == (sendingMsg = chatServiceImpl.chatLoadHandling(receivedMsg))) {
+				//조회 실패시 처리
+				session.sendMessage(new TextMessage(
+						objectMapper.writeValueAsString(failMessageBuilder("loadChat", ChatFailReason.SERVER_FAIL))
+				));
+				return;
+			}
+			
+			//전송
+			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(sendingMsg)));
+			break;
+		default:
+			//오류 처리 등?
+			// 필요 없는 로직일 수도
+			break;
 		}
 //		테스트를 위해 주석처리 - 240603
 	}
