@@ -1,209 +1,296 @@
 /*
 	채팅 통합 처리를 위한 SharedWorker
-	여기 로그들은
-	chrome://inspect/#workers
-	로 가야만 볼 수 있음
+	로그 확인 -> chrome://inspect/#workers
 */
 
-/*
-	메모 240528
-	웹소켓 열고 닫는거 관련
-	여기다가 채팅창이 열리고 닫힌 브라우저 컨텍스트가 몇개 있는지를
-	기록하는 변수를 만들어야 함
-	지금 상태로는 채팅창 하나가 닫히면 다른 채팅창이 열린 브라우저 컨텍스트가 몇개
-	있던간에 웹소켓이 닫힘
-	이걸 기록하고 컨트롤할 변수와 로직이 필요함
-*/
-
-/*
-	프로토콜? 240529
-	브라우저 컨텍스트 -> 공유 워커
-	{
-		action: "...",
-		...
-	}
-	공유 워커 -> 브라우저 컨텍스트
-	{
-		actRes: "...",
-		...
-	}
-*/
-
-//웹소켓 커넥션
+//커넥션 객체
 let WEBSOCKET = null;
-//SSE 커넥션
 let EVENTSOURCE = null;
-
-//Web Worker port
 const PORT_LIST = [];
 
-//채팅방이 열린 탭 목록
+//포트 리스트 생성자
+function PortListElementBuilder(port) {
+	this.port = port;
+	this.chatRoomIdx = null;
+}
 
-//미확인 메시지 개수
-let uncheckedMsgCnt = 0;
+//최초 SharedWorker 접속시 SSE 연결
+if(!EVENTSOURCE && !WEBSOCKET)
+	connectSSE();
 
 //SharedWorker 연결
 self.onconnect = function(e) {
 	const port = e.ports[0];
-	
-	PORT_LIST.push(port);
-	
-	port.onmessage = function(e) {
-		console.log("웹워커 onmessage e.data.action=" + e.data.action);
-		
-		switch(e.data.action) {
-			//closePort는 addEventListener - beforeunload 시 호출하게 해야 함
-			//https://stackoverflow.com/questions/13662089/javascript-how-to-know-if-a-connection-with-a-shared-worker-is-still-alive
-            case "closePort":
-                let idx;
-                for(let i = 0; i < PORT_LIST.length; i++) {
-                    if(PORT_LIST[i] == port) {
-                        idx = i;
-                    }
-                }
-                PORT_LIST.splice(idx, 1);
-				console.log("공유 웹워커 포트 1 개 삭제");
-                if(PORT_LIST.length < 1) {
-					//이거 따로 함수로 분리시키면 좋을거같은데
-					console.log("공유 웹워커 종료 : 연결된 포트 없음");
-                    disconnectConnection("socket is closed by user exit");
-					self.close();
-                }
-                break;
-            case "sendMsg":
-				console.log(e.data.payload);
-                // WEBSOCKET.send(JSON.stringify(e.data.content));
-                //웹소켓 연결시에만 받게 해야함
 
-				//reqAct로 분기
-				switch(e.data.payload.reqAct) {
-					case "chatRoomEnter": //  -> 채팅방 진입 요청
-						WEBSOCKET.send(JSON.stringify({
-							act: "chatRoomEnter", // <-- 이거 어케 스위치문 없이 통합할 수 없나
-							payload: {
-								roomidx: e.data.payload.roomidx
-							}
-						}));
-						promised_WebSocketMsgReceiver("chatRoomEnter")
-						.then((data) => {
-							port.postMessage(data);
-						})
-						.catch((err) => {});
+	PORT_LIST.push(new PortListElementBuilder(port));
+
+	//함수로 분리
+	port.onmessage = function(e) {
+		console.log("SharedWorker, onmessage, e.data.action=" + e.data.action);
+		switch(e.data.action) {
+			//탭 닫기
+			case "closePort":
+				let idx;
+				for(let i = 0; i < PORT_LIST.length; i++) {
+					if(PORT_LIST[i].port == port) {
+						idx = i;
 						break;
+					}
 				}
-                break;
-			case "chkConnState":
-				let state = "";
-				if(!!WEBSOCKET) {
-					state = "WS";
-				} else if(!!EVENTSOURCE) {
-					state = "SSE";
-				} else {
-					state = "NONE";
+				PORT_LIST.splice(idx, 1);
+				console.log("SharedWorker, port removed");
+				if(PORT_LIST.length < 1) {
+					console.log("SharedWorker, closed");
+					//서버와의 연결 끊기
+					disconnectSSE();
+					disconnectWebSocket();
+					self.close();
 				}
-				port.postMessage({
-					actRes: "chkConnStateDone",
-					connState: state
+				break;
+			case "chatRoomEnter":
+				chatRoomEnter(e.data, port)
+				.then((result) => {
+					if(result) {
+						for(let key in PORT_LIST) {
+							if(PORT_LIST[key].port == port) {
+								PORT_LIST[key].chatRoomIdx = e.data.payload.roomidx;
+							}
+						}
+					} else {
+						//실패시 웹소켓을 끊는다
+						disconnectWebSocket();
+						connectSSE();
+					}
 				});
 				break;
-            case "upgradeConn":
-				//SSE -> WebSocket
-				//웹소켓 연결이 살아있는지 체크 - 중복 연결을 막는다
-				if(!WEBSOCKET) {
-					//우선 브컨들에게 웹소켓 연결을 알린다
-					broadcastMsg("WebSocket Conn req", {
-						status: "WebSocket Conn reqed"
-					})
-					upgradeConnection(port);
-				}
+			case "chatRoomLeave":
+				chatRoomLeave(e.data, port)
+				.then((result) => {
+					if(result) {
+						let crlFlag = true;
+						for(let key in PORT_LIST) {
+							if(PORT_LIST[key].port == port) {
+								PORT_LIST[key].chatRoomIdx = null;
+							} else if(!!PORT_LIST[key].chatRoomIdx) {
+								//채팅방 접속중인 다른 탭이 있는지 확인
+								crlFlag = false;
+							}
+						}
+						//접속중인 채팅방이 없으면 연결을 내린다
+						if(crlFlag) {
+							console.log("why");
+							disconnectWebSocket();
+							connectSSE();
+						}
+					}
+				});
 				break;
-			case "downgradeConn":
-				//WebSocket -> SSE
-				//SSE 연결이 살아있는지 체크 - 중복 연결을 막는다
-				if(!EVENTSOURCE) {
-					downgradeConnection("socket is closed by connection downgrade");
-				}
+			case "loadChat":
+				loadChat(e.data, port);
 				break;
-			case "logout":
-				disconnectConnection("socket is closed by connection close");
+			case "sendChat":
+				sendChat(e.data, port);
 				break;
-        }
+		}
 	};
 };
 
-//최초연결시 SSE 연결
-if(!EVENTSOURCE && !WEBSOCKET) {
-	connectSSE();
-}
-
-/*================================================================================*/
-/*브로드캐스트*/
+//broadcast
 function broadcastMsg(by, data) {
-	PORT_LIST.forEach((port) => {
-		port.postMessage(data);
-		console.log("SharedWorker broadcast to=");
-		console.log(port);
-		console.log("data=");
-		console.log(data);
-	});
-}
-
-/*================================================================================*/
-/*1회성 수신 함수*/
-async function promised_WebSocketMsgReceiver(act) {
-	return new Promise((resolve, reject) => {
-		const receiver = function(e) {
-			const data = JSON.parse(e.data);
-			if(data.act === act) {
-				console.log("promised_WebSocketMsgReceiver, act=" + act);
-				resolve(data);
-				WEBSOCKET.removeEventListener("message", receiver);
-			}
-		};
-		WEBSOCKET.addEventListener("message", receiver);
-	});
-}
-
-/*================================================================================*/
-/*연결 관리*/
-//연결 업그레이드 함수
-function upgradeConnection(reqPort) {
-	connectWebSocket().
-	then(() => {
-		if(!!EVENTSOURCE) {
-			EVENTSOURCE.close();
-			EVENTSOURCE = null;
-		}
-
-		//일단 요청 브컨에게 연결 수립을 알린다
-		console.log("upgradeConn postMsg");
-		reqPort.postMessage({
-			actRes: "WebSocketConnDone"
+	console.log("broadcast, SharedWorker, by=" + by);
+	console.log(data);
+	PORT_LIST.forEach((val) => {
+		val.port.postMessage({
+			action: data.act,
+			payload: data.payload
 		});
-	})
-	.catch((err) => {});
+	});
 }
-//연결 다운그레이드 함수
-function downgradeConnection(reason) {
-	connectSSE();
-	if(!!WEBSOCKET) {
-		WEBSOCKET.close(1000, reason);
-		WEBSOCKET = null;
+
+//chatRoomEnter 처리
+async function chatRoomEnter(data, port) {
+	//웹소켓 연결이 없는 경우에만
+	if(!WEBSOCKET) {
+		disconnectSSE();
+		try {
+			await connectWebSocket();
+		} catch(e) {
+			port.postMessage({
+				action: "chatRoomEnter",
+				isSuccess: false
+			});
+			return false;
+		}
+	}
+
+	WEBSOCKET.send(JSON.stringify({
+		act: "chatRoomEnter",
+		payload: {
+			roomidx: data.payload.roomidx
+		}
+	}));
+	try {
+		const res = await promised_WebSocketReceiver("chatRoomEnter");
+		if(!!res.payload.reason) {
+			port.postMessage({
+				action: "chatRoomEnter",
+				isSuccess: false
+			});
+			return false;
+		}
+		port.postMessage({
+			action: "chatRoomEnter",
+			isSuccess: true,
+			payload: res.payload
+		});
+		return true;
+	} catch(e) {
+		port.postMessage({
+			action: "chatRoomEnter",
+			isSuccess: false
+		});
+		return false;
 	}
 }
-//연결 종료 함수
-function disconnectConnection(reason) {
+
+//chatRoomLeave 처리
+async function chatRoomLeave(data, port) {
+	WEBSOCKET.send(JSON.stringify({
+		act: "chatRoomLeave",
+		payload: {
+			roomidx: data.payload.roomidx
+		}
+	}));
+	try {
+		const res = await promised_WebSocketReceiver("chatRoomLeave");
+		if(!!res.payload.reason) {
+			port.postMessage({
+				action: "chatRoomLeave",
+				isSuccess: false
+			});
+			return false;
+		}
+		port.postMessage({
+			action: "chatRoomLeave",
+			isSuccess: true,
+			payload: res.payload
+		});
+		return true;
+	} catch(e) {
+		port.postMessage({
+			action: "chatRoomLeave",
+			isSuccess: false
+		});
+		return false;
+	}
+}
+
+//loadChat 처리
+async function loadChat(data, port) {
+	WEBSOCKET.send(JSON.stringify({
+		act: "loadChat",
+		payload: {
+			roomidx: data.payload.roomidx,
+			startChatDetailIdx: data.payload.startChatDetailIdx
+		}
+	}));
+	try {
+		const res = await promised_WebSocketReceiver("loadChat", 500);
+		if(!!res.payload.reason) {
+			port.postMessage({
+				action: "loadChat",
+				isSuccess: false
+			});
+			return;
+		}
+		port.postMessage({
+			action: "loadChat",
+			isSuccess: true,
+			payload: res.payload
+		});
+		return;
+	} catch(e) {
+		port.postMessage({
+			action: "loadChat",
+			isSuccess: false
+		});
+		return;
+	}
+}
+
+//sendChat 처리
+async function sendChat(data, port) {
+	WEBSOCKET.send(JSON.stringify({
+		act: "sendChat",
+		payload: {
+			roomidx: data.payload.roomidx,
+			chatContent: data.payload.chatContent
+		}
+	}));
+
+	try {
+		const res = await promised_WebSocketReceiver("sendChat");
+		console.log(res);
+		if(!!res.payload.reason) {
+			port.postMessage({
+				action: "sendChat",
+				isSuccess: false
+			})
+			return;
+		}
+		port.postMessage({
+			action: "sendChat",
+			isSuccess: true,
+			payload: res.payload
+		});
+		return;
+	} catch(e) {
+		port.postMessage({
+			action: "sendChat",
+			isSuccess: false
+		})
+		return;
+	}
+}
+
+//1회성 수신 함수
+async function promised_WebSocketReceiver(act, millisec = 3000) {
+	return new Promise((resolve, reject) => {
+        const receiver = (e) => {
+            const data = JSON.parse(e.data);
+            if (data.act === act) {
+				console.log("promised_WebSocketReceiver resolved");
+				console.log(data);
+                WEBSOCKET.removeEventListener("message", receiver);
+                clearTimeout(timeoutId); // 타임아웃 중단
+                resolve(data);
+            }
+        };
+
+        const timeoutId = setTimeout(() => {
+            console.log("promised_WebSocketReceiver timeout call");
+			if(!!WEBSOCKET)
+            	WEBSOCKET.removeEventListener("message", receiver);
+            reject(new Error("timeout"));
+        }, millisec);
+
+        WEBSOCKET.addEventListener("message", receiver);
+    });
+}
+//연결 종료
+function disconnectSSE() {
 	if(!!EVENTSOURCE) {
 		EVENTSOURCE.close();
 		EVENTSOURCE = null;
 	}
+}
+function disconnectWebSocket() {
 	if(!!WEBSOCKET) {
-		WEBSOCKET.close(1000, reason);
+		WEBSOCKET.close(1000);
 		WEBSOCKET = null;
 	}
 }
-
-//SSE 연결 함수
+//SSE 연결
 function connectSSE() {
 	EVENTSOURCE = new EventSource("http://localhost:8080/sse/subscribe");
 	
@@ -213,9 +300,11 @@ function connectSSE() {
 	EVENTSOURCE.addEventListener("connected", (e) => {
 		console.log("SSE received msg=connected");
 	});
-	EVENTSOURCE.addEventListener("broadcast", (e) => {
+	EVENTSOURCE.addEventListener("broadcastChat", (e) => {
 		console.log("SSE received msg=broadcast");
-		broadcastMsg("SSE", e.data);
+		const data = JSON.parse(e.data);
+		if(data.act === "broadcastChat")
+			broadcastMsg("SSE", data);
 	});
 	EVENTSOURCE.onerror = (err) => {
 		console.log("SSE onerror=" + err);
@@ -226,8 +315,10 @@ function connectSSE() {
 		console.log("SSE closed");
 	};
 }
-//웹소켓 연결 함수
+//웹소켓 연결
 async function connectWebSocket() {
+	console.log("connWS");
+
 	WEBSOCKET = new WebSocket("ws://localhost:8080/wschat");
 	
 	WEBSOCKET.onopen = (e) => {
@@ -237,7 +328,9 @@ async function connectWebSocket() {
 		console.log("WebSocket received msg");
 		console.log(e.data);
 		console.log(JSON.parse(e.data));
-		broadcastMsg("WebSocket", e.data);
+		const data = JSON.parse(e.data);
+		if(data.act === "broadcastChat")
+			broadcastMsg("WebSocket", data);
 	};
 	WEBSOCKET.onerror = (e) => {
 		WEBSOCKET.close();
@@ -248,8 +341,16 @@ async function connectWebSocket() {
 	};
 
 	return new Promise((resolve, reject) => {
-		WEBSOCKET.addEventListener("open", (e) => {
+		const dcs = (e) => {
+			WEBSOCKET.removeEventListener("open", dcs);
+			clearTimeout(timeoutId);
 			resolve();
-		});
+		};
+		const timeoutId = setTimeout(() => {
+			if(!!WEBSOCKET)
+				WEBSOCKET.removeEventListener("open", dcs);
+			reject(new Error("timeout"));
+		}, 3000);
+		WEBSOCKET.addEventListener("open", dcs);
 	});
 }

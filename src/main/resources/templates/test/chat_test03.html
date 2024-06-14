@@ -6,10 +6,10 @@
 	<title>CHAT TEST 03</title>
 	<style>	
 		*{
-	    	margin: 0; padding: 0;
-	    	box-sizing: border-box;
+			margin: 0; padding: 0;
+			box-sizing: border-box;
 		}
-		
+
 		#chat-wrapper {
 			position: fixed;
 			bottom: 80px;
@@ -77,26 +77,31 @@
 			align-content: stretch;
 			align-items: center;
 
-			background-color: lightblue;
+			box-shadow: 0px 5px 5px 0px lightgray;
+
+			z-index: 100;
 		}
 		#chat-list-footer {
 			width: 100%;
 			height: 50px;
-
-			background-color: lightblue;
 
 			border-radius: 0 0 20px 20px;
 
 			display: flex;
 			font-display: row;
 			justify-content: space-between;
+
+			background-color: rgb(238, 238, 238);
+
+			z-index: 100;
 		}
 		.cc-footer-btn {
-			width: 120px;
+			width: 200px;
 			height: 50px;
-			background-color: lightcoral;
 			text-align: center;
 			line-height: 50px;
+
+			background-color: transparent;
 		}
 		#chat-list-footer-oto-btn {
 			border-radius: 0 0 0 20px;
@@ -124,87 +129,115 @@
 		#chat-list-oto-cont::-webkit-scrollbar {
 			width: 10px;
 		}
-        #chat-list-oto-cont::-webkit-scrollbar-thumb {
-            background-color: lightcoral;
-            border-radius: 20px;
-            background-clip: padding-box;
-            border: 2px solid transparent;
-        }
-        /* #chat-list-oto-cont::-webkit-scrollbar-track {
-            background-color: lightcyan;
-        } */
+		#chat-list-oto-cont::-webkit-scrollbar-thumb {
+			background-color: lightgray;
+			border-radius: 20px;
+			background-clip: padding-box;
+			border: 2px solid transparent;
+		}
+		/* #chat-list-oto-cont::-webkit-scrollbar-track {
+			background-color: lightcyan;
+		} */
 
-        #chat-body-cont {
-            width: 100%;
-            height: 100%;
-        }
-        #chat-body-header {
-            width: 100%;
-            height: 50px;
+		#chat-body-cont {
+			width: 100%;
+			height: 100%;
+		}
+		#chat-body-header {
+			width: 100%;
+			height: 50px;
 
-            padding: 0 5px 0 5px;
+			padding: 0 5px 0 5px;
 
-            border-radius: 20px 20px 0 0;
+			border-radius: 20px 20px 0 0;
 
-            display: flex;
-            flex-direction: row;
-            align-content: stretch;
-            align-items: center;
+			display: flex;
+			flex-direction: row;
+			align-content: stretch;
+			align-items: center;
 
-            background-color: lightblue;
-        }
-        #chat-body-inner-cont {
-            width: 100%;
-            height: 500px;
+			box-shadow: 0px 5px 5px 0px lightgray;
 
-            /* padding: 0 15px 0 15px; */
-            
-            /* display: flex; */
-            /* flex-direction: column-reverse; */
-            /* flex-direction: column; */
+			z-index: 100;
+		}
+		#chat-body-inner-cont {
+			width: 100%;
+			height: 500px;
 
-            /* overflow: auto; */
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-        #chat-body-more-inner-cont {
-            width: 335px;
-            /* height: 500px; */
-            max-height: fit-content;
+			/* padding: 0 15px 0 15px; */
+			
+			/* display: flex; */
+			/* flex-direction: column-reverse; */
+			/* flex-direction: column; */
 
-            /* margin: 0 auto; */
-            margin-left: 50px;
-            padding: 15px 0 0 0;
+			/* overflow: auto; */
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+		#chat-body-more-inner-cont {
+			width: 335px;
+			/* height: 500px; */
+			max-height: fit-content;
 
-            display: flex;
-            flex-direction: column;
-        }
-        /* 참조 https://codingbroker.tistory.com/66 */
-        #chat-body-inner-cont::-webkit-scrollbar {
-            width: 10px;
-        }
-        #chat-body-inner-cont::-webkit-scrollbar-thumb {
-            background-color: lightcoral;
-            border-radius: 20px;
-            background-clip: padding-box;
-            border: 2px solid transparent;
-            /* margin-left: -10px; */
-        }
-        /* #chat-body-inner-cont::-webkit-scrollbar-track {
-            background-color: lightcyan;
-        } */
-        #chat-body-input-cont {
-            width: 100%;
-            height: 50px;
+			/* margin: 0 auto; */
+			margin-left: 50px;
+			padding: 15px 0 0 0;
 
-            background-color: lightblue;
+			display: flex;
+			flex-direction: column;
+		}
+		/* 참조 https://codingbroker.tistory.com/66 */
+		#chat-body-inner-cont::-webkit-scrollbar {
+			width: 10px;
+		}
+		#chat-body-inner-cont::-webkit-scrollbar-thumb {
+			background-color: lightcoral;
+			border-radius: 20px;
+			background-clip: padding-box;
+			border: 2px solid transparent;
+			/* margin-left: -10px; */
+		}
+		/* #chat-body-inner-cont::-webkit-scrollbar-track {
+			background-color: lightcyan;
+		} */
+		#chat-body-input-cont {
+			width: 100%;
+			height: 50px;
 
-            border-radius: 0 0 20px 20px;
-        }
+			padding: 0 15px 0 15px;
 
-        #quit-chat {
-            margin-right: 5px;
-        }
+			background-color: rgb(238, 238, 238);
+
+			border-radius: 0 0 20px 20px;
+
+			z-index: 100;
+
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+		}
+		#input-chat {
+			width: 300px;
+			height: 30px;
+		}
+		#submit-chat {
+			background-color: transparent;
+			background-image: url("/images/boardimg/next.png");
+			background-size: 60%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		#quit-chat {
+			margin-right: 5px;
+
+			background-color: transparent;
+			background-image: url("/images/boardimg/prev.png");
+			background-size: 60%;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
 
 		.cc-list-oto-ele {
 			height: 100px;
@@ -214,7 +247,9 @@
 
 			border-radius: 15px/15px;
 
-			background-color: lightsalmon;
+			/* background-color: lightsalmon; */
+
+			box-shadow: 2px 2px 8px 0px lightgray;
 
 			/* overflow: hidden; */
 			/*
@@ -300,7 +335,7 @@
 
 			border-radius: 15px/15px;
 
-			background-color: lightsalmon;
+			/* background-color: lightsalmon; */
 
 			/* overflow: hidden; */
 			/*
@@ -359,41 +394,44 @@
 			border-radius: 0 0 10px 0;
 		}
 
-        .ccbody-left, .ccbody-right {
-            min-width: 20px;
-            max-width: 250px;
-            min-height: 20px;
-            max-height: fit-content;
+		.ccbody-left, .ccbody-right {
+			min-width: 20px;
+			max-width: 250px;
+			min-height: 20px;
+			max-height: fit-content;
 
 			border-radius: 10px/10px;
 
-            font-size: 16px;
-            word-break: break-all;
+			font-size: 16px;
+			word-break: break-all;
 
-            /* margin: 0 15px 15px 15px; */
-            margin-bottom: 8px;
-            padding: 5px 10px 5px 10px;
+			/* margin: 0 15px 15px 15px; */
+			margin-bottom: 8px;
+			padding: 5px 10px 5px 10px;
 
-            flex-shrink: 0;
+			flex-shrink: 0;
 
-            background-color: lightsalmon;
-        }
-        .ccbody-left {
-            margin-right: auto;
-        }
-        .ccbody-right {
-            margin-left: auto;
-            /* margin-right: 5px; */
-        }
-        .ccbody-continue {
-            margin-bottom: 5px;
-        }
-        .ccbody-btn {
-            width: 40px;
-            height: 40px;
-            border: 0;
-            /* background-color: transparent; */
-        }
+			background-color: lightsalmon;
+		}
+		.ccbody-left {
+			margin-right: auto;
+
+			background-color: rgb(238, 238, 238);
+		}
+		.ccbody-right {
+			margin-left: auto;
+			/* margin-right: 5px; */
+			background-color: rgb(255, 228, 109);
+		}
+		.ccbody-continue {
+			margin-bottom: 5px;
+		}
+		.ccbody-btn {
+			width: 40px;
+			height: 40px;
+			border: 0;
+			/* background-color: transparent; */
+		}
 		.ccbody-loading {
 			position: relative;
 		}
@@ -434,65 +472,65 @@
 			bottom: 100px; right: 0px;
 		}
 
-        /*채팅 시작 메시지 블럭*/
-        .ccbody-start {
-            width: 250px;
-            min-height: 30px;
-            max-height: fit-content;
+		/*채팅 시작 메시지 블럭*/
+		.ccbody-start {
+			width: 250px;
+			min-height: 30px;
+			max-height: fit-content;
 
-            /* margin: 0 auto; */
-            margin: 0 0 8px 25px;
-            padding: 6px 15px 6px 15px;
+			/* margin: 0 auto; */
+			margin: 0 0 8px 25px;
+			padding: 6px 15px 6px 15px;
 
-            border-radius: 10px/10px;
+			border-radius: 10px/10px;
 
-            font-size: 12px;
-            word-break: break-all;
-            text-align: center;
+			font-size: 12px;
+			word-break: break-all;
+			text-align: center;
 
-            flex-shrink: 0;
+			flex-shrink: 0;
 
-            background-color: lightgray;
-        }
-        /* 채팅 날짜 메시지 블럭 */
-        .ccbody-date {
-            width: 160px;
-            height: 20px;
+			background-color: lightgray;
+		}
+		/* 채팅 날짜 메시지 블럭 */
+		.ccbody-date {
+			width: 160px;
+			height: 20px;
 
-            margin: 12px 0 20px 70px;
-            padding: 2px 0 2px 0;
+			margin: 12px 0 20px 70px;
+			padding: 2px 0 2px 0;
 
-            border-radius: 10px/10px;
+			border-radius: 10px/10px;
 
-            font-size: 12px;
-            text-align: center;
+			font-size: 12px;
+			text-align: center;
 
-            background-color: lightgray;
-        }
+			background-color: lightgray;
+		}
 
-        /* 채팅요소 날짜 가상요소선택자 */
-        .ccbody-left, .ccbody-right {
-            position: relative;
-        }
+		/* 채팅요소 날짜 가상요소선택자 */
+		.ccbody-left, .ccbody-right {
+			position: relative;
+		}
 
-        .ccbody-timestamp.ccbody-left::after {
-            content: attr(data-timestamp);
-    
-            font-size: 10px;
-    
-            position: absolute;
-            right: -30px;
-            bottom: 0px;
-        }
-        .ccbody-timestamp.ccbody-right::after {
-            content: attr(data-timestamp);
-    
-            font-size: 10px;
-    
-            position: absolute;
-            left: -30px;
-            bottom: 0px;
-        }
+		.ccbody-timestamp.ccbody-left::after {
+			content: attr(data-timestamp);
+
+			font-size: 10px;
+
+			position: absolute;
+			right: -30px;
+			bottom: 0px;
+		}
+		.ccbody-timestamp.ccbody-right::after {
+			content: attr(data-timestamp);
+
+			font-size: 10px;
+
+			position: absolute;
+			left: -30px;
+			bottom: 0px;
+		}
 
 		/* 꼬리표, (ccbody-left의 경우)상대 사용자 이미지, userid */
 		/*ccbody-left 꼬리표*/
@@ -506,7 +544,7 @@
 			transform: rotate(45deg);
 
 			border-top: 10px solid transparent;
-			border-right: 17px solid lightsalmon;
+			border-right: 17px solid rgb(238, 238, 238);
 			border-bottom: 10px solid transparent;
 			border-left: 10px solid transparent;
 		}
@@ -523,7 +561,7 @@
 			border-top: 10px solid transparent;
 			border-right: 10px solid transparent;
 			border-bottom: 10px solid transparent;
-			border-left: 17px solid lightsalmon;
+			border-left: 17px solid rgb(255, 228, 109);
 		}
 		/*ccbody-left 최상단 띄우기*/
 		.ccbody-left.ccbody-head {
@@ -539,7 +577,7 @@
 			border-radius: 10px/10px;
 
 			background-size: cover;
-			background-color: lightsalmon;
+			background-color: rgb(235, 235, 235);
 		}
 		/*ccbody-left 최상단 유저아이디*/
 		.ccbody-left.ccbody-head>div:nth-child(2) {
@@ -550,31 +588,31 @@
 
 			font-size: 12px;
 		}
-        
 
-        /* 요소 숨기기 */
+
+		/* 요소 숨기기 */
 		.cc-hidden {
 			display: none!important;
 		}
 
-        /*
-            채팅 요소 가상요소선택자 정리
+		/*
+			채팅 요소 가상요소선택자 정리
 
-            - 로딩(전송중)
-            .ccbody-loading::after
+			- 로딩(전송중)
+			.ccbody-loading::after
 
-            - 타임스탬프
-            .ccbody-timestamp.ccbody-left/right::after
+			- 타임스탬프
+			.ccbody-timestamp.ccbody-left/right::after
 
-            - 꼬리표
-            .ccbody-tail.ccbody-left/right::before
-        */
-        /*
-            메모
-            지금 ccbody-left.ccbody-head 마진탑 관련해서 문제있음
-            자식 pos를 absolute로 줬더니 위쪽 채팅이랑 간격 조절이 안된다
+			- 꼬리표
+			.ccbody-tail.ccbody-left/right::before
+		*/
+		/*
+			메모
+			지금 ccbody-left.ccbody-head 마진탑 관련해서 문제있음
+			자식 pos를 absolute로 줬더니 위쪽 채팅이랑 간격 조절이 안된다
 			-> .ccbody-left.ccbody-head에 mt40 줘서 해결함
-        */
+		*/
 	</style>
 </head>
 <body>
@@ -597,50 +635,7 @@
 							<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
 							<p>현재 입장해있는 채팅방이 없습니다</p>
 						</div>
-						<div id="chat-list-chatbot-cont" class="cc-hidden">
-							<!-- WIP -->
-						</div>
 						<div id="chat-list-oto-cont">
-							<!-- oto, otm 요소 예시 -->
-							<!-- <div id="otoele-1" class="cc-list-oto-ele">
-								<div>
-									<img src="../../static/images/layoutimg/logo.png" alt="img001">
-								</div>
-								<div>
-									<h4>패키지명 팔라우 바다여행</h4>
-									<p>qwerty1234</p>
-									<p>네 5박 6일 맞습니다</p>
-									<p>5월 28일</p>
-									<div>99..</div>
-								</div>
-							</div>
-							<div id="otoele-2" class="cc-list-oto-ele">
-								<div>
-									<img src="../../static/images/layoutimg/logo.png" alt="img002">
-								</div>
-								<div>
-									<h4>팔라우 6박7일 하루빼고 바다만</h4>
-									<p>qwerty1234</p>
-									<p>진짜 6일동안 바다만 다녀요?</p>
-									<p>5월 28일</p>
-									<div class="cc-hidden">0</div>
-								</div>
-							</div>
-							<div id="otoele-2" class="cc-list-otm-ele">
-								<div>
-									<img src="../../static/images/layoutimg/logo.png" alt="img002">
-									<img src="../../static/images/layoutimg/logo.png" alt="img002">
-									<img src="../../static/images/layoutimg/logo.png" alt="img002">
-									<img src="../../static/images/layoutimg/logo.png" alt="img002">
-								</div>
-								<div>
-									<h4>팔라우 6박7일 하루빼고 바다만</h4>
-									<p>qwerty1234</p>
-									<p>진짜 6일동안 바다만 다녀요?</p>
-									<p>5월 28일</p>
-									<div class="cc-hidden">0</div>
-								</div>
-							</div> -->
 						</div>
 						<div id="chat-list-otm-cont" class="cc-hidden"></div>
 					</div>
@@ -655,7 +650,7 @@
 				</div>
 				<div id="chat-body-cont" class="cc-hidden">
 					<div id="chat-body-header">
-						<input type="submit" value="나가기" id="quit-chat" class="ccbody-btn">
+						<input type="submit" value="" id="quit-chat" class="ccbody-btn">
 						<h4 id="chat-body-title"></h4>
 					</div>
 					<div id="chat-body-inner-cont">
@@ -665,7 +660,7 @@
 					</div>
 					<div id="chat-body-input-cont">
 						<input type="text" id="input-chat">
-						<input type="submit" value="전송" id="submit-chat" class="ccbody-btn">
+						<input type="submit" value="" id="submit-chat" class="ccbody-btn">
 					</div>
 				</div>
 			</div>
@@ -682,7 +677,7 @@
 
 	//채팅 알림창
 	const CHAT_ALERT_CONT = document.getElementById("chat-alert-cont");
-	
+
 	//채팅방 목록창 container
 	const CHAT_LIST_CONT = document.getElementById("chat-list-cont");
 	//빈 채팅방 목록
@@ -725,7 +720,7 @@
 	window.addEventListener("load", function(e) {
 		if(!!window.SharedWorker) {
 			//공유워커 지원 브라우저
-			WORKER = new SharedWorker("http://localhost:8080/js/chat/chatworkertemp.js", "tripfy-chatworker");
+			WORKER = new SharedWorker("http://localhost:8080/js/chat/chatworker.js", "tripfy-chatworker");
 
 			WORKER.port.onmessage = (e) => {
 				//공유워커에서 메세지 수신시
@@ -760,7 +755,7 @@
 
 	/*================================================================================*/
 	/*클릭이벤트 등록*/
-	
+
 	//채팅창 버튼
 	CHAT_WINDOW_BTN.addEventListener("click", chatWindowBtnClick);
 	//채팅리스트창 푸터 버튼 클릭 감지
@@ -784,6 +779,8 @@
 	/*
 		해당 패키지의 채팅이 이미 존재한다면 채팅방을 생성하는 대신
 		존재하는 패키지 채팅을 띄워줌
+
+		지역변수 packagenum은 해당 페이지의 packagenum으로 초기화되어야 함
 	*/
 	async function createPackageChat(e) {
 		const packagenum = 5; /*초기화 필요*/
@@ -1138,7 +1135,7 @@
 					chatContent: inputContent
 				}
 			});
-	
+
 			//응답 대기/처리
 			try {
 				const res = await promised_waitTillResponse("sendChat");
@@ -1426,7 +1423,7 @@
 
 		/*CBI.lastSender 초기화*/
 		CHAT_BODY_INFO.lastSender = CHAT_BODY_INFO.userid;
-	
+
 		//시간 비교용
 		//sendChat *상대적 미래*
 		const timestamp = new Date(payload.regdate);
@@ -1500,7 +1497,7 @@
 	async function chatRoomScrollEventReceiver(e) {
 		console.log("cRSER CBIC.scrollTop=" + CHAT_BODY_INNER_CONT.scrollTop);
 		if(CHAT_BODY_INFO.isEmpty === false && CHAT_BODY_INFO.isFirst === false) {
-			if(CHAT_BODY_INNER_CONT.scrollTop / CHAT_BODY_INNER_CONT.offsetHeight <= 0.1) {
+			if(CHAT_BODY_INNER_CONT.scrollTop / CHAT_BODY_INNER_CONT.offsetHeight <= 0.05) {
 				if(isChatLoadProcessDone) {
 					isChatLoadProcessDone = false;
 
@@ -1531,7 +1528,6 @@
 		}
 	}
 
-	//스크롤 출력
 	function chatLoadHandler(payload) {
 		//CBI 갱신
 		CHAT_BODY_INFO.isFirst = payload.isFirst;
@@ -1559,6 +1555,11 @@
 			let dateFlag = false;
 			/*채팅 좌우 구분*/
 			let isLeftFlag = false;
+			/*채팅 타임스탬프 여부*/
+			let isTimestamp = false;
+			/*기존요소 ccbody-head 제거(i==0) 혹은 기존요소 ccbody-head 미부여(i > 0) 여부*/
+			let doesHeadNeedToUnexist = false;
+
 			/*기존 채팅과 이을지 여부*/
 			let isChatContinued = false;
 
@@ -1573,33 +1574,43 @@
 			}
 
 			//기존 채팅과 이을지 판별 - 이전 채팅 ccbody-head 유지/제거-부여/미부여, 타겟 채팅 ccbody-timestamp 부여 여부
-			//또한 날짜블럭 삽입여부도 판별
+			//날짜블럭 체크
 			if(i == 0) {
 				//로드된 채팅중 첫 번째는 마지막 기존 채팅과 비교
-				if(cdDTO.userid == CHAT_BODY_INFO.lastSender) {
+				if(
+					(isLeftFlag && CHAT_BODY_MORE_INNER_CONT.firstChild.classList.contains("ccbody-left")) 
+					||
+					(!isLeftFlag && CHAT_BODY_MORE_INNER_CONT.firstChild.classList.contains("ccbody-right"))
+				) {
 					if(reg.getTime() - (new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)).getTime() == 0) {
-						//동일송신자 && 1분이내 차이인 경우 isChatContinued = true
-						isChatContinued = true;
+						doesHeadNeedToUnexist = true;
 					}
 				}
-				if(!isChatContinued && getDiffOfDate(reg.getTime(), (new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)).getTime()) < 0) {
-					//1일 이상 차이가 나면 dateFlag = true
+				if(
+					getDiffOfDate(reg.getTime(), (new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)).getTime()) < 0
+				) {
 					dateFlag = true;
 				}
 			} else {
-				//나머지는 기존 삽입된 요소와 비교
-				if(cdDTO.userid == payload.chatDetails[i-1].userid) {
-					if(reg.getTime() - (new Date(chatFragment.firstElementChild.dataset.fulltimestamp)).getTime() == 0) {
-						isChatContinued = true;
+				//나머지는 chatFragment 요소와 비교
+				if(
+					(isLeftFlag && chatFragment.firstChild.classList.contains("ccbody-left"))
+					||
+					(!isLeftFlag && chatFragment.firstChild.classList.contains("ccbody-right"))
+				) {
+					if(reg.getTime() - (new Date(chatFragment.firstChild.dataset.fulltimestamp)).getTime() == 0) {
+						doesHeadNeedToUnexist = true;
 					}
 				}
-				if(!isChatContinued && getDiffOfDate(reg.getTime(), (new Date(chatFragment.firstElementChild.dataset.fulltimestamp)).getTime()) < 0) {
-					//1일 이상 차이가 나면 dateFlag = true
+				if(
+					getDiffOfDate(reg.getTime(), (new Date(chatFragment.firstChild.dataset.fulltimestamp)).getTime()) < 0
+				) {
 					dateFlag = true;
 				}
 			}
 
 			//구현
+
 			const div = document.createElement("div");
 			div.id = "ccbodyele-" + cdDTO.chatDetailIdx;
 			div.classList.add(isLeftFlag ? "ccbody-left" : "ccbody-right");
@@ -1610,35 +1621,30 @@
 			const p = document.createElement("p");
 			p.innerHTML = cdDTO.chatDetailContent;
 			div.appendChild(p);
-			if(isChatContinued) {
-				if(i == 0) {
-					if(CHAT_BODY_MORE_INNER_CONT.firstChild.classList.contains("ccbody-left")) {
-						CHAT_BODY_MORE_INNER_CONT.firstChild.firstChild.remove();
-						CHAT_BODY_MORE_INNER_CONT.firstChild.firstChild.remove();
-					}
-					CHAT_BODY_MORE_INNER_CONT.firstChild.classList.remove("ccbody-head");
-				} else {
-					if(chatFragment.firstChild.classList.contains("ccbody-left")) {
-						chatFragment.firstChild.firstChild.remove();
-						chatFragment.firstChild.firstChild.remove();
-					}
-					chatFragment.firstChild.classList.remove("ccbody-head");
+
+			if(i == 0 && doesHeadNeedToUnexist) {
+				if(CHAT_BODY_MORE_INNER_CONT.firstChild.classList.contains("ccbody-left")) {
+					CHAT_BODY_MORE_INNER_CONT.firstChild.firstChild.remove();
+					CHAT_BODY_MORE_INNER_CONT.firstChild.firstChild.remove();
 				}
-			} else {
+				CHAT_BODY_MORE_INNER_CONT.firstChild.classList.remove("ccbody-head");
+			}
+			else if(i == 0) {
+				div.classList.add("ccbody-timestamp");
+			}
+			if(i > 0 && !doesHeadNeedToUnexist) {
 				chatFragment.firstChild.classList.add("ccbody-head");
-				
 				if(chatFragment.firstChild.classList.contains("ccbody-left")) {
 					const imgDiv = document.createElement("div");
 					imgDiv.style.backgroundImage = "url('" + "/images/layoutimg/logo.png" + "')";
 					for(let ui of CHAT_BODY_INFO.chatRoomInfo.userImage) {
-						if(cdDTO.userid == ui.userid) {
+						if(payload.chatDetails[i-1].userid == ui.userid) {
 							imgDiv.style.backgroundImage = "url('" + "/user/thumbnail?sysname=" + ui.sysname + "')";
 							break;
 						}
 					}
-					
 					const useridDiv = document.createElement("div");
-					useridDiv.innerHTML = cdDTO.userid;
+					useridDiv.innerHTML = payload.chatDetails[i-1].userid;
 
 					chatFragment.firstChild.prepend(useridDiv);
 					chatFragment.firstChild.prepend(imgDiv);
@@ -1646,7 +1652,12 @@
 
 				div.classList.add("ccbody-timestamp");
 			}
+
+			console.log(cdDTO.chatDetailIdx);
+			console.log(dateFlag);
+
 			if(dateFlag) {
+				console.log("dateFlag=true");
 				const tgtDate = new Date(
 					i == 0 ? new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)
 							: new Date(chatFragment.firstChild.dataset.fulltimestamp)
@@ -1657,7 +1668,7 @@
 								+ (tgtDate.getMonth() + 1) + "월 "
 								+ tgtDate.getDate() + "일 "
 								+ day[tgtDate.getDay()] + "요일";
-
+				console.log(dateDiv);
 				chatFragment.prepend(dateDiv);
 			}
 
@@ -1665,6 +1676,25 @@
 
 		}
 
+		//마지막으로 만들어진 요소가 ccbody-left면 ccbody-head를 붙여준다
+		if(chatFragment.firstChild.classList.contains("ccbody-left")) {
+			chatFragment.firstChild.classList.add("ccbody-head");
+			const imgDiv = document.createElement("div");
+			imgDiv.style.backgroundImage = "url('" + "/images/layoutimg/logo.png" + "')";
+			for(let ui of CHAT_BODY_INFO.chatRoomInfo.userImage) {
+				if(payload.chatDetails[payload.chatDetails.length-1].userid == ui.userid) {
+					imgDiv.style.backgroundImage = "url('" + "/user/thumbnail?sysname=" + ui.sysname + "')";
+					break;
+				}
+			}
+			const useridDiv = document.createElement("div");
+			useridDiv.innerHTML = payload.chatDetails[payload.chatDetails.length-1].userid;
+
+			chatFragment.firstChild.prepend(useridDiv);
+			chatFragment.firstChild.prepend(imgDiv);
+		}
+
+		//채팅방의 모든 채팅이 로드되었으면 시작메시지블럭과 날짜블럭을 삽입
 		if(CHAT_BODY_INFO.isFirst) {
 			const tgtDate = new Date(new Date(chatFragment.firstChild.dataset.fulltimestamp));
 			const dateDiv = document.createElement("div");
@@ -1685,6 +1715,7 @@
 			chatFragment.prepend(startDiv);
 		}
 
+		//채팅방에 적용
 		CHAT_BODY_MORE_INNER_CONT.prepend(chatFragment);
 	}
 
@@ -1760,7 +1791,7 @@
 	}
 	//총 안 읽은 개수
 	let UNCHECKED_MSG_COUNT = 0;
-	
+
 	let CHAT_FIRST_DETAIL_IDX = null;
 
 	const CHAT_BODY_INFO = {
