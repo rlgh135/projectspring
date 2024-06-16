@@ -7,6 +7,11 @@
 		insert into timeline(packagenum,day,detail_num,title) 
 		values(#{packagenum},#{day},#{detailNum},#{title})
 	</insert>
+	
+	<select id="getTimelineByPackageNum">
+		select * from timeline
+		where packagenum = #{packagenum}
+	</select>
 	<select id="getTlDayList">
 		select * from timeline
 		where packagenum = #{packagenum} and `day` = #{day}

@@ -63,5 +63,6 @@ public interface UserMapper {
 	
 	// 유저 프로필
 	UserImgDTO getUserProfile(String userid);
+	UserDTO getUserByGuideNum(long guidenum);
 	
 }

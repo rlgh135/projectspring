@@ -48,6 +48,12 @@
 	<delete id="deleteProfileimg">
 		delete from user_img where userid=#{userid}
 	</delete>
+	<select id="getUserByGuideNum">
+		select u.*
+		from user u
+		join guide g ON u.userid = g.userid
+		where g.guidenum = #{guidenum};
+	</select>
 	<select id="getTotalReviewCnt">
 		select count(*) from review where guidenum=#{guidenum}
 	</select>

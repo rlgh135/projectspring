@@ -74,5 +74,8 @@ public interface PackageService {
 	// 좋아요 클릭
 	boolean likeClick(String userid, long packagenum);
 
+	boolean deleteTimelineAll(TimelineDTO tl);
+
+	UserDTO getUserByGuideNum(long guidenum);
 
 }

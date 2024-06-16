@@ -355,6 +355,15 @@ public class PackageServiceImpl implements PackageService{
 			}
 		}
 	}
+	
+	@Override
+	public boolean deleteTimelineAll(TimelineDTO tl) {
+		if(tmapper.getTimelineByPackageNum(tl) != null) {
+			return tmapper.deleteTimeline(tl.getPackagenum());			
+		}else {
+			return true;
+		}
+	}
 	@Override
 	public TimelineDTO getTimelineContent(TimelineDTO tl) {
 		return tmapper.getTimeLineContent(tl);
@@ -434,36 +443,39 @@ public class PackageServiceImpl implements PackageService{
 	}
 	
 	// 좋아요 클릭
-		@Override
-		public boolean likeClick(String userid, long packagenum) {
-			PackageDTO pack = pmapper.getPackageByPackageNum(packagenum);
-			
-			if(pmapper.getPackageLike(userid, packagenum) == null) {
-				// 좋아요 등록
-				if(pmapper.likeRegist(userid, packagenum) == 1) {
-					System.out.println("좋아요 등록 성공");
-					return true;
-				}
-				
-				else {
-					System.out.println("좋아요 등록 실패");
-				}
+	@Override
+	public boolean likeClick(String userid, long packagenum) {
+		PackageDTO pack = pmapper.getPackageByPackageNum(packagenum);
+		
+		if(pmapper.getPackageLike(userid, packagenum) == null) {
+			// 좋아요 등록
+			if(pmapper.likeRegist(userid, packagenum) == 1) {
+				System.out.println("좋아요 등록 성공");
+				return true;
 			}
 			
 			else {
-				// 좋아요 취소
-				if(pmapper.likeDelete(userid, packagenum) == 1) {
-					
-					System.out.println("좋아요 취소 성공");
-					return true;
-				}
-				
-				else {
-					System.out.println("좋아요 취소 실패");
-				}
+				System.out.println("좋아요 등록 실패");
 			}
-			return false;
 		}
-	
+		
+		else {
+			// 좋아요 취소
+			if(pmapper.likeDelete(userid, packagenum) == 1) {
+				
+				System.out.println("좋아요 취소 성공");
+				return true;
+			}
+			
+			else {
+				System.out.println("좋아요 취소 실패");
+			}
+		}
+		return false;
+	}
+	@Override
+	public UserDTO getUserByGuideNum(long guidenum) {
+		return umapper.getUserByGuideNum(guidenum);
+	}
 	
 }

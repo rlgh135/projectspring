@@ -346,6 +346,9 @@ public class PackController {
 	    if (guidenum != null) {
 	        model.addAttribute("guideNum", guidenum);            
 	    }
+	    UserDTO user =  service.getUserByGuideNum(pac.getGuidenum());
+	    System.out.println("유저 : "+user);
+	    model.addAttribute("user",user);
 	    model.addAttribute("pac", pac);
 	    String[] dayMMdd = service.getDayMMdd(pac.getStartdate(), pac.getEnddate());
 	    model.addAttribute("dayMMdd", dayMMdd);
@@ -400,6 +403,16 @@ public class PackController {
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
+	@PostMapping(value="timelineDeleteAll", consumes = "application/json", produces = "application/json;charset=utf-8")
+	public ResponseEntity<TimelineDTO> deleteTimelineAll(@RequestBody TimelineDTO tl) {
+	    boolean deleted = service.deleteTimelineAll(tl);
+	    if (deleted) {
+	        return new ResponseEntity<>(HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
 	
 	@PutMapping(value="timelineContentsUpdate", consumes = "application/json", produces = "application/json;charset=utf-8")
 	public ResponseEntity<Void> tlUpdateContents(@RequestBody TimelineDTO tl) {

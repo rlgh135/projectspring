@@ -17,6 +17,22 @@ $(document).ready(function() {
 		window.location.href = '/package/packageVisibility?packagenum=' + packagenum;
 	})
 	
+	$("#deleteAllTimeline").click(function(){
+		showAlertModal(98,"지금까지 작성한 타임라인을 전부 삭제하시겠습니까?");
+	})
+	$(document).on("click", "#deleteAllTimelineBtn", function(){
+		timelineService.deleteAll(
+			{"packagenum":packagenum},
+			function(result){
+				$(this).remove();
+				alertModal.hide();
+				for(i=1;i<=days;i++){
+				    showDayList(packagenum,i);		
+				}
+			}
+		)
+	})
+	
     for(i=1;i<=days;i++){
 	    showDayList(packagenum,i);		
 	}
@@ -609,6 +625,20 @@ const timelineService = {
 			$.ajax({
 				type:"POST",
 				url:"/package/timelineDelete",
+				data:JSON.stringify(data),
+				contentType:"application/json;charset=utf-8",
+				success:function(result){
+					callback(result)
+				},
+				error:function(status,xhr){
+					 console.error("AJAX Error:", xhr.status, status);
+				}
+			})
+		},
+		deleteAll:function(data,callback){
+			$.ajax({
+				type:"POST",
+				url:"/package/timelineDeleteAll",
 				data:JSON.stringify(data),
 				contentType:"application/json;charset=utf-8",
 				success:function(result){
