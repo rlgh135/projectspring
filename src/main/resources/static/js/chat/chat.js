@@ -16,11 +16,18 @@ const CHAT_LIST_EMPTY = document.getElementById("chat-list-empty");
 const CHAT_LIST_OTO = document.getElementById("chat-list-oto-cont");
 //다대다 목록창
 const CHAT_LIST_OTM = document.getElementById("chat-list-otm-cont");
+//채팅리스트창 헤더 채팅 개설 버튼
+const CHAT_LIST_CREATE_BTN = document.getElementById("create-chat");
 //채팅리스트창 푸터
 const CHAT_LIST_FOOTER = document.getElementById("chat-list-footer");
 //채팅방 목록창 푸터 버튼 <--이새끼들 필요없을거같은데
 const CHAT_LIST_OTO_BTN = document.getElementById("chat-list-footer-oto-btn");
 const CHAT_LIST_OTM_BTN = document.getElementById("chat-list-footer-otm-btn");
+
+//채팅 생성 사이드창 배경
+const CHAT_LIST_CREATE = document.getElementById("chat-list-create");
+//사이드창 나가기 버튼
+const CHAT_LIST_CREATE_CANCEL_BTN = document.getElementById("cancel-create-chat");
 
 //채팅창 container
 const CHAT_BODY_CONT = document.getElementById("chat-body-cont");
@@ -100,6 +107,15 @@ CHAT_BODY_SUBMIT_BTN.addEventListener("click", chatBodySubmitBtnClick);
 //채팅창 스크롤 감지 - 채팅 로딩
 CHAT_BODY_INNER_CONT.addEventListener("scroll", chatRoomScrollEventReceiver);
 
+/* 임시 */
+CHAT_LIST_CREATE_BTN.addEventListener("click", (e) => CHAT_LIST_CREATE.classList.remove("cc-hidden"));
+CHAT_LIST_CREATE_CANCEL_BTN.addEventListener("click", (e) => CHAT_LIST_CREATE.classList.add("cc-hidden"));
+CHAT_LIST_CREATE.addEventListener("click", (e) => {
+	if(e.target.id === e.currentTarget.id) {
+		//배경 클릭시 창 닫기
+		CHAT_LIST_CREATE.classList.add("cc-hidden");
+	}
+});
 
 /*테스트*/
 //document.getElementById("testChatCreate").addEventListener("click", createPackageChat);

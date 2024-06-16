@@ -13,16 +13,42 @@
 			</div>
 			<div id="chat-window" class="cc-hidden">
 				<div id="chat-list-cont" class="">
-					<div id="chat-list-header"></div>
+					<div id="chat-list-header">
+						<input type="button" value="개설" id="create-chat" class="ccbody-btn">
+					</div>
 					<div id="chat-list-inner-cont">
+						<div id="chat-list-create" class="cc-hidden">
+							<!-- 채팅 생성 사이드창 배경 -->
+							<div id="chat-list-create-cont">
+								<!-- 채팅 생성 사이드창 -->
+								<div id="clcc-header">
+									<h4>채팅방 개설하기</h4>
+									<input type="button" value="나가기" id="cancel-create-chat" class="ccbody-btn">
+								</div>
+								<div id="clcc-input-body">
+									<div>
+										<span>채팅방 제목</span>
+										<input type="text" name="" id="">
+									</div>
+									<div>
+										<span>대화상대 초대</span>
+										<input type="text" name="" id="">
+									</div>
+								</div>
+								<div id="clcc-result-body"></div>
+							</div>
+						</div>
 						<div id="chat-list-empty" class="cc-hidden">
 							<!-- 이미지 바꿔라 -->
 							<img src="/images/layoutimg/logo.png" id="cc-logo-empty">
 							<p>현재 입장해있는 채팅방이 없습니다</p>
 						</div>
 						<div id="chat-list-oto-cont">
+							<!-- 1대1 -->
 						</div>
-						<div id="chat-list-otm-cont" class="cc-hidden"></div>
+						<div id="chat-list-otm-cont" class="cc-hidden">
+							<!-- 다대다 -->
+						</div>
 					</div>
 					<div id="chat-list-footer">
 						<div id="chat-list-footer-oto-btn" class="cc-footer-btn">

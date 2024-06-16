@@ -38,7 +38,7 @@ public class ChatTestController {
 		
 		model.addAttribute("loginUser", loginUserId);
 		
-		return "/test/chat_test.html";
+		return "test/chat_test.html";
 	}
 	@GetMapping("chat_test_02")
 	public String chat_test_02() {

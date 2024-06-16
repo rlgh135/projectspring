@@ -127,6 +127,9 @@
 	</div>
 	<th:block th:include="~{layout/chatBot::chatBot}"></th:block>
 	<th:block th:include="~{layout/packageModal::packageModal}"></th:block>
+	<th:block th:unless="${#strings.isEmpty(loginUser)}">
+		<th:block th:include="~{chat/chat::chat}"></th:block>
+	</th:block>
 	<script>
 		const modal = document.querySelector('.modal');
 		const modalOpen = document.querySelector('.modal_btn');
