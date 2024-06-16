@@ -107,7 +107,7 @@
 						<div class="pget-copyUrl" id="urlCopyButton">
 							<img src="https://openimage.interpark.com/UI/tour/common/common/popups/share/icon_urlCopy.png" alt="" style="width: 30px; height: 30px; cursor: pointer;">
 						</div>
-						<div class="pget-print">
+						<div class="pget-print" id="pacPrintOpen">
 							<img src="https://openimage.interpark.com/UI/tour/pages/package/detail/btnPrint.svg" alt="" style="width: 30px; height: 30px; cursor: pointer;">
 						</div>
 					</div>
@@ -162,6 +162,7 @@
 		</div>
     </div>
 	<th:block th:include="~{layout/alertModal::alertModal}"></th:block>
+	<th:block th:include="~{package/pacPrint::pacPrintModal}"></th:block>
 </body>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
 <script th:inline="javascript">

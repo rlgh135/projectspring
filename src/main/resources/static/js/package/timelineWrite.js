@@ -65,8 +65,8 @@ $(document).ready(function() {
             codeviewIframeFilter: false, // 코드 보기 iframe 필터 비활성화
             lang: 'ko-KR',
             placeholder: '장소의 사진이나 메모를 작성하세요',
-            width: 950,
-            maxWidth: 950,
+            width: 1000,
+            maxWidth: 1000,
             height: 500,
             maxHeight: 500,
             focus : true,

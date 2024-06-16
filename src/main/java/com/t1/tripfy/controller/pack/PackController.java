@@ -207,23 +207,26 @@ public class PackController {
 	
 	@GetMapping(value={"pget", "pmodify"})
 	public String get(Criteria cri, long packagenum, HttpServletRequest req, HttpServletResponse resp, Model model) {
-	    System.out.println("packagenum: " + packagenum);
 	    String requestURI = req.getRequestURI();
 	    model.addAttribute("cri", cri);
 	    HttpSession session = req.getSession();
 	    PackageDTO pack = service.getDetail(packagenum);
-	    System.out.println(pack + "안뜨나?");
 	    model.addAttribute("package", pack);
 	    model.addAttribute("files", service.getFiles(packagenum));
 	    String loginUser = (String) session.getAttribute("loginUser");
-	    System.out.println("로그인 유저 : "+loginUser);
 	    List<ReservationDTO> reserve = service.getReservationCntByPackagenum(packagenum); 
-	    System.out.println(reserve+"대체 왜 없는거야 슈우발 ");
 	    List<ReviewDTO> reviewlist = new ArrayList<>();
 	    long gunum = pack.getGuidenum();
 	    List<ReviewDTO> review = service.getReviewByGuidenum(gunum);
 	    List<UserImgDTO> thumbnaillist = uservice.getAllUserImg();
-
+	    
+	    ArrayList<TimelineDTO> timeline = new ArrayList<>();
+	    for(int i=0; i <= pack.getTourdays();i++) {
+	    	timeline.addAll(service.tlDayList(packagenum, i));    	
+	    }
+	    model.addAttribute("timeline",timeline);
+	    model.addAttribute("tourdays",pack.getTourdays());
+	    
 	    for (ReviewDTO rdto : review) {
 	        List<UserImgDTO> userImages = new ArrayList<>();
 	        for (UserImgDTO thumbnail : thumbnaillist) {
@@ -272,7 +275,6 @@ public class PackController {
 	        }
 	        if (read_pack == null) {
 	            service.increaseReadCount(packagenum);
-	            System.out.println("조회수 증가");
 	            Cookie cookie = new Cookie("read_pack" + packagenum, "r");
 	            cookie.setMaxAge(1800); // 30분 동안 유지
 	            resp.addCookie(cookie);
