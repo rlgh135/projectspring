@@ -13,7 +13,8 @@
 
 #chat-wrapper {
 	position: fixed;
-	bottom: 80px;
+	/* bottom: 80px; */
+	bottom: 150px;
 	right: 100px;
 	
 	background-color: white;
@@ -289,6 +290,11 @@
 	padding: 0 15px 0 15px;
 }
 /* 사이드창 인풋바디 */
+#clcc-input-body {
+	box-shadow: 0px 5px 5px 0px lightgray;
+
+	padding: 0 0 10px 0;
+}
 #clcc-input-body>div {
 	display: flex;
 	flex-direction: row;
@@ -300,8 +306,81 @@
 
 	padding: 0 10px 0 10px;
 }
+/* 채팅방 제목, 대화상대 인풋 */
 #clcc-input-body>div>input[type=text] {
 	height: 28px;
+}
+/* 출력(검색된 유저, 추가된 유저) 컨테이너 */
+#clcc-result-body {
+	width: 300px;
+	height: 440px;
+}
+/* 출력컨테이너 내부 */
+#clcc-result-search, #clcc-result-select {
+	width: 300px;
+	height: 205px;
+
+	padding: 0 0 0 15px;
+
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+/* 출력컨테이너 세퍼레이터 */
+#clcc-seperator {
+	width: 300px; height: 20px;
+	box-shadow: 0px 5px 5px 0px lightgray, 0px -2px 5px 0px lightgray;
+}
+/* 하단 입력부 */
+#clcc-footer {
+	width: 300px;
+	height: 50px;
+
+	border-radius: 0px 0px 20px 20px;
+
+	background-color: rgb(200, 200, 200);
+}
+/* 채팅 개설 버튼 */
+#clcc-footer>#submit-create-chat {
+	display: block;
+
+	width: 300px; height: 50px;
+
+	background-color: transparent;
+
+	border: 0;
+
+	font-size: 20px;
+}
+/* clcc-result-* 내부 동적 요소 */
+.clcc-result {
+	width: 270px; height: 40px;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.clcc-result>img {
+	width: 35px; height: 35px;
+	border-radius: 5px/5px;
+
+	margin: 0 15px 0 0;
+}
+.clcc-result>h4 {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+
+	max-width: 140px;
+}
+.clcc-result>p {
+	margin-left: auto;
+	margin-right: 10px;
+	font-size: 14px;
+}
+.clcc-result>input[type=button] {
+	width: 30px; height: 30px;
+
+	border: 0;
 }
 
 .cc-list-oto-ele {

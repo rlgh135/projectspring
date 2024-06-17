@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
+import com.t1.tripfy.domain.dto.chat.ChatUserDTO;
 import com.t1.tripfy.service.chat.ChatService;
 
 import lombok.RequiredArgsConstructor;
@@ -128,5 +129,22 @@ public class ChatRestController {
 		System.out.println(chatList);
 		
 		return new ResponseEntity<List<ChatListPayloadDTO>>(chatList, HttpStatus.OK);
+	}
+	
+	//유저 검색
+	@GetMapping("/search")
+	public ResponseEntity<List<Map<String, Object>>> getSearchUserResult(
+			@SessionAttribute(name="loginUser", required=false) String loginUserId,
+			@RequestParam String input
+	) {
+		//유효성
+		if(loginUserId == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+		
+		//서비스
+		
+		
+		return null;
 	}
 }

@@ -28,6 +28,8 @@ const CHAT_LIST_OTM_BTN = document.getElementById("chat-list-footer-otm-btn");
 const CHAT_LIST_CREATE = document.getElementById("chat-list-create");
 //사이드창 나가기 버튼
 const CHAT_LIST_CREATE_CANCEL_BTN = document.getElementById("cancel-create-chat");
+//채팅방 개설 유저 검색창
+const CHAT_LIST_CREATE_USER_INPUT = document.getElementById("user-create-chat");
 
 //채팅창 container
 const CHAT_BODY_CONT = document.getElementById("chat-body-cont");
@@ -127,13 +129,17 @@ CHAT_LIST_CREATE.addEventListener("click", (e) => {
 	존재하는 패키지 채팅을 띄워줌
 
 	지역변수 packagenum은 해당 페이지의 packagenum으로 초기화되어야 함
+
+	packagenum 이름이 겹침
+	chat_packagenum으로 변경
+	다만 port.postMessage 부분에서는 기존대로 함
 */
 
 //packagenum 변수
-const packagenum = 5; /*초기화 필요*/
+const chat_packagenum = 5; /*초기화 필요*/
 
 async function createPackageChat(e) {
-	console.log("createPackageChat(), packagenum=" + packagenum);
+	console.log("createPackageChat(), chat_packagenum=" + chat_packagenum);
 	console.log("IS_VD_LOADED=" + IS_VD_LOADED);
 
 	//CHAT_OTO_VD 로드 확인
@@ -164,7 +170,7 @@ async function createPackageChat(e) {
 	if(CHAT_OTO_VD.length > 0 || CHAT_OTM_VD.length > 0) {
 		//가입된 채팅이 있는 경우
 		for(let i = 0; i < CHAT_OTO_VD.length; i++) {
-			if(CHAT_OTO_VD[i].dataObj.pkgnum === packagenum) {
+			if(CHAT_OTO_VD[i].dataObj.pkgnum === chat_packagenum) {
 				tgtRoomIdx = CHAT_OTO_VD[i].dataObj.roomidx;
 				tgtVDIdx = i;
 				break;
@@ -172,7 +178,7 @@ async function createPackageChat(e) {
 		}
 		if(!!!tgtRoomIdx) {
 			for(let j = 0; j < CHAT_OTM_VD.length; j++) {
-				if(CHAT_OTM_VD[j].dataObj.pkgnum === packagenum) {
+				if(CHAT_OTM_VD[j].dataObj.pkgnum === chat_packagenum) {
 					tgtRoomIdx = CHAT_OTM_VD[j].dataObj.roomidx;
 					isOTOChat = false;
 					tgtVDIdx = j;
@@ -189,7 +195,7 @@ async function createPackageChat(e) {
 		try {
 			res = await ajaxPost("localhost:8080", "/chat", {
 				isPackageChat: true,
-				packagenum: packagenum
+				packagenum: chat_packagenum
 			});
 		} catch(err) {
 			//신규 채팅 생성 관련 실패
@@ -243,6 +249,20 @@ async function createPackageChat(e) {
 /*일반 채팅 생성*/
 function createNormalChat(e) {
 
+}
+/*일반 채팅 채팅창 내부 생성 관련*/
+
+let userCreateChatInputTimeoutID = null;
+
+//대화상대 검색창
+function userCreateChatInputHandler(e) {
+	if(userCreateChatInputTimeoutID !== null) {
+		clearTimeout(userCreateChatInputTimeoutID);
+	}
+
+	userCreateChatInputTimeoutID = setTimeout(() => {
+		//Ajax
+	}, 1000);
 }
 
 /*================================================================================*/
