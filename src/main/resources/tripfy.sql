@@ -213,8 +213,9 @@ CREATE TABLE `chat_detail` (
 # 240516 채팅테이블 수정본
 CREATE TABLE `chat_room` (
 	`chat_room_idx` BIGINT PRIMARY KEY AUTO_INCREMENT,
+	`chat_room_type` INT NOT NULL COMMENT "채팅방 타입 - 0 일반/일반, 1 가이드/일반(문의), 2 가이드/일반(다대다)",
     `chat_room_title` VARCHAR(300) COMMENT "null 가능, 패키지 관련이면 무조건 null",
-    `packagenum` BIGINT COMMENT "null이면 일반 <-> 일반, null이 아니면 판매자 <-> 일반",
+    `packagenum` BIGINT COMMENT "null이면 일반 <-> 일반, null이 아니면 판매자 <-> 일반 <- 정도로 볼 수 있음, 240617부로 chat_room_type 추가, 역할이 넘어감",
     `chat_room_is_terminated` BOOLEAN NOT NULL COMMENT "종료되었는지 여부",
     `regdate` DATETIME NOT NULL DEFAULT(CURRENT_TIMESTAMP()) COMMENT "채팅방 개설 시간"
     #,CONSTRAINT fk___package___chat_room___packagenum FOREIGN KEY (`packagenum`) REFERENCES `package`(`packagenum`)
