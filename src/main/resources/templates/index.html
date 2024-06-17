@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<title>tripfy</title>
 	<link rel="stylesheet" href="/css/layout/indexstyle.css">
+	<link rel="stylesheet" href="/css/layout/fontscroll.css">
 	<style>
 		
 	</style>
@@ -76,18 +77,37 @@
 
 
 			<div class="welcome-text" id="content1">
-				<p><span>내</span>가 안내하는 <br><span>우</span><span>리</span>의 여행 </p>
+				<p>언제나 똑같은 여행지</p>
 			</div>
 
 		</section>
-		<section class="index-section" id="idxsection1">
+		<section class="index-section" id="idxsection2">
 			<div class="welcome-text" id="content2">
-				<p>늘 가는 여행지는 NO<br>직접 기획하는 우리 동네 패키지</p>
+				<p>나만의 <span>특별한</span> 패키지를 판매하세요</p>
+			</div>
+			<div class="slider-container">
+				<div class="slider" id="mydiv">
+				</div>
 			</div>
 		</section>
-		<section class="index-section" id="idxsection1">
+		<section class="index-section" id="idxsection3">
 			<div class="welcome-text" id="content3">
-				<p>늘 가는 여행지는 NO<br>직접 기획하는 우리 동네 패키지</p>
+				<p><br><span>타임라인</span>으로 <br> 루트를 한눈에</p>
+			</div>
+			<div class="threesectionimg">
+				<img src="/images/layoutimg/tlpinandroot.png" alt="" srcset="">
+			</div>
+		</section>
+		<section class="index-section" id="idxsection4">
+			<div class="welcome-text" id="content4">
+				<p><span>동행</span>을 모집하거나 <br>나만의 여행 <span>팁</span>을 나눠보세요</p>
+			</div>
+			<div class="foursectionimg">
+				<div id="boardslide">
+					<div class="bslider bsimg1"></div>
+					<div class="bslider bsimg2"></div>
+					<div class="bslider bsimg3"></div>
+				</div>
 			</div>
 		</section>
 		<div id="joinlogoWrap">
@@ -133,10 +153,64 @@
 	observer.observe(indexsection[0]);
 	observer.observe(indexsection[1]);
 	observer.observe(indexsection[2]);
+
+	let ctnt=[]; // 배열 선언
+	ctnt[0]="/images/layoutimg/idxf01.png";
+	ctnt[1]="/images/layoutimg/idx02.png";
+	ctnt[2]="/images/layoutimg/idxd03.png";
+	ctnt[3]="/images/layoutimg/idxf04.png";
+	ctnt[4]="/images/layoutimg/idxf01.png";
+	ctnt[5]="/images/layoutimg/idx02.png";
+	ctnt[6]="/images/layoutimg/idxd03.png";
+	ctnt[7]="/images/layoutimg/idxf04.png";
+
+	const myDiv = document.getElementById('mydiv');
+
+	function start() {
+		for(let i=0; i<ctnt.length; i++) {
+			const imgPf = document.createElement('img');
+			imgPf.src = ctnt[i];
+			imgPf.id = 'area' + i;
+			imgPf.style.position = 'absolute';
+			imgPf.style.top = '0';
+			imgPf.style.left = i * 360 + 'px';
+			imgPf.className = 'pfimgSlide';
+			myDiv.appendChild(imgPf);
+		}
+
+		// 3) 3초 후에 scroll 함수 1번 호출
+		setTimeout(scroll, 3000);
+
+	} // start end
+
+
+	function scroll() {
+		for(let i=0; i<ctnt.length; i++) {
+			let tmp=document.getElementById("area"+i).style;
+			tmp.left = parseInt(tmp.left) - 1 + "px";
+			
+			if(parseInt(tmp.left)<=-360){
+				tmp.left = (ctnt.length-1)*360 + "px"
+			}
+		}              
+
+		// 6) 0.5초 후 scroll함수 호출
+		timer=setTimeout(scroll, 10);
+
+	} // scroll end
+
+	// 13) 6)의 시간을 해제
+	var timer; // 전역변수
+
+	function killtime() {
+		clearTimeout(timer);
+	} // killtime end
 </script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 	$(document).ready(function(){
+		start();
+
 		let firstCnt = 0;
 		let secondCnt = 0;
 		let holdCnt = false;
@@ -165,5 +239,7 @@
 			}			
 		}
 	})
+
+	
 </script>
 </html>

@@ -501,7 +501,7 @@ public class UserController {
 	public String yourInfo(HttpServletRequest req, Model model, Criteria cri) {
 		HttpSession session = req.getSession();
 		//썸네일 가져오기
-		String loginUser = (String)session.getAttribute("loginUser");
+		String loginUser = (String)session.getAttribute("loginUser")!=null?(String)session.getAttribute("loginUser"):"";
 		String userid = req.getParameter("userid");
 		if(loginUser.equals(userid)) {
 			return "redirect:/user/myinfo";

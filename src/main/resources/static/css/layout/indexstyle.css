@@ -155,10 +155,10 @@ section{
     display: inline-block;
     position: fixed;
 }
-section:first-child{
+section:nth-child(odd){
     background-color: #e3fefd;
 }
-section:nth-child(2){
+section:nth-child(even){
     background-image: url("");
 }
 section:last-child{
@@ -211,8 +211,7 @@ section:last-child{
     animation: fadeIn 2s ease-in-out;
 }
 
-#content1  span{
-    font-size: 100px;
+.welcome-text  span{
     font-weight: bolder;
     color: #2196f3;
 }
@@ -259,4 +258,108 @@ section:last-child{
 #lologoswrap li img{
 	width: 40px;
 	height: 40px;
+}
+
+/*슬라이더*/
+#mydiv{
+	position: relative;
+	top: 370px;
+  
+	width: 100%;                   
+	height: 400px;
+	background-color: none;         
+	overflow: hidden;              
+}
+
+#boardslide {
+  position: relative;
+  overflow: hidden;
+}
+
+.bslider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+
+  animation: slider 7.5s infinite linear;
+}
+
+.bsimg1 {
+  background-image: url('/images/layoutimg/bdim1.png');
+  background-size: auto 600px;
+  background-repeat: no-repeat;
+  animation-delay: 0;
+}
+.bsimg2 {
+  background-image: url('/images/layoutimg/bdim2.png');
+  background-size: auto 600px;
+  background-repeat: no-repeat;
+  animation-delay: -2.5s;
+}
+.bsimg3 {
+  background-image: url('/images/layoutimg/bdim3.png');
+  background-size: auto 600px;
+  background-repeat: no-repeat;
+  animation-delay: -5s;
+}
+
+@keyframes slider {
+  0% {
+    transform: translateX(0);
+  }
+
+  26% {
+    transform: translateX(0);
+  }
+  33% {
+    transform: translateX(-100%);
+    animation-timing-function: step-end;
+  }
+  93% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+
+#idxsection2{
+	text-align: center;
+}
+.threesectionimg{
+	width: 1200px;
+    margin-right: auto;
+    margin-top: 30px;
+    padding-left: 200px;
+    
+}
+.threesectionimg > img{
+	width: 900px;
+	height: 700px;
+	border-radius: 25px;
+	margin-left: auto;
+}
+#content2 > p {
+	text-align: center;
+}
+#content3 > p{
+	position: absolute;
+	right: 250px;
+}
+.foursectionimg{
+	background-color: #e3fefd;
+	width: 100%;
+    height: 600px;
+    margin-top: 140px;
+}
+#boardslide{
+	width: 1280px;
+	height: 600px;
+	margin: 0 auto;
 }
