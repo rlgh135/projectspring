@@ -377,6 +377,12 @@ public class UserServiceImpl implements UserService{
 		
 		String[] countrycodes = {"kr$mol", "ea$동남아시아", "gu$괌/사이판/호주/뉴질랜드", "jp$일본", "cn$중국", "eu$유럽", "us$미국"};
 		String[] krregions = {"서울", "제주도", "경기도", "강원도", "충청도", "경상도", "전라도", "인천광역시"};
+		String[] earegions = {"태국", "베트남", "필리핀", "싱가폴", "말레이시아", "캄보디아"};
+		String[] guregions = {"괌", "사이판", "호주", "뉴질랜드"};
+		String[] jpregions = {"오사카", "후쿠오카", "도쿄", "교토", "삿포로"};
+		String[] cnregions = {"하이난", "청도", "베이징", "장가계"};
+		String[] euregions = {"프랑스", "영국", "이탈리아", "스페인", "독일", "스위스", "핀란드", "노르웨이", "그리스", "포르투갈"};
+		String[] usregions = {"하와이", "미 동부", "미 서부", "캐나다", "중남미"};
 		//게시판
 		for(int i=0; i<3000; i++) {
 			BoardDTO board = new BoardDTO();
@@ -389,7 +395,26 @@ public class UserServiceImpl implements UserService{
 			if(idx==0) {
 				board.setRegionname(krregions[random.nextInt(8)]);
 			} else {
-				board.setRegionname(location[1]);
+				switch(location[0]) {
+					case "ea":
+						board.setRegionname(earegions[random.nextInt(6)]);
+						break;
+					case "gu":
+						board.setRegionname(guregions[random.nextInt(4)]);
+						break;
+					case "jp":
+						board.setRegionname(jpregions[random.nextInt(5)]);
+						break;
+					case "cn":
+						board.setRegionname(cnregions[random.nextInt(4)]);
+						break;
+					case "eu":
+						board.setRegionname(euregions[random.nextInt(10)]);
+						break;
+					case "us":
+						board.setRegionname(usregions[random.nextInt(5)]);
+						break;
+				}
 			}
 			
 			if(bmapper.insertBoard(board)==1) {
@@ -416,11 +441,30 @@ public class UserServiceImpl implements UserService{
 			if(idx==0) {
 				pack.setRegionname(krregions[random.nextInt(8)]);
 			} else {
-				pack.setRegionname(location[1]);
+				switch(location[0]) {
+					case "ea":
+						pack.setRegionname(earegions[random.nextInt(6)]);
+						break;
+					case "gu":
+						pack.setRegionname(guregions[random.nextInt(4)]);
+						break;
+					case "jp":
+						pack.setRegionname(jpregions[random.nextInt(5)]);
+						break;
+					case "cn":
+						pack.setRegionname(cnregions[random.nextInt(4)]);
+						break;
+					case "eu":
+						pack.setRegionname(euregions[random.nextInt(10)]);
+						break;
+					case "us":
+						pack.setRegionname(usregions[random.nextInt(5)]);
+						break;
+				}
 			}
 			pack.setGuidenum((random.nextInt(2)+1));
 			pack.setPackageTitle((i+1)+"번째 패키지!");
-			pack.setPackageContent(location[1]+"으로 떠나는 \n"+(i+1)+"번째 패키지 내용입니다. ");
+			pack.setPackageContent(pack.getRegionname()+"으로 떠나는 \n"+(i+1)+"번째 패키지 내용입니다. ");
 			pack.setMaxcnt(random.nextInt(9)+20);
 			pack.setAdultPrice(100*(random.nextInt(4000)+1));
 			pack.setChildPrice(100*(random.nextInt(4000)+1));
@@ -554,7 +598,7 @@ public class UserServiceImpl implements UserService{
 					
 					int emcoin = random.nextInt(3);
 					if(emcoin==0) {
-						reply.setEmSysname("");
+						reply.setEmSysname("0");
 					} else {
 						reply.setEmSysname((random.nextInt(20)+1)+"");
 					} 
