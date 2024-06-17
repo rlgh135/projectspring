@@ -26,12 +26,12 @@
 							    
 							    <div class="dl_choice">
 							        <ul class="choiceTableLeft">
-							            <li><button type="button" class="leftDepth1">동남아</button></li>
-							            <li><button type="button" class="leftDepth1">괌/ 사이판/ <br>호주/ 뉴질랜드</button></li>
-							            <li><button type="button" class="leftDepth1">일본</button></li>
-							            <li><button type="button" class="leftDepth1">중국</button></li>
-							            <li><button type="button" class="leftDepth1">유럽</button></li>
-							            <li><button type="button" class="leftDepth1">하와이/ 미국/ 중남미</button></li>
+							            <li><button type="button" class="leftDepth1" value="ea">동남아</button></li>
+							            <li><button type="button" class="leftDepth1" vlaue="gu">괌/ 사이판/ <br>호주/ 뉴질랜드</button></li>
+							            <li><button type="button" class="leftDepth1" value="jp">일본</button></li>
+							            <li><button type="button" class="leftDepth1" value="cn">중국</button></li>
+							            <li><button type="button" class="leftDepth1" value="eu">유럽</button></li>
+							            <li><button type="button" class="leftDepth1" value="us">하와이/ 미국/ 중남미</button></li>
 							        </ul>
 							        <ul class="choiceTableRight">
 							            <li><button type="button" class="RightDepth1">태국</button></li>
@@ -117,6 +117,7 @@
 						<input type="hidden" name="startdate" id="startDateInputForm">
 						<input type="hidden" name="enddate" id="endDateInputForm">
 						<input type="hidden" name="maxcnt" id="personInputForm">
+						<input type="hidden" name="countrycode" id="countrycodeInputForm">
                         <div class="search_btn">
                             <button type="submit">검색</button>
                         </div>
@@ -292,12 +293,14 @@
 	    const startDate = document.getElementById("startDateInput").value;
 	    const endDate = document.getElementById("endDateInput").value;
 	    const personCount = document.getElementById("personInput").value;
+		const countrycode = document.getElementById("countrycodeInputForm").value;
 	
 	    // 세션 스토리지에 검색 조건 저장
 	    sessionStorage.setItem("region", region);
 	    sessionStorage.setItem("startDate", startDate);
 	    sessionStorage.setItem("endDate", endDate);
 	    sessionStorage.setItem("personCount", personCount);
+		sessionStorage.setItem("countrycode", countrycode);
 	});
 	
 	// 가격순 정렬 버튼 클릭 이벤트
@@ -372,25 +375,15 @@
 	    const startDate = document.getElementById("startDateInput").value;
 	    const endDate = document.getElementById("endDateInput").value;
 	    const personCount = document.getElementById("personInput").value;
+		const countrycode = document.getElementById('countrycodeInputForm').value;
+		
 	
 	    console.log("Destination:", destination);
 	    console.log("Start Date:", startDate);
 	    console.log("End Date:", endDate);
 	    console.log("Person Count:", personCount);
 	
-	    if (!destination) {
-	        alert("여행 목적지를 선택하세요.");
-	        return false; // 폼 제출을 방지
-	    }
-		            if (!startDate || !endDate) {
-	        alert("여행 날짜를 선택하세요.");
-	        return false;
-	    }
-	    if (!personCount) {
-	        alert("인원 수를 선택하세요.");
-	        return false; // 폼 제출을 방지
-	    }
-	
+	    
 	    return true; // 폼 제출을 허용
 	}
 	

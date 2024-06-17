@@ -71,6 +71,7 @@
 						<input type="hidden" name="startdate" id="startDateInputForm">
 						<input type="hidden" name="enddate" id="endDateInputForm">
 						<input type="hidden" name="maxcnt" id="personInputForm">
+						<input type="hidden" name="countrycode" id="countrycodeInputForm" value="kr">
                         <div class="search_btn">
                             <button type="submit">검색</button>
                         </div>
@@ -183,15 +184,7 @@
 			const startDate = getSessionStorageItem("startDate");
 			const endDate = getSessionStorageItem("endDate");
 			const personCount = getSessionStorageItem("personCount");
-			if (startDate === null) {
-			    console.log("startDate is null");
-			} else if (startDate === undefined) {
-			    console.log("startDate is undefined");
-			} else if (startDate === "") {
-			    console.log("startDate is an empty string");
-			} else {
-			    console.log("startDate:", startDate);
-			}
+			
 
             
 
@@ -251,12 +244,15 @@
             const startDate = document.getElementById("startDateInput").value;
             const endDate = document.getElementById("endDateInput").value;
             const personCount = document.getElementById("personInput").value;
-
+			const countrycode = document.getElementById("countrycodeInputForm").value;
+			 
             // 세션 스토리지에 검색 조건 저장
             sessionStorage.setItem("region", region);
             sessionStorage.setItem("startDate", startDate);
             sessionStorage.setItem("endDate", endDate);
             sessionStorage.setItem("personCount", personCount);
+            sessionStorage.setItem("countrycode", countrycode);
+			
         });
 
 		// 가격순 정렬 버튼 클릭 이벤트
@@ -312,7 +308,8 @@
 		                    const startDate = urlParams.get('startdate');
 		                    const endDate = urlParams.get('enddate');
 		                    const maxcnt = urlParams.get('maxcnt');
-		                    const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&orderBy=${orderBy}&pagenum=${page}`;
+							const countrycode = urlParams.get('countrycode');
+		                    const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&countrycode=${countrycode}&orderBy=${orderBy}&pagenum=${page}`;
 		
 		                    // 현재 페이지를 새로운 URL로 변경
 		                    window.location.href = newUrl;
@@ -331,6 +328,8 @@
             const startDate = document.getElementById("startDateInput").value;
             const endDate = document.getElementById("endDateInput").value;
             const personCount = document.getElementById("personInput").value;
+			const countrycode = "kr";
+
 
             console.log("Destination:", destination);
             console.log("Start Date:", startDate);
@@ -359,9 +358,10 @@
                 const endDate = urlParams.get('enddate');
                 const maxcnt = urlParams.get('maxcnt');
 				const orderBy = urlParams.get('orderBy');
+				const countrycode = urlParams.get('countrycode');
 
                 // 새로운 페이지 번호를 쿼리스트링에 반영하여 새 URL 생성
-                const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&orderBy=${orderBy}&pagenum=${page}`;
+                const newUrl = `/package/plist?regionname=${regionname}&startdate=${startDate}&enddate=${endDate}&maxcnt=${maxcnt}&countrycode=${countrycode}&orderBy=${orderBy}&pagenum=${page}`;
 
                 // 현재 페이지를 새로운 URL로 변경
                 window.location.href = newUrl;
