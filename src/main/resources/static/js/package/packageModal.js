@@ -229,8 +229,8 @@ $(document).ready(function() {
         </div>
         <div class="body_area" style="margin-top:50px;">
             <div>
-            	<input type="text" class="calendar-dateInput" id="calendar-startdate" placeholder="날짜를 선택하세요" readonly>
-    			<input type="text" class="calendar-dateInput" id="calendar-enddate" placeholder="날짜를 선택하세요" readonly>
+            	<input type="text" class="calendar-dateInput" id="calendar-startdate" placeholder=" 출발 날짜를 선택하세요" readonly>
+    			<input type="text" class="calendar-dateInput" id="calendar-enddate" placeholder="도착 날짜를 선택하세요" readonly>
             </div>
             <div class="nxt_btn_area">
               <p class="notice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#1976D2"></circle><path d="M11.2485 14.0939H12.7336L13.0422 7.88978L13.1194 6.05957H10.8821L10.9399 7.88978L11.2485 14.0939ZM11.9814 17.9404C12.8301 17.9404 13.4858 17.4286 13.4858 16.6996C13.4858 15.9706 12.8301 15.4278 11.9814 15.4278C11.1521 15.4278 10.5156 15.9706 10.5156 16.6996C10.5156 17.4286 11.1521 17.9404 11.9814 17.9404Z" fill="white"></path></svg>종료일은 시작일보다 이전일 수 없습니다</p>
@@ -253,8 +253,8 @@ $(document).ready(function() {
         </div>
         <div class="body_area" style="margin-top:50px;">
             <div>
-            	<input type="text" class="calendar-dateInput" id="calendar-startdate" placeholder="날짜를 선택하세요" readonly>
-    			<input type="text" class="calendar-dateInput" id="calendar-enddate" placeholder="날짜를 선택하세요" readonly>
+            	<input type="text" class="calendar-dateInput" id="calendar-startdate" placeholder="출발 날짜를 선택하세요" readonly>
+    			<input type="text" class="calendar-dateInput" id="calendar-enddate" placeholder="도착 날짜를 선택하세요" readonly>
             </div>
             <div class="nxt_btn_area">
               <p class="notice"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#1976D2"></circle><path d="M11.2485 14.0939H12.7336L13.0422 7.88978L13.1194 6.05957H10.8821L10.9399 7.88978L11.2485 14.0939ZM11.9814 17.9404C12.8301 17.9404 13.4858 17.4286 13.4858 16.6996C13.4858 15.9706 12.8301 15.4278 11.9814 15.4278C11.1521 15.4278 10.5156 15.9706 10.5156 16.6996C10.5156 17.4286 11.1521 17.9404 11.9814 17.9404Z" fill="white"></path></svg>종료일은 시작일보다 이전일 수 없습니다</p>
@@ -468,11 +468,16 @@ $(document).ready(function() {
 	modal.on('click', '#nextButton', function(){
 	    const startDate = $('#calendar-startdate').val();
 	    const endDate = $('#calendar-enddate').val();
-	    
+	  
 	    if (isEndDateBeforeStartDate(startDate, endDate)) {
 	        $('.notice').addClass('on');
 	        return;
 	    }
+	    
+	    if(startDate === "" && endDate === ""){
+			alert("날짜를 입력해주세요");
+			return;
+		}
 	
 	    $('#startdate').val(startDate);
 	    $('#enddate').val(endDate);

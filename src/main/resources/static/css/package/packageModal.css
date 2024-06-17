@@ -64,7 +64,7 @@
     border: none;
     border-radius: 20px;
 }
-.country:hover,.region:hover{
+.country:hover,.region:hover, .overregion:hover{
     background-color: #2196F3;
     color: #ffffff;
 }
