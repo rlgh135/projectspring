@@ -65,13 +65,13 @@
                                         <div class="adult">
                                             <div class="adult_info">
                                                 <h3>성인</h3>
-                                                <input type="text" id="adultPrice" th:value="${package.adultPrice}">
+                                                <input type="text" id="adultPrice" th:value="${package.adultPrice}"	oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                             </div>
                                         </div>
                                         <div class="child">
                                             <div class="child_info">
                                                 <h3>아이</h3>
-                                                <input type="text" id="childPrice" th:value="${package.childPrice}">
+                                                <input type="text" id="childPrice" th:value="${package.childPrice}" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                             </div>
                                         </div>
                                     </div>
