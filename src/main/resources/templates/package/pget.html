@@ -300,9 +300,9 @@
 	    document.getElementById('childCount').value = childCount;
 	    
 	    // packagenum 값을 URL에서 가져오기
-	    const urlParams = new URLSearchParams(window.location.search);
-	    const packagenum = urlParams.get('packagenum');
-	    document.getElementById('packagenum').value = packagenum;
+	    //const urlParams = new URLSearchParams(window.location.search);
+	    //const packagenum = urlParams.get('packagenum');
+	    //document.getElementById('packagenum').value = packagenum;
 	    
 	    // 폼 제출
 	    document.getElementById('paymentForm').submit();
@@ -408,8 +408,8 @@
 					let guidenum = 	[[${session.guideNum}]];
 					console.log(guidenum);
 					let pguidenum = [[${package.guidenum}]];
-					console.log(pguidenum);	
-					let packagenum = [[${package.packagenum}]];
+					//console.log(pguidenum);	
+					//let packagenum = [[${package.packagenum}]];
 					
 					console.log("packagenum: " + packagenum);	
 					

@@ -132,6 +132,7 @@
 	        ]]>
 	    </if>
 	    <![CDATA[
+	    order by packagenum desc
 	    limit #{startrow}, #{amount}
 	    ]]>
 	</select>

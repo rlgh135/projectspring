@@ -261,7 +261,7 @@ function userCreateChatInputHandler(e) {
 	}
 
 	userCreateChatInputTimeoutID = setTimeout(() => {
-		//Ajax
+		// --> Ajax
 	}, 1000);
 }
 
@@ -1797,12 +1797,24 @@ function printChatList() {
 */
 function adjustChatList() {
 	let flag = 0;
+	/*
+		ot*이 비어있으면 해당 페이지가 현재 열려있는 상태인지 확인
+		열려있으면 open_CHAT_LIST_OT*()을 호출해 chat-list-empty를 띄운다
+
+		함수 목적이랑 좀 안 맞기는 한데..
+	*/
 	if(CHAT_OTO_VD.length == 0) {
 		CHAT_LIST_OTO.replaceChildren();
+		if(!CHAT_LIST_OTO.classList.contains("cc-hidden")) {
+			open_CHAT_LIST_OTO();
+		}
 		flag++;
 	}
 	if(CHAT_OTM_VD.length == 0) {
 		CHAT_LIST_OTM.replaceChildren();
+		if(!CHAT_LIST_OTM.classList.contains("cc-hidden")) {
+			open_CHAT_LIST_OTM();
+		}
 		flag++;
 	}
 	if(flag == 2) {
