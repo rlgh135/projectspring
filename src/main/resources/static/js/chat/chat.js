@@ -194,7 +194,7 @@ async function createPackageChat(e) {
 		let res;
 		try {
 			res = await ajaxPost("localhost:8080", "/chat", {
-				isPackageChat: true,
+				chatRoomType: 1,
 				packagenum: chat_packagenum
 			});
 		} catch(err) {
@@ -2087,42 +2087,36 @@ function createChatListElement(cr, isOTO=true) {
 /*================================================================================*/
 /*AJAX*/
 /*
-	대충 get 사용법
-	ajaxGet("localhost:8080", "/chat", {
-		//쿼리스트링에 넣을 키-값을 js 객체 형태로 삽입
-		// 넣을 쿼리스트링이 없으면 생략 가능함
-		"userid1": USER_ID,
-		"userid2": "qwerty1234",
-		"userid3": document.getElementById("simpleexampleelementid").value,
-		...
-	})
-	.then((data) => {
-		//대충 받은 데이터 사용하는 로직
-	})
-	.catch((error) => {
-		//에러 발생시 로직
-	});
-
-	post 사용법
-	ajaxPost("localhost:8080", "/chat", {
-		//body에 넣을 키-값 value
-		// js 객체 형태로 삽입
-	}, {
-		//header에 넣을 키-값 value
-		// js 객체 형태로 삽입
-		// 없으면 생략
-	})
-	.then((data) => {
-		//받은 데이터 사용하는 로직
-	})
-	.catch((error) => {
-		//에러 처리 로직
-	});
-
+	참조
 	queryStrings, body, header는 js 객체 형태로 삽입
 	반환되는 데이터는 무조건 JSON으로 수신 -> JS 객체화
 */
+
 //GET
+/**
+ * AJAX로 GET 요청을 보내고 응답을 받는 함수
+ * 
+ * then-catch나 async-await으로 받으면 됨
+ * 
+ * @example
+ * ajaxGet("localhost:8080", "/chat", {
+ *     //쿼리스트링에 넣을 키-값 을 JS 객체 형태로 삽입
+ *     //넣을 값이 없으면 생략 가능함
+ *     userid1: USER_ID,
+ *     userid2: "qwerty1234",
+ *     userid3: document.getElementById("polehammeroverheadfullswing").value,
+ *     ...
+ * }).then((data) => {
+ *     //수신 후 처리
+ * }).catch((error) => {
+ *     //송수신 실패시 처리
+ * });
+ * 
+ * @param {string} host host 주소 (localhost:8080의 형태로 마지막 슬래시를 생략)
+ * @param {string} path path 주소 (/chat 의 형태로 시작 슬래시를 꼭 작성)
+ * @param {Object} queryStrings 쿼리스트링으로 넣을 키-값, JS 객체의 형태로 삽입, 생략 가능함
+ * @returns {Promise<*>} 반환값은 JSON으로 수신 -> JS 객체화 -> Promise로 포장 의 단계를 거침
+ */
 async function ajaxGet(host, path, queryStrings={}) {
 	let qs = "";
 	if(Object.keys(queryStrings).length > 0) {
@@ -2145,6 +2139,32 @@ async function ajaxGet(host, path, queryStrings={}) {
 	}
 }
 //POST
+/**
+ * AJAX로 POST 요청을 보내고 응답을 받는 함수
+ * 
+ * Content-Type은 application/json
+ * 
+ * then-catch나 async-await으로 받으면 됨
+ * 
+ * @example
+ * ajaxPost("localhost:8080", "/chat", {
+ *     //body에 담을 키-값, 생략 불가능
+ * }, {
+ *     //header에 담을 키-값, 생략가능
+ * })
+ * .then((data) => {
+ *     //수신 후 처리
+ * })
+ * .catch((error) => {
+ *     //송수신 실패시 처리
+ * });
+ * 
+ * @param {string} host host 주소 (localhost:8080의 형태로 마지막 슬래시를 생략)
+ * @param {string} path path 주소 (/chat 의 형태로 시작 슬래시를 꼭 작성)
+ * @param {Object} body 요청 body에 담을 키-값, JS 객체 형태로 삽입, 생략 불가능
+ * @param {Object} header 요청 header에 담을 키-값, JS 객체 형태로 삽입, 생략 가능
+ * @returns {Promise<*>} 반환값은 JSON으로 수신 -> JS 객체화 -> Promise로 포장 의 단계를 거침
+ */
 async function ajaxPost(host, path, body, header={}) {
 	const url = "http://" + host + path;
 	const options = {

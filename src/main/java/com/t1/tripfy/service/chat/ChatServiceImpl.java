@@ -114,11 +114,79 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	@Transactional
 	public ChatListPayloadDTO createChat(String userid, String title, List<String> invitee) {
-		//chat_room
 		
-		//chat_user
+	//유효성 검사
+		//invitee의 모든 요소(userid)가 존재하는지 확인
+		//이거 일단은 순회로 처리함
+		for(String iv : invitee) {
+			if(null == userServiceImpl.getUser(iv)) {
+				//존재하지 않는 userid
+				return null;
+			}
+		}
 		
-		return null;
+	//chat_room
+		//현재시간 저장
+		LocalDateTime current = LocalDateTime.now();
+		
+		//삽입할 DTO 구성
+		/*
+		 * title null 체크는 안함 - null 기입 가능함
+		 * 또한 auto_increment 된 PK 를 crDTO 에 담아온다
+		 * */
+		ChatRoomDTO crDTO = new ChatRoomDTO()
+				.setChatRoomType(0)
+				.setChatRoomTitle(title)
+				.setPackagenum(null)
+				.setRegdate(current);
+		
+		//삽입
+		if(1 != chatRoomMapper.createRoom(crDTO)) {
+			//chat_room insert 실패
+			return null;
+		}
+		
+		Long crPK = crDTO.getChatRoomIdx();
+		
+	//chat_user
+		//invitee를 순회하면서 삽입용 DTO List 초기화
+		List<ChatUserDTO> cuDTOList = new ArrayList<>();
+		for(String iv : invitee) {
+			cuDTOList.add(new ChatUserDTO()
+					.setChatRoomIdx(crPK)
+					.setUserid(iv)
+					.setChatUserIsCreator(false)
+					.setChatUserIsQuit(false)
+					.setChatDetailIdx(null));
+		}
+		//요청자 삽입
+		cuDTOList.add(new ChatUserDTO()
+				.setChatRoomIdx(crPK)
+				.setUserid(userid)
+				.setChatUserIsCreator(true)
+				.setChatUserIsQuit(false)
+				.setChatDetailIdx(null));
+		
+		//삽입
+		if((invitee.size() + 1) != chatUserMapper.insertRow(cuDTOList)) {
+			//chat_user insert 실패
+			return null;
+		}
+	
+	//전송값 꾸리고 보내기
+		//cuDTOList에서 요청자 빼기
+		cuDTOList.remove(cuDTOList.size() - 1);
+		
+		return new ChatListPayloadDTO()
+				.setRoomidx(crPK)
+				.setPkgnum(null)
+				.setTitle(title)
+				.setChatRegdate(current)
+				.setIsCreator(true) // 요청자가 채팅 생성자임
+				.setUserList(cuDTOList)
+				.setChatContent(null)
+				.setChatContentRegdate(null)
+				.setUncheckedmsg(0);
 	}
 	
 	//채팅방 진입

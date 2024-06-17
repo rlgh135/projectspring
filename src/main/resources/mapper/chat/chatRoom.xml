@@ -19,6 +19,6 @@
 	<insert id="createRoom" useGeneratedKeys="true" keyProperty="chatRoomIdx">
 		INSERT INTO chat_room
 		VALUES
-			(null, #{chatRoomTitle}, #{packagenum}, false, #{regdate})
+			(null, #{chatRoomType}, #{chatRoomTitle}, #{packagenum}, false, #{regdate})
 	</insert>
 </mapper>

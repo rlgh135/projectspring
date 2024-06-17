@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain=true)
 public class ChatRoomDTO {
 	private Long chatRoomIdx;
+	private Integer chatRoomType;
 	private String chatRoomTitle;
 	private Long packagenum;
 	private Boolean chatRoomIsTerminated;

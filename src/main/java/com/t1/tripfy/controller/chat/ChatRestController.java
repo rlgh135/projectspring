@@ -31,7 +31,6 @@ public class ChatRestController {
 	@PostMapping
 	public ResponseEntity<ChatListPayloadDTO> createChat(
 			@SessionAttribute(name="loginUser", required=false) String loginUserId,/*
-			@RequestBody(required=true) Boolean isPackageChat,
 			@RequestBody(required=false) Long packagenum,
 			@RequestBody(required=false) String title,
 			@RequestBody(required=false) List<String> invitee*/
@@ -48,15 +47,16 @@ public class ChatRestController {
 		
 		/*임시*/
 		//데이터 변환
-		Boolean isPackageChat = (Boolean)data.get("isPackageChat");
+//		Boolean isPackageChat = (Boolean)data.get("isPackageChat");
+		Integer chatRoomType = (Integer)data.get("chatRoomType");
 		Long packagenum = Long.valueOf((Integer)data.get("packagenum"));
 		String title = (String)data.get("title");
 		List<String> invitee = (List<String>)data.get("invitee");
 		
 		System.out.println("========================================\n" + packagenum + "\n========================================");
 		
-		//패키지챗
-		if(isPackageChat) {
+		//패키지(문의)챗
+		if(chatRoomType == 1) {
 			if(packagenum == null) {
 				//400
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -72,14 +72,24 @@ public class ChatRestController {
 				}
 			}
 		//일반챗
-		} else {
-			/*일반/일반 챗의 경우 초대자를 명시해야 함*/
+		} else if(chatRoomType == 0){
+			/* 
+			 * 일반/일반 챗의 경우 초대자를 명시해야 함
+			 * List에 적재된 userid들의 유효성은 서비스에서 처리
+			 * */
 			if(invitee == null || invitee.isEmpty()) {
 				//400
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 			} else {
 				//sv
 				/* wip */
+				if(null == (respondDTO = chatSV.createChat(loginUserId, title, invitee))) {
+					//500
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				} else {
+					//생성 성공
+					return ResponseEntity.ok(respondDTO);
+				}
 			}
 		}
 		
@@ -88,6 +98,7 @@ public class ChatRestController {
 //		}
 		System.out.println("crccc-2");
 		
+		/*이거 전달값 오류로 바꿔라*/
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
