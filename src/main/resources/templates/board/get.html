@@ -65,7 +65,7 @@
 						</table>
 					</div>
 					
-					<div class="line"></div>
+					<div class="g_line"></div>
 
                     <div class="reply_area">
                         <h4>댓글</h4>
@@ -132,6 +132,7 @@
         </div>
     </div>
 	<th:block th:include="~{layout/alertModal::alertModal}"></th:block>
+	<th:block th:include="~{layout/footer::footer(${session.loginUser})}"></th:block>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>

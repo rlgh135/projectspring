@@ -163,6 +163,7 @@
     </div>
 	<th:block th:include="~{layout/alertModal::alertModal}"></th:block>
 	<th:block th:include="~{package/pacPrint::pacPrintModal}"></th:block>
+	<th:block th:include="~{layout/footer::footer(${session.loginUser})}"></th:block>
 </body>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAClH3Zck8wh1CdEBWohj2_PxG1HZsSmEg&libraries=places,geometry"></script>
 <script th:inline="javascript">
