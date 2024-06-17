@@ -13,10 +13,10 @@ $(document).ready(function() {
                 showChatBotMessage("안녕하세요 트리피 입니다 궁금하신 태그를 선택해주세요", "트리피는 뭐하는 곳 인가요?", "가이드는 뭐가 다른가요?", "패키지 신청에 제약이 있나요?");
             }, 1500);
             firstChatBotOpen++;
-            scrollToBottom();
         }
         chatBotArea.removeClass("cb-hidden");
         $(this).removeClass("chatBotOn").addClass("chatBotOff");
+        scrollToBottom();
     });
 
     $(document).on('click', '.chatBotOff', function() {
@@ -45,6 +45,7 @@ $(document).ready(function() {
         }
         typingIndicator.append(dots);
         messageArea.append(typingIndicator);
+        scrollToBottom();
     }
 
     function hideTypingIndicator() {
