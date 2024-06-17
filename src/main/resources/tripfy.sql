@@ -27,11 +27,6 @@ CREATE TABLE `user_img` (
   `orgname` varchar(2000)
 );
 
-CREATE TABLE `manager` (
-  `managerid` varchar(300) PRIMARY KEY,
-  `managerpw` varchar(300)
-);
-
 CREATE TABLE `guide` (
   `guidenum` bigint PRIMARY KEY AUTO_INCREMENT,
   `userid` varchar(300),
@@ -249,7 +244,7 @@ CREATE TABLE `chat_detail` (
 create table manager(
 	manage_key varchar(1000)
 );
-
+insert into manager values("X7a5G3kZ9T");
 create table task_message(
 	messagenum bigint primary key auto_increment,
     task_type varchar(300), /*1보드 2패키지 3유저*/
