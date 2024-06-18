@@ -276,6 +276,7 @@ public class UserController {
 		guide.setIntroduce(user.getIntroduce());
 		
 		if(service.insertGuide(guide)==1) {
+			req.getSession().setAttribute("guideNum", service.getGuideNum(userid).getGuidenum());
 			return "redirect:/user/myinfo";
 		} else {
 			return "redirect:/";
