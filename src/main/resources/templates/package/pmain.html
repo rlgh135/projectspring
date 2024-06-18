@@ -207,10 +207,19 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
+	// 현재 날짜 가져오기
+	const currentDate = new Date();
+	
+	// 4일을 더한 날짜 계산
+	currentDate.setDate(currentDate.getDate() + 4);
+	
+	// yyyy-mm-dd 형식으로 포맷팅
+	const minDate = currentDate.toISOString().split('T')[0];
+
     flatpickr("#startDateInput", {
         mode: "range",
         dateFormat: "Y-m-d",
-		minDate: "today",
+		minDate: minDate,
         onClose: function(selectedDates, dateStr, instance) {
             if (selectedDates.length === 2) {
                 const startDate = instance.formatDate(selectedDates[0], "Y-m-d");
