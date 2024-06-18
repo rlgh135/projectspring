@@ -126,7 +126,7 @@
                         </div>
                     </div>
 
-                    <div class="chatting">채팅하기</div>
+                    <div class="chatting" style="cursor: pointer;">채팅하기</div>
                 </div>
             </div>
         </div>
@@ -141,7 +141,8 @@ const map = $("#map");
 const defaultLocationName = /*[[${boardaddr != null && boardaddr.placename != null ? boardaddr.placename : board.regionname}]]*/'';
 const zoomScope = /*[[${boardaddr != null && boardaddr.placename != null ? 11 : 5}]]*/'';
 const content = /*[[${board.content}]]*/'';
-let loginUser = /*[[${session.loginUser}]]*/'';
+let loginUser = /*[[${session.loginUser}]]*/''
+const boardWriterId = /*[[${board.userid}]]*/'';
 let boardnum = [[${board.boardnum}]];
 const geocoder = new google.maps.Geocoder();
 let stickerNum = 0;
@@ -154,6 +155,36 @@ let emojiContent = `
 	           </svg>
 	       `;
 let thispage = 1;
+
+//민수님 아래 로그인유저 쓰세요~
+$(document).on("click", ".chatting", function(){
+	//현재 접속중인 유저 아이디
+	loginUser;
+	//보드 작성자 아이디
+	boardWriterId;
+})
+//민수님 아래 아이디 써서 채팅함수에 넣으면 됩니다.
+$(document).on("click",".user-chat-button",function(){
+	//현재 누른 채팅 유저에 아이디 이거 매개변수로 함수 호출
+	let thisChatUserId = $(this).closest('.reply').find('.reply_userid').text();
+})
+
+$(document).on("click",".reply_userThumnail img", function(){
+	event.stopPropagation();
+	$('.user-tool-menu').remove();
+	const userToolMenu = $('<div class="user-tool-menu"></div>').html(`
+		           <button class="info-button">정보 보기</button>
+		           <button class="user-chat-button">채팅 걸기</button>
+		       `);
+	$(this).closest(".reply_userThumnail").append(userToolMenu);
+})
+
+$(document).on("click",".info-button",function(){
+	let replyUserId = $(this).closest('.reply').find('.reply_userid').text();
+	location.href = "/user/yourinfo?userid=" + replyUserId;
+})
+
+
 	$(document).ready(function() {
 	   $(".trip_introduction div").html(content);
 	   showReplyList(thispage);
@@ -192,6 +223,10 @@ let thispage = 1;
            if (!$(event.target).closest('.reply_tool').length) {
                $('.tool-menu').remove();
            }
+		   
+		   if (!$(event.target).closest('.reply_userThumnail').length) {
+              $('.user-tool-menu').remove();
+          }
        });
 	   
 	   $(document).on('click', '#emoji_toggle', function() {

@@ -404,19 +404,20 @@ public class BoardServiceImpl implements BoardService {
 		if(bmapper.updateBoard(board) != 1) {
 			return false;
 		}
-		System.out.println("보드 : "+board);
-		System.out.println("보드 에드 : "+boardaddr);
-		System.out.println("파일 : "+files);
-		System.out.println("업데이트Cnt : "+updateCnt);
+
 		if (!boardaddr.getPlacename().equals("") && !boardaddr.getPlacename().isEmpty()
 		    && !boardaddr.getStartdate().equals("") && !boardaddr.getStartdate().isEmpty()
 		    && !boardaddr.getEnddate().equals("") && !boardaddr.getEnddate().isEmpty()) {
 		    boardaddr.setBoardnum(boardnum);
 		    if (bmapper.getBoardaddrByBoardnum(boardnum) != null) {
-		    	if(bmapper.deleteBoardaddr(boardnum) != 1) {
-		    		return false;		    		
-		    	}
+		    	bmapper.updateBoardAddr(boardaddr);
+		    }else {
+		    	bmapper.insertBoardAddr(boardaddr);
 		    }
+		}else {
+			if(bmapper.getBoardaddrByBoardnum(boardnum) != null) {
+				bmapper.deleteBoardaddr(boardnum);
+			}
 		}
 		ArrayList<String> deleteNames = null;
 		boolean deleteThumnailflag = false;

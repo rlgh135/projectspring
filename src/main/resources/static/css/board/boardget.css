@@ -315,6 +315,10 @@
     	margin-bottom: 30px;
 		font-family: 'Nanum Gothic';
 	}
+	.chatting:hover{
+		scale: 1.1;
+		translate:transform 0.5s;
+	}
 	
 	input[type="button"] {
 	    cursor: pointer;
@@ -379,6 +383,11 @@
 	.reply .reply_userThumnail img{
 	   width:50px; height:50px;
 	   border-radius: 10px;
+	   cursor: pointer;
+	}
+	.reply .reply_userThumnail img:hover{
+		scale: 1.1;
+		transform: 0.5s;
 	}
 	.reply .reply_box{
 	   width: 96%;
@@ -415,6 +424,17 @@
 	   	width: 100px;
 	    top: 30px;
 	    right: 0;
+	    background-color: white;
+	    border: 1px solid #ccc;
+	    border-radius: 5px;
+	    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	    padding: 10px;
+	    z-index: 10;
+	}
+	.user-tool-menu{
+		position: absolute;
+	   	width: 120px;
+	    left: -80px;
 	    background-color: white;
 	    border: 1px solid #ccc;
 	    border-radius: 5px;
@@ -472,7 +492,7 @@
 	.reply_area .comment_attach .emoticon-close-btn:hover{
 	   background: rgba(255, 255, 255, 1);
 		}
-	.reply .tool-menu button {
+	.reply .tool-menu button, .user-tool-menu button {
 	    display: block;
 	    width: 100%;
 	    background: none;
@@ -483,12 +503,13 @@
 	    cursor: pointer;
 	    font-size: 14px;
 	}
+	
 		
-	.reply .tool-menu button:hover {
+	.reply .tool-menu button:hover, .user-tool-menu button:hover {
 		       background-color: #f0f0f0;
 		   }
 		
-	.reply .tool-menu button:focus {
+	.reply .tool-menu button:focus, .user-tool-menu button:focus {
 	    outline: none;
 	}
 	.emoji-picker, .modify-emoji-picker{
