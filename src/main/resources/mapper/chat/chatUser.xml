@@ -43,7 +43,9 @@
 		SELECT count(*)
 		FROM chat_user
 		WHERE
-			userid = #{userid}
+				userid = #{userid}
+			AND
+				chat_user_is_quit = false
 	</select>
 	
 	
@@ -96,7 +98,7 @@
 	-->
 	<select id="selectAllByUserid">
 		SELECT 
-			cu.chat_room_idx, cr.chat_room_title, cr.packagenum, cu.chat_user_is_creator, cr.regdate, MAX(cd.regdate) as last_msg_date
+			cu.chat_room_idx, cr.chat_room_type, cr.chat_room_title, cr.packagenum, cr.chat_room_is_terminated, cu.chat_user_is_creator, cr.regdate, MAX(cd.regdate) as last_msg_date
 		FROM 
 			chat_user AS cu
 		INNER JOIN 
@@ -111,8 +113,6 @@
 				cu.userid = #{userid}
 			AND
 				cu.chat_user_is_quit = false
-			AND
-				cr.chat_room_is_terminated = false
 		GROUP BY
 			cu.chat_room_idx
 		ORDER BY

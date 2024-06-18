@@ -95,7 +95,7 @@ async function createUserToUserChat(targetUserid) {
         //VD로 DOM 수정
         adjustChatList();
         //roomidx 전달, VD 인덱스 초기화
-        tgtRoomIdx = res.roomidx;
+        tgtRoomIdx = cr.roomidx;
         tgtVDIdx = 0;
     }
 

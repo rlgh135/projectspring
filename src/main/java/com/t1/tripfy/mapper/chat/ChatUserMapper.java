@@ -26,6 +26,13 @@ public interface ChatUserMapper {
 	List<ChatUserDTO> selectOpponentUserInfo(Long chatRoomIdx, String userid);
 	
 	//userid로 chat_user 테이블 행 개수 가져오기
+	/**
+	 * <p>userid로 chat_user 테이블의 행 개수 가져오기
+	 * <p>즉 userid가 가입한 채팅방의 개수를 구하는 쿼리임
+	 * <p>또한 cu.chat_user_is_quit=false인 행만 셈<br>나간 채팅은 세지 않음
+	 * 
+	 * @param userid : String 목표 유저의 userid
+	 * */
 	Integer selectCountOfSpecificChatUserByUserid(String userid);
 	
 	
@@ -35,8 +42,17 @@ public interface ChatUserMapper {
 	
 	/**
 	 * <p><strong>SELECT</strong> : userid로 채팅방 가져오기
-	 * <p>다만 닫힌 채팅방(chat_user.chat_user_is_quit = true, chat_room.chat_room_is_terminated)은 가져오지 않음
-	 * <p>반환값은 각각 <br>chat_room_idx, chat_room_title, packagenum, chat_user_is_creator, regdate(채팅방 개설일), last_msg_date(chat_room_idx의 제일 최신 메시지 regdate)<br>로 이루어져 있음
+	 * <p><s>다만 닫힌 채팅방(chat_user.chat_user_is_quit = true, chat_room.chat_room_is_terminated)은 가져오지 않음</s>
+	 * <br>이제는 목표 사용자(userid)가 나간 채팅방(cu.chat_user_is_quit=true)만을 제외하고 전부 가져옴
+	 * <p>반환값은 각각 
+	 * <br>chat_room_idx,
+	 * <br>chat_room_type,
+	 * <br>chat_room_title,
+	 * <br>packagenum,
+	 * <br>chat_room_is_terminated,
+	 * <br>chat_user_is_creator,
+	 * <br>regdate(채팅방 개설일),
+	 * <br>last_msg_date(chat_room_idx의 제일 최신 메시지 regdate)<br>로 이루어져 있음
 	 * <p><strong>최신 내림차순 정렬</strong>
 	 * */
 	List<Map<String, Object>> selectAllByUserid(String userid);

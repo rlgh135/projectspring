@@ -18,8 +18,16 @@ public interface ChatService {
 	 * https://jangjjolkit.tistory.com/62
 	 * */
 	
+	/*
+	 * 채팅방 만들기
+	 * 각각
+	 * chatRoomType == 	0 일반/일반(다대다 가능)
+	 * 					1 패키지(문의)
+	 * 					2 패키지(다대다)
+	 * */
 	ChatListPayloadDTO createChat(String userid, Long packagenum);
 	ChatListPayloadDTO createChat(String userid, String title, List<String> invitee);
+	ChatListPayloadDTO createChat(String userid, Long packagenum, String title, List<String> invitee);
 	
 	// 채팅방 진입
 	// 나중에 캐시 추가하는 경우를 생각해 채팅방 진입과 채팅방 내용 가져오는 메서드를 분리함

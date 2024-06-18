@@ -49,7 +49,7 @@ const CHAT_BODY_INPUT = document.getElementById("input-chat");
 /*================================================================================*/
 /*기타 전역변수*/
 //요일 배열
-const day = ["일", "월", "화", "수", "목", "금", "토"];
+const CHAT_DAY_ARR = ["일", "월", "화", "수", "목", "금", "토"];
 
 /*================================================================================*/
 /*공유 워커 관련*/
@@ -136,9 +136,9 @@ CHAT_LIST_CREATE.addEventListener("click", (e) => {
 */
 
 //packagenum 변수
-const chat_packagenum = 5; /*초기화 필요*/
+// const chat_packagenum = 5; /*초기화 필요*/
 
-async function createPackageChat(e) {
+async function createPackageChat(chat_packagenum) {
 	console.log("createPackageChat(), chat_packagenum=" + chat_packagenum);
 	console.log("IS_VD_LOADED=" + IS_VD_LOADED);
 
@@ -164,9 +164,19 @@ async function createPackageChat(e) {
 	}
 
 	//요청된 패키지 채팅이 이미 존재하는지 체크
+	/*
+		일대일 패키지 채팅만 체크, 패키지 다대다는 따로임
+	*/
 	let tgtRoomIdx = null;
-	let isOTOChat = true;
+	// let isOTOChat = true;
 	let tgtVDIdx = null;
+	let isChatRoomAlreadyExist = false;
+	if(CHAT_OTO_VD.length > 0) {
+		for(let i = 0; i < CHAT_OTO_VD.length; i++) {
+			// if(CHAT_OTO_VD[i].dataObj.)
+			/* 작성중 240618 */
+		}
+	}
 	if(CHAT_OTO_VD.length > 0 || CHAT_OTM_VD.length > 0) {
 		//가입된 채팅이 있는 경우
 		for(let i = 0; i < CHAT_OTO_VD.length; i++) {
@@ -646,7 +656,7 @@ function createBroadcastChatElement(payload) {
 		dateDiv.innerHTML = timestamp.getFullYear() + "년 "
 						+ (timestamp.getMonth() + 1) + "월 "
 						+ timestamp.getDate() + "일 "
-						+ day[timestamp.getDay()] + "요일 ";
+						+ CHAT_DAY_ARR[timestamp.getDay()] + "요일 ";
 		CHAT_BODY_MORE_INNER_CONT.appendChild(dateDiv);
 	}
 	/*메시지 블럭 생성, 추가*/
@@ -839,7 +849,7 @@ function sendChatReceiveHandler(payload) {
 		dateDiv.innerHTML = timestamp.getFullYear() + "년 "
 						+ (timestamp.getMonth() + 1) + "월 "
 						+ timestamp.getDate() + "일 "
-						+ day[timestamp.getDay()] + "요일";
+						+ CHAT_DAY_ARR[timestamp.getDay()] + "요일";
 		CHAT_BODY_MORE_INNER_CONT.lastChild.before(dateDiv);
 	}
 	//메시지 본문 구성
@@ -1035,7 +1045,7 @@ function chatLoadHandler(payload) {
 			dateDiv.innerHTML = tgtDate.getFullYear() + "년 " 
 							+ (tgtDate.getMonth() + 1) + "월 "
 							+ tgtDate.getDate() + "일 "
-							+ day[tgtDate.getDay()] + "요일";
+							+ CHAT_DAY_ARR[tgtDate.getDay()] + "요일";
 			console.log(dateDiv);
 			chatFragment.prepend(dateDiv);
 		}
@@ -1070,7 +1080,7 @@ function chatLoadHandler(payload) {
 		dateDiv.innerHTML = tgtDate.getFullYear() + "년 " 
 						+ (tgtDate.getMonth() + 1) + "월 "
 						+ tgtDate.getDate() + "일 "
-						+ day[tgtDate.getDay()] + "요일";
+						+ CHAT_DAY_ARR[tgtDate.getDay()] + "요일";
 
 		chatFragment.prepend(dateDiv);
 
@@ -1545,7 +1555,7 @@ function printChatRoom(payload) {
 			dateDiv.innerHTML = tgtDate.getFullYear() + "년 " 
 							+ (tgtDate.getMonth() + 1) + "월 "
 							+ tgtDate.getDate() + "일 "
-							+ day[tgtDate.getDay()] + "요일";
+							+ CHAT_DAY_ARR[tgtDate.getDay()] + "요일";
 			
 			//chatFragment에 삽입
 			chatFragment.appendChild(dateDiv);
@@ -1566,7 +1576,7 @@ function printChatRoom(payload) {
 		startDateP.innerHTML = tgtStartDate.getFullYear() + "년 " 
 							+ (tgtStartDate.getMonth() + 1) + "월 "
 							+ tgtStartDate.getDate() + "일 "
-							+ day[tgtStartDate.getDay()] + "요일";
+							+ CHAT_DAY_ARR[tgtStartDate.getDay()] + "요일";
 		startDateDiv.appendChild(startDateP);
 
 		chatFragment.prepend(startDateDiv);

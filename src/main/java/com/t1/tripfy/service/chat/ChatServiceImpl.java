@@ -46,6 +46,7 @@ public class ChatServiceImpl implements ChatService {
 	 	기능을 기준으로 메서드 나눌것
 	*/
 	
+	//패키지(문의)챗 생성
 	@Override
 	@Transactional
 	public ChatListPayloadDTO createChat(String userid, Long packagenum) {
@@ -111,6 +112,7 @@ public class ChatServiceImpl implements ChatService {
 				.setUncheckedmsg(0);
 	}
 	
+	//일반/일반 챗 생성
 	@Override
 	@Transactional
 	public ChatListPayloadDTO createChat(String userid, String title, List<String> invitee) {
@@ -177,6 +179,12 @@ public class ChatServiceImpl implements ChatService {
 		//cuDTOList에서 요청자 빼기
 		cuDTOList.remove(cuDTOList.size() - 1);
 		
+		//상대 유저들 이미지 가져오기
+		List<UserImgDTO> imgList = new ArrayList<>();
+		for(ChatUserDTO dto : cuDTOList) {
+			imgList.add(userServiceImpl.getProfileImgDTO(dto.getUserid()));
+		}
+		
 		return new ChatListPayloadDTO()
 				.setRoomidx(crPK)
 				.setPkgnum(null)
@@ -184,6 +192,90 @@ public class ChatServiceImpl implements ChatService {
 				.setChatRegdate(current)
 				.setIsCreator(true) // 요청자가 채팅 생성자임
 				.setUserList(cuDTOList)
+				.setUserImage(imgList)
+				.setChatContent(null)
+				.setChatContentRegdate(null)
+				.setUncheckedmsg(0);
+	}
+	
+	//패키지(다대다) 생성
+	@Override
+	@Transactional
+	public ChatListPayloadDTO createChat(String userid, Long packagenum, String title, List<String> invitee) {
+		
+	//유효성 검사
+		for(String iv : invitee) {
+			if(null == userServiceImpl.getUser(iv)) {
+				return null;
+			}
+		}
+		
+	//Chat_room
+		//현재시간 저장
+		LocalDateTime current = LocalDateTime.now();
+		
+		//삽입할 DTO 구성
+		/*
+		 * title null 체크는 안함 - null 기입 가능함
+		 * 또한 auto_increment 된 PK 를 crDTO 에 담아온다
+		 * */
+		ChatRoomDTO crDTO = new ChatRoomDTO()
+				.setChatRoomType(2)
+				.setChatRoomTitle(title)
+				.setPackagenum(packagenum)
+				.setRegdate(current);
+		
+		//삽입
+		if(1 != chatRoomMapper.createRoom(crDTO)) {
+			return null;
+		}
+		
+		//PK 확보
+		Long crPK = crDTO.getChatRoomIdx();
+		
+	//chat_user
+		//invitee를 순회하면서 삽입용 DTO List 초기화
+		List<ChatUserDTO> cuDTOList = new ArrayList<>();
+		for(String iv : invitee) {
+			cuDTOList.add(new ChatUserDTO()
+					.setChatRoomIdx(crPK)
+					.setUserid(iv)
+					.setChatUserIsCreator(false)
+					.setChatUserIsQuit(false)
+					.setChatDetailIdx(null));
+		}
+		//요청자 삽입
+		cuDTOList.add(new ChatUserDTO()
+				.setChatRoomIdx(crPK)
+				.setUserid(userid)
+				.setChatUserIsCreator(true)
+				.setChatUserIsQuit(false)
+				.setChatDetailIdx(null));
+		
+		//삽입
+		if((invitee.size() + 1) != chatUserMapper.insertRow(cuDTOList)) {
+			//chat_user insert 실패
+			return null;
+		}
+	
+	//전송값 꾸리고 보내기
+		//cuDTOList에서 요청자 빼기
+		cuDTOList.remove(cuDTOList.size() - 1);
+		
+		//상대 유저들 이미지 가져오기
+		List<UserImgDTO> imgList = new ArrayList<>();
+		for(ChatUserDTO dto : cuDTOList) {
+			imgList.add(userServiceImpl.getProfileImgDTO(dto.getUserid()));
+		}
+		
+		return new ChatListPayloadDTO()
+				.setRoomidx(crPK)
+				.setPkgnum(packagenum)
+				.setTitle(title)
+				.setChatRegdate(current)
+				.setIsCreator(true) // 요청자가 채팅 생성자임
+				.setUserList(cuDTOList)
+				.setUserImage(imgList)
 				.setChatContent(null)
 				.setChatContentRegdate(null)
 				.setUncheckedmsg(0);
@@ -359,6 +451,10 @@ public class ChatServiceImpl implements ChatService {
 		/*
 		 * 240603
 		 * 이제 한번에 모든 채팅방을 가져온다
+		 * 
+		 * 240618
+		 * 이제 cu.chat_user_is_quit=false 인 채팅만 가져오고
+		 * ChatListPayloadDTO 수정(isTerminated 필드 추가)에 맞춤
 		 * */
 		
 		Integer chatRoomCnt;
@@ -380,6 +476,11 @@ public class ChatServiceImpl implements ChatService {
 		//    chat_room_idx, chat_user_is_creator, regdate(채팅방 개설 시간), last_msg_date(해당 채팅방의 마지막 메시지 regdate)
 		//를 가져온다
 		/*!!주의 last_msg_date는 null일 수 있음 <- 메시지가 없는 채팅방*/
+		/*
+		 * 240618
+		 * 이제는 cr.chat_room_is_terminated=true 인 채팅방도 가져온다
+		 * 그리고 반환값에 chat_room_type, chat_room_is_terminated도 포함함
+		 * */
 		List<Map<String, Object>> targetList;
 		if(null == (targetList = chatUserMapper.selectAllByUserid(userid))) {
 			//타겟 조회 실패
@@ -442,6 +543,10 @@ public class ChatServiceImpl implements ChatService {
 			
 			//isCreator 설정
 			clplDTO.setIsCreator((Boolean) tgt.get("chat_user_is_creator"));
+			
+			//cr.chat_room_type, cr.chat_room_is_terminated 삽입
+			clplDTO.setRoomType((Integer)tgt.get("chat_room_type"))
+					.setIsTerminated((Boolean)tgt.get("chat_room_is_terminated"));
 			
 			//삽입
 			resultPayload.add(clplDTO);
