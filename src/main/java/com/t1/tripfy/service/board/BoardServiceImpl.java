@@ -615,7 +615,7 @@ public class BoardServiceImpl implements BoardService {
 		
 		Document doc = Jsoup.parse(content);
 		
-		System.out.println("Before filtering:");
+		//System.out.println("Before filtering:");
 		
 		// 모든 <img> 태그를 선택하고 제거
         Elements imgTags = doc.select("img");
@@ -636,8 +636,8 @@ public class BoardServiceImpl implements BoardService {
         // HTML 구조를 유지하면서 body의 내용을 가져옴
         String exceptContent = doc.body().html();
 		
-		System.out.println("After filtering:");
-		System.out.println("exceptContent: " + exceptContent);
+		//System.out.println("After filtering:");
+		//System.out.println("exceptContent: " + exceptContent);
 		
 		return exceptContent;
 	}

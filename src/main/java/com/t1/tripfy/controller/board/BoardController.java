@@ -51,7 +51,7 @@ public class BoardController {
 	private BoardService service;
 
 	@GetMapping("list")
-	public void boardlist(@RequestParam(value = "sort", required = false) String method, Criteria cri, Model model) {
+	public String boardlist(@RequestParam(value = "sort", required = false) String method, Criteria cri, Model model) {
 		
 		if(cri.getKeyword() == "") {
 			cri.setKeyword(null);
@@ -147,6 +147,8 @@ public class BoardController {
 		System.out.println("profiles: " + profiles);
 		System.out.println("pageMaker:" + new PageDTO(service.getTotal(cri), cri));
 		System.out.println("guides: " + guides);
+		
+		return "board/list";
 	}
 	
 	@GetMapping("sort")

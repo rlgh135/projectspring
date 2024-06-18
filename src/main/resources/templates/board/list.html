@@ -184,6 +184,7 @@
 		<input type="hidden" id="realEndPage" th:value="${pageMaker.realEnd}">
 		<input type="hidden" id="pagenum" th:value="${pageMaker.cri.pagenum}">
 		<input type="hidden" id="keyword" th:value="${pageMaker.cri.keyword}">
+		<input type="text" th:value="${pageMaker.cri.countrycode}">
 		<input type="hidden" id="countrycode" th:value="${pageMaker.cri.countrycode}">
 		<input type="hidden" id="regionname" th:value="${pageMaker.cri.regionname}">
 		<input type="hidden" id="method" th:value="${sort}">
@@ -207,7 +208,7 @@
 	console.log(country_select)
 	console.log(area_select)
 	
-	
+	/*
 	const startPage = document.getElementById("startPage").value;
 	let realEndPage = document.getElementById("realEndPage").value;
 	const page = document.getElementById("pagenum").value;
@@ -215,7 +216,16 @@
 	let countrycode = document.getElementById("countrycode").value;
 	let regionname = document.getElementById("regionname").value;
 	const method = document.getElementById("method").value;
+	*/
 	
+	const startPage = /*[[${pageMaker.startPage}]]*/"";
+	let realEndPage = /*[[${pageMaker.realEnd}]]*/"";
+	const page = /*[[${pageMaker.cri.pagenum}]]*/"";
+	const keyword = /*[[${pageMaker.cri.keyword}]]*/"";
+	let countrycode = /*[[${pageMaker.cri.countrycode}]]*/"";
+	let regionname = /*[[${pageMaker.cri.regionname}]]*/"";
+	const method = /*[[${sort}]]*/"";
+		
 	console.log("startPage: " + startPage)
 	console.log("realEndPage: " + realEndPage)
 	console.log("page: " + page)
@@ -226,12 +236,12 @@
 	
 	
 	
-	if(keyword != "") {
+	if(keyword != null) {
 		b_search.value = keyword;
 		search_cancel.style.visibility = "visible";
 	}
 	
-	if(countrycode != "") {
+	if(countrycode != null) {
 		const countrybtn = document.getElementsByClassName("countrybtn");
 		const area = document.getElementsByClassName("area");
 		
@@ -294,11 +304,11 @@
 		}
 	}
 	
-	if(regionname != "") {
+	if(regionname != null) {
 		console.log("name: " + regionname)
 		const area = document.getElementsByClassName("area");
 		const area_detail = document.getElementsByClassName("area_detail");
-		console.log("area_detail: " + area_detail[6].name)
+		// console.log("area_detail: " + area_detail[6].name)
 		
 		if(countrycode == "kr") {
 			document.querySelector(".c_region > div#kr").style.visibility = "visible";
@@ -395,7 +405,7 @@
 	
 	}
 	
-	if(method != "") {
+	if(method != null) {
 		for(let i = 0; i < sort.length; i++) {
 			sort[i].classList.remove("selected");  // selected 클래스 모두 제거
 			sort[i].style.backgroundColor = "#F5F5F5";
@@ -1744,10 +1754,10 @@
 		
 	}
 
-	// function boardwrite() {
-		// let loginUser = /*[[${session.loginUser}]]*/"";  // 세션에 있는 loginUser
-		// console.log(loginUser)
-		/*
+	function boardwrite() {
+		let loginUser = /*[[${session.loginUser}]]*/"";  // 세션에 있는 loginUser
+		console.log(loginUser)
+		
 		if(loginUser == null) {
 			showAlertModal(2, "로그인 후 이용 가능합니다");
 		}
@@ -1756,7 +1766,7 @@
 			location.replace("/board/write")
 		}
 	}
-	*/
+	
 	
 	// function like(e) {
 		// let loginUser = /*[[${session.loginUser}]]*/"";
