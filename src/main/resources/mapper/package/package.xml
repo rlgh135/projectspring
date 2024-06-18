@@ -38,12 +38,12 @@
 		where packagenum = #{packagenum}
 	</update>
 	
-	<select id="getRecentList">
+<select id="getRecentList">
 		SELECT * 
     	FROM package 
     	where countrycode = "kr"
     	and visibility ='O'
-    	AND startdate > CURDATE()
+    	AND startdate > DATE_ADD(CURDATE(), INTERVAL 4 DAY)
     	ORDER BY packagenum DESC 
     	LIMIT 4
 	</select>
@@ -51,14 +51,14 @@
 		select * from package 
 		where countrycode = "kr"
 		and visibility ='O'
-		AND startdate > CURDATE()
+		AND startdate > DATE_ADD(CURDATE(), INTERVAL 4 DAY)
 		ORDER BY viewcnt desc limit 4
 	</select>
 	<select id="getCheapList">
 		select * from package
 		where countrycode = "kr"
 		and visibility ='O'
-		AND startdate > CURDATE()
+		AND startdate > DATE_ADD(CURDATE(), INTERVAL 4 DAY)
 		ORDER BY adult_price asc limit 4
 	</select>
 	<!-- <select id="getPopularGuideList">
@@ -77,7 +77,7 @@
     	FROM package 
     	where countrycode != "kr"
     	and visibility ='O'
-    	AND startdate > CURDATE()
+    	AND startdate > DATE_ADD(CURDATE(), INTERVAL 4 DAY)
     	ORDER BY packagenum DESC 
     	LIMIT 4
 	</select>
@@ -85,14 +85,14 @@
 		select * from package
 		where countrycode != "kr"
 		and visibility ='O'
-		AND startdate > CURDATE()
+		AND startdate > DATE_ADD(CURDATE(), INTERVAL 4 DAY)
 		ORDER BY viewcnt desc limit 4
 	</select>
 	<select id="getAbroadCheapList">
 		select * from package
 		where countrycode != "kr"
 		and visibility ='O'
-		AND startdate > CURDATE()
+		AND startdate > DATE_ADD(CURDATE(), INTERVAL 4 DAY)
 		ORDER BY adult_price asc limit 4
 	</select>
 	
