@@ -685,3 +685,8 @@ body{
 .rlpagez > div:hover{
     color: #2196f3;
 }
+
+/*수정*/
+#isguide{
+	margin-left: 5px;
+}

@@ -149,6 +149,9 @@
             <div class="details-gr purplebull" data-target="받은 후기"onclick="openCont('review', 'userid')">받은 후기</div>
         </nav>
     </section>
+	<th:block th:if="${session.loginUser!=null}">
+		<th:block th:include="~{chat/chat::chat}"></th:block>
+	</th:block>
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <th:block th:include="~{layout/packageModal::packageModal}"></th:block>
@@ -847,5 +850,6 @@
             alert("잘못된 값입니다!");
         }
     }
+	 
 </script>
 </html>

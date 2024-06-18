@@ -433,7 +433,7 @@
 	}
 	.user-tool-menu{
 		position: absolute;
-	   	width: 120px;
+	   	width: 110px;
 	    left: -80px;
 	    background-color: white;
 	    border: 1px solid #ccc;
@@ -498,7 +498,7 @@
 	    background: none;
 	    border: none;
 	    padding: 10px 15px;
-	    text-align: left;
+	    text-align: center;
 	    color: #333;
 	    cursor: pointer;
 	    font-size: 14px;

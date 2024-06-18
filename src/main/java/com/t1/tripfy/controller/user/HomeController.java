@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 public class HomeController {
 	@RequestMapping(value="/")
 	public String home(HttpServletRequest req, Model model) {
+		if(req.getSession().getAttribute("loginUser")!=null) {
+			return "redirect:/user/myinfo";
+		}
 		return "index";
 	}
 }

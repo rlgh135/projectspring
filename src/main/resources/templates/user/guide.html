@@ -22,6 +22,7 @@
 			</div>
 			<div class="phyosi"><span style="color: red;">*</span>이미지를 클릭하면 해당 패키지로 이동합니다</div>
 			<div class="gumosection">
+				<a id="gumoa" href="javascript:showApplies()"></a>
 				<div id="gumopt"></div>
 				<div id="gumopa"></div>
 				<div id="gumopd"></div>
@@ -133,52 +134,7 @@
                         </ul>
                     </div>
                 </div>
-                <div id="applyuserlist" class="hidden">
-                    <p class="subtitles">패키지 신청인원</p>
-                    <ul class="gmlists">
-                        <th:block th:if="${packagelist != null and packagelist.size > 0}">
-                            <li th:each="ply:${packagelist}">
-                                <div class="outerpckgs" >
-									<div class="ingthumb" th:onclick="|location.href='/package/pget?packagenum=${ply.packagenum}'|">
-										<img src="/images/packageimg/384878.jpg">
-									</div>
-                                    <div class="mypckgs" th:onclick="|location.href='/package/pget?packagenum=${ply.packagenum}'|">
-										<div>[[${ply.packageTitle}]]</div>
-										<div>[[${ply.startdate}]] ~ [[${ply.enddate}]]([[${ply.tourdays}]]일)</div>
-									</div>
-                                    <div class="showapplyusers" th:onclick="'showapply('+${ply.packagenum}+')'">
-										신청현황확인
-									</div>
-                                </div>
-                                <div>
-                                    <ul th:id="${'myapplies'+ply.packagenum}" class="myapplyuserlist hidden">
-                                    </ul>
-                                </div>
-                            </li>
-                        </th:block>
-                        <th:block th:unless="${packagelist != null and packagelist.size > 0}">
-                            <li>
-                                <div>
-                                    등록한 패키지가 없습니다.
-                                </div>
-                            </li>
-                        </th:block>
-                    </ul>
-                </div>
             </section>
-			<div id="choicezone">
-				<div id="showpackagelist" class="guide-selected">
-					<p>
-						내 패키지						
-					</p>
-				</div>
-			    <div id="showapplylist">
-					<p>
-						신청 현황
-						<span id="redalert"></span>						
-					</p>
-				</div>
-			</div>
         </container>
 		<div id="modalcnt" class="hugimodal">
 			<div>
@@ -202,32 +158,6 @@
 	        }
 	    });
 	});
-	
-    $("#showpackagelist").click(function (){
-        if($(this).hasClass("guide-selected")){
-            return;
-        }
-        
-		$("#showpackagelist").toggleClass("guide-selected");
-		$("#showapplylist").toggleClass("guide-selected");
-		$("#mypackagelist").toggleClass("guide-selected");
-		$("#mypackagelist").toggleClass("hidden");
-		$("#applyuserlist").toggleClass("guide-selected");
-		$("#applyuserlist").toggleClass("hidden");
-	})
-    
-    $("#showapplylist").click(function (){
-        if($(this).hasClass("guide-selected")){
-            return;
-        }
-        
-        $("#showpackagelist").toggleClass("guide-selected");
-        $("#showapplylist").toggleClass("guide-selected");
-        $("#mypackagelist").toggleClass("guide-selected");
-        $("#mypackagelist").toggleClass("hidden");
-        $("#applyuserlist").toggleClass("guide-selected");
-        $("#applyuserlist").toggleClass("hidden");		
-	})
 
     let orgval = $('textarea[name="introduce"]').val();
 	$(".sogaetriger").click(function (){
@@ -274,7 +204,9 @@
 				console.log(datas);
 				$(".gumothumb").attr("onclick", "location.href='/package/pget?packagenum="+datas.pack.packagenum+"'");
 				$(".gumothumb > img").attr("src", "/package/thumbnail?systemname="+datas.ptum.pfSysname);
-				$("#gumopt").text(datas.pack.packageTitle+"(인원리스트랑 채팅방개설버튼)");
+				$("#gumopt").text(datas.pack.packageTitle);
+				$("#gumoa").prop("href", "javascript:showApplies("+datas.pack.packagenum+")");
+				$("#gumoa").text("신청목록");
 				$("#gumopa").text("여행지: "+datas.pack.regionname);
 				$("#gumopd").text(datas.pack.startdate+" ~ "+datas.pack.enddate+"("+datas.pack.tourdays+"일)");
 				parentnode.innerHTML="";
@@ -465,6 +397,9 @@
 		} else{
 			console.log("유효한 타입이 아닙니다");
 		}
+	}
+	function showApplies(packagenum){
+			
 	}
 </script>
 </html>

@@ -173,8 +173,8 @@ $(document).on("click",".reply_userThumnail img", function(){
 	event.stopPropagation();
 	$('.user-tool-menu').remove();
 	const userToolMenu = $('<div class="user-tool-menu"></div>').html(`
-		           <button class="info-button">정보 보기</button>
-		           <button class="user-chat-button">채팅 걸기</button>
+		           <button class="info-button">정보보기</button>
+		           <button class="user-chat-button">채팅하기</button>
 		       `);
 	$(this).closest(".reply_userThumnail").append(userToolMenu);
 })

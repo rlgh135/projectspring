@@ -216,8 +216,11 @@
 	function sendmsg(){
 		let phonenumber = $("#phone").val();
 		$.ajax({
-			url: "/sendsms/checker?phonenumber"+phonenumber,
+			url: "/sendsms/checker",
 			method: "POST",
+			data: {
+				phonenumber: phonenumber
+			},
 			
 			success:function(responseString){
 				checker = responseString;
