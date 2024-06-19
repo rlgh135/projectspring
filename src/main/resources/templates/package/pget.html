@@ -145,6 +145,11 @@
 		        </div>
 		    </div>
 		    <div class="pay_container">
+				<div class="writerinfo">
+					<div class="w_profile"><img th:src="'/user/thumbnail?sysname=' + ${guideimg.sysname}"></div>
+					<div class="w_id">[[${guideimg.userid}]]</div>
+					<div class="w_c_button"><input type="button" value="1:1채팅하기"></div>
+				</div>
 		        <div class="mapcon">
 		            <div class="maphead">
 		                <h3>[[${package.regionname}]]</h3>
@@ -405,51 +410,52 @@
 			}
 		}
 		$("#p_like").on("click", function() {
-					let loginUser = /*[[${session.loginUser}]]*/"";
-					let guidenum = 	[[${session.guideNum}]];
-					console.log(guidenum);
-					let pguidenum = [[${package.guidenum}]];
-					//console.log(pguidenum);	
-					//let packagenum = [[${package.packagenum}]];
+			let loginUser = /*[[${session.loginUser}]]*/"";
+			let guidenum = 	[[${session.guideNum}]];
+			console.log(guidenum);
+			let pguidenum = [[${package.guidenum}]];
+			//console.log(pguidenum);	
+			//let packagenum = [[${package.packagenum}]];
+			
+			console.log("packagenum: " + packagenum);	
+			
+			if(loginUser == null) {
+				showAlertModal(2, "로그인 후 이용 가능합니다");
+				return;
+			}
+			
+			if(guidenum == pguidenum) {
+				showAlertModal(2, "본인 게시글에는 좋아요를 클릭할 수 없습니다");
+				return;
+			}
+			
+			else {			
+				$.ajax({
+					url: "/package/like?packagenum=" + packagenum,
+					method: "PUT",
 					
-					console.log("packagenum: " + packagenum);	
+					success:function(data) {
+						console.log(data)
+						
+						if(data.packlike == null) {  
+							$("#p_like").html('<img src="/images/boardimg/emptyheart.png" id="like">');
+						
+						}
+						else {
+							$("#p_like").html('<img src="/images/boardimg/fullheart.png" id="like">');
+							
+						}
+							
+					},
 					
-					if(loginUser == null) {
-						showAlertModal(2, "로그인 후 이용 가능합니다");
-						return;
+					error:function(data) {
+						showAlertModal(1, "잠시 후에 다시 시도해주세요");
 					}
 					
-					if(guidenum == pguidenum) {
-						showAlertModal(2, "본인 게시글에는 좋아요를 클릭할 수 없습니다");
-						return;
-					}
-					
-					else {			
-						$.ajax({
-							url: "/package/like?packagenum=" + packagenum,
-							method: "PUT",
-							
-							success:function(data) {
-								console.log(data)
-								
-								if(data.packlike == null) {  
-									$("#p_like").html('<img src="/images/boardimg/emptyheart.png" id="like">');
-								
-								}
-								else {
-									$("#p_like").html('<img src="/images/boardimg/fullheart.png" id="like">');
-									
-								}
-									
-							},
-							
-							error:function(data) {
-								showAlertModal(1, "잠시 후에 다시 시도해주세요");
-							}
-							
-						});
-					}
-				})	
+				});
+			}
+		})
+			
 		
 </script>
 </html>

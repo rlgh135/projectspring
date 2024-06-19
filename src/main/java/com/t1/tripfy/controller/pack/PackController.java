@@ -219,6 +219,7 @@ public class PackController {
 	    long gunum = pack.getGuidenum();
 	    List<ReviewDTO> review = service.getReviewByGuidenum(gunum);
 	    List<UserImgDTO> thumbnaillist = uservice.getAllUserImg();
+	    UserImgDTO guideimg = uservice.getGuideAndImg(packagenum);
 	    
 	    ArrayList<TimelineDTO> timeline = new ArrayList<>();
 	    for(int i=0; i <= pack.getTourdays();i++) {
@@ -241,7 +242,9 @@ public class PackController {
 
 	    // model에 reviewlist 추가
 	    model.addAttribute("review", reviewlist);
-	    model.addAttribute("reserve",reserve);	    
+	    model.addAttribute("reserve",reserve);	 
+	    model.addAttribute("guideimg",guideimg);
+	    System.out.println("뭐가 문제야 :"+guideimg);
 	    
 
 	    //일단 보류
@@ -257,8 +260,6 @@ public class PackController {
 	    } else if (guidenumObj instanceof Integer) {
 	        guidenum = ((Integer) guidenumObj).longValue();
 	    }
-	    
-
 	    
 	    
 	    // 쿠키를 사용하여 각 packagenum에 대한 조회수 증가

@@ -88,12 +88,51 @@ body{
 
 .pay_container{
     width: 400px;
-    height: 500px;
+    height: 550px;
     margin-left: 20px;
     
 }
+.writerinfo{
+	height: 50px;
+	width: 380px;
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+	
+}
+.w_profile{
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin: 0 auto;
+	margin-right:5px;
+	margin-left: 10px;
+}
+.w_profile img{
+	width:100%;
+	height: 100%;
+	border-radius: 50%;
+}
+.w_id{
+	margin-left: 10px;
+}
+.w_c_button{
+	margin-left: 30px;
+	
+}
+.w_c_button input{
+	background-color: dodgerblue;
+	color: white;
+	width: 180px;
+	height: 40px;
+	border: none;
+	border-radius: 10px;
+	cursor:pointer;
+}
 .mapcon{
-    width: 350px;
+    width: 380px;
     height: 470px;
     border: 1px solid lightgray;
     border-radius: 20px;
@@ -245,6 +284,9 @@ body{
     margin-top: 40px;
     display: flex;
     width: 1400px;
+}
+.mi_container{
+	margin-top:50px;
 }
 .mi_header{
     width: 1000px;
