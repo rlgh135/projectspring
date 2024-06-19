@@ -165,18 +165,18 @@ section:last-child{
     background-color: #e3fefd;
 }
 #joinlogoWrap{
-    width: 320px;
-    height: 300px;
+    width: 150px;
+    height: 130px;
     border-radius: 50%;
     position: fixed;
-    right: 40px;
+    right: 60px;
     bottom: 40px;
 }
 #goJoinBtn:hover{
     content: url('../../images/layoutimg/logowink.png');
 }
 #goJoinBtn{
-    width: 300px;
+    width: 150px;
 }
 
 /*section 효과*/
@@ -328,7 +328,12 @@ section:last-child{
   }
 }
 
-
+#idxsection1{
+	position: relative;
+}
+#poimg{
+	position: absolute;
+}
 #idxsection2{
 	text-align: center;
 }

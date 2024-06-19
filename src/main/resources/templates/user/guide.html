@@ -32,10 +32,25 @@
 				<ul id="addhugiul" class=""></ul>
 			</div>
 		</div>
-	</div>
-	<div id="aplmodal" class="gumodal hidden">
-		<div id="aplmodal-body" class="gumodalbody">
-			
+		<div id="aplmodal-body" class="apmodalbody hidden">
+			<div id="aplinner">
+				<img id="apmoclose" src="/images/layoutimg/cancel_10289710.png">
+				<div>신청자 목록</div>
+				<ul id="apmoul">
+					<!--<li>
+						<div class="appf">
+							<div class="appfupper">이름 외 4명</div>
+							<div class="appflower">연락처: 01023456546</div>
+						</div>
+						<div class="canslezone">
+							<div>상태: <span class="greenalert">준비완료</span></div>
+							<div class="canslebtns cansleyes" onclick="cansleRes('accept')"></div>
+							<div class="canslebtns cansleno" onclick="ansleRes('reject')"></div>
+						</div>
+					</li>-->
+				</ul>
+				<div onclick="createPacakgeChat(packagenum)" class="chatcdiv">채팅방 개설</div>
+			</div>
 		</div>
 	</div>
     <div id="wrap">
@@ -182,6 +197,9 @@
 
 	$("#gumoclose").on("click", function(){
 		$("#pkgmodal").toggleClass("hidden");
+	});
+	$("#apmoclose").on("click", function(){
+		$("#aplmodal-body").toggleClass("hidden");
 	});
     //후기 보여주기
     function showhugis(packagenum, diff) {
@@ -346,60 +364,87 @@
 			
 		} else if(type=='apply'){
 			for(let i in datas.applylist){
-				var applyUserLi = document.createElement('li');
-				applyUserLi.id = 'appai'+datas.applylist[i].reservationnum; // Change 1 to the appropriate dynamic value
+				const liNode = document.createElement('li');
+
+				// appf div 노드 생성
+				const appfDiv = document.createElement('div');
+				appfDiv.className = 'appf';
+
+				// appfupper div 노드 생성
+				const appfUpperDiv = document.createElement('div');
+				appfUpperDiv.className = 'appfupper';
+				appfUpperDiv.textContent = '이름 외 4명';
+
+				// appflower div 노드 생성
+				const appfLowerDiv = document.createElement('div');
+				appfLowerDiv.className = 'appflower';
+				appfLowerDiv.textContent = '연락처: 01023456546';
+
+				// appf div에 appfupper와 appflower div 추가
+				appfDiv.appendChild(appfUpperDiv);
+				appfDiv.appendChild(appfLowerDiv);
+
+				// canslezone div 노드 생성
+				const cansleZoneDiv = document.createElement('div');
+				cansleZoneDiv.className = 'canslezone';
+
+				// 상태 div 노드 생성
+				const stateDiv = document.createElement('div');
+				stateDiv.innerHTML = '상태: <span class="greenalert">준비완료</span>';
+
+				// cansleyes 버튼 div 노드 생성
+				const cansleYesDiv = document.createElement('div');
+				cansleYesDiv.className = 'canslebtns cansleyes';
+				cansleYesDiv.setAttribute('onclick', "cansleRes('accept')");
+
+				// cansleno 버튼 div 노드 생성
+				const cansleNoDiv = document.createElement('div');
+				cansleNoDiv.className = 'canslebtns cansleno';
+				cansleNoDiv.setAttribute('onclick', "ansleRes('reject')");
+
+				// canslezone div에 상태 div와 버튼 div들 추가
+				cansleZoneDiv.appendChild(stateDiv);
+				cansleZoneDiv.appendChild(cansleYesDiv);
+				cansleZoneDiv.appendChild(cansleNoDiv);
+
+				// li 노드에 appf div와 canslezone div 추가
+				liNode.appendChild(appfDiv);
+				liNode.appendChild(cansleZoneDiv);
 				
-				var userDiv = document.createElement('div');
-				
-				var userStatusDiv = document.createElement('div');
-				if(datas.applylist[i].isDelete==1){
-					userStatusDiv.innerHTML = '이름, 회원여부 상태: <span class="rednotice" id="maspan'+datas.applylist[i].reservationnum+'">취소요청</span>';					
-				} else {
-					userStatusDiv.innerHTML = '이름, 회원여부 상태: <span class="greennotice" id="maspan'+datas.applylist[i].reservationnum+'">결제완료</span>';										
-				}
-				
-				var userDetailsDiv = document.createElement('div');
-				userDetailsDiv.textContent = '인원:'+(datas.applylist[i].adultCnt+datas.applylist[i].childCnt)+' , 전화번호: '+datas.applylist[i].phone+', 결제수단: '+datas.applylist[i].payMethod;
-				
-				// Append userStatusDiv and userDetailsDiv to userDiv
-				userDiv.appendChild(userStatusDiv);
-				userDiv.appendChild(userDetailsDiv);
-				
-				// Append userDiv and cancelWrapDiv to applyUserLi
-				applyUserLi.appendChild(userDiv);
-				
-				if(datas.applylist[i].isDelete==1){
-					var cancelWrapDiv = document.createElement('div');
-					cancelWrapDiv.className = 'canslewrap';
-					cancelWrapDiv.id = 'macaid'+datas.applylist[i].reservationnum;
-					
-					var acceptButton = document.createElement('input');
-					acceptButton.type = 'button';
-					acceptButton.value = '취소승인';
-					acceptButton.className = 'acceptmgbtn';
-					acceptButton.setAttribute('onclick', 'cansleApply('+datas.applylist[i].reservationnum+', 1)');
-					
-					var rejectButton = document.createElement('input');
-					rejectButton.type = 'button';
-					rejectButton.value = '취소거절';
-					rejectButton.className = 'rejectmgbtn';
-					rejectButton.setAttribute('onclick', 'cansleApply('+datas.applylist[i].reservationnum+', 0)');
-					
-					// Append acceptButton and rejectButton to cancelWrapDiv
-					cancelWrapDiv.appendChild(acceptButton);
-					cancelWrapDiv.appendChild(rejectButton);
-					
-					applyUserLi.appendChild(cancelWrapDiv);
-				}
-				
-				parentnode.appendChild(applyUserLi);
+				parentnode.appendChild(liNode);
 			}
 		} else{
 			console.log("유효한 타입이 아닙니다");
 		}
 	}
 	function showApplies(packagenum){
+		const parentnode = document.getElementById("apmoul");
+				
+		$.ajax({
+			url: "/user/apply?packagenum="+packagenum,
+			method: "GET",
 			
+			success:function(datas){
+				console.log(datas);
+				if(datas.length==0||datas==null){
+					alert("신청이 없어요");
+				} else {
+					$("#aplmodal-body").toggleClass("hidden");
+					makeDOM(datas, 'apply', parentnode);
+				}
+			},
+			
+			error:function(){
+				console.log("통신에러");
+			}
+		})
+	}
+	
+	function createPacakgeChat(packagenum){
+		let thisChatPackagenum = packagenum;
+		
+		//채팅방 생성 함수 호출
+		
 	}
 </script>
 </html>
