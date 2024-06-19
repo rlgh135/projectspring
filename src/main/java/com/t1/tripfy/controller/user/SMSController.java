@@ -46,17 +46,13 @@ public class SMSController {
 		
 		targetString = builder.toString();
 		System.out.println("target String: " + targetString);
-//		String api_key="YOUR_API_KEY";
-		String api_key="NCSXBY2OUL7CFHH9";
-//		String api_secret="YOUR_API_SECREAT_KEY";
-		String api_secret="QG2XTXL6YOVJ3OJYS1CN7ORCSLRLV4EU";
+		String api_key="YOUR_API_KEY";
+		String api_secret="YOUR_API_SECREAT_KEY";
 		
 		DefaultMessageService messageService = NurigoApp.INSTANCE.initialize(api_key, api_secret, "https://api.coolsms.co.kr");
 		Message message = new Message();
-//		message.setFrom("YOUR_PHONE_NUM");
-		message.setFrom("01028946094");
+		message.setFrom("YOUR_PHONE_NUM");
 		message.setTo(reciever);
-//		message.setTo("01028946094");
 		message.setText("인증번호는 ["+targetString+"] 입니다.");
 		
 		try {
