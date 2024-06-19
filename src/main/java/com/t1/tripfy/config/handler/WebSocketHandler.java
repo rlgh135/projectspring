@@ -342,6 +342,40 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			log.debug("disconnect, WebSocket, userid={}", userid);
 	}
 	
+	/**
+	 * <p>웹소켓 메시지 broadcast 용 함수
+	 * <p>WebSocketHandler 밖에서 웹소켓 전파를 하기 위해 만들어짐
+	 * @param action : MessageDTO.act 값
+	 * @param payload : MessageDTO.payload 값 - MessagePayload 인터페이스의 구현체만 대입 가능
+	 * @param targetRoomIdx : 전파할 채팅방 인덱스(cr.chat_room_idx)
+	 * @param userThatExcept : 전파하지 않을 사용자 - 아마 이 함수를 호출하는 요청 처리 로직의 요청자를 넣으면 될 거임, 없으면 null 넣어라
+	 * @throws Exception : d
+	 */
+	public void broadcastRequestHandler(String action, MessagePayload payload, long targetRoomIdx, String userThatExcept) throws Exception {
+		//targetRoomIdx 값 검증은 안 넣음
+		//action, payload 값 검증도 안 넣는다 어짜피 MessagePayload 구현체만 넘길 수 있긴 하니까 뭐
+
+		//송신값 구성
+		MessageDTO<ChatRoomEnterMessagePayload> message = new MessageDTO<>();
+		message.setAct(action);
+		message.setPayload((ChatRoomEnterMessagePayload)payload);
+		
+		MessageDTO<? extends MessagePayload> sex = message;
+		
+		//목표 채팅방의 가입자 목록 꺼내기
+		List<String> userList = OPENED_CHAT_INFO.get(targetRoomIdx);
+		
+		//순회하면서 broadcast
+		// 웹소켓 연결이 없는 유저는 SSE로 넘긴다
+		for(String userid : userList) {
+			if(WEBSOCKET_SESSIONS.containsKey(userid)) {
+				WEBSOCKET_SESSIONS.get(userid).sendMessage(new TextMessage(objectMapper.writeValueAsString(userList)))
+			} else {
+				
+			}
+		}
+	}
+	
 	//==========================================================================================
 	//== AOP ===================================================================================
 	private <T> ArrayList<T> createHashMapValue() {

@@ -13,6 +13,7 @@ import com.t1.tripfy.domain.dto.chat.ChatDetailDTO;
 import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
 import com.t1.tripfy.domain.dto.chat.ChatRoomDTO;
 import com.t1.tripfy.domain.dto.chat.ChatUserDTO;
+import com.t1.tripfy.domain.dto.chat.ChatUserRegdateDTO;
 import com.t1.tripfy.domain.dto.chat.MessageDTO;
 import com.t1.tripfy.domain.dto.chat.MessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatContentMessagePayload;
@@ -26,6 +27,7 @@ import com.t1.tripfy.mapper.chat.ChatDetailMapper;
 import com.t1.tripfy.mapper.chat.ChatInvadingMapper;
 import com.t1.tripfy.mapper.chat.ChatRoomMapper;
 import com.t1.tripfy.mapper.chat.ChatUserMapper;
+import com.t1.tripfy.mapper.chat.ChatUserRegdateMapper;
 import com.t1.tripfy.service.pack.PackageService;
 import com.t1.tripfy.service.user.UserService;
 
@@ -37,6 +39,8 @@ public class ChatServiceImpl implements ChatService {
 	private ChatUserMapper chatUserMapper;
 	@Autowired
 	private ChatDetailMapper chatDetailMapper;
+	@Autowired
+	private ChatUserRegdateMapper chatUserRegdateMapper;
 	@Autowired
 	private ChatInvadingMapper chatInvadingMapper;
 	
@@ -467,6 +471,16 @@ public class ChatServiceImpl implements ChatService {
 			//조회 실패시 처리
 			return null;
 		}
+		
+		//제일 최근 메시지와 30번째 메시지의 regdate를 기준으로 채팅방 진입/이탈 기록을 가져온다
+		if(null == (bulk.setChatUserRegdates(chatUserRegdateMapper.selectSpecificRangeOfUserRegdates(
+				((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(),
+				bulk.getChatDetails().get(29).getRegdate(),
+				bulk.getChatDetails().get(0).getRegdate()
+		)))) {
+			//조회 실패시 처리
+			return null;
+		}
 
 		//나머지 속성 부여
 		//메시지 수가 30개가 아닌경우 제일 첫 메시지를 가져온 것임으로 체크
@@ -581,6 +595,16 @@ public class ChatServiceImpl implements ChatService {
 			return null;
 		}
 		
+		//로드 구간의 사용자 채팅방 진입/이탈기록 가져오기
+		List<ChatUserRegdateDTO> curList;
+		if(null == (curList = chatUserRegdateMapper.selectSpecificRangeOfUserRegdates(
+				chatRoomIdx,
+				list.get(list.size() - 1).getRegdate(),
+				list.get(0).getRegdate()
+		))) {
+			return null;
+		}
+		
 		//payload 초기화
 		ChatDetailBulkMessagePayload sendPayload = new ChatDetailBulkMessagePayload();
 		sendPayload
@@ -588,7 +612,8 @@ public class ChatServiceImpl implements ChatService {
 			.setStartChatDetailIdx(list.isEmpty() ? null : list.get(list.size() - 1).getChatDetailIdx())
 			.setEndChatDetailIdx(list.isEmpty() ? null : list.get(0).getChatDetailIdx())
 			.setIsFirst(list.size() < 30 ? true : false)
-			.setChatDetails(list);
+			.setChatDetails(list)
+			.setChatUserRegdates(curList);
 		//MessageDTO 구성 후 반환
 		return new MessageDTO<ChatDetailBulkMessagePayload>()
 				.setAct("loadChat")
