@@ -37,6 +37,29 @@
 	</select>
 	
 	<!-- 
+		일반/일반 채팅중
+			일대일
+			userid, opponentuserid 가입
+		의 조건을 충족하는 채팅방의 userid 정보 뽑아오기
+	-->
+	<select id="selectOTOCommonChatUserInfoByUserids">
+		SELECT * FROM chat_user
+		WHERE
+				userid = #{userid}
+		    AND
+				chat_room_idx IN (
+					SELECT chat_room_idx FROM chat_user
+		            WHERE
+						userid = #{opponentuserid}
+				)
+		GROUP BY
+			chat_room_idx
+		HAVING
+			COUNT(*) = 1;
+		;
+	</select>
+	
+	<!-- 
 		userid로 chat_user 테이블 행 개수 가져오기
 	-->
 	<select id="selectCountOfSpecificChatUserByUserid">
@@ -157,6 +180,18 @@
 			chat_room_idx = #{chatRoomIdx}
 		AND
 			userid = #{userid}
+	</update>
+	<!-- 
+		isQuit 수정
+	-->
+	<update id="updateIsQuit">
+		UPDATE chat_user
+		SET
+			chat_user_is_quit = #{isQuitValue}
+		WHERE
+				chat_room_idx = #{chatRoomIdx}
+			AND
+				userid = #{userid}
 	</update>
 	
 	<!-- 

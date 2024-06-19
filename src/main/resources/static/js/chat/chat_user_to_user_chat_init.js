@@ -45,14 +45,24 @@ async function createUserToUserChat(targetUserid) {
         IS_VD_LOADED = true;
         console.log("createUserToUserChat() DOM 적용됨");
     }
-
+    console.log(CHAT_OTO_VD);
     //상대 유저(targetUserid) 와의 1대1 채팅이 이미 존재하는지 체크
+    /*
+        이제는 단순 OTO 여부만 확인하는게 아니라
+        roomType=0? 과 isTerminated=false 도 체크함
+    */
     let tgtRoomIdx = null;
     let tgtVDIdx = null;
     let isChatRoomAlreadyExist = false;
     if(CHAT_OTO_VD.length > 0) {
         for(let i = 0; i < CHAT_OTO_VD.length; i++) {
-            if(CHAT_OTO_VD[i].dataObj.userList[0] === targetUserid) {
+            if(
+                CHAT_OTO_VD[i].dataObj.roomType === 0
+                &&
+                !CHAT_OTO_VD[i].dataObj.isTerminated
+                &&
+                CHAT_OTO_VD[i].dataObj.userList[0].userid === targetUserid
+            ) {
                 //이미 존재하는 경우
                 tgtRoomIdx = CHAT_OTO_VD[i].dataObj.roomidx;
                 tgtVDIdx = i;
@@ -73,6 +83,7 @@ async function createUserToUserChat(targetUserid) {
             //ChatListPayloadDTO 수신
             cr = await ajaxPost("localhost:8080", "/chat", {
                 chatRoomType: 0,
+                title: null,
                 invitee: [
                     targetUserid
                 ]

@@ -206,6 +206,7 @@ CREATE TABLE `chat_detail` (
 );
 */
 # 240516 채팅테이블 수정본
+#채팅방 목록
 CREATE TABLE `chat_room` (
 	`chat_room_idx` BIGINT PRIMARY KEY AUTO_INCREMENT,
 	`chat_room_type` INT NOT NULL COMMENT "채팅방 타입 - 0 일반/일반, 1 가이드/일반(문의), 2 가이드/일반(다대다)",
@@ -216,6 +217,7 @@ CREATE TABLE `chat_room` (
     #,CONSTRAINT fk___package___chat_room___packagenum FOREIGN KEY (`packagenum`) REFERENCES `package`(`packagenum`)
 );
 
+#채팅방 가입자 목록
 CREATE TABLE `chat_user` (
 	`chat_room_idx` BIGINT, 
     `userid` VARCHAR(300),
@@ -230,6 +232,7 @@ CREATE TABLE `chat_user` (
     */
 );
 
+#채팅 내역
 CREATE TABLE `chat_detail` (
 	`chat_detail_idx` BIGINT PRIMARY KEY AUTO_INCREMENT,
     `chat_room_idx` BIGINT NOT NULL,
@@ -241,6 +244,16 @@ CREATE TABLE `chat_detail` (
     CONSTRAINT fk___chat_user___chat_detail___userid FOREIGN KEY (`userid`) REFERENCES `chat_user`(`userid`)
 	*/
 );
+
+#유저들의 채팅방 진입/이탈을 기록하기 위한 테이블
+CREATE TABLE `chat_user_regdate` (
+	`cur_idx` BIGINT PRIMARY KEY AUTO_INCREMENT,
+	`chat_room_idx` BIGINT NOT NULL,
+    `userid` VARCHAR(300) NOT NULL,
+    `cur_action` CHAR(20) NOT NULL COMMENT "진입/이탈 기록, 최초진입(채팅방 생성시 진입) INIT_ENTER, 일반진입(생성 이후 진입) NORM_ENTER, 이탈 LEAVE",
+    `cur_regdate` DATETIME NOT NULL DEFAULT(CURRENT_TIMESTAMP())
+);
+
 #매니저와 쪽지
 create table manager(
 	manage_key varchar(1000)

@@ -245,6 +245,9 @@
 		      alertModal.hide();
 		    }, 1500);
 		});
+		
+		//채팅 버튼 클릭 이벤트리스너 등록
+		document.getElementsByClassName("w_c_button")[0].children[0].addEventListener("click", (e) => createPackageChat(packagenum));
 	});
 	
 	function copyToClipboard(text) {

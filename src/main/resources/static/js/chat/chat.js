@@ -37,10 +37,19 @@ const CHAT_BODY_CONT = document.getElementById("chat-body-cont");
 const CHAT_BODY_INNER_CONT = document.getElementById("chat-body-inner-cont");
 //채팅창 본문
 const CHAT_BODY_MORE_INNER_CONT = document.getElementById("chat-body-more-inner-cont");
+//채팅창 사이드바(사이드바 배경)
+const CHAT_BODY_SIDEBAR_BACKGROUND = document.getElementById("chat-body-sidebar-background");
 //title
 const CHAT_BODY_TITLE = document.getElementById("chat-body-title");
 //채팅창 나가기 버튼
 const CHAT_BODY_QUIT_BTN = document.getElementById("quit-chat");
+//채팅창 설정(사이드바) 버튼
+/* 채팅창 사이드바 열기 */
+const CHAT_BODY_SIDEBAR_OPEN_BTN = document.getElementById("open-chat-setting");
+/* 채팅창 사이드바 닫기 */
+const CHAT_BODY_SIDEBAR_CLOSE_BTN = document.getElementById("close-chat-setting");
+/* 채팅 나가기(채팅 탈퇴) */
+const CHAT_BODY_SIDEBAR_LEAVE_CHAT = document.getElementById("leave-chat");
 //채팅 전송 버튼
 const CHAT_BODY_SUBMIT_BTN = document.getElementById("submit-chat");
 //채팅 입력창
@@ -119,6 +128,20 @@ CHAT_LIST_CREATE.addEventListener("click", (e) => {
 	}
 });
 
+//채팅창 사이드바 열고 닫기
+/* 사이드바 여는 버튼 */
+CHAT_BODY_SIDEBAR_OPEN_BTN.addEventListener("click", (e) => {
+	open_CHAT_BODY_SIDEBAR();
+});
+/* 배경 클릭으로 사이드바 닫기 */
+CHAT_BODY_SIDEBAR_BACKGROUND.addEventListener("click", (e) => {
+	if(e.target.id === e.currentTarget.id) {
+		close_CHAT_BODY_SIDEBAR();
+	}
+});
+/* 버튼 클릭으로 사이드바 닫기 */
+CHAT_BODY_SIDEBAR_CLOSE_BTN.addEventListener("click", (e) => close_CHAT_BODY_SIDEBAR());
+
 /*테스트*/
 //document.getElementById("testChatCreate").addEventListener("click", createPackageChat);
 
@@ -133,11 +156,9 @@ CHAT_LIST_CREATE.addEventListener("click", (e) => {
 	packagenum 이름이 겹침
 	chat_packagenum으로 변경
 	다만 port.postMessage 부분에서는 기존대로 함
+
+	이제 임마는 패키지(문의) 채팅 생성용임
 */
-
-//packagenum 변수
-// const chat_packagenum = 5; /*초기화 필요*/
-
 async function createPackageChat(chat_packagenum) {
 	console.log("createPackageChat(), chat_packagenum=" + chat_packagenum);
 	console.log("IS_VD_LOADED=" + IS_VD_LOADED);
@@ -166,40 +187,32 @@ async function createPackageChat(chat_packagenum) {
 	//요청된 패키지 채팅이 이미 존재하는지 체크
 	/*
 		일대일 패키지 채팅만 체크, 패키지 다대다는 따로임
+
+		roomType=1? && isTerminated=false 체크
 	*/
 	let tgtRoomIdx = null;
-	// let isOTOChat = true;
 	let tgtVDIdx = null;
 	let isChatRoomAlreadyExist = false;
 	if(CHAT_OTO_VD.length > 0) {
 		for(let i = 0; i < CHAT_OTO_VD.length; i++) {
-			// if(CHAT_OTO_VD[i].dataObj.)
-			/* 작성중 240618 */
-		}
-	}
-	if(CHAT_OTO_VD.length > 0 || CHAT_OTM_VD.length > 0) {
-		//가입된 채팅이 있는 경우
-		for(let i = 0; i < CHAT_OTO_VD.length; i++) {
-			if(CHAT_OTO_VD[i].dataObj.pkgnum === chat_packagenum) {
+			if(
+				CHAT_OTO_VD[i].dataObj.roomType === 1
+				&&
+				!CHAT_OTO_VD[i].dataObj.isTerminated
+				&&
+				CHAT_OTO_VD[i].dataObj.pkgnum === chat_packagenum
+			) {
+				//이미 존재하는 경우
 				tgtRoomIdx = CHAT_OTO_VD[i].dataObj.roomidx;
 				tgtVDIdx = i;
+				isChatRoomAlreadyExist = true;
 				break;
-			}
-		}
-		if(!!!tgtRoomIdx) {
-			for(let j = 0; j < CHAT_OTM_VD.length; j++) {
-				if(CHAT_OTM_VD[j].dataObj.pkgnum === chat_packagenum) {
-					tgtRoomIdx = CHAT_OTM_VD[j].dataObj.roomidx;
-					isOTOChat = false;
-					tgtVDIdx = j;
-					break;
-				}
 			}
 		}
 	}
 
 	//새 채팅 생성 분기
-	if(!!!tgtRoomIdx) {
+	if(!isChatRoomAlreadyExist) {
 		//채팅 생성
 		let res;
 		try {
@@ -237,14 +250,18 @@ async function createPackageChat(chat_packagenum) {
 		printChatRoom(res.payload);
 		//cc-hidden 컨트롤
 		open_CHAT_WINDOW();
-		CHAT_BODY_INFO.chatRoomInfo.userList.length > 1 ? open_CHAT_LIST_OTM()
-														: open_CHAT_LIST_OTO();
+		open_CHAT_LIST_OTO();
 		close_CHAT_LIST_CONT();
 		open_CHAT_BODY_CONT();
 
-		UNCHECKED_MSG_COUNT -= (isOTOChat ? CHAT_OTO_VD : CHAT_OTM_VD)[tgtVDIdx].uncheckedmsg;
-		(isOTOChat ? CHAT_OTO_VD : CHAT_OTM_VD)[tgtVDIdx].uncheckedmsg = 0;
+		//미확인 메시지 값 수정
+        UNCHECKED_MSG_COUNT -= CHAT_BODY_INFO.chatRoomInfo.uncheckedmsg;
+        CHAT_OTO_VD[tgtVDIdx].uncheckedmsg = 0;
+
 		//아래로 스크롤
+        /*
+            CBI.isEmpty가 null일 수도 있어서 false를 명시함
+        */
 		if(CHAT_BODY_INFO.isEmpty == false) {
 			scrollIntoLastChatElement();
 		}
@@ -482,6 +499,33 @@ async function chatBodyQuitBtnClick(e) {
 		//스크롤 감지 롤백
 		isChatLoadProcessDone = true;
 	}
+}
+
+//채팅 나가기(탈퇴) 버튼 클릭
+/*
+	현재 열려있는 채팅에서 나가게(cu.chat_user_is_quit=true) 요청을 보내는 함수
+*/
+function leaveChatBtnClick(e) {
+	//스크롤 감지 금지
+	isChatLoadProcessDone = false;
+
+	
+}
+
+//채팅 종료하기 버튼 클릭
+/*
+	현재 열려있는 채팅을 종료(cr.chat_room_is_terminated=true)시키는 요청을 보내는 함수
+	채팅 종료는 영구적임 - 되돌릴 수 없음
+	사실 되돌리려면 되돌릴 수는 있음 있는데 내가 그거까지 짜기는 시간도없고 뭐
+
+	하여간
+	클라단에서의 채팅 종료는 오로지 가이드에 의해서만, 그리고 해당 가이드가 소유한 패키지의 채팅에서만 실행될 수 있어야 함
+	따라서 이 메서드는 오로지 guidenum을 꺼내올 수 있으며 CHAT_BODY_INFO.isPkgChat=true 일 때에만 노출되어야 함
+	뭐 일단 서버단에서도 한번 걸러줄거긴 한데
+	요청 userid가 해당 패키지 채팅의 소유자인지는 서버단에서 체크함
+*/
+function terminateChatBtnClick(e) {
+
 }
 
 //채팅창 입력 submit 클릭
@@ -1355,6 +1399,9 @@ function open_CHAT_LIST_OTM() {
 //채팅창
 function open_CHAT_BODY_CONT() { CHAT_BODY_CONT.classList.remove("cc-hidden"); }
 function close_CHAT_BODY_CONT() { CHAT_BODY_CONT.classList.add("cc-hidden"); }
+//채팅창 사이드바
+function open_CHAT_BODY_SIDEBAR() { CHAT_BODY_SIDEBAR_BACKGROUND.classList.remove("cc-hidden"); }
+function close_CHAT_BODY_SIDEBAR() { CHAT_BODY_SIDEBAR_BACKGROUND.classList.add("cc-hidden"); }
 
 /*================================================================================*/
 /*DOM 구현*/
@@ -2021,6 +2068,7 @@ function createChatListElement(cr, isOTO=true) {
 	*/
 	if(isOTO) {
 		const img = document.createElement("img");
+		console.log(cr.dataObj.userImage);
 		if(!!cr.dataObj.userImage[0].sysname) {
 			img.src = "/user/thumbnail?sysname=" + cr.dataObj.userImage[0].sysname;
 		} else {

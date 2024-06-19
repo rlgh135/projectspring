@@ -20,11 +20,13 @@ import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatLoadMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatContentDetailMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatDetailBulkMessagePayload;
+import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.chat.ChatDetailMapper;
 import com.t1.tripfy.mapper.chat.ChatInvadingMapper;
 import com.t1.tripfy.mapper.chat.ChatRoomMapper;
 import com.t1.tripfy.mapper.chat.ChatUserMapper;
+import com.t1.tripfy.service.pack.PackageService;
 import com.t1.tripfy.service.user.UserService;
 
 @Service
@@ -40,6 +42,8 @@ public class ChatServiceImpl implements ChatService {
 	
 	@Autowired
 	private UserService userServiceImpl;
+	@Autowired
+	private PackageService packageServiceImpl;
 	
 	/*
 	 	중요!!
@@ -50,25 +54,89 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	@Transactional
 	public ChatListPayloadDTO createChat(String userid, Long packagenum) {
+	//유효성 검사 겸 가이드 userid 가져오기
+		PackageDTO pkgDTO;
+		//packagenum이 존재하는지 확인
+		if(null == (pkgDTO = packageServiceImpl.getDetail(packagenum))) {
+			return null;
+		}
+		//존재하면 가이드 userid를 가져온다
+		String guideUserid;
+		if(null == (guideUserid = chatInvadingMapper.selectGuideUseridByPackagenum(pkgDTO.getGuidenum()))) {
+			return null;
+		}
+		
+	//숨겨졌지만 종료되지 않은 채팅(cu.chat_user_is_quit=true && cr.chat_room_is_terminated=false)
+	//이 존재하는지 체크
+		//우선 초대자가 포함된 채팅을 찾는다
+		List<ChatUserDTO> inviteeDTOList;
+		if(null == (inviteeDTOList = chatUserMapper.selectOTOCommonChatUserInfoByUserids(userid, guideUserid))) {
+			//조회 실패
+			return null;
+		}
+		//is_quit 여부 체크, 해당할 경우 is_terminated 여부 체크 + chat_room_type 체크(=1)
+		for(ChatUserDTO cu : inviteeDTOList) {
+			//해당 채팅방이 단순히 userid가 이탈한 건지 종료된 건지 체크
+			if(cu.getChatUserIsQuit()) {
+				//isQuit=true
+				ChatRoomDTO cr;
+				if(null == (cr = chatRoomMapper.selectRowByChatRoomIdx(null))) {
+					//조회 실패
+					return null;
+				}
+				if(1 == cr.getChatRoomType() && !cr.getChatRoomIsTerminated()) {
+					//chatRoomType=1 && isTerminated=false
+					//사용자가 이탈하였지만 종료되지 않은 채팅 확인
+					//새 채팅을 개설하는 대신 해당 채팅방을 유지한다
+					
+					//요청자 isQuit 갱신(true -> false)
+					if(1 != chatUserMapper.updateIsQuit(false, cr.getChatRoomIdx(), userid)) {
+						//수정 실패
+						return null;
+					}
+					
+					//상대 유저 목록 가져오기
+					List<ChatUserDTO> cuResList = new ArrayList<>();
+					if(null == (cuResList = chatUserMapper.selectOpponentUserInfo(cr.getChatRoomIdx(), userid))) {
+						return null;
+					}
+					
+					//상대 유저 이미지 가져오기
+					List<UserImgDTO> imgList = new ArrayList<>();
+					for(ChatUserDTO dto : cuResList) {
+						imgList.add(userServiceImpl.getProfileImgDTO(dto.getUserid()));
+					}
+					
+					//반환
+					return new ChatListPayloadDTO()
+							.setRoomidx(cr.getChatRoomIdx())
+							.setRoomType(1)
+							.setPkgnum(packagenum)
+							.setTitle(cr.getChatRoomTitle())
+							.setChatRegdate(cr.getRegdate())
+							.setIsCreator(cu.getChatUserIsCreator())
+							.setIsTerminated(false)
+							.setUserList(cuResList)
+							.setUserImage(imgList)
+							.setChatContent(null)
+							.setChatContentRegdate(null)
+							.setUncheckedmsg(0);
+				}
+			}
+		}
+		
 		//chat_room insert, PK(chat_room_idx) 가져오기
 		LocalDateTime current = LocalDateTime.now();
 		ChatRoomDTO crDTO = new ChatRoomDTO()
+				.setChatRoomType(1)
 				.setChatRoomTitle(null)
 				.setPackagenum(packagenum)
 				.setRegdate(current);
 		
 		if(1 != chatRoomMapper.createRoom(crDTO)) {
-			System.out.println("cc-1");
 			return null;
 		}
 		Long crPK = crDTO.getChatRoomIdx();
-		
-		//패키지 판매자 userid 가져오기
-		String guideUserid;
-		if(null == (guideUserid = chatInvadingMapper.selectGuideUseridByPackagenum(packagenum))) {
-			System.out.println("cc-2");
-			return null;
-		}
 		
 		//chat_user 삽입하기
 		List<ChatUserDTO> userList = new ArrayList<>();
@@ -100,13 +168,22 @@ public class ChatServiceImpl implements ChatService {
 		//userList에서 요청자(일반유저)를 뺀다
 		userList.remove(1);
 		
+		//상대 유저 이미지 가져오기
+		List<UserImgDTO> imgList = new ArrayList<>();
+		for(ChatUserDTO dto : userList) {
+			imgList.add(userServiceImpl.getProfileImgDTO(dto.getUserid()));
+		}
+		
 		return new ChatListPayloadDTO()
 				.setRoomidx(crPK)
+				.setRoomType(1)
 				.setPkgnum(packagenum)
 				.setTitle(pkgTitle)
 				.setChatRegdate(current)
 				.setIsCreator(false)
+				.setIsTerminated(false)
 				.setUserList(userList)
+				.setUserImage(imgList)
 				.setChatContent(null)
 				.setChatContentRegdate(null)
 				.setUncheckedmsg(0);
@@ -124,6 +201,79 @@ public class ChatServiceImpl implements ChatService {
 			if(null == userServiceImpl.getUser(iv)) {
 				//존재하지 않는 userid
 				return null;
+			}
+		}
+	
+	//OTO/OTM 분기
+		if(invitee.size() > 1) {
+		//OTM
+			
+		} else {
+		//OTO
+			//상대방 userid 뽑기
+			String opponUserid = invitee.get(0);
+			
+		//이미 채팅이 존재하는지 체크
+		/*
+		 * cu.chat_user_is_quit=true
+		 * AND
+		 * cr.chat_room_is_terminated=false
+		 * 인 채팅을 찾는다
+		 * */
+			//우선 초대자가 포함된 채팅을 찾는다
+			List<ChatUserDTO> inviteeDTOList;
+			if(null == (inviteeDTOList = chatUserMapper.selectOTOCommonChatUserInfoByUserids(userid, opponUserid))) {
+				//조회 실패
+				return null;
+			}
+			//is_quit 여부 체크, 해당할 경우 is_terminated 여부 체크
+			for(ChatUserDTO cu : inviteeDTOList) {
+				//해당 채팅방이 단순히 userid가 이탈한 건지 종료된 건지 체크
+				if(cu.getChatUserIsQuit()) {
+					//isQuit=true
+					ChatRoomDTO cr;
+					if(null == (cr = chatRoomMapper.selectRowByChatRoomIdx(null))) {
+						//조회 실패
+						return null;
+					}
+					if(!cr.getChatRoomIsTerminated()) {
+						//isTerminated=false
+						//사용자가 이탈하였지만 종료되지 않은 채팅 확인
+						//새 채팅을 개설하는 대신 해당 채팅방을 유지한다
+						
+						//요청자 isQuit 갱신(true -> false)
+						if(1 != chatUserMapper.updateIsQuit(false, cr.getChatRoomIdx(), userid)) {
+							return null;
+						}
+						
+						//상대 유저 목록 가져오기
+						List<ChatUserDTO> cuResList = new ArrayList<>();
+						if(null == (cuResList = chatUserMapper.selectOpponentUserInfo(cr.getChatRoomIdx(), userid))) {
+							return null;
+						}
+						
+						//상대 유저 이미지 가져오기
+						List<UserImgDTO> imgList = new ArrayList<>();
+						for(ChatUserDTO dto : cuResList) {
+							imgList.add(userServiceImpl.getProfileImgDTO(dto.getUserid()));
+						}
+						
+						//반환
+						return new ChatListPayloadDTO()
+								.setRoomidx(cr.getChatRoomIdx())
+								.setRoomType(0)
+								.setPkgnum(null)
+								.setTitle(cr.getChatRoomTitle())
+								.setChatRegdate(cr.getRegdate())
+								.setIsCreator(cu.getChatUserIsCreator())
+								.setIsTerminated(false)
+								.setUserList(cuResList)
+								.setUserImage(imgList)
+								.setChatContent(null)
+								.setChatContentRegdate(null)
+								.setUncheckedmsg(0);
+					}
+				}
 			}
 		}
 		
@@ -187,10 +337,12 @@ public class ChatServiceImpl implements ChatService {
 		
 		return new ChatListPayloadDTO()
 				.setRoomidx(crPK)
+				.setRoomType(0)
 				.setPkgnum(null)
 				.setTitle(title)
 				.setChatRegdate(current)
 				.setIsCreator(true) // 요청자가 채팅 생성자임
+				.setIsTerminated(false)
 				.setUserList(cuDTOList)
 				.setUserImage(imgList)
 				.setChatContent(null)

@@ -159,14 +159,20 @@ let thispage = 1;
 //민수님 아래 로그인유저 쓰세요~
 $(document).on("click", ".chatting", function(){
 	//현재 접속중인 유저 아이디
-	loginUser;
+	//loginUser;
 	//보드 작성자 아이디
-	boardWriterId;
+	//boardWriterId;
+	
+	//채팅 생성
+	createUserToUserChat(boardWriterId);
 })
 //민수님 아래 아이디 써서 채팅함수에 넣으면 됩니다.
 $(document).on("click",".user-chat-button",function(){
 	//현재 누른 채팅 유저에 아이디 이거 매개변수로 함수 호출
 	let thisChatUserId = $(this).closest('.reply').find('.reply_userid').text();
+	
+	//채팅 생성
+	createUserToUserChat(thisChatUserId);
 })
 
 $(document).on("click",".reply_userThumnail img", function(){

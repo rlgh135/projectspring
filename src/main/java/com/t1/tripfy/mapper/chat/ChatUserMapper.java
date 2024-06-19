@@ -10,6 +10,8 @@ import com.t1.tripfy.domain.dto.chat.ChatUserDTO;
 
 @Mapper
 public interface ChatUserMapper {
+	
+//R
 	//userid로 chat_user 테이블 행 긁어오기
 	ArrayList<ChatUserDTO> selectSpecificChatUserByUserid(String userid);
 	/**
@@ -24,6 +26,16 @@ public interface ChatUserMapper {
 	 * <p><strong>다대다 가능</strong>
 	 * */
 	List<ChatUserDTO> selectOpponentUserInfo(Long chatRoomIdx, String userid);
+	
+	/**
+	 * <p>일반/일반 채팅중
+	 * <br><strong>OTO</strong>
+	 * <br><strong>userid, opponentuserid만이 가입</strong>
+	 * <br>의 조건을 충족하는 채팅방에서 userid의 행을 뽑아오기
+	 * 
+	 * <p>채팅방의 is_terminated, is_quit 여부는 체크 안함
+	 * */
+	List<ChatUserDTO> selectOTOCommonChatUserInfoByUserids(String userid, String opponentuserid);
 	
 	//userid로 chat_user 테이블 행 개수 가져오기
 	/**
@@ -56,7 +68,9 @@ public interface ChatUserMapper {
 	 * <p><strong>최신 내림차순 정렬</strong>
 	 * */
 	List<Map<String, Object>> selectAllByUserid(String userid);
-	
+
+//U	
+
 	/**
 	 * <p><strong>UPDATE</strong> : 마지막 확인 메시지 수정하기
 	 * */
@@ -65,8 +79,16 @@ public interface ChatUserMapper {
 	 * <p><strong>UPDATE</strong> : 메시지 전부 확인처리
 	 * */
 	Integer updateChatDetailIdxToEnd(Long chatRoomIdx, String userid);
+	/**
+	 * <p><strong>UPDATE</strong> : 사용자 채팅방 이탈여부(chat_user_is_quit) 수정하기
+	 * 
+	 * @param isQuitValue : 수정값
+	 * @param chatRoomIdx : 이탈여부를 수정할 채팅방
+	 * @param userid : 이탈여부를 수정할 채팅방의 유저 userid
+	 * */
+	Integer updateIsQuit(boolean isQuitValue, long chatRoomIdx, String userid);
 	
-	//c
+//c
 	
 	/**
 	 * <p><strong>INSERT</strong> : 유저 추가
