@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t1.tripfy.mapper.chat.ChatUserRegdateMapper">
+	
+<!-- C -->
+
+	<!-- 
+		1행 기입
+	-->
+	<insert id="insertChatUserRegdate">
+		INSERT INTO 
+			chat_user_regdate
+		VALUES
+			(
+				null,
+				#{chatRoomIdx},
+				#{userid},
+				#{curAction},
+				#{curRegdate}
+			)
+	</insert>
+	
+	<!-- 
+		n행 기입
+	-->
+	<insert id="insertChatUserRegdates">
+		INSERT INTO
+			chat_user_regdate
+		VALUES
+		<foreach collection="curList" item="dto" separator=",">
+			(
+				null,
+				#{dto.chatRoomIdx},
+				#{dto.userid},
+				#{dto.curAction},
+				#{dto.curRegdate}
+			)
+		</foreach>
+	</insert>
+	
+<!-- R -->
+	
+	<!-- 
+		특정 채팅방의 모든 진입/이탈 기록 가져오기
+	-->
+	<select id="selectSpecificChatRoomRegdates">
+		SELECT 
+			* 
+		FROM 
+			chat_user_regdate
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+	</select>
+	
+	<!-- 
+		특정 유저의 특정 채팅방에서의 진입/이탈 기록 가져오기
+	-->
+	<select id="selectSpecificUserRegdates">
+		SELECT
+			*
+		FROM
+			chat_user_regdate
+		WHERE
+				chat_room_idx = #{chatRoomIdx}
+			AND
+				userid = #{userid}
+	</select>
+	
+	<!-- 
+		특정 채팅방의 특정 시점 사이의 모든 진입/이탈 기록 가져오기
+		cur_idx 최신순 내림차순으로 정렬
+	-->
+	<select id="selectSpecificRangeOfUserRegdates">
+		SELECT
+			*
+		FROM
+			chat_user_regdate
+		WHERE
+				chat_room_idx = #{chatRoomIdx}
+			AND
+				cur_regdate 
+				BETWEEN 
+						#{startDate}
+					AND
+						#{endDate}
+	</select>
+</mapper>

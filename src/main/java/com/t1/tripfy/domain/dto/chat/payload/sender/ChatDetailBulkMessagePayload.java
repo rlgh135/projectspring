@@ -3,6 +3,7 @@ package com.t1.tripfy.domain.dto.chat.payload.sender;
 import java.util.List;
 
 import com.t1.tripfy.domain.dto.chat.ChatDetailDTO;
+import com.t1.tripfy.domain.dto.chat.ChatUserRegdateDTO;
 import com.t1.tripfy.domain.dto.chat.MessagePayload;
 
 import lombok.Data;
@@ -23,4 +24,5 @@ public class ChatDetailBulkMessagePayload implements MessagePayload {
 	private Boolean isFirst;
 	private String requestUserid;
 	private List<ChatDetailDTO> chatDetails;
+	private List<ChatUserRegdateDTO> chatUserRegdates;
 }
