@@ -14,6 +14,6 @@ public class ChatUserRegdateDTO {
 	private Long chatRoomIdx;
 	private String userid;
 	private String curAction;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
 	private LocalDateTime curRegdate;
 }

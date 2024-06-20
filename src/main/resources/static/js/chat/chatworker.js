@@ -3,6 +3,16 @@
 	로그 확인 -> chrome://inspect/#workers
 */
 
+/*
+	대충 해야하는거
+	액션 처리 함수단에서 처리 성공시
+	요청 port뿐만이 아니라
+	동일한 채팅방(roomidx)를 열고 있는 모든 탭에 뿌려주기
+
+	동일한 채팅방을 열고 있는 탭들이 동일하게 작동하게 하려면
+	요청에 따른 응답을 나눠 줄 필요가 있음
+*/
+
 //커넥션 객체
 let WEBSOCKET = null;
 let EVENTSOURCE = null;
@@ -78,12 +88,36 @@ self.onconnect = function(e) {
 						}
 						//접속중인 채팅방이 없으면 연결을 내린다
 						if(crlFlag) {
-							console.log("why");
 							disconnectWebSocket();
 							connectSSE();
 						}
 					}
 				});
+				break;
+			case "leaveChat":
+				leaveChat(e.data, port)
+				.then((result) => {
+					if(result) {
+						let lcFlag = true;
+						for(let key in PORT_LIST) {
+							if(PORT_LIST[key].port == port) {
+								PORT_LIST[key].chatRoomIdx = null;
+							} else if(!!PORT_LIST[key].chatRoomIdx) {
+								//채팅방 접속중인 다른 탭이 존재하는지 체크
+								lcFlag = false;
+							}
+						}
+
+						//접속중인 채팅방이 없으면 연결을 내린다
+						if(lcFlag) {
+							disconnectWebSocket();
+							connectSSE();
+						}
+					}
+				})
+				break;
+			case "terminateChat":
+				terminateChat(e.data, port);
 				break;
 			case "loadChat":
 				loadChat(e.data, port);
@@ -182,6 +216,91 @@ async function chatRoomLeave(data, port) {
 			isSuccess: false
 		});
 		return false;
+	}
+}
+
+//leaveChat 처리
+async function leaveChat(data, port) {
+	WEBSOCKET.send(JSON.stringify({
+		act: "leaveChat",
+		payload: {
+			roomidx: data.payload.roomidx
+		}
+	}));
+
+	try {
+
+		const res = await promised_WebSocketReceiver("leaveChat", 500);
+		
+		if(!!res.payload.reason) {
+			port.postMessage({
+				action: "leaveChat",
+				isSuccess: false
+			});
+			return false;
+		}
+
+		port.postMessage({
+			action: "leaveChat",
+			isSuccess: true,
+			payload: res.payload
+		});
+
+		return true;
+
+	} catch(err) {
+
+		port.postMessage({
+			action: "leaveChat",
+			isSuccess: false
+		});
+
+		return false;
+
+	}
+}
+
+//terminateChat 처리
+/*
+	terminateChat은 leaveChat과 다르게 채팅방에서 나가게 하지 않는다
+*/
+async function terminateChat(data, port) {
+	WEBSOCKET.send(JSON.stringify({
+		act: "terminateChat",
+		payload: {
+			roomidx: data.payload.roomidx
+		}
+	}));
+
+	try {
+
+		const res = await promised_WebSocketReceiver("terminateChat", 500);
+		
+		if(!!res.payload.reason) {
+			port.postMessage({
+				action: "terminateChat",
+				isSuccess: false
+			});
+			return;
+		}
+
+		port.postMessage({
+			action: "terminateChat",
+			isSuccess: true,
+			payload: res.payload
+		});
+
+		return;
+
+	} catch(err) {
+
+		port.postMessage({
+			action: "terminateChat",
+			isSuccess: false
+		});
+
+		return;
+
 	}
 }
 

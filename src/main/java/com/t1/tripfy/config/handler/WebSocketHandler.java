@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -19,6 +20,7 @@ import com.t1.tripfy.domain.dto.chat.MessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatContentMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatFailedMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.sender.ChatRoomEnterQuitMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatFailedMessagePayload.ChatFailReason;
 import com.t1.tripfy.service.chat.ChatService;
 import com.t1.tripfy.service.chat.SseEmitterService;
@@ -135,6 +137,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			 * 이거 채팅방 진입 여부
 			 * 어쩌면 다른 모든 채팅방 가입자들한테 뿌려줘야 할 지도 모름
 			 * 읽음 표시 관련해서dd
+			 * 
+			 * 추가 - 240620
+			 * 이제는 채팅방 정보를 처음 저장할 때
+			 * isQuit 여부를 체크함
 			 * */
 			
 			//열린 채팅방인지 확인
@@ -218,6 +224,113 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			}
 			
 			//응답
+			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(receivedMsg)));
+			break;
+		case "leaveChat":
+		//채팅방 탈퇴 요청
+			/*
+			 * 여기서 해야할거
+			 * 우선 유효성
+			 *     해당유저 chat_user_regdate 갱신
+			 *             isQuit=true 처리
+			 *     모든 가입자가 isQuit=true인지 체크
+			 *         해당하면 isTerminated=true 처리
+			 * 채팅목록 정리
+			 * isTerminated=false인 경우 남은 가입자들에게 전파
+			 * 성공여부 반환
+			 * 
+			 * 웹소켓 연결해제는 클라단에서 결정
+			 * 
+			 * 중요!!
+			 * isTerminated=true여도 OCR을 날리면 안됨
+			 * 종료 여부와 접근 제한(isQuit)은 별개임
+			 * 
+			 * 대충 isTerminated=true의 경우가
+			 *     모든 사용자가 isQuit=true
+			 *     권한자가 종료시킴
+			 * 정도
+			 * 
+			 * 일단 여기랑 ChatServiceImpl.leaveChatHandler는 모든 사용자가 isQuit한 경우만 담당함
+			 * 그렇게 보면 OCR OCI 날려도 될듯?
+			 */
+			Long lcRoomIdx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
+			
+		//sv
+			Boolean doesChatTerminated;
+			if(null == (doesChatTerminated = chatServiceImpl.leaveChatHandler(receivedMsg))) {
+				//서비스 실패시 처리
+				session.sendMessage(new TextMessage(
+						objectMapper.writeValueAsString(failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL))
+				));
+				return;
+			}
+		
+		//채팅방 종료여부로 분기
+			if(doesChatTerminated) {
+			//종료됨
+				//OCI를 순회하면서 OCR에서 종료된 채팅방을 제거
+				for(String id : OPENED_CHAT_INFO.get(lcRoomIdx)) {
+					if(OPENED_CHAT_REV.containsKey(id)) {
+						OPENED_CHAT_REV.get(id).remove(lcRoomIdx);
+					}
+				}
+				//OCI 삭제
+				OPENED_CHAT_INFO.remove(lcRoomIdx);
+			} else {
+			//살아있음
+				//요청자 OCR에서 채팅방 제거, OCI에서 요청자 제거
+				OPENED_CHAT_REV.get(userid).remove(lcRoomIdx);
+				OPENED_CHAT_INFO.get(lcRoomIdx).remove(userid);
+				
+				//남은 가입자들에게 전파
+				broadcastRequestHandler(
+						"broadcastLeaveChat",
+						new ChatRoomEnterQuitMessagePayload()
+							.setRoomidx(lcRoomIdx)
+							.setUserid(userid),
+						lcRoomIdx,
+						null
+				);
+			}
+			
+			//성공여부 전송
+			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(receivedMsg)));
+			break;
+		case "terminateChat":
+		//채팅방 종료 요청
+			/*
+			 * 권한자에 의한 종료 처리임
+			 * 따라서 OCR, OCI를 날리지는 않음
+			 */
+			Long tcRoomIdx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
+			
+		//sv
+			Boolean isTerminated;
+			if(null == (isTerminated = chatServiceImpl.terminateChatHandler(receivedMsg))) {
+				session.sendMessage(new TextMessage(objectMapper.writeValueAsString(
+						failMessageBuilder(receivedMsg.getAct(), ChatFailReason.FORBIDDEN)
+				)));
+				return;
+			}
+			
+			//서버 오류 체크
+			if(!isTerminated) {
+				session.sendMessage(new TextMessage(objectMapper.writeValueAsString(
+						failMessageBuilder(receivedMsg.getAct(), ChatFailReason.SERVER_FAIL)
+				)));
+				return;
+			}
+			
+		//가입자들에게 전파
+			broadcastRequestHandler(
+					"broadcastTerminateChat",
+					new ChatRoomEnterMessagePayload()
+						.setRoomidx(tcRoomIdx),
+					tcRoomIdx,
+					userid
+			);
+		
+		//성공여부 요청자에게 전달
 			session.sendMessage(new TextMessage(objectMapper.writeValueAsString(receivedMsg)));
 			break;
 		case "sendChat":
@@ -345,6 +458,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	/**
 	 * <p>웹소켓 메시지 broadcast 용 함수
 	 * <p>WebSocketHandler 밖에서 웹소켓 전파를 하기 위해 만들어짐
+	 * <p>근데 여기서도 쓰기는 할 거임
 	 * @param action : MessageDTO.act 값
 	 * @param payload : MessageDTO.payload 값 - MessagePayload 인터페이스의 구현체만 대입 가능
 	 * @param targetRoomIdx : 전파할 채팅방 인덱스(cr.chat_room_idx)
@@ -356,11 +470,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		//action, payload 값 검증도 안 넣는다 어짜피 MessagePayload 구현체만 넘길 수 있긴 하니까 뭐
 
 		//송신값 구성
-		MessageDTO<ChatRoomEnterMessagePayload> message = new MessageDTO<>();
-		message.setAct(action);
-		message.setPayload((ChatRoomEnterMessagePayload)payload);
+		MessageDTO<? extends MessagePayload> message = new MessageDTO<>();
 		
-		MessageDTO<? extends MessagePayload> sex = message;
+		switch(action) {
+		case "broadcastEnterChat":
+		case "broadcastLeaveChat":
+			MessageDTO<ChatRoomEnterQuitMessagePayload> temp1 = new MessageDTO<>();
+			temp1.setPayload((ChatRoomEnterQuitMessagePayload)payload);
+			message = temp1;
+			break;
+		}
 		
 		//목표 채팅방의 가입자 목록 꺼내기
 		List<String> userList = OPENED_CHAT_INFO.get(targetRoomIdx);
@@ -368,10 +487,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		//순회하면서 broadcast
 		// 웹소켓 연결이 없는 유저는 SSE로 넘긴다
 		for(String userid : userList) {
-			if(WEBSOCKET_SESSIONS.containsKey(userid)) {
-				WEBSOCKET_SESSIONS.get(userid).sendMessage(new TextMessage(objectMapper.writeValueAsString(userList)))
-			} else {
-				
+			if((userThatExcept != null && !userid.equals(userThatExcept)) || userThatExcept == null) {
+				if(WEBSOCKET_SESSIONS.containsKey(userid)) {
+					WEBSOCKET_SESSIONS.get(userid).sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+				} else {
+					sseService.broadcast(userid, objectMapper.writeValueAsString(message));
+				}
 			}
 		}
 	}
@@ -389,6 +510,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		return temp;
 	}
 	
+	/**
+	 * <p>실패 메시지 빌더?
+	 * @param act : 요청 act값
+	 * @param reason : 실패 원인 - 일단은 ChatFailedMessagePayload의 static 이너 클래스 ChatFailReason에서 꺼내오는건데 그냥 문자열을 넣어도 되기는 할거임
+	 * @return 생성된 MessageDTO 객체
+	 */
 	private MessageDTO<ChatFailedMessagePayload> failMessageBuilder(String act, String reason) {
 		return new MessageDTO<ChatFailedMessagePayload>()
 				.setAct(act)

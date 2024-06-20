@@ -21,4 +21,15 @@
 		VALUES
 			(null, #{chatRoomType}, #{chatRoomTitle}, #{packagenum}, false, #{regdate})
 	</insert>
+	
+	<!-- 
+		채팅방 종료시키기
+	-->
+	<update id="updateIsTerminated">
+		UPDATE chat_room
+		SET
+			chat_room_is_terminated = true
+		WHERE
+			chat_room_idx = #{chatRoomIdx}
+	</update>
 </mapper>

@@ -2,6 +2,7 @@ package com.t1.tripfy.controller.chat;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -103,13 +104,8 @@ public class ChatRestController {
 			}
 		}
 		
-//		if(chatSV.createChat(loginUserId, packagenum)) {
-//			return ResponseEntity.status(HttpStatus.CREATED).build();
-//		}
-		System.out.println("crccc-2");
-		
-		/*이거 전달값 오류로 바꿔라*/
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		/*chatRoomType 값이 잘못된 경우*/
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
 	
 	//채팅방 리스트 요청
@@ -124,13 +120,6 @@ public class ChatRestController {
 		if(loginUserId == null) {
 			System.out.println("로그인 체크 통과 실패");
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-			//postman 테스트용
-			//일반
-//			loginUserId = "testUserId01";
-			//메시지 없는 채팅방
-//			loginUserId = "testNoMessageInChatUser06";
-			//가입한 채팅방이 없는 유저
-//			loginUserId = "testNoChattingUser05";
 		}
 		
 	//서비스

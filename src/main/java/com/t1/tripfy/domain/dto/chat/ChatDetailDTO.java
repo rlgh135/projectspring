@@ -14,6 +14,6 @@ public class ChatDetailDTO {
 	private Long chatRoomIdx;
 	private String userid;
 	private String chatDetailContent;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
 	private LocalDateTime regdate;
 }

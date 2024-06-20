@@ -26,6 +26,22 @@ public interface ChatUserMapper {
 	 * <p><strong>다대다 가능</strong>
 	 * */
 	List<ChatUserDTO> selectOpponentUserInfo(Long chatRoomIdx, String userid);
+	/**
+	 * <p><strong>SELECT</strong> : chatRoomIdx, userid로 채팅방의 상대 사용자 중 isQuit=false인 유저의 userid 가져오기 
+	 * <p>요청자를 제외하고 가져옴
+	 * <p><strong>다대다 가능</strong>
+	 * @param chatRoomIdx
+	 * @param userid
+	 * @return
+	 */
+	List<String> selectNotQuitOpponentUserid(Long chatRoomIdx, String userid);
+	
+	/**
+	 * <p><strong>SELECT</strong> : chatRoomIdx로 해당 채팅방에 남은 사용자 수를 가져옴
+	 * @param chatRoomIdx
+	 * @return
+	 */
+	Integer selectCountOfNotQuitUser(Long chatRoomIdx);
 	
 	/**
 	 * <p>일반/일반 채팅중

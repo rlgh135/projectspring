@@ -273,10 +273,6 @@ async function createPackageChat(chat_packagenum) {
 	}
 }
 
-/*일반 채팅 생성*/
-function createNormalChat(e) {
-
-}
 /*일반 채팅 채팅창 내부 생성 관련*/
 
 let userCreateChatInputTimeoutID = null;
@@ -573,6 +569,9 @@ async function chatBodySubmitBtnClick(e) {
 			//오류 처리
 			console.log(e);
 		}
+
+		//다 했으면 성공실패 상관없이 입력창 비우기
+		CHAT_BODY_INPUT.value = "";
 	} else {
 		//공란 입력 불가능 알림
 	}
@@ -670,7 +669,7 @@ function createBroadcastChatElement(payload) {
 		} else if(CHAT_BODY_INFO.lastSender === payload.userid) {
 			//송신자 채팅이 마지막
 			//ccbody-timestamp 유지 체크
-			if(timestamp.getTime() - tgtstamp.getTime() == 0) {
+			if(getDiffOfMinuteByDateObject(timestamp, tgtstamp) == 0) {
 				timestampRemoveFlag = true;
 			} else {
 				headFlag = true;
@@ -865,7 +864,7 @@ function sendChatReceiveHandler(payload) {
 			headFlag = true;
 		} else {
 			//이전 채팅이 있으며 내 채팅인 경우
-			if(tgtstamp.getTime() - timestamp.getTime() < 0) {
+			if(getDiffOfMinuteByDateObject(tgtstamp, timestamp) < 0) {
 				//1분 이상 차이나는 경우
 				headFlag = true;
 			} else {
@@ -1004,7 +1003,7 @@ function chatLoadHandler(payload) {
 				||
 				(!isLeftFlag && CHAT_BODY_MORE_INNER_CONT.firstChild.classList.contains("ccbody-right"))
 			) {
-				if(reg.getTime() - (new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)).getTime() == 0) {
+				if(getDiffOfMinuteByDateObject(reg, new Date(CHAT_BODY_MORE_INNER_CONT.firstChild.dataset.fulltimestamp)) == 0) {
 					doesHeadNeedToUnexist = true;
 				}
 			}
@@ -1020,7 +1019,7 @@ function chatLoadHandler(payload) {
 				||
 				(!isLeftFlag && chatFragment.firstChild.classList.contains("ccbody-right"))
 			) {
-				if(reg.getTime() - (new Date(chatFragment.firstChild.dataset.fulltimestamp)).getTime() == 0) {
+				if(getDiffOfMinuteByDateObject(reg, new Date(chatFragment.firstChild.dataset.fulltimestamp)) == 0) {
 					doesHeadNeedToUnexist = true;
 				}
 			}
@@ -1527,15 +1526,42 @@ function printChatRoom(payload) {
 		div.dataset.timestamp = timestamp.getHours() + ":" + (timestamp.getMinutes() < 10 ? "0" + timestamp.getMinutes() : timestamp.getMinutes());
 		div.dataset.fulltimestamp = payload.chatDetails[i].regdate;
 
+		//ccbody-head, ccbody-timestamp 삽입 체크
+		let headFlag = false;
+		let timestampFlag = false;
+		/*
+			ccbody-head는 구현상 첫 메시지(i == payload.chatDetails.length - 1) 이거나
+			이번 메시지의 송신자가 이전 메시지의 송신자와 다르거나
+			이전 메시지와 분단위 이상의 차이가 날 때 삽입
+
+			ccbody-timestamp는 다음 메시지가 없거나(i == 0)
+			다음 메시지와 송신자가 다르거나
+			두 채팅이 1분 이상 차이가 나는 경우 삽입
+		*/
+		if(
+			i + 1 == payload.chatDetails.length 
+			|| payload.chatDetails[i+1].userid != payload.chatDetails[i].userid 
+			|| 0 < getDiffOfMinuteByDateObject(timestamp, new Date(payload.chatDetails[i+1].regdate))
+		) {
+			headFlag = true;
+		}
+		if(
+			i == 0
+			|| payload.chatDetails[i-1].userid != payload.chatDetails[i].userid
+			|| 0 > getDiffOfMinuteByDateObject(timestamp, new Date(payload.chatDetails[i-1].regdate))
+		) {
+			timestampFlag = true;
+		}
+
 		//채팅 좌우 분기
 		if(payload.chatDetails[i].userid != CHAT_BODY_INFO.userid) {
 			//좌
 			//기본 클래스 삽입
 			div.classList.add("ccbody-left");
 			//구현상 첫 메시지인 경우나 이전 메시지의 송신자가 다르거나 이전 메시지와 분단위 이상의 차이가 나면 ccbody-head 삽입
-			if(i + 1 == payload.chatDetails.length || payload.chatDetails[i+1].userid != payload.chatDetails[i].userid || timestamp.getTime() - (new Date(payload.chatDetails[i+1].regdate)).getTime() > 0) {
+			if(headFlag) {
 				div.classList.add("ccbody-head");
-
+	
 				//이미지
 				const imgDiv = document.createElement("div");
 				/*일단 임시로 로고 삽입*/
@@ -1551,7 +1577,7 @@ function printChatRoom(payload) {
 				//userid
 				const useridDiv = document.createElement("div");
 				useridDiv.innerHTML = payload.chatDetails[i].userid;
-
+	
 				div.appendChild(imgDiv);
 				div.appendChild(useridDiv);
 			}
@@ -1560,7 +1586,8 @@ function printChatRoom(payload) {
 			//클래스 삽입
 			div.classList.add("ccbody-right");
 			//ccbody-head 삽입, 조건은 위와 같음
-			if(i + 1 == payload.chatDetails.length || payload.chatDetails[i+1].userid != payload.chatDetails[i].userid || timestamp.getTime() - (new Date(payload.chatDetails[i+1].regdate)).getTime() > 0) {
+			//분단위 계산 로직 유지를 위한 객체
+			if(headFlag) {
 				div.classList.add("ccbody-head");
 			}
 		}
@@ -1572,7 +1599,7 @@ function printChatRoom(payload) {
 
 		//타임스탬프 클래스(.ccbody-timestamp) 삽입
 		//다음 메시지가 없거나 송신자가 다르거나 분단위 이상 차이가 나면 삽입
-		if(i == 0 || payload.chatDetails[i-1].userid != payload.chatDetails[i].userid || timestamp.getTime() - (new Date(payload.chatDetails[i-1].regdate)).getTime() < 0) {
+		if(timestampFlag) {
 			div.classList.add("ccbody-timestamp");
 		}
 
@@ -1651,6 +1678,30 @@ function getDiffOfDate(nowTime, afterTime) {
 	const thisYear = new Date(new Date().getFullYear(), 0, 0).getTime();
 
 	return Math.floor((nowTime - thisYear) / oneDay) - Math.floor((afterTime - thisYear) / oneDay);
+}
+
+//분단위 차이 계산 메서드
+/**
+ * 초 이하 단위를 생략한 시간 비교 함수
+ * 
+ * 반환값은 아래와 같음
+ * @example
+ *     nowDateObj : afterDateObj : 반환값
+ *    .. 16:15:17 =  .. 16:15:53 :      0
+ *    .. 16:15:17 <  .. 16:16:00 :     -1
+ *    .. 16:15:17 >  .. 16:13:52 :      2
+ * @param {Date} nowDateObj 현재 수정 요소의 시간값 Date 객체
+ * @param {Date} afterDateObj 다음 수정 요소의 시간값 Date 객체
+ * @returns {Number} 두 인수의 분 단위 차이
+ */
+function getDiffOfMinuteByDateObject(nowDateObj, afterDateObj) {
+	const a = new Date(nowDateObj.getTime());
+	const b = new Date(afterDateObj.getTime());
+
+	a.setSeconds(0, 0);
+	b.setSeconds(0, 0);
+
+	return a.getTime() - b.getTime();
 }
 
 //채팅방 DOM 구현
@@ -2173,7 +2224,7 @@ function createChatListElement(cr, isOTO=true) {
  * @param {string} host host 주소 (localhost:8080의 형태로 마지막 슬래시를 생략)
  * @param {string} path path 주소 (/chat 의 형태로 시작 슬래시를 꼭 작성)
  * @param {Object} queryStrings 쿼리스트링으로 넣을 키-값, JS 객체의 형태로 삽입, 생략 가능함
- * @returns {Promise<*>} 반환값은 JSON으로 수신 -> JS 객체화 -> Promise로 포장 의 단계를 거침
+ * @returns {Promise<*>} 반환값은 JSON으로 수신 -> JS 객체화 -> Promise로 포장 후 반환 의 단계를 거침
  */
 async function ajaxGet(host, path, queryStrings={}) {
 	let qs = "";

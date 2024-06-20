@@ -13,5 +13,7 @@ public class ChatFailedMessagePayload implements MessagePayload {
 	public static class ChatFailReason {
 		//서버단 오류
 		public static final String SERVER_FAIL = "SERVER_FAIL";
+		//권한 없음
+		public static final String FORBIDDEN = "FORBIDDEN";
 	}
 }

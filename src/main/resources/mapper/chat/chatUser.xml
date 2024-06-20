@@ -37,6 +37,32 @@
 	</select>
 	
 	<!-- 
+		isQuit=false인 상대 유저 userid 가져오기
+	-->
+	<select id="selectNotQuitOpponentUserid">
+		SELECT userid
+		FROM chat_user
+		WHERE
+				chat_room_idx = #{chatRoomIdx}
+			AND
+				userid != #{userid}
+			AND
+				chat_user_is_quit = false
+	</select>
+	
+	<!-- 
+		isQuit=false인 유저 수 가져오기
+	-->
+	<select id="selectCountOfNotQuitUser">
+		SELECT COUNT(*)
+		FROM chat_user
+		WHERE
+				chat_room_idx = #{chatRoomIdx}
+			AND
+				chat_user_is_quit = false
+	</select>
+	
+	<!-- 
 		일반/일반 채팅중
 			일대일
 			userid, opponentuserid 가입

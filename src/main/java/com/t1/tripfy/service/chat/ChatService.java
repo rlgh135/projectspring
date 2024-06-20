@@ -50,4 +50,21 @@ public interface ChatService {
 	
 	// 채팅방 리스트 + 각 채팅방의 마지막 메시지 + 안 읽은 메시지 개수 가져오기
 	List<ChatListPayloadDTO> selectChatList(String userid);
+	
+	/**
+	 * <p>채팅방 탈퇴 처리
+	 * <p>모든 가입자가 탈퇴한 경우 채팅 또한 종료시킨다
+	 * @param receivedMsg : 목표 chat_room_idx, userid를 포함한 수신 객체
+	 * @return 채팅방 종료시 true, 요청자만 탈퇴시 false, 실패시 null
+	 */
+	Boolean leaveChatHandler(MessageDTO<? extends MessagePayload> receivedMsg);
+	
+	/**
+	 * <p>채팅방 종료 처리
+	 * <p>권한자(가이드) 에 의한 채팅방 종료 요청을 처리함
+	 * <p><strong>채팅 종료와 채팅방 접근은 별개임</strong>
+	 * @param receivedMsg : 목표 chat_room_idx와 요청자 userid를 포함한 수신 객체
+	 * @return 종료 성공시 true, 실패시 false, 유효성 실패(userid)시 null
+	 */
+	Boolean terminateChatHandler(MessageDTO<? extends MessagePayload> receivedMsg);
 }

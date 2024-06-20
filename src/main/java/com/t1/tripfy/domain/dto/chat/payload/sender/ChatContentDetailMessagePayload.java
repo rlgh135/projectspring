@@ -16,7 +16,7 @@ public class ChatContentDetailMessagePayload implements MessagePayload {
 	private String title;
 	private String userid;
 	private String chatContent;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
 	private LocalDateTime regdate;
 //	private Integer uncheckedmsg; //수신자 기준 미확인 메시지
 }

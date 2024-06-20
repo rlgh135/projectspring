@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.t1.tripfy.config.handler.WebSocketHandler;
 import com.t1.tripfy.domain.dto.chat.ChatDetailDTO;
 import com.t1.tripfy.domain.dto.chat.ChatListPayloadDTO;
 import com.t1.tripfy.domain.dto.chat.ChatRoomDTO;
@@ -21,6 +23,7 @@ import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatLoadMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.receiver.ChatRoomEnterMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatContentDetailMessagePayload;
 import com.t1.tripfy.domain.dto.chat.payload.sender.ChatDetailBulkMessagePayload;
+import com.t1.tripfy.domain.dto.chat.payload.sender.ChatRoomEnterQuitMessagePayload;
 import com.t1.tripfy.domain.dto.pack.PackageDTO;
 import com.t1.tripfy.domain.dto.user.UserImgDTO;
 import com.t1.tripfy.mapper.chat.ChatDetailMapper;
@@ -49,6 +52,9 @@ public class ChatServiceImpl implements ChatService {
 	@Autowired
 	private PackageService packageServiceImpl;
 	
+	@Autowired
+	private WebSocketBridge wsBridge;
+	
 	/*
 	 	중요!!
 	 	기능을 기준으로 메서드 나눌것
@@ -69,6 +75,9 @@ public class ChatServiceImpl implements ChatService {
 		if(null == (guideUserid = chatInvadingMapper.selectGuideUseridByPackagenum(pkgDTO.getGuidenum()))) {
 			return null;
 		}
+		
+	//chat_user_regdate 기준시간
+		LocalDateTime current = LocalDateTime.now();
 		
 	//숨겨졌지만 종료되지 않은 채팅(cu.chat_user_is_quit=true && cr.chat_room_is_terminated=false)
 	//이 존재하는지 체크
@@ -99,6 +108,16 @@ public class ChatServiceImpl implements ChatService {
 						return null;
 					}
 					
+					//요청자 chat_user_regdate INSERT
+					if(1 != chatUserRegdateMapper.insertChatUserRegdate(
+							cr.getChatRoomIdx(),
+							userid,
+							"NORM_ENTER",
+							current
+					)) {
+						return null;
+					}
+					
 					//상대 유저 목록 가져오기
 					List<ChatUserDTO> cuResList = new ArrayList<>();
 					if(null == (cuResList = chatUserMapper.selectOpponentUserInfo(cr.getChatRoomIdx(), userid))) {
@@ -110,6 +129,16 @@ public class ChatServiceImpl implements ChatService {
 					for(ChatUserDTO dto : cuResList) {
 						imgList.add(userServiceImpl.getProfileImgDTO(dto.getUserid()));
 					}
+					
+					//반환 전에 다른 채팅방 가입자들에게 메시지 전파
+					wsBridge.broadcastBridge(
+							"broadcastEnterChat",
+							new ChatRoomEnterQuitMessagePayload()
+								.setRoomidx(cr.getChatRoomIdx())
+								.setUserid(userid),
+							cr.getChatRoomIdx(),
+							null
+					);
 					
 					//반환
 					return new ChatListPayloadDTO()
@@ -130,7 +159,6 @@ public class ChatServiceImpl implements ChatService {
 		}
 		
 		//chat_room insert, PK(chat_room_idx) 가져오기
-		LocalDateTime current = LocalDateTime.now();
 		ChatRoomDTO crDTO = new ChatRoomDTO()
 				.setChatRoomType(1)
 				.setChatRoomTitle(null)
@@ -159,6 +187,24 @@ public class ChatServiceImpl implements ChatService {
 		
 		if(2 != chatUserMapper.insertRow(userList)) {
 			System.out.println("cc-3");
+			return null;
+		}
+		
+		//chat_user_regdate INSERT
+		List<ChatUserRegdateDTO> curList = new ArrayList<>();
+		curList.add(new ChatUserRegdateDTO()
+				.setChatRoomIdx(crPK)
+				.setUserid(guideUserid)
+				.setCurAction("INIT_ENTER")
+				.setCurRegdate(current)
+		);
+		curList.add(new ChatUserRegdateDTO()
+				.setChatRoomIdx(crPK)
+				.setUserid(userid)
+				.setCurAction("INIT_ENTER")
+				.setCurRegdate(current)
+		);
+		if(2 != chatUserRegdateMapper.insertChatUserRegdates(curList)) {
 			return null;
 		}
 		
@@ -207,6 +253,9 @@ public class ChatServiceImpl implements ChatService {
 				return null;
 			}
 		}
+		
+	//현재시간 저장
+	LocalDateTime current = LocalDateTime.now();
 	
 	//OTO/OTM 분기
 		if(invitee.size() > 1) {
@@ -223,6 +272,9 @@ public class ChatServiceImpl implements ChatService {
 		 * AND
 		 * cr.chat_room_is_terminated=false
 		 * 인 채팅을 찾는다
+		 * 
+		 * 채팅이 이미 존재할 경우 isQuit=false를 하고
+		 * 해당 채팅방 정보를 반환 - 새 채팅방을 만들지 않는다
 		 * */
 			//우선 초대자가 포함된 채팅을 찾는다
 			List<ChatUserDTO> inviteeDTOList;
@@ -250,6 +302,16 @@ public class ChatServiceImpl implements ChatService {
 							return null;
 						}
 						
+						//요청자 chat_user_regdate INSERT
+						if(1 != chatUserRegdateMapper.insertChatUserRegdate(
+								cr.getChatRoomIdx(),
+								userid,
+								"NORM_ENTER",
+								current
+						)) {
+							return null;
+						}
+						
 						//상대 유저 목록 가져오기
 						List<ChatUserDTO> cuResList = new ArrayList<>();
 						if(null == (cuResList = chatUserMapper.selectOpponentUserInfo(cr.getChatRoomIdx(), userid))) {
@@ -261,6 +323,16 @@ public class ChatServiceImpl implements ChatService {
 						for(ChatUserDTO dto : cuResList) {
 							imgList.add(userServiceImpl.getProfileImgDTO(dto.getUserid()));
 						}
+						
+						//반환 전에 다른 채팅방 가입자들에게 메시지 전파
+						wsBridge.broadcastBridge(
+								"broadcastEnterChat",
+								new ChatRoomEnterQuitMessagePayload()
+									.setRoomidx(cr.getChatRoomIdx())
+									.setUserid(userid),
+								cr.getChatRoomIdx(),
+								null
+						);
 						
 						//반환
 						return new ChatListPayloadDTO()
@@ -282,8 +354,6 @@ public class ChatServiceImpl implements ChatService {
 		}
 		
 	//chat_room
-		//현재시간 저장
-		LocalDateTime current = LocalDateTime.now();
 		
 		//삽입할 DTO 구성
 		/*
@@ -304,9 +374,10 @@ public class ChatServiceImpl implements ChatService {
 		
 		Long crPK = crDTO.getChatRoomIdx();
 		
-	//chat_user
+	//chat_user, chat_user_regdate
 		//invitee를 순회하면서 삽입용 DTO List 초기화
 		List<ChatUserDTO> cuDTOList = new ArrayList<>();
+		List<ChatUserRegdateDTO> curList = new ArrayList<>();
 		for(String iv : invitee) {
 			cuDTOList.add(new ChatUserDTO()
 					.setChatRoomIdx(crPK)
@@ -314,6 +385,11 @@ public class ChatServiceImpl implements ChatService {
 					.setChatUserIsCreator(false)
 					.setChatUserIsQuit(false)
 					.setChatDetailIdx(null));
+			curList.add(new ChatUserRegdateDTO()
+					.setChatRoomIdx(crPK)
+					.setUserid(iv)
+					.setCurAction("INIT_ENTER")
+					.setCurRegdate(current));
 		}
 		//요청자 삽입
 		cuDTOList.add(new ChatUserDTO()
@@ -322,12 +398,22 @@ public class ChatServiceImpl implements ChatService {
 				.setChatUserIsCreator(true)
 				.setChatUserIsQuit(false)
 				.setChatDetailIdx(null));
+		curList.add(new ChatUserRegdateDTO()
+				.setChatRoomIdx(crPK)
+				.setUserid(userid)
+				.setCurAction("INIT_ENTER")
+				.setCurRegdate(current));
 		
 		//삽입
 		if((invitee.size() + 1) != chatUserMapper.insertRow(cuDTOList)) {
 			//chat_user insert 실패
 			return null;
 		}
+		if((invitee.size() + 1) != chatUserRegdateMapper.insertChatUserRegdates(curList)) {
+			//chat_user_regdate insert 실패
+			return null;
+		}
+		
 	
 	//전송값 꾸리고 보내기
 		//cuDTOList에서 요청자 빼기
@@ -389,9 +475,10 @@ public class ChatServiceImpl implements ChatService {
 		//PK 확보
 		Long crPK = crDTO.getChatRoomIdx();
 		
-	//chat_user
+	//chat_user, chat_user_regdate
 		//invitee를 순회하면서 삽입용 DTO List 초기화
 		List<ChatUserDTO> cuDTOList = new ArrayList<>();
+		List<ChatUserRegdateDTO> curList = new ArrayList<>();
 		for(String iv : invitee) {
 			cuDTOList.add(new ChatUserDTO()
 					.setChatRoomIdx(crPK)
@@ -399,6 +486,11 @@ public class ChatServiceImpl implements ChatService {
 					.setChatUserIsCreator(false)
 					.setChatUserIsQuit(false)
 					.setChatDetailIdx(null));
+			curList.add(new ChatUserRegdateDTO()
+					.setChatRoomIdx(crPK)
+					.setUserid(iv)
+					.setCurAction("INIT_ENTER")
+					.setCurRegdate(current));
 		}
 		//요청자 삽입
 		cuDTOList.add(new ChatUserDTO()
@@ -407,9 +499,18 @@ public class ChatServiceImpl implements ChatService {
 				.setChatUserIsCreator(true)
 				.setChatUserIsQuit(false)
 				.setChatDetailIdx(null));
+		curList.add(new ChatUserRegdateDTO()
+				.setChatRoomIdx(crPK)
+				.setUserid(userid)
+				.setCurAction("INIT_ENTER")
+				.setCurRegdate(current));
 		
 		//삽입
 		if((invitee.size() + 1) != chatUserMapper.insertRow(cuDTOList)) {
+			//chat_user insert 실패
+			return null;
+		}
+		if((invitee.size() + 1) != chatUserRegdateMapper.insertChatUserRegdates(curList)) {
 			//chat_user insert 실패
 			return null;
 		}
@@ -448,7 +549,10 @@ public class ChatServiceImpl implements ChatService {
 		//최초 채팅방 진입시 가입자들의 userid를 가져온다
 		if(doesNeedToLoadUser) {
 			//대충 receiverMsg.receiverId에 DB서 긁어온 값을 대입, 그 후 receiverId 값이 null인지 체크
-			if(null == (receiveMsg.setReceiverId( chatUserMapper.selectOpponentUserid( ((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(), receiveMsg.getSenderId() ) ).getReceiverId())) {
+			/*
+			 * 이제는 isQuit=false만 가져온다
+			 */
+			if(null == (receiveMsg.setReceiverId( chatUserMapper.selectNotQuitOpponentUserid( ((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(), receiveMsg.getSenderId() ) ).getReceiverId())) {
 				//조회 실패
 				return null;
 			}
@@ -472,15 +576,27 @@ public class ChatServiceImpl implements ChatService {
 			return null;
 		}
 		
-		//제일 최근 메시지와 30번째 메시지의 regdate를 기준으로 채팅방 진입/이탈 기록을 가져온다
-		if(null == (bulk.setChatUserRegdates(chatUserRegdateMapper.selectSpecificRangeOfUserRegdates(
-				((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(),
-				bulk.getChatDetails().get(29).getRegdate(),
-				bulk.getChatDetails().get(0).getRegdate()
-		)))) {
-			//조회 실패시 처리
-			return null;
+		//제일 최근 메시지와 최대 30번째 메시지의 regdate를 기준으로 채팅방 진입/이탈 기록을 가져온다
+		
+		if(bulk.getChatDetails().isEmpty()) {
+			//채팅 내역이 없는 경우
+			//채팅 생성 시점 ~ 현재 시점의 진입/이탈 기록을 가져온다
+			if(null == (bulk.setChatUserRegdates(chatUserRegdateMapper.selectSpecificChatRoomRegdates(((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx())))) {
+				//조회 실패시 처리
+				return null;
+			}	
+		} else {
+			//채팅 내역이 존재하는 경우
+			if(null == (bulk.setChatUserRegdates(chatUserRegdateMapper.selectSpecificRangeOfUserRegdates(
+					((ChatRoomEnterMessagePayload)receiveMsg.getPayload()).getRoomidx(),
+					bulk.getChatDetails().get(bulk.getChatDetails().size() - 1).getRegdate(),
+					bulk.getChatDetails().get(0).getRegdate()
+					)))) {
+				//조회 실패시 처리
+				return null;
+			}			
 		}
+		
 
 		//나머지 속성 부여
 		//메시지 수가 30개가 아닌경우 제일 첫 메시지를 가져온 것임으로 체크
@@ -747,5 +863,69 @@ public class ChatServiceImpl implements ChatService {
 		}
 		return count;
 	}
+	
+	//채팅 탈퇴, 종료 처리
+	/*
+	 * 모든 가입자가 탈퇴한 경우 채팅을 종료
+	 */
+	@Override
+	@Transactional
+	public Boolean leaveChatHandler(MessageDTO<? extends MessagePayload> receivedMsg) {
+		//유효성은 스킵
+		String userid = receivedMsg.getSenderId();
+		Long roomIdx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
+		LocalDateTime current = LocalDateTime.now();
+		//요청자 탈퇴처리
+		if(1 != chatUserRegdateMapper.insertChatUserRegdate(roomIdx, userid, "LEAVE", current)) {
+			return null;
+		}
+		if(1 != chatUserMapper.updateIsQuit(true, roomIdx, userid)) {
+			return null;
+		}
+		//모든 유저가 isQuit=true인지 확인
+		Integer userCnt;
+		if(null == (userCnt = chatUserMapper.selectCountOfNotQuitUser(roomIdx))) {
+			return null;
+		}
+		if(userCnt == 0) {
+			//모든 사용자가 채팅방을 탈퇴했으면 isTerminated=true를 한다
+			if(1 != chatRoomMapper.updateIsTerminated(roomIdx)) {
+				return null;
+			}
+			return true;
+		}
+		return false;
+	}
 
+	//권한자(가이드)에 의한 채팅 종료 처리
+	/*
+	 * 채팅 접근권한(isQuit)을 건들지 않음
+	 */
+	@Override
+	@Transactional
+	public Boolean terminateChatHandler(MessageDTO<? extends MessagePayload> receivedMsg) {
+		String reqUserid = receivedMsg.getSenderId();
+		Long roomIdx = ((ChatRoomEnterMessagePayload)receivedMsg.getPayload()).getRoomidx();
+		
+		//유효성
+		if(null == userServiceImpl.getUser(reqUserid)) {
+			return null;
+		}
+		if(null == chatRoomMapper.selectRowByChatRoomIdx(roomIdx)) {
+			return false;
+		}
+		
+		//터트리기
+		if(1 != chatRoomMapper.updateIsTerminated(roomIdx)) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	//공통처리
+	//CUR INSERT
+//	private boolean insertChatUserRegdate(List<ChatUserRegdateDTO> curList) {
+//		return curList.size() == chatUserRegdateMapper.insertChatUserRegdates(curList);
+//	}
 }
