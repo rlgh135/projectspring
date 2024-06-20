@@ -690,3 +690,27 @@ body{
 #isguide{
 	margin-left: 5px;
 }
+
+.innerpfpc{
+	position: relative;
+}
+.innerpfpc > a{
+	position: absolute;
+    bottom: 93px;
+    right: 193px;
+    border-radius: 10px;
+    background-color: #2196f3;
+    width: 55px;
+    height: 25px;
+    color: white;
+    line-height: 25px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 10000000;
+}
+.innerpfpc > a:hover{
+	background-color: aliceblue;
+    color: #2196f3;
+    border: 1px solid aliceblue;
+    box-shadow: inset 2px 2px rgba(0, 0, 0, 0.15);
+}

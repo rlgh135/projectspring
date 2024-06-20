@@ -419,6 +419,7 @@
     
                     } else {
                         makeDom('joinpack', datas);
+						 
                     }
                 },
     
@@ -709,6 +710,12 @@
                 innerDiv2.appendChild(pElement);
                 innerDiv1.appendChild(pElement2);
                 innerDiv1.appendChild(divElement2);
+				if($('#sltcnt0').hasClass('sltselected')){
+					var recpa = document.createElement("a");
+					recpa.innerHTML = "영수증";
+					recpa.setAttribute('href', '/user/receipt?packagenum='+datas.packagelist[i].packagenum);
+					divElement2.appendChild(recpa);
+				}
                 divElement2.appendChild(imgHeart);
                 divElement2.appendChild(text1);
 				
