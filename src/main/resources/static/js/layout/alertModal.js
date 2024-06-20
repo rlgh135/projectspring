@@ -23,6 +23,7 @@ function showAlertModal(imgNum,text){
 	}else{	
 	    imgSrc = '<img src="/images/alertImg/1-'+imgNum+'.png" alt="">';
 	    $('.alertModalClose').text("닫기");
+	    $('.alertModalClose').removeAttr("id");
 	}
 	$(".alertModal_content div:first-child").html(imgSrc);
     alertModal.show();
@@ -36,7 +37,7 @@ function showAlertModal(imgNum,text){
         if (event.target.id == 'myModal') {
             alertModal.hide();
             $(".modal h3").text("");
-            $('.alertModalClose').attr("id");
+            $('.alertModalClose').attr("id"); 
         }
     });
 }

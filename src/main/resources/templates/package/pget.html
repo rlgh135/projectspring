@@ -242,6 +242,7 @@
 		copyButton.addEventListener('click', function() {
 		    copyToClipboard(window.location.href);
 			showAlertModal(2, "URL이 복사되었습니다");
+			
 			setTimeout(function() {
 		      alertModal.hide();
 		    }, 1500);
