@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <ul class="linkUl">
-                    <li onclick="location.href='/user/myinfo'">내 정보</li>
+                    <li th:if="${session.loginUser!=null}" onclick="location.href='/user/myinfo'">내 정보<thli>
                     <li onclick ="location.href='/board/list'">게시판</li>
                     <li onclick="location.href='/package/pmain'">패키지</li>
                 </ul>
