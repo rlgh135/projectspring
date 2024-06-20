@@ -92,7 +92,7 @@
                                             <input type="hidden" name="packagenum" id="packagenum" th:value="${package.packagenum}"> 
                                             <input type="hidden" name="adultCount" id="adultCount" value="0">
                                             <input type="hidden" name="childCount" id="childCount" value="0">
-                                            <button type="button" onclick="submitPaymentForm()">결제하기</button>
+											<button type="button" id="submitBtn">결제하기</button>
                                         </form>
                                     </div>
                                 </div>
@@ -285,37 +285,42 @@
         resultElement.innerText = number;
     }
 
-	function submitPaymentForm() {
-		const hiddenData = document.getElementById('hiddenData');
-		const maxCnt = parseInt(hiddenData.dataset.maxcnt);
-		console.log(maxCnt);
-		const reservedCnt = hiddenData.dataset.reservedcnt ? parseInt(hiddenData.dataset.reservedcnt) : 0;
-		console.log(reservedCnt);
+	// JavaScript 코드에서 버튼에 이벤트 리스너를 등록하여 클릭 이벤트를 처리합니다.
+	document.getElementById('submitBtn').addEventListener('click', function() {
+	    // submitPaymentForm 함수 내용 시작
+	    const hiddenData = document.getElementById('hiddenData');
+	    const maxCnt = parseInt(hiddenData.dataset.maxcnt);
+	    console.log(maxCnt);
+	    const reservedCnt = hiddenData.dataset.reservedcnt ? parseInt(hiddenData.dataset.reservedcnt) : 0;
+	    console.log(reservedCnt);
+	    
 	    // 성인 및 아이 수를 가져와서 폼 필드에 설정
 	    const adultCount = parseInt(document.getElementById('result').innerText);
 	    const childCount = parseInt(document.getElementById('result_child').innerText);
 	    const totalGuests = adultCount + childCount;
-		const remainConfirm = maxCnt - reservedCnt - totalGuests;
+	    const remainConfirm = maxCnt - reservedCnt - totalGuests;
+	    
 	    if (totalGuests === 0) {
 	        alert('최소 1명 이상의 인원을 선택해주세요.');
 	        return; 
+	    } else if (remainConfirm < 0) {
+	        alert("예약 가능 인원을 초과하였습니다.");
+	        return;
 	    }
-		else if(remainConfirm < 0){
-			alert("예약 가능 인원을 초과하였습니다.");
-			return;
-		}
-	
+	    
 	    document.getElementById('adultCount').value = adultCount;
 	    document.getElementById('childCount').value = childCount;
 	    
-	    // packagenum 값을 URL에서 가져오기
-	    //const urlParams = new URLSearchParams(window.location.search);
-	    //const packagenum = urlParams.get('packagenum');
-	    //document.getElementById('packagenum').value = packagenum;
+	    // packagenum 값을 URL에서 가져오기 (필요시 주석 해제)
+	    // const urlParams = new URLSearchParams(window.location.search);
+	    // const packagenum = urlParams.get('packagenum');
+	    // document.getElementById('packagenum').value = packagenum;
 	    
 	    // 폼 제출
 	    document.getElementById('paymentForm').submit();
-	}
+	    // submitPaymentForm 함수 내용 종료
+	});
+
 	
 	document.addEventListener("DOMContentLoaded", function() {
 	        // 메뉴 아이템을 변수에 저장
