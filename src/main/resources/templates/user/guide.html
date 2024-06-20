@@ -122,7 +122,7 @@
 											</div>
 											<div class="bonm"><br><img src="/images/boardimg/location.png" class="mapmarker"> [[${package.regionname}]]</div>
 											<div class="bonm">[[${package.startdate}]] ~ [[${package.enddate}]]([[${package.tourdays}]]일)</div>
-											<div class="bonm">상태: <span>여행준비</span> 인원: 2/[[${package.maxcnt}]]</div>
+											<div class="bonm">상태: <span>여행준비</span> 인원: <span th:text="${totlist[iterStats.index]}"></span>/[[${package.maxcnt}]]</div>
 											<input type="hidden" th:id="'hupage'+${package.packagenum}" value="1"><span></span>												
 										</div>
                                     </div>

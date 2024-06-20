@@ -268,3 +268,23 @@ create table task_message(
     task_status varchar(300) default "1", /*1은 진행중 2는 처리완료*/
     regdate datetime DEFAULT now()
 );
+select * from chat_room;
+select * from chat_user;
+select * from chat_detail;
+select * from chat_user_regdate;
+drop table chat_room;
+drop table chat_user;
+drop table chat_detail;
+drop table chat_user_regdate;
+drop database tripfy;
+create database tripfy;
+select * from reservation where packagenum=4001;
+select * from board where boardnum=3001;
+select * from board_file where boardnum=3001;
+use tripfy;
+select * from package order by packagenum desc;
+select sum(adult_cnt + child_cnt) from reservation where packagenum =4003 and isdelete < 2;
+select * from timeline;
+update package set visibility='O' where packagenum > 0;
+insert into guide values(1, 'kiho', '0', '0', '자기소개가 없어요');
+insert into guide values(2, 'minsoo', '0', '0', '자기소개가 없어요');

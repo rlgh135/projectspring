@@ -332,9 +332,16 @@ public class UserController {
 		List<PackageFileDTO> thumbnaillist = new ArrayList<>();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		ArrayList<Integer> moreend = new ArrayList<>();
+		ArrayList<Integer> totlist = new ArrayList<>();
 		
 		if(packagelist.size()> 0) {
 			for (PackageDTO pack : packagelist) {
+				if(service.getTotalResCnt(pack.getPackagenum())!=null) {
+					totlist.add(service.getTotalResCnt(pack.getPackagenum()));
+				} else {
+					totlist.add(0);					
+				}
+				
 				try {
 					Date enddate = formatter.parse(pack.getEnddate());
 					Date today = new Date();
@@ -365,6 +372,7 @@ public class UserController {
 		model.addAttribute("thumbnaillist", thumbnaillist);
 		model.addAttribute("packagelist", packagelist);
 		model.addAttribute("moreend", moreend);
+		model.addAttribute("totlist", totlist);
 		
 		return "/user/guide";
 	}
