@@ -529,8 +529,8 @@ public class UserController {
 		model.addAttribute("user", user);
 		
 		HashMap<String, Integer> infomap = new HashMap<>();
-		infomap.put("boardcnt", service.getTotalBoardCnt(loginUser));
-		infomap.put("replycnt", service.getTotalReplyCnt(loginUser));
+		infomap.put("boardcnt", service.getTotalBoardCnt(userid));
+		infomap.put("replycnt", service.getTotalReplyCnt(userid));
 		if(guide!=null) {
 			infomap.put("packagecnt", service.getTotalPackageCnt(guide.getGuidenum()));
 			infomap.put("reviewcnt", service.getTotalReview(guide.getGuidenum()));			
