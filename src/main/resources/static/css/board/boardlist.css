@@ -174,10 +174,10 @@ a:hover {color: #000; cursor: pointer;}
     }
    
 .nation_area > button {
-        width: 80px;
+        /* width: 80px; */
         background-color: #fff;
         border: 1px solid rgb(233, 233, 233);
-        padding: 10px 13px 10px;
+        padding: 10px 13px 10px 38px;
         border-radius: 10px;
         font-weight: 500;
         color: #4e4c4c;
@@ -186,6 +186,12 @@ a:hover {color: #000; cursor: pointer;}
         float: right;
 		cursor: pointer;
 		font-family: 'Nanum Gothic';
+}
+
+.nation_area > button > #nationbtn {
+	font-weight: 500;
+    color: #4e4c4c;
+    font-family: 'Nanum Gothic';
 }
 	
 .nation_select {

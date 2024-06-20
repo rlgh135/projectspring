@@ -36,7 +36,7 @@
                 </div>
     
                 <div class="nation_area">
-                    <button><img src="/images/boardimg/settings.png" alt="설정" class="settings">국가</button>
+                    <button><img src="/images/boardimg/settings.png" alt="설정" class="settings"><span id="nationbtn">국가</span></button>
 					<div class="nation_select" style="display: none;">
 						<div class="category">
 						    <div class="nation">
@@ -233,6 +233,50 @@
 	console.log("regionname: " + regionname)
 	console.log("method: " + method)
 	
+	const ea = document.getElementById("ea");
+	const jp = document.getElementById("jp");
+	const cn = document.getElementById("cn");
+	const eu = document.getElementById("eu");
+	const us = document.getElementById("us");
+
+	if(countrycode != null && regionname == null) {
+		if(countrycode == "kr") {			
+			document.getElementById("nationbtn").innerText = "국내";
+		}
+		
+		else if(countrycode == "fr") {
+			document.getElementById("nationbtn").innerText = "해외";
+		}
+		
+		else if(countrycode == "ea") {
+			document.getElementById("nationbtn").innerText = "동남아시아";
+		}
+		
+		else if(countrycode == "gu") {
+			document.getElementById("nationbtn").innerText = "괌/사이판/호주/뉴질랜드";
+		}
+		
+		else if(countrycode == "jp") {
+		document.getElementById("nationbtn").innerText = "일본";
+		}
+		
+		else if(countrycode == "cn") {
+			document.getElementById("nationbtn").innerText = "중국";
+		}
+		
+		else if(countrycode == "eu") {
+			document.getElementById("nationbtn").innerText = "유럽";
+		}
+		
+		else if(countrycode == "us") {
+			document.getElementById("nationbtn").innerText = "하와이/미국/중남미";
+		}
+	}
+	
+	if(countrycode != null && regionname != null) {
+		document.getElementById("nationbtn").innerText = regionname;
+	}
+	
 
 	if(keyword != null) {
 		b_search.value = keyword;
@@ -246,17 +290,20 @@
 		if(countrycode == "kr") {
 			countrybtn[0].style.backgroundColor = "#f0f0f0";
 			countrybtn[0].classList.add("country_select");
+			document.getElementById("kr").style.visibility = "visible";
 		}
 		
 		else if(countrycode == "fr") {
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
+			document.getElementById("fr").style.visibility = "visible";
 		}
 		
 		else if(countrycode == "ea") {
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
 			document.querySelector(".c_region > div#fr").style.visibility = "visible";
+			document.getElementById("ea").style.visibility = "visible";
 			area[8].style.backgroundColor = "#f0f0f0";
 			area[8].classList.add("area_select");
 		}
@@ -273,6 +320,7 @@
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
 			document.querySelector(".c_region > div#fr").style.visibility = "visible";
+			document.getElementById("jp").style.visibility = "visible";
 			area[10].style.backgroundColor = "#f0f0f0";
 			area[10].classList.add("area_select");
 		}
@@ -281,6 +329,7 @@
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
 			document.querySelector(".c_region > div#fr").style.visibility = "visible";
+			document.getElementById("cn").style.visibility = "visible";
 			area[11].style.backgroundColor = "#f0f0f0";
 			area[11].classList.add("area_select");
 		}
@@ -289,6 +338,7 @@
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
 			document.querySelector(".c_region > div#fr").style.visibility = "visible";
+			document.getElementById("eu").style.visibility = "visible";
 			area[12].style.backgroundColor = "#f0f0f0";
 			area[12].classList.add("area_select");
 		}
@@ -297,6 +347,7 @@
 			countrybtn[1].style.backgroundColor = "#f0f0f0";
 			countrybtn[1].classList.add("country_select");
 			document.querySelector(".c_region > div#fr").style.visibility = "visible";
+			document.getElementById("us").style.visibility = "visible";
 			area[13].style.backgroundColor = "#f0f0f0";
 			area[13].classList.add("area_select");
 		}
@@ -1075,6 +1126,12 @@
 			area[i].classList.remove("area_select");
 		}
 		
+		// 상세지역 버튼 색상 및 클래스 초기화
+		for(let i = 0; i < area_detail.length; i++) {
+			area_detail[i].style.backgroundColor = "#fff";
+			area_detail[i].classList.remove("area_detail_select");
+		}
+		
 		obj.style.backgroundColor = "#f0f0f0";
 		obj.classList.add("area_select");
 		
@@ -1173,9 +1230,9 @@
 	
 	    // 국내, 해외 선택하지 않은 경우
 	    if (country == null) {
-	        // 국내, 해외 선택하지 않은 경우에도 빈 문자열로 설정하여 AJAX 요청을 보내도록 함
 	        countryName = "";
 	        regionName = "";
+			document.getElementById("nationbtn").innerText = "국가";
 	    } 
 		
 		else {
@@ -1183,14 +1240,19 @@
 	        console.log("countryName: " + countryName);
 	
 	        if (countryName === "kr") {
+				document.getElementById("nationbtn").innerText = "국내";
+
 	            // 지역 선택
 	            if (region != null) {
 	                regionName = region.name;
+					document.getElementById("nationbtn").innerText = regionName;
 	            }
 	            console.log("regionName: " + regionName);
 	        } 
 			
 			else if (countryName === "fr") {
+				document.getElementById("nationbtn").innerText = "해외";
+				
 	            // 지역 선택
 	            if (region != null) {
 	                let txt = region.name;
@@ -1198,31 +1260,38 @@
 	
 	                if (txt === "동남아시아") {
 	                    countryName = "ea";
+						document.getElementById("nationbtn").innerText = "동남아시아";
 	                } 
 					
 					else if (txt === "괌/사이판/호주/뉴질랜드") {
 	                    countryName = "gu";
+						document.getElementById("nationbtn").innerText = "괌/사이판/호주/뉴질랜드";
 	                } 
 					
 					else if (txt === "일본") {
 	                    countryName = "jp";
+						document.getElementById("nationbtn").innerText = "일본";
 	                } 
 					
 					else if (txt === "중국") {
 	                    countryName = "cn";
+						document.getElementById("nationbtn").innerText = "중국";
 	                } 
 					
 					else if (txt === "유럽") {
 	                    countryName = "eu";
+						document.getElementById("nationbtn").innerText = "유럽";
 	                } 
 					
 					else if (txt === "미국") {
 	                    countryName = "us";
+						document.getElementById("nationbtn").innerText = "하와이/미국/중남미";
 	                }
 	
 	                if (region_detail != null) {
 	                    console.log("name: " + region_detail.name);
 	                    regionName = region_detail.name;
+						document.getElementById("nationbtn").innerText = regionName;
 	                }
 	            }
 	        }
