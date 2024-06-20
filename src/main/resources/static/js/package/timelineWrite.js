@@ -36,19 +36,19 @@ $(document).ready(function() {
     for(i=1;i<=days;i++){
 	    showDayList(packagenum,i);		
 	}
-  
+  	let thisClickDay = 0;
     //썸머노트 여는버튼 day랑 detail_num이랑 쓰여있는 장소 불러와야함
     $(document).on("click", ".add_picture_btn", function(){
 		let dayDetailBoxId = $(this).closest('.day_detail_box').attr('id');
-	    let thisDay = dayDetailBoxId.split('-')[0];
+	    thisClickDay = dayDetailBoxId.split('-')[0];
 	    let thisDetailNum = dayDetailBoxId.split('-')[1];
 	    let placeNameText = $(this).closest('.day_detail_box').find('.place_name').text();
         contentModal.show();
         $(".McDetail_place p").text(placeNameText);
-        $("this_day coqSbM").text("Day"+thisDay);
+        $("this_day coqSbM").text("Day"+thisClickDay);
         $(".McDetail_num p span").text(thisDetailNum);
         timelineService.getContent(
-			{"packagenum":packagenum,"day":thisDay,"detailNum":thisDetailNum},
+			{"packagenum":packagenum,"day":thisClickDay,"detailNum":thisDetailNum},
 			function(result){
 				$("#summernote").summernote("code",result.contents);
 			}
@@ -62,10 +62,13 @@ $(document).ready(function() {
     
     //썸머노트 작성버튼 클릭시
     $(document).on("click", "#submitButton", function(){
-	    let thisDay = ($(".this_day .coqSbM").text()).substring(3);
+	    let thisDay = thisClickDay;
 	    let thisDetailNum = $(".McDetail_num p span").text();
 	    let contents = $("#summernote").summernote("code");
-	    console.log(thisDay+thisDetailNum+contents)
+	    console.log("들어왔나요?")
+	    console.log(thisDay)
+	    console.log(thisDetailNum)
+	    console.log(contents)
         timelineService.updateContents(
 			{"packagenum":packagenum,"day":thisDay,"detailNum":thisDetailNum,"contents":contents},
 			function(result){
