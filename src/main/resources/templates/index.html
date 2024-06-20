@@ -84,7 +84,7 @@
 		</section>
 		<section class="index-section" id="idxsection2">
 			<div class="welcome-text" id="content2">
-				<p>나만의 <span>특별한</span> 패키지를 판매하세요</p>
+				<p>나만의 <span>특</span><span>별</span><span>한</span> 패키지를 판매하세요</p>
 			</div>
 			<div class="slider-container">
 				<div class="slider" id="mydiv">
@@ -217,21 +217,21 @@
 		let holdCnt = false;
 		let holdTimeout;
 		
-		$("#content1 p span:first-of-type").on('click', function(){
+		$('#content2 p span:eq(0)').on('click', function(){
 			firstCnt ++;
 			checkTrigger();
 		})
 		
-		$("#content1 p span:nth-of-type(2)").on('click',function(){
+		$('#content2 p span:eq(1)').on('click',function(){
 			secondCnt ++;
 			checkTrigger();
 		})
 		
-		$("#content1 p span:nth-of-type(3)").on('mousedown',function(){
+		$('#content2 p span:eq(2)').on('mousedown',function(){
 			holdTimeout = setTimeout(function(){
 				holdCnt = true;
 				checkTrigger();
-			},3000);
+			},2000);
 		})
 		
 		function checkTrigger(){
