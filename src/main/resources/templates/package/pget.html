@@ -89,7 +89,7 @@
                                     </div>
                                     <div class="paybutton">
                                         <form id="paymentForm" action="pay" method="get">
-                                            <input type="hidden" name="packagenum" id="packagenum" value=""> 
+                                            <input type="hidden" name="packagenum" id="packagenum" th:value="${package.packagenum}"> 
                                             <input type="hidden" name="adultCount" id="adultCount" value="0">
                                             <input type="hidden" name="childCount" id="childCount" value="0">
                                             <button type="button" onclick="submitPaymentForm()">결제하기</button>
