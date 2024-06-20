@@ -25,6 +25,7 @@
     scrollbar-width: thin; /* 스크롤 바 너비 지정 */
     scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0); /* 스크롤 바 색상 지정 */
     overflow-y: auto; /* 세로 스크롤을 항상 표시 */
+    position: fixed;
 }
 /* 스크롤 바의 스크롤 트랙(배경) */
 .calendar-calendar::-webkit-scrollbar-track {
