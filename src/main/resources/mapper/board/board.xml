@@ -72,7 +72,7 @@
 				</otherwise>
 			</choose>
 		</if>
-		boardnum > 0 order by likecnt desc limit #{startrow}, #{amount}
+		boardnum > 0 order by likecnt desc, boardnum desc limit #{startrow}, #{amount}
 	</select>	
 	
 	<!-- 인기 순 게시글 긁어오기 -->
@@ -91,7 +91,7 @@
 				</otherwise>
 			</choose>
 		</if>
-		boardnum > 0 order by viewcnt desc limit #{startrow}, #{amount}
+		boardnum > 0 order by viewcnt desc, boardnum desc limit #{startrow}, #{amount}
 	</select>	
 	
 	<!-- 총 게시글 개수 -->

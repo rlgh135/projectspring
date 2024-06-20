@@ -233,8 +233,7 @@
 	console.log("regionname: " + regionname)
 	console.log("method: " + method)
 	
-	
-	
+
 	if(keyword != null) {
 		b_search.value = keyword;
 		search_cancel.style.visibility = "visible";
@@ -1165,235 +1164,229 @@
 	}
 	
 	function regionSearch() {
-		const country = document.querySelector(".country_select");
-		const region = document.querySelector(".area_select");
-		const region_detail = document.querySelector(".area_detail_select");
+	    const country = document.querySelector(".country_select");
+	    const region = document.querySelector(".area_select");
+	    const region_detail = document.querySelector(".area_detail_select");
+	
+	    let countryName = "";
+	    let regionName = "";
+	
+	    // 국내, 해외 선택하지 않은 경우
+	    if (country == null) {
+	        // 국내, 해외 선택하지 않은 경우에도 빈 문자열로 설정하여 AJAX 요청을 보내도록 함
+	        countryName = "";
+	        regionName = "";
+	    } 
 		
-		
-		// 국내, 해외 선택하지 않은 경우
-		if(country == null) {
-			showAlertModal(2, "나라를 선택해주세요");
-		}
-		
-		// 국내, 해외 선택
 		else {
-			let regionName = "";
+	        countryName = country.name;
+	        console.log("countryName: " + countryName);
+	
+	        if (countryName === "kr") {
+	            // 지역 선택
+	            if (region != null) {
+	                regionName = region.name;
+	            }
+	            console.log("regionName: " + regionName);
+	        } 
 			
-			let countryName = country.name;
-			console.log("countryName: " + countryName);
-			
-			if(country.name == "kr") {
-				// 지역 선택
-				if(region != null) {
-					regionName = region.name;
-				}
-				console.log("regionName: " + regionName);
-			}
-			
-			else if(country.name == "fr") {
-				// 지역 선택
-				if(region != null) {
-					let txt = region.name;
-					console.log("countryName2: " + txt);
+			else if (countryName === "fr") {
+	            // 지역 선택
+	            if (region != null) {
+	                let txt = region.name;
+	                console.log("countryName2: " + txt);
+	
+	                if (txt === "동남아시아") {
+	                    countryName = "ea";
+	                } 
 					
-					if(txt == "동남아시아") { 
-						countryName = "ea"; 
-					}
+					else if (txt === "괌/사이판/호주/뉴질랜드") {
+	                    countryName = "gu";
+	                } 
 					
-					else if(txt == "괌/사이판/호주/뉴질랜드") {
-						countryName = "gu"; 
-					}
+					else if (txt === "일본") {
+	                    countryName = "jp";
+	                } 
 					
-					else if(txt == "일본") {
-						countryName = "jp";
-					}
+					else if (txt === "중국") {
+	                    countryName = "cn";
+	                } 
 					
-					else if(txt == "중국") { 
-						countryName = "cn";	
-					}
+					else if (txt === "유럽") {
+	                    countryName = "eu";
+	                } 
 					
-					else if(txt == "유럽") { 
-						countryName = "eu"; 
-					}
-					
-					else if(txt == "미국") { 
-						countryName = "us"; 
-					}
-					
-					
-					if(region_detail != null) {
-						console.log("name: " + region_detail.name);
-						regionName = region_detail.name;
-					}
-				}
-			}
-			
-			
-			nation_select.style.display = "none";
-			flag = false;
-			
-			
-			let sort = document.querySelector(".selected").value;
-			console.log(sort);
-			
-			let str = "";
-			if(sort == "최신 순") {
-				str = "recent";
-			}
-			
-			else if(sort == "인기 순") {
-				str = "popular";
-			}
-			
-			else {
-				str = "like";
-			}
-			console.log(str);
-			
-			let keyword = document.querySelector(".b_search").value;
-			console.log(keyword);
-			
-			$.ajax({
-				url: "/board/sort?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName,
-				method: "GET",
-				
-				success:function(data) {
-					//console.log("O")
-					
-					// DOM 구현
-					$(".posts").empty();
-					$(".b_pagenation").empty();
-					$(".no_list").remove();
-					
-					if(data.sortlist.length == 0) {
-						if($(".no_list").length === 0) {
-							let no_list = $("<div>").attr("class", "no_list");
-							$(".post_area").append(no_list);
-							
-							
-							$(".no_list").empty();  // 기존에 있던 .no_post 내용 없앰
-							let divTag = $("<div>").attr("class", "no_post").text("등록된 게시글이 없습니다.");
-							$(".no_list").append(divTag);
-							
-							// 페이지 네이션
-							// 이전 버튼
-							let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
-							$(".b_pagenation").append(b_prevbtn);
-							
-							// 페이지
-							let currentPage = $("<a>").text(1).addClass("page").attr("id", 1);
-							$(".b_pagenation").append(currentPage);
-							
-							// 다음 버튼
-							let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);		
-							$(".b_pagenation").append(b_nextbtn);
-							
-							realEndPage = data.pageMaker.realEnd;
-							console.log("realEndPageTest: " + realEndPage)
-						}
-					}
-					
-					else {
-						$(".no_list").remove();
-						
-						for(let i = 0; i < data.sortlist.length; i++) {
-							// .attr: 속성 추가
-							// .addClass: 클래스 추가
-							let aTag = $("<a>").attr("href", "/board/get?boardnum=" + data.sortlist[i].boardnum);
-							let divPost = $("<div>").addClass("post");
-								
-							let divGuide = $("<div>").addClass("guide");
-							let profileImg = data.sortprofiles[i] && data.sortprofiles[i].sysname ? data.sortprofiles[i].sysname : "profile.png";
-							let profile = $("<img>").attr("src", "/BoardThumnail/" + profileImg);
-							let spanTag = $("<span>").text(data.sortlist[i].userid);
-								
-							if(data.sortguides[i] != null) {							
-								let guideBadge = $("<img>").attr("src", "/images/userimg/guidebadge.png").attr("alt", "").addClass("guidebadge");
-								spanTag.append(guideBadge)
-							}
-							
-							divGuide.append(profile, spanTag);
-								
-							let divCnts = $("<div>").addClass("cnts");
-							let likecnt = $("<div>");
-							let likecntImg = $("<img>").addClass("likecntImg").attr("src", "/images/boardimg/emptyheart.png");
-							let likecntText = $("<span>").text(data.sortlist[i].likecnt);
-							likecnt.append(likecntImg, likecntText);
-							
-							let replycnt = $("<div>");
-							let replycntImg = $("<img>").attr("src", "/images/boardimg/comments.png");
-							let replycntText = $("<span>").text(data.sortlist[i].replycnt);
-							replycnt.append(replycntImg, replycntText);
-							
-							let viewcnt = $("<div>");
-							let viewcntImg = $("<img>").attr("src", "/images/boardimg/viewcnt.png");
-							let viewcntText = $("<span>").text(data.sortlist[i].viewcnt);
-							viewcnt.append(viewcntImg, viewcntText);
-							
-							divCnts.append(likecnt, replycnt, viewcnt);
-							divGuide.append(divCnts);
-								
-							let divpImg = $("<div>").addClass("p_img");
-							let thumbnail = data.sortthumbnails[i] && data.sortthumbnails[i].sysname ? data.sortthumbnails[i].sysname : "no_img.jpg";
-							let boardimg = $("<img>").attr("src", "/BoardThumnail/" + thumbnail).attr("alt", "");
-							divpImg.append(boardimg);
-							
-							
-							let divWrite = $("<div>").addClass("post_write");
-							let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
-							let postPrev = $("<div>").addClass("post_preview").html(data.sortlist[i].content);
-								
-							divWrite.append(postTitle, postPrev);
-							
-							divPost.append(divGuide, divpImg, divWrite);
-							aTag.append(divPost);
-							
-							$(".posts").append(aTag);
-						}
-						
-						// 페이지 네이션
-						// 이전 버튼
-						let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
-						$(".b_pagenation").append(b_prevbtn);
-						
-						// 페이지
-						for(let i = data.pageMaker.startPage; i <= data.pageMaker.endPage; i++) {							
-							if(data.pageMaker.cri.pagenum == i) {
-								let currentPage = $("<a>").text(i).addClass("page").attr("id", i);
-								$(".b_pagenation").append(currentPage);
-							}
-							else {								
-								let changePage = $("<a>").attr("href", i).addClass("changePage page").text(i).attr("id", i);
-								$(".b_pagenation").append(changePage);
-							}
-						}
-						
-						// 다음 버튼
-						let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);		
-						$(".b_pagenation").append(b_nextbtn);
-						
-						realEndPage = data.pageMaker.realEnd;
-						console.log("realEndPageTest: " + realEndPage)
-						
-					}
-					
-					$(".page").each(function() {
-					    if ($(this).text().trim() == "1") {
-					        $(this).css("color", '#2196F3');
-					        $(this).css("border-color", '#2196F3');
-					    }
-					});
-				},
-				
-				error:function(data) {
-					// console.log("X")
-					showAlertModal(1, "잠시 후에 다시 시도해주세요");
-				}
-			})
-		}
+					else if (txt === "미국") {
+	                    countryName = "us";
+	                }
+	
+	                if (region_detail != null) {
+	                    console.log("name: " + region_detail.name);
+	                    regionName = region_detail.name;
+	                }
+	            }
+	        }
+	    }
+	
+	    nation_select.style.display = "none";
+	    flag = false;
+	
+	    let sort = document.querySelector(".selected").value;
+	    console.log(sort);
+	
+	    let str = "";
+	    if (sort === "최신 순") {
+	        str = "recent";
+	    } 
+		
+		else if (sort === "인기 순") {
+	            str = "popular";
+	    } 
+		
+		else {
+	        str = "like";
+	    }
+	    console.log(str);
+	
+	    let keyword = document.querySelector(".b_search").value;
+	    console.log(keyword);
+	
+	    console.log("-------------------------------regionName: " + regionName)
+	    console.log("-------------------------------countryName: " + countryName)
+	
+	    $.ajax({
+	        url: "/board/sort?sort=" + str + "&keyword=" + keyword + "&countrycode=" + countryName + "&regionname=" + regionName,
+	        method: "GET",
+	
+	        success: function(data) {
+	            //console.log("O")
+	
+	            // DOM 구현
+	            $(".posts").empty();
+	            $(".b_pagenation").empty();
+	            $(".no_list").remove();
+	
+	            if (data.sortlist.length == 0) {
+	                if ($(".no_list").length === 0) {
+	                    let no_list = $("<div>").attr("class", "no_list");
+	                    $(".post_area").append(no_list);
+	
+	                    $(".no_list").empty();  // 기존에 있던 .no_post 내용 없앰
+	                    let divTag = $("<div>").attr("class", "no_post").text("등록된 게시글이 없습니다.");
+	                    $(".no_list").append(divTag);
+	
+	                    // 페이지 네이션
+	                    // 이전 버튼
+	                    let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
+	                    $(".b_pagenation").append(b_prevbtn);
+	
+	                    // 페이지
+	                    let currentPage = $("<a>").text(1).addClass("page").attr("id", 1);
+	                    $(".b_pagenation").append(currentPage);
+	
+	                    // 다음 버튼
+	                    let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);
+	                    $(".b_pagenation").append(b_nextbtn);
+	
+	                    realEndPage = data.pageMaker.realEnd;
+	                    console.log("realEndPageTest: " + realEndPage)
+	                }
+	            } else {
+	                $(".no_list").remove();
+	
+	                for (let i = 0; i < data.sortlist.length; i++) {
+	                    // .attr: 속성 추가
+	                    // .addClass: 클래스 추가
+	                    let aTag = $("<a>").attr("href", "/board/get?boardnum=" + data.sortlist[i].boardnum);
+	                    let divPost = $("<div>").addClass("post");
+	
+	                    let divGuide = $("<div>").addClass("guide");
+	                    let profileImg = data.sortprofiles[i] && data.sortprofiles[i].sysname ? data.sortprofiles[i].sysname : "profile.png";
+	                    let profile = $("<img>").attr("src", "/BoardThumnail/" + profileImg);
+	                    let spanTag = $("<span>").text(data.sortlist[i].userid);
+	
+	                    if (data.sortguides[i] != null) {
+	                        let guideBadge = $("<img>").attr("src", "/images/userimg/guidebadge.png").attr("alt", "").addClass("guidebadge");
+	                        spanTag.append(guideBadge)
+	                    }
+	
+	                    divGuide.append(profile, spanTag);
+	
+	                    let divCnts = $("<div>").addClass("cnts");
+	                    let likecnt = $("<div>");
+	                    let likecntImg = $("<img>").addClass("likecntImg").attr("src", "/images/boardimg/emptyheart.png");
+	                    let likecntText = $("<span>").text(data.sortlist[i].likecnt);
+	                    likecnt.append(likecntImg, likecntText);
+	
+	                    let replycnt = $("<div>");
+	                    let replycntImg = $("<img>").attr("src", "/images/boardimg/comments.png");
+	                    let replycntText = $("<span>").text(data.sortlist[i].replycnt);
+	                    replycnt.append(replycntImg, replycntText);
+	
+	                    let viewcnt = $("<div>");
+	                    let viewcntImg = $("<img>").attr("src", "/images/boardimg/viewcnt.png");
+	                    let viewcntText = $("<span>").text(data.sortlist[i].viewcnt);
+	                    viewcnt.append(viewcntImg, viewcntText);
+	
+	                    divCnts.append(likecnt, replycnt, viewcnt);
+	                    divGuide.append(divCnts);
+	
+	                    let divpImg = $("<div>").addClass("p_img");
+	                    let thumbnail = data.sortthumbnails[i] && data.sortthumbnails[i].sysname ? data.sortthumbnails[i].sysname : "no_img.jpg";
+	                    let boardimg = $("<img>").attr("src", "/BoardThumnail/" + thumbnail).attr("alt", "");
+	                    divpImg.append(boardimg);
+	
+	                    let divWrite = $("<div>").addClass("post_write");
+	                    let postTitle = $("<div>").addClass("post_title").text(data.sortlist[i].title);
+	                    let postPrev = $("<div>").addClass("post_preview").html(data.sortlist[i].content);
+	
+	                    divWrite.append(postTitle, postPrev);
+	
+	                    divPost.append(divGuide, divpImg, divWrite);
+	                    aTag.append(divPost);
+	
+	                    $(".posts").append(aTag);
+	                }
+	
+	                // 페이지 네이션
+	                // 이전 버튼
+	                let b_prevbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum - 1 + "").addClass("changePage b_prevbtn").attr("id", data.pageMaker.cri.pagenum - 1);
+	                $(".b_pagenation").append(b_prevbtn);
+	
+	                // 페이지
+	                for (let i = data.pageMaker.startPage; i <= data.pageMaker.endPage; i++) {
+	                    if (data.pageMaker.cri.pagenum == i) {
+	                        let currentPage = $("<a>").text(i).addClass("page").attr("id", i);
+	                        $(".b_pagenation").append(currentPage);
+	                    } else {
+	                        let changePage = $("<a>").attr("href", i).addClass("changePage page").text(i).attr("id", i);
+	                        $(".b_pagenation").append(changePage);
+	                    }
+	                }
+	
+	                // 다음 버튼
+	                let b_nextbtn = $("<a>").attr("href", data.pageMaker.cri.pagenum + 1 + "").addClass("changePage b_nextbtn").attr("id", data.pageMaker.cri.pagenum + 1);
+	                $(".b_pagenation").append(b_nextbtn);
+	
+	                realEndPage = data.pageMaker.realEnd;
+	                console.log("realEndPageTest: " + realEndPage)
+	            }
+	
+	            $(".page").each(function() {
+	                if ($(this).text().trim() == "1") {
+	                    $(this).css("color", '#2196F3');
+	                    $(this).css("border-color", '#2196F3');
+	                }
+	            });
+	        },
+	
+	        error: function(data) {
+	            // console.log("X")
+	            showAlertModal(1, "잠시 후에 다시 시도해주세요");
+	        }
+	    });
 	}
-	
-	
+
 	function reset() {
 		// 국내, 해외 버튼 색 초기화
 		for(let i = 0; i < countrybtn.length; i++) {
