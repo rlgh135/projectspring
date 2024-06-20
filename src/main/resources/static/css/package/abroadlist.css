@@ -37,6 +37,7 @@ body{
     border-radius: 20px;
     position: fixed;
     text-align: center;
+    z-index: 3;
 }  
 .sidebar > #searchForm button{
     background-color: dodgerblue;
@@ -461,4 +462,9 @@ body{
 	color:white!important;
 	border:none;
 	cursor: pointer;
+}
+.flatpickr-calendar.open {
+    display: inline-block;
+    z-index: 99999;
+    position: fixed;
 }
