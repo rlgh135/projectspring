@@ -564,7 +564,7 @@ public class UserController {
 		HttpSession session = req.getSession();
 		String backuri = req.getHeader("Referer");
 		if(backuri.equals("http://localhost:8080/")) {
-			backuri = "/user/myinfo";
+			backuri = "/package/pmain";
 		}
 		
 		if(service.login(userid, userpw)) {
