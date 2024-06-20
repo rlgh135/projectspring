@@ -383,7 +383,7 @@ public class UserServiceImpl implements UserService{
 		String[] cnregions = {"하이난", "청도", "베이징", "장가계"};
 		String[] euregions = {"프랑스", "영국", "이탈리아", "스페인", "독일", "스위스", "핀란드", "노르웨이", "그리스", "포르투갈"};
 		String[] usregions = {"하와이", "미 동부", "미 서부", "캐나다", "중남미"};
-		String[] usregionsb = {"하와이", "미국 동부", "미국 서부", "캐나다", "중남미"};
+		String[] usregionsb = {"하와이", "미국(동부)", "미국(서부)", "캐나다", "중남미"};
 		//게시판
 		for(int i=0; i<3000; i++) {
 			BoardDTO board = new BoardDTO();

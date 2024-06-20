@@ -1,5 +1,4 @@
 create database tripfy;
-
 use tripfy;
 
 CREATE TABLE `user` (

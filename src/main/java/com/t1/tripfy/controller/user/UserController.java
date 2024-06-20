@@ -4,6 +4,7 @@ import java.net.http.HttpRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -401,6 +402,17 @@ public class UserController {
 		Map<String, Object> datas = new HashMap<>();
 		long packagenum = Long.parseLong(req.getParameter("packagenum"));
 		
+		PackageDTO pack = service.getJoinPackage(packagenum);
+        
+        LocalDate targetDate = LocalDate.parse(pack.getStartdate());
+        LocalDate currentDate = LocalDate.now();
+        long daysDifference = ChronoUnit.DAYS.between(currentDate, targetDate);
+        
+        if (daysDifference >= 0 && daysDifference <= 4) {
+        	datas.put("gray", "no");
+        } else {
+        	datas.put("gray", "yes");
+        }
 		List<ReservationDTO> applylist = service.getApplyByPackagenum(packagenum);
 		
 		datas.put("applylist", applylist);
@@ -552,7 +564,7 @@ public class UserController {
 		HttpSession session = req.getSession();
 		String backuri = req.getHeader("Referer");
 		if(backuri.equals("http://localhost:8080/")) {
-			backuri = "/user/myinfo";
+			backuri = "/package/pmain";
 		}
 		
 		if(service.login(userid, userpw)) {

@@ -6,6 +6,7 @@
     <title>내 패키지 관리</title>
     <link rel="stylesheet" href="/css/layout/fontscroll.css">
     <link rel="stylesheet" href="/css/user/guidestyle.css">
+	<link rel="icon" href="/images/emoticon/1.png" type="image/png">
     <script>
         function compareDates(currentdate, targetDate) {
             return new Date(currentDate) > new Date(targetDate);
@@ -36,20 +37,8 @@
 			<div id="aplinner">
 				<img id="apmoclose" src="/images/layoutimg/cancel_10289710.png">
 				<div>신청자 목록</div>
-				<ul id="apmoul">
-					<!--<li>
-						<div class="appf">
-							<div class="appfupper">이름 외 4명</div>
-							<div class="appflower">연락처: 01023456546</div>
-						</div>
-						<div class="canslezone">
-							<div>상태: <span class="greenalert">준비완료</span></div>
-							<div class="canslebtns cansleyes" onclick="cansleRes('accept')"></div>
-							<div class="canslebtns cansleno" onclick="ansleRes('reject')"></div>
-						</div>
-					</li>-->
-				</ul>
-				<div onclick="createPacakgeChat(packagenum)" class="chatcdiv">채팅방 개설</div>
+				<ul id="apmoul"></ul>
+				<div id="chatcdivid" onclick="" class="chatcdiv">채팅방 개설</div>
 			</div>
 		</div>
 	</div>
@@ -59,7 +48,7 @@
                 <div class="badgeimgarea">
                     <img th:src="${'/user/thumbnail?sysname='+userthumbnail}" alt="">
                 </div>
-                <div class="guideidarea">[[${session.loginUser}]]<span><img src="/images/userimg/guidebadge.png" alt=""></span></div>
+                <div class="guideidarea">[[${session.loginUser}]]<span style="margin-left: 5px;"><img src="/images/userimg/guidebadge.png" alt=""></span></div>
                 <div class="showguidenumberarea">
                     <ul>
                         <li>
@@ -110,6 +99,7 @@
                             </th:block>
                         </ul>
                     </div>
+					
                     <div id="mypacklists">
 	                    <p class="subtitles">내 패키지</p>
                         <ul class="gmlists rgmlis">
@@ -295,11 +285,13 @@
 					alert("고객의 취소요청을 거부합니다.");
 					let target = document.getElementById("appai"+reservationnum);
 					let maspan = document.getElementById("maspan"+reservationnum);
-					maspan.className="greennotice";
-					maspan.innerHTML="결제완료";
+					maspan.className="greenalert";
+					maspan.innerHTML="준비완료";
 					
-					let macaid = document.getElementById("macaid"+reservationnum);
-					target.removeChild(macaid);
+					let btnsaply = document.getElementById("apbtnedy"+reservationnum);
+					let btnsapln = document.getElementById("apbtnedn"+reservationnum);
+					btnsapln.className="canslebtns";
+					btnsaply.className="canslebtns";
 				},
 				
 				error:function(){
@@ -364,7 +356,12 @@
 			
 		} else if(type=='apply'){
 			for(let i in datas.applylist){
+				
+				if(datas.applylist[i].isDelete===2){
+					continue;
+				}
 				const liNode = document.createElement('li');
+				liNode.setAttribute("id", "appai"+datas.applylist[i].reservationnum);
 
 				// appf div 노드 생성
 				const appfDiv = document.createElement('div');
@@ -373,12 +370,16 @@
 				// appfupper div 노드 생성
 				const appfUpperDiv = document.createElement('div');
 				appfUpperDiv.className = 'appfupper';
-				appfUpperDiv.textContent = '이름 외 4명';
+				if(datas.applylist[i].name==="회원"){
+					appfUpperDiv.innerHTML = '<span class="apidspan" onclick="goInfo(\''+datas.applylist[i].userid+'\')">'+datas.applylist[i].userid+'님</span> 외 4명';					
+				} else {
+					appfUpperDiv.innerHTML = '<span class="apnmspan">'+datas.applylist[i].name+'님</span> 외 4명'
+				}
 
 				// appflower div 노드 생성
 				const appfLowerDiv = document.createElement('div');
 				appfLowerDiv.className = 'appflower';
-				appfLowerDiv.textContent = '연락처: 01023456546';
+				appfLowerDiv.textContent = '연락처: '+datas.applylist[i].phone;
 
 				// appf div에 appfupper와 appflower div 추가
 				appfDiv.appendChild(appfUpperDiv);
@@ -390,22 +391,41 @@
 
 				// 상태 div 노드 생성
 				const stateDiv = document.createElement('div');
-				stateDiv.innerHTML = '상태: <span class="greenalert">준비완료</span>';
+				if(datas.applylist[i].isDelete===1){
+					stateDiv.innerHTML = '상태: <span id="maspan'+datas.applylist[i].reservationnum+'" class="redalert">취소신청</span>';					
+				} else {
+					stateDiv.innerHTML = '상태: <span id="maspan'+datas.applylist[i].reservationnum+'" class="greenalert">준비완료</span>';					
+				}
 
+				const btDiv = document.createElement('div');
+				btDiv.className = 'btDiv';
+				
 				// cansleyes 버튼 div 노드 생성
 				const cansleYesDiv = document.createElement('div');
-				cansleYesDiv.className = 'canslebtns cansleyes';
-				cansleYesDiv.setAttribute('onclick', "cansleRes('accept')");
+				cansleYesDiv.setAttribute("id", "apbtnedy"+datas.applylist[i].reservationnum);
+				if(datas.applylist[i].isDelete===1){
+					cansleYesDiv.className = 'canslebtns cansleyes';
+					cansleYesDiv.setAttribute('onclick', "cansleApply("+datas.applylist[i].reservationnum+", 1)");
+				} else {
+					cansleYesDiv.className = 'canslebtns';
+				}
 
 				// cansleno 버튼 div 노드 생성
 				const cansleNoDiv = document.createElement('div');
-				cansleNoDiv.className = 'canslebtns cansleno';
-				cansleNoDiv.setAttribute('onclick', "ansleRes('reject')");
+				cansleNoDiv.setAttribute("id", "apbtnedn"+datas.applylist[i].reservationnum);
+				if(datas.applylist[i].isDelete===1){
+					cansleNoDiv.className = 'canslebtns cansleno';
+					cansleNoDiv.setAttribute('onclick', "cansleApply("+datas.applylist[i].reservationnum+", 0)");
+				} else {
+					cansleNoDiv.className = 'canslebtns';
+				}
 
+				btDiv.appendChild(cansleYesDiv);
+				btDiv.appendChild(cansleNoDiv);
+				
 				// canslezone div에 상태 div와 버튼 div들 추가
 				cansleZoneDiv.appendChild(stateDiv);
-				cansleZoneDiv.appendChild(cansleYesDiv);
-				cansleZoneDiv.appendChild(cansleNoDiv);
+				cansleZoneDiv.appendChild(btDiv);
 
 				// li 노드에 appf div와 canslezone div 추가
 				liNode.appendChild(appfDiv);
@@ -426,10 +446,19 @@
 			
 			success:function(datas){
 				console.log(datas);
+				parentnode.innerHTML="";
 				if(datas.length==0||datas==null){
 					alert("신청이 없어요");
 				} else {
+					const chatd = document.getElementById("chatcdivid");
 					$("#aplmodal-body").toggleClass("hidden");
+					if(datas.gray==="no"){
+						chatd.classList.remove("graychat");
+						chatd.setAttribute('onclick', 'createPacakgeChat('+datas.applylist[0].packagenum+')');
+					} else{
+						chatd.classList.add("graychat");
+						chatd.setAttribute('onclick', '');
+					}
 					makeDOM(datas, 'apply', parentnode);
 				}
 			},
@@ -439,10 +468,12 @@
 			}
 		})
 	}
-	
+	function goInfo(userid){
+		window.open("about:blank").location.href = "/user/yourinfo?userid="+userid;
+	}
 	function createPacakgeChat(packagenum){
 		let thisChatPackagenum = packagenum;
-		
+		console.log(thisChatPackagenum);
 		//채팅방 생성 함수 호출
 		
 	}

@@ -87,12 +87,18 @@ public class PackageServiceImpl implements PackageService{
         if(pmapper.insertPack(pack) != 1) {
 			return false;
 		}
+        long packagenum = pmapper.getLastNum(pack.getGuidenum());
         
         if(file == null || file.getSize() == 0) {
-			return true;
+        	PackageFileDTO pfdto = new PackageFileDTO();
+			pfdto.setPackagenum(packagenum);
+			pfdto.setPfSysname("defaultimg.jpg");
+			pfdto.setPfOrgname("");
+			if(pfmapper.insertFile(pfdto) == 1) {
+				return true;
+			}
 		}else {
 			boolean flag = false;
-			long packagenum = pmapper.getLastNum(pack.getGuidenum());
 			String pfOrgname = file.getOriginalFilename();
 			int lastIdx = pfOrgname.lastIndexOf(".");
 			String extension = pfOrgname.substring(lastIdx);
