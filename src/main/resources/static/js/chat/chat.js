@@ -1130,7 +1130,7 @@ function chatLoadHandler(payload) {
 		const startDiv = document.createElement("div");
 		startDiv.classList.add("ccbody-start");
 		const startP = document.createElement("p");
-		startP.innerHTML = "시작메시지 chatLoadHandler";
+		startP.innerHTML = "채팅방이 시작되었습니다.";
 		startDiv.appendChild(startP);
 
 		chatFragment.prepend(startDiv);
@@ -1502,7 +1502,7 @@ function printChatRoom(payload) {
 		const startDiv = document.createElement("div");
 		startDiv.classList.add("ccbody-start");
 		const startP = document.createElement("p");
-		startP.innerHTML = "대충 시작메시지 - 채팅방에 메시지가 없을 경우";
+		startP.innerHTML = "채팅방이 시작되었습니다";
 		startDiv.appendChild(startP);
 		CHAT_BODY_MORE_INNER_CONT.appendChild(startDiv);
 		return;
@@ -1641,7 +1641,7 @@ function printChatRoom(payload) {
 		const startDiv = document.createElement("div");
 		startDiv.classList.add("ccbody-start");
 		const startP = document.createElement("p");
-		startP.innerHTML = "시작메시지 뭐... 대충 뭐 일단 이거 위치는 printChatRoom() 제일 밑 이거 뭐라적야아할지 모르겠네";
+		startP.innerHTML = "채팅방이 시작되었습니다";
 		startDiv.appendChild(startP);
 		const startDateDiv = document.createElement("div");
 		startDateDiv.classList.add("ccbody-date");
